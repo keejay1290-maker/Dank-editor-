@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "DankDayZ Ultimate Builder"
+version = "1.0.0"
+id = "artifacts/dayz-builder"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21416
+
+[services.development]
+run = "pnpm --filter @workspace/dayz-builder run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/dayz-builder", "run", "build" ]
+publicDir = "artifacts/dayz-builder/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21416"
+BASE_PATH = "/"

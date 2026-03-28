@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dank DayZ — Shape Generator v2</title>
+<style>
+:root {
+  --bg:#0a0804;--paper:#1a160e;--gold:#d4a017;--gold-dim:#8a6a0f;
+  --red:#8b1a1a;--red-bright:#c0392b;--text:#c8b99a;--muted:#6a5a3a;
+  --border:#2e2518;--panel:#12100a;--green:#2a5a1a;--blue:#1a3a5a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Courier New',monospace;min-height:100vh;overflow-x:hidden;}
+header{border-bottom:2px solid var(--gold);padding:12px 20px;display:flex;align-items:center;gap:12px;background:var(--panel);}
+.logo{font-size:1.3rem;color:var(--gold);letter-spacing:2px;font-weight:bold;}
+.logo span{color:var(--red-bright);}
+.subtitle{color:var(--muted);font-size:0.7rem;letter-spacing:1px;}
+.ver{color:var(--red-bright);font-size:0.65rem;border:1px solid var(--red);padding:2px 6px;border-radius:2px;margin-left:6px;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--red-bright);margin-left:auto;animation:pulse 1.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 4px var(--red-bright)}50%{opacity:.4;box-shadow:none}}
+
+.layout{display:grid;grid-template-columns:330px 1fr;min-height:calc(100vh - 52px);}
+.sidebar{background:var(--panel);border-right:1px solid var(--border);padding:14px;overflow-y:auto;max-height:calc(100vh - 52px);}
+.section-title{color:var(--gold);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:5px;margin:14px 0 8px;}
+.section-title:first-child{margin-top:0;}
+label{font-size:0.72rem;color:var(--muted);display:block;margin-bottom:2px;}
+select,input[type=text],input[type=number]{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:'Courier New',monospace;font-size:0.78rem;padding:5px 7px;border-radius:3px;margin-bottom:8px;}
+select:focus,input:focus{outline:none;border-color:var(--gold-dim);}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
+.btn{width:100%;padding:8px;font-family:'Courier New',monospace;font-size:0.75rem;letter-spacing:1px;cursor:pointer;border-radius:3px;border:none;margin-bottom:6px;text-transform:uppercase;font-weight:bold;transition:all .15s;}
+.btn-gold{background:var(--gold);color:var(--bg);}
+.btn-gold:hover{background:#e8b82a;}
+.btn-red{background:var(--red);color:var(--text);}
+.btn-red:hover{background:var(--red-bright);color:#fff;}
+.btn-dark{background:var(--border);color:var(--text);}
+.btn-dark:hover{background:#3e3020;}
+.btn-blue{background:var(--blue);color:var(--text);}
+.btn-blue:hover{background:#2a5a8a;}
+.stat-bar{display:flex;justify-content:space-between;font-size:0.68rem;color:var(--muted);margin-bottom:3px;}
+.stat-val{color:var(--gold);}
+.stat-warn{color:#e07a20;}
+
+/* FORMAT TOGGLE */
+.fmt-row{display:flex;gap:6px;margin-bottom:10px;}
+.fmt-btn{flex:1;padding:6px;font-size:0.72rem;font-family:'Courier New',monospace;cursor:pointer;border-radius:3px;border:1px solid var(--border);background:var(--bg);color:var(--muted);transition:all .15s;text-align:center;}
+.fmt-btn.active{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:bold;}
+
+.main{display:flex;flex-direction:column;}
+.controls-bar{display:flex;align-items:center;gap:10px;padding:6px 14px;background:var(--panel);border-bottom:1px solid var(--border);font-size:0.7rem;flex-wrap:wrap;}
+.controls-bar span{color:var(--muted);}
+.controls-bar strong{color:var(--gold);margin-left:2px;}
+.preview-area{flex:1;position:relative;min-height:380px;background:#060402;overflow:hidden;}
+canvas#preview{width:100%;height:100%;display:block;}
+.output-area{padding:14px;background:var(--panel);}
+.output-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.output-header h3{color:var(--gold);font-size:0.75rem;letter-spacing:1px;}
+.output-actions{display:flex;gap:6px;}
+.output-actions button{padding:4px 10px;font-size:0.68rem;font-family:'Courier New',monospace;}
+textarea#output{min-height:180px;max-height:320px;font-size:0.68rem;color:#9ec080;background:var(--bg);border:1px solid var(--border);line-height:1.5;width:100%;resize:vertical;padding:8px;border-radius:3px;}
+.param-group{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:10px;margin-bottom:6px;}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--gold);color:var(--bg);padding:8px 18px;border-radius:4px;font-size:0.75rem;font-weight:bold;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;}
+.toast.show{opacity:1;}
+.badge{display:inline-block;padding:1px 5px;border-radius:2px;font-size:0.6rem;background:var(--green);color:#9ec080;margin-left:4px;vertical-align:middle;}
+.badge.hot{background:var(--red);color:#fcc;}
+optgroup{color:var(--gold-dim);}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <div class="logo">DANK <span>DAYZ</span> <span class="ver">v2</span></div>
+    <div class="subtitle">SHAPE GENERATOR — INIT.C &amp; JSON EXPORT</div>
+  </div>
+  <div class="dot"></div>
+</header>
+
+<div class="layout">
+<div class="sidebar">
+
+  <!-- OUTPUT FORMAT -->
+  <div class="section-title">Output Format</div>
+  <div class="fmt-row">
+    <div class="fmt-btn active" id="fmt-initc" onclick="setFmt('initc')">init.c</div>
+    <div class="fmt-btn" id="fmt-json" onclick="setFmt('json')">JSON Spawner</div>
+  </div>
+
+  <!-- OBJECT -->
+  <div class="section-title">Object</div>
+  <label>Quick Select</label>
+  <select id="quickObj" onchange="applyQuickObj()">
+    <option value="">-- Custom --</option>
+    <optgroup label="Containers / Industrial">
+      <option value="StaticObj_Container_1D">Container 1D (shipping)</option>
+      <option value="StaticObj_Container_1C">Container 1C</option>
+      <option value="Land_Container_1Bo_DE">Container 1Bo (dark)</option>
+      <option value="Land_Container_1Aoh_DE">Container 1Aoh</option>
+      <option value="Land_GasTank_Cylindrical">Gas Tank (cylinder)</option>
+      <option value="Barrel_Blue">Barrel Blue</option>
+      <option value="Barrel_Green">Barrel Green</option>
+      <option value="Pallet_EP1">Pallet</option>
+    </optgroup>
+    <optgroup label="Vehicles / Wrecks">
+      <option value="Land_Wreck_V3S_DE">Wreck V3S Truck</option>
+      <option value="Land_Wreck_Ikarus_DE">Wreck Ikarus Bus</option>
+      <option value="Land_Train_Wagon_Box_DE">Train Wagon Box</option>
+      <option value="Land_Train_Wagon_Box_Mil_DE">Train Wagon Mil</option>
+      <option value="Land_Wreck_Trailer_Closed_DE">Trailer Closed</option>
+      <option value="Land_Wreck_hb01_aban1_blue_DE">Wreck Hatchback Blue</option>
+      <option value="Land_Wreck_sed01_aban1_black_DE">Wreck Sedan Black</option>
+      <option value="Land_Wreck_offroad02_aban1_DE">Wreck Offroad</option>
+      <option value="Land_Boat_Small9_DE">Small Boat</option>
+    </optgroup>
+    <optgroup label="Rocks / Natural">
+      <option value="DZ\rocks_bliss\stone10_moss.p3d">Stone Moss (med)</option>
+      <option value="DZ\rocks_bliss\stone9_moss.p3d">Stone Moss (large)</option>
+      <option value="DZ\rocks_bliss\rock_monolith1.p3d">Rock Monolith 1</option>
+      <option value="DZ\rocks_bliss\rock_spike1.p3d">Rock Spike 1</option>
+    </optgroup>
+    <optgroup label="Static Props">
+      <option value="Land_PetrolStation_Canopy">Petrol Station Canopy</option>
+      <option value="StaticObj_Rail_Platform_Segment">Rail Platform Segment</option>
+      <option value="StaticObj_Monument_Wall">Monument Wall</option>
+      <option value="StaticObj_Lamp_Ind">Industrial Lamp</option>
+      <option value="Land_Misc_Well_Pump_Yellow">Well Pump Yellow</option>
+      <option value="Land_Garage_Big">Big Garage</option>
+      <option value="StaticObj_Furniture_shelf_DZ">Shelf DZ</option>
+      <option value="HatchbackWheel">Hatchback Wheel</option>
+      <option value="Land_Fence_Barbed">Barbed Fence</option>
+    </optgroup>
+    <optgroup label="Plants / Trees">
+      <option value="DZ\plants_bliss\tree\t_fagussylvatica_3f_summer.p3d">Beech Tree</option>
+      <option value="DZ\plants_bliss\tree\t_pinussylvestris_2f_summer.p3d">Pine Tree</option>
+      <option value="DZ\plants_bliss\bush\b_prunusspinosa_1s_summer.p3d">Blackthorn Bush</option>
+    </optgroup>
+  </select>
+  <label>Object Classname / Path</label>
+  <input type="text" id="objClass" value="StaticObj_Container_1D">
+
+  <!-- MULTI-OBJECT MODE -->
+  <div class="section-title">Multi-Object (optional)</div>
+  <label>Extra objects per point (comma-sep classnames)</label>
+  <input type="text" id="extraObjs" placeholder="e.g. Barrel_Blue,HatchbackWheel" title="Each point spawns these too, stacked in Y">
+  <label>Y offset between stacked objects (m)</label>
+  <input type="number" id="stackY" value="0" step="0.5">
+
+  <!-- SHAPE -->
+  <div class="section-title">Shape</div>
+  <label>Shape Type</label>
+  <select id="shapeType" onchange="onShapeChange()">
+    <optgroup label="☠ Sci-Fi / Epic">
+      <option value="deathstar">☠ Death Star</option>
+      <option value="sphere">Sphere Shell</option>
+      <option value="hemisphere">Hemisphere</option>
+      <option value="torus">Torus / Ring Gate</option>
+      <option value="disc">Flat Disc / Platform</option>
+      <option value="helix">Helix / DNA Spiral</option>
+      <option value="cone">Cone</option>
+      <option value="cylinder">Cylinder</option>
+      <option value="hyperboloid">Hyperboloid (hourglass)</option>
+      <option value="mobius">Möbius Strip</option>
+      <option value="icosphere">Icosphere (faceted)</option>
+    </optgroup>
+    <optgroup label="💀 Body Parts">
+      <option value="body_skull">Skull</option>
+      <option value="body_hand">Giant Hand</option>
+      <option value="body_ribcage">Ribcage</option>
+      <option value="body_spine">Spine Column</option>
+      <option value="body_eye">Giant Eye</option>
+      <option value="body_humanoid">Full Humanoid Figure</option>
+    </optgroup>
+    <optgroup label="🏰 Fortifications">
+      <option value="bastion_round">Round Fort Bastion</option>
+      <option value="bastion_square">Square Fort</option>
+      <option value="tower">Tower / Turret</option>
+      <option value="wall_line">Wall (Straight)</option>
+      <option value="wall_arc">Wall (Arc)</option>
+      <option value="star_fort">Star Fort (5-point)</option>
+    </optgroup>
+    <optgroup label="📐 Primitives">
+      <option value="grid_flat">Flat Grid</option>
+      <option value="staircase">Staircase</option>
+      <option value="pyramid">Stepped Pyramid</option>
+      <option value="ring_platform">Ring Platform</option>
+      <option value="cross">Cross / Plus Shape</option>
+      <option value="arrow">Arrow Shape</option>
+      <option value="letter_D">Letter D</option>
+      <option value="letter_Z">Letter Z</option>
+    </optgroup>
+  </select>
+  <div id="paramArea"></div>
+
+  <!-- POSITION -->
+  <div class="section-title">Base Position</div>
+  <div class="row3">
+    <div><label>X</label><input type="number" id="posX" value="12000" step="1"></div>
+    <div><label>Y</label><input type="number" id="posY" value="150" step="0.1"></div>
+    <div><label>Z</label><input type="number" id="posZ" value="12600" step="1"></div>
+  </div>
+
+  <!-- OPTIONS -->
+  <div class="section-title">Options</div>
+  <div class="row2">
+    <div><label>Rot Y (yaw °)</label><input type="number" id="rotY" value="0" step="5"></div>
+    <div><label>Scale</label><input type="number" id="scale" value="1.00" step="0.1" min="0.1"></div>
+  </div>
+  <label>CE Persistency (JSON only)</label>
+  <select id="cePersist">
+    <option value="0">0 — disabled (recommended)</option>
+    <option value="1">1 — enabled</option>
+  </select>
+  <label>init.c helper function</label>
+  <select id="helper">
+    <option value="1">Yes — include SpawnObject()</option>
+    <option value="0">No — bare calls only</option>
+  </select>
+
+  <!-- STATS -->
+  <div class="section-title">Stats</div>
+  <div class="stat-bar"><span>Objects</span><span class="stat-val" id="statCount">0</span></div>
+  <div class="stat-bar"><span>CE Impact</span><span class="stat-val" id="statCE">—</span></div>
+  <div class="stat-bar"><span>Format</span><span class="stat-val" id="statFmt">init.c</span></div>
+
+  <button class="btn btn-gold" onclick="generate()">⚙ Generate</button>
+  <button class="btn btn-blue" onclick="previewShape()">👁 Preview 3D</button>
+  <button class="btn btn-dark" onclick="clearOutput()">✕ Clear</button>
+
+</div><!-- /sidebar -->
+
+<div class="main">
+  <div class="controls-bar">
+    <span>Shape:</span><strong id="previewLabel">—</strong>
+    <span style="margin-left:auto;opacity:.5">Drag=rotate · Scroll=zoom</span>
+  </div>
+  <div class="preview-area"><canvas id="preview"></canvas></div>
+  <div class="output-area">
+    <div class="output-header">
+      <h3 id="outputTitle">▶ Generated init.c Code</h3>
+      <div class="output-actions">
+        <button class="btn btn-dark" onclick="copyCode()">Copy</button>
+        <button class="btn btn-gold" onclick="downloadCode()">Download</button>
+      </div>
+    </div>
+    <textarea id="output" readonly placeholder="// Click Generate..."></textarea>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── FORMAT STATE ───────────────────────────────────────────────
+let currentFmt = 'initc';
+function setFmt(f) {
+  currentFmt = f;
+  document.getElementById('fmt-initc').classList.toggle('active', f==='initc');
+  document.getElementById('fmt-json').classList.toggle('active', f==='json');
+  document.getElementById('statFmt').textContent = f==='initc'?'init.c':'JSON Spawner';
+  document.getElementById('outputTitle').textContent = f==='initc'?'▶ Generated init.c Code':'▶ Generated JSON Spawner';
+}
+
+// ─── PARAM DEFS ─────────────────────────────────────────────────
+const PARAMS = {
+  deathstar:[
+    {id:'radius',label:'Equatorial Radius (m)',val:40,min:5,max:200},
+    {id:'latSegs',label:'Latitude Segments',val:10,min:4,max:20},
+    {id:'lonSegs',label:'Longitude Segments',val:16,min:6,max:32},
+    {id:'dishRadius',label:'Dish Indent Radius (m)',val:12,min:2,max:60},
+    {id:'dishDepth',label:'Dish Depth (m)',val:8,min:1,max:30},
+    {id:'dishLat',label:'Dish Latitude (deg)',val:30,min:-80,max:80},
+  ],
+  sphere:[{id:'radius',label:'Radius (m)',val:25,min:2,max:200},{id:'latSegs',label:'Latitude Rings',val:8,min:3,max:20},{id:'lonSegs',label:'Longitude Points',val:12,min:4,max:32}],
+  hemisphere:[{id:'radius',label:'Radius (m)',val:25,min:2,max:200},{id:'latSegs',label:'Rings',val:6,min:2,max:16},{id:'lonSegs',label:'Points per Ring',val:12,min:4,max:32}],
+  torus:[{id:'majorR',label:'Major Radius (m)',val:30,min:5,max:150},{id:'minorR',label:'Tube Radius (m)',val:8,min:1,max:50},{id:'majorSegs',label:'Segments Around',val:16,min:6,max:48},{id:'minorSegs',label:'Segments Tube',val:8,min:3,max:16}],
+  disc:[{id:'radius',label:'Radius (m)',val:30,min:2,max:200},{id:'rings',label:'Concentric Rings',val:3,min:1,max:12},{id:'points',label:'Points per Ring',val:16,min:4,max:48},{id:'innerRadius',label:'Inner Hole Radius',val:0,min:0,max:150}],
+  helix:[{id:'radius',label:'Helix Radius (m)',val:15,min:2,max:100},{id:'height',label:'Total Height (m)',val:30,min:3,max:200},{id:'turns',label:'Turns',val:4,min:1,max:20},{id:'pointsPerTurn',label:'Points/Turn',val:12,min:4,max:32},{id:'strands',label:'Strands (1/2/3)',val:1,min:1,max:4}],
+  cone:[{id:'radius',label:'Base Radius (m)',val:20,min:2,max:150},{id:'height',label:'Height (m)',val:25,min:2,max:200},{id:'rings',label:'Height Rings',val:5,min:2,max:20},{id:'points',label:'Points/Ring',val:12,min:3,max:32}],
+  cylinder:[{id:'radius',label:'Radius (m)',val:20,min:2,max:150},{id:'height',label:'Height (m)',val:20,min:2,max:150},{id:'rings',label:'Height Segments',val:4,min:1,max:20},{id:'points',label:'Points/Ring',val:12,min:3,max:32},{id:'caps',label:'Caps (0/1)',val:1,min:0,max:1}],
+  hyperboloid:[{id:'radiusTop',label:'Top Radius (m)',val:15,min:1,max:100},{id:'radiusMid',label:'Waist Radius (m)',val:8,min:1,max:100},{id:'height',label:'Height (m)',val:30,min:4,max:200},{id:'rings',label:'Height Rings',val:8,min:3,max:24},{id:'points',label:'Points/Ring',val:14,min:4,max:32}],
+  mobius:[{id:'radius',label:'Ring Radius (m)',val:25,min:5,max:120},{id:'width',label:'Strip Width (m)',val:8,min:1,max:40},{id:'segs',label:'Segments',val:20,min:8,max:60},{id:'widthSegs',label:'Width Divisions',val:4,min:1,max:10}],
+  icosphere:[{id:'radius',label:'Radius (m)',val:25,min:3,max:150},{id:'subdivisions',label:'Subdivisions (1-3)',val:1,min:1,max:3}],
+
+  // Body parts
+  body_skull:[{id:'radius',label:'Skull Radius (m)',val:12,min:3,max:50},{id:'eyeSocket',label:'Eye Socket Depth (m)',val:4,min:1,max:15},{id:'jawDrop',label:'Jaw Drop (m)',val:6,min:0,max:20}],
+  body_hand:[{id:'palmSize',label:'Palm Size (m)',val:12,min:3,max:50},{id:'fingerLength',label:'Finger Length (m)',val:18,min:5,max:80},{id:'fingerCount',label:'Fingers',val:5,min:3,max:5}],
+  body_ribcage:[{id:'width',label:'Width (m)',val:16,min:4,max:60},{id:'height',label:'Height (m)',val:20,min:5,max:80},{id:'ribs',label:'Rib Pairs',val:7,min:3,max:12}],
+  body_spine:[{id:'height',label:'Spine Height (m)',val:30,min:5,max:100},{id:'vertebrae',label:'Vertebrae Count',val:20,min:6,max:40},{id:'width',label:'Vertebra Width (m)',val:4,min:1,max:20}],
+  body_eye:[{id:'radius',label:'Eyeball Radius (m)',val:15,min:4,max:60},{id:'irisRadius',label:'Iris Radius (m)',val:7,min:1,max:40},{id:'pupilR',label:'Pupil Radius (m)',val:3,min:0.5,max:20}],
+  body_humanoid:[{id:'height',label:'Figure Height (m)',val:30,min:8,max:120},{id:'width',label:'Shoulder Width (m)',val:12,min:3,max:50}],
+
+  bastion_round:[{id:'radius',label:'Bastion Radius (m)',val:20,min:5,max:100},{id:'wallH',label:'Wall Height (m)',val:15,min:3,max:50},{id:'wallRings',label:'Height Rings',val:2,min:1,max:8},{id:'bastionSegs',label:'Segments',val:16,min:6,max:32}],
+  bastion_square:[{id:'width',label:'Width (m)',val:80,min:10,max:300},{id:'depth',label:'Depth (m)',val:80,min:10,max:300},{id:'wallH',label:'Wall Height (m)',val:15,min:3,max:50},{id:'wallRings',label:'Height Rings',val:2,min:1,max:8},{id:'spacing',label:'Obj Spacing (m)',val:8,min:2,max:30}],
+  tower:[{id:'radius',label:'Radius (m)',val:8,min:2,max:50},{id:'height',label:'Height (m)',val:25,min:3,max:100},{id:'rings',label:'Height Sections',val:5,min:2,max:20},{id:'points',label:'Points/Ring',val:8,min:3,max:20}],
+  wall_line:[{id:'length',label:'Length (m)',val:80,min:4,max:500},{id:'height',label:'Height (m)',val:15,min:2,max:60},{id:'spacing',label:'Spacing (m)',val:8,min:1,max:30},{id:'rings',label:'Height Rings',val:2,min:1,max:8}],
+  wall_arc:[{id:'radius',label:'Arc Radius (m)',val:40,min:5,max:200},{id:'arcDeg',label:'Arc Degrees',val:180,min:10,max:360},{id:'height',label:'Height (m)',val:12,min:2,max:60},{id:'spacing',label:'Spacing (m)',val:8,min:1,max:30},{id:'rings',label:'Height Rings',val:2,min:1,max:8}],
+  star_fort:[{id:'outerR',label:'Outer Radius (m)',val:50,min:10,max:200},{id:'innerR',label:'Inner Radius (m)',val:30,min:5,max:150},{id:'points',label:'Star Points',val:5,min:3,max:8},{id:'height',label:'Wall Height (m)',val:12,min:2,max:50},{id:'rings',label:'Height Rings',val:2,min:1,max:6}],
+
+  grid_flat:[{id:'cols',label:'Columns',val:8,min:1,max:30},{id:'rows',label:'Rows',val:8,min:1,max:30},{id:'spacingX',label:'X Spacing (m)',val:8,min:1,max:50},{id:'spacingZ',label:'Z Spacing (m)',val:8,min:1,max:50}],
+  staircase:[{id:'steps',label:'Steps',val:12,min:2,max:40},{id:'stepW',label:'Width (m)',val:6,min:1,max:30},{id:'stepH',label:'Step Height (m)',val:1.5,min:0.3,max:5},{id:'stepD',label:'Depth (m)',val:2,min:0.5,max:10},{id:'curve',label:'Curve Radius (0=straight)',val:0,min:0,max:50}],
+  pyramid:[{id:'levels',label:'Levels',val:5,min:2,max:12},{id:'baseSize',label:'Base Size (m)',val:60,min:5,max:300},{id:'shrink',label:'Shrink/Level (%)',val:20,min:5,max:50},{id:'levelH',label:'Level Height (m)',val:4,min:1,max:20},{id:'spacing',label:'Spacing (m)',val:8,min:1,max:30}],
+  ring_platform:[{id:'outerR',label:'Outer Radius (m)',val:40,min:5,max:200},{id:'innerR',label:'Inner Radius (m)',val:25,min:2,max:180},{id:'height',label:'Height (m)',val:8,min:0,max:50},{id:'rings',label:'Concentric Rings',val:2,min:1,max:8},{id:'points',label:'Points/Ring',val:20,min:4,max:60}],
+  cross:[{id:'armLen',label:'Arm Length (m)',val:30,min:5,max:150},{id:'armW',label:'Arm Width (m)',val:10,min:2,max:50},{id:'height',label:'Height (m)',val:8,min:1,max:40},{id:'spacing',label:'Spacing (m)',val:5,min:1,max:20},{id:'rings',label:'Height Rings',val:2,min:1,max:6}],
+  arrow:[{id:'length',label:'Total Length (m)',val:50,min:10,max:200},{id:'width',label:'Shaft Width (m)',val:8,min:2,max:40},{id:'headW',label:'Head Width (m)',val:20,min:5,max:80},{id:'headL',label:'Head Length (m)',val:15,min:3,max:60},{id:'height',label:'Height (m)',val:6,min:1,max:30},{id:'spacing',label:'Spacing (m)',val:5,min:1,max:20}],
+  letter_D:[{id:'size',label:'Letter Height (m)',val:30,min:5,max:150},{id:'depth',label:'Letter Depth (m)',val:8,min:1,max:40},{id:'spacing',label:'Obj Spacing (m)',val:4,min:1,max:15},{id:'rings',label:'Height Rings',val:2,min:1,max:6}],
+  letter_Z:[{id:'size',label:'Letter Height (m)',val:30,min:5,max:150},{id:'depth',label:'Letter Depth (m)',val:8,min:1,max:40},{id:'spacing',label:'Obj Spacing (m)',val:4,min:1,max:15},{id:'rings',label:'Height Rings',val:2,min:1,max:6}],
+};
+
+function onShapeChange(){
+  const shape=document.getElementById('shapeType').value;
+  const area=document.getElementById('paramArea');
+  const defs=PARAMS[shape]||[];
+  area.innerHTML=`<div class="section-title">Parameters</div><div class="param-group">`+
+    defs.map(p=>`<label>${p.label}</label><input type="number" id="p_${p.id}" value="${p.val}" min="${p.min}" max="${p.max}" step="any">`).join('')+`</div>`;
+}
+onShapeChange();
+function applyQuickObj(){const v=document.getElementById('quickObj').value;if(v)document.getElementById('objClass').value=v;}
+function getP(id){return parseFloat(document.getElementById('p_'+id)?.value||0);}
+function getParam(id,fb=0){const el=document.getElementById(id);return el?parseFloat(el.value):fb;}
+function rotYapply(x,z,deg){const r=deg*Math.PI/180;return[x*Math.cos(r)-z*Math.sin(r),x*Math.sin(r)+z*Math.cos(r)];}
+
+// ─── SHAPE GENERATORS ───────────────────────────────────────────
+function gen_sphere(p,hemi=false){
+  const pts=[];
+  const latMax=hemi?0:-Math.PI/2;
+  for(let i=0;i<=p.latSegs;i++){
+    const lat=Math.PI/2+(latMax-Math.PI/2)*i/p.latSegs;
+    const y=p.radius*Math.sin(lat),r=p.radius*Math.cos(lat);
+    for(let j=0;j<p.lonSegs;j++){const a=2*Math.PI*j/p.lonSegs;pts.push({x:r*Math.cos(a),y,z:r*Math.sin(a)});}
+  }
+  return pts;
+}
+function gen_deathstar(p){
+  const pts=[];
+  const dishLatRad=p.dishLat*Math.PI/180;
+  const dX=Math.cos(dishLatRad),dY=Math.sin(dishLatRad);
+  for(let i=0;i<=p.latSegs;i++){
+    const lat=-Math.PI/2+Math.PI*i/p.latSegs;
+    const y=p.radius*Math.sin(lat),r=p.radius*Math.cos(lat);
+    for(let j=0;j<p.lonSegs;j++){
+      const a=2*Math.PI*j/p.lonSegs;
+      const px=r*Math.cos(a),pz=r*Math.sin(a);
+      const dot=px/p.radius*dX+y/p.radius*dY;
+      const ang=Math.acos(Math.min(1,Math.max(-1,dot)));
+      const dr=Math.asin(Math.min(1,p.dishRadius/p.radius));
+      if(ang<dr)continue;
+      pts.push({x:px,y,z:pz});
+    }
+  }
+  const bc={x:p.radius*dX,y:p.radius*dY};
+  for(let ri=1;ri<=4;ri++){
+    const dr=p.dishRadius*ri/4;
+    const dep=p.dishDepth*(1-(dr/p.dishRadius)**2);
+    for(let j=0;j<24;j++){const a=2*Math.PI*j/24;pts.push({x:bc.x-dep*dX+dr*Math.cos(a)*0.7,y:bc.y-dep*dY,z:dr*Math.sin(a)});}
+  }
+  return pts;
+}
+function gen_torus(p){
+  const pts=[];
+  for(let i=0;i<p.majorSegs;i++){const u=2*Math.PI*i/p.majorSegs;
+    for(let j=0;j<p.minorSegs;j++){const v=2*Math.PI*j/p.minorSegs;
+      pts.push({x:(p.majorR+p.minorR*Math.cos(v))*Math.cos(u),y:p.minorR*Math.sin(v),z:(p.majorR+p.minorR*Math.cos(v))*Math.sin(u)});
+    }
+  }
+  return pts;
+}
+function gen_disc(p){
+  const pts=[];
+  const inner=p.innerRadius||0;
+  for(let ri=0;ri<p.rings;ri++){
+    const r=inner+(p.radius-inner)*(ri+1)/p.rings;
+    for(let j=0;j<p.points;j++){const a=2*Math.PI*j/p.points;pts.push({x:r*Math.cos(a),y:0,z:r*Math.sin(a)});}
+  }
+  return pts;
+}
+function gen_helix(p){
+  const pts=[];
+  const total=p.turns*p.pointsPerTurn;
+  for(let s=0;s<p.strands;s++){
+    const ph=2*Math.PI*s/p.strands;
+    for(let i=0;i<=total;i++){
+      const t=i/total,a=2*Math.PI*p.turns*t+ph;
+      pts.push({x:p.radius*Math.cos(a),y:p.height*t,z:p.radius*Math.sin(a)});
+    }
+  }
+  return pts;
+}
+function gen_cone(p){
+  const pts=[];
+  for(let ri=0;ri<=p.rings;ri++){
+    const t=ri/p.rings,r=p.radius*(1-t),y=p.height*t;
+    if(r<0.5){pts.push({x:0,y,z:0});continue;}
+    for(let j=0;j<p.points;j++){const a=2*Math.PI*j/p.points;pts.push({x:r*Math.cos(a),y,z:r*Math.sin(a)});}
+  }
+  return pts;
+}
+function gen_cylinder(p){
+  const pts=[];
+  for(let ri=0;ri<=p.rings;ri++){
+    const y=p.height*ri/p.rings;
+    for(let j=0;j<p.points;j++){const a=2*Math.PI*j/p.points;pts.push({x:p.radius*Math.cos(a),y,z:p.radius*Math.sin(a)});}
+  }
+  if(p.caps){for(let j=0;j<p.points;j++){const a=2*Math.PI*j/p.points;pts.push({x:p.radius*Math.cos(a)/2,y:0,z:p.radius*Math.sin(a)/2});pts.push({x:p.radius*Math.cos(a)/2,y:p.height,z:p.radius*Math.sin(a)/2});}}
+  return pts;
+}
+function gen_hyperboloid(p){
+  const pts=[];
+  for(let ri=0;ri<=p.rings;ri++){
+    const t=ri/p.rings,y=p.height*t-p.height/2;
+    const r=p.radiusMid+Math.pow(2*t-1,2)*(p.radiusTop-p.radiusMid);
+    for(let j=0;j<p.points;j++){const a=2*Math.PI*j/p.points;pts.push({x:r*Math.cos(a),y:y+p.height/2,z:r*Math.sin(a)});}
+  }
+  return pts;
+}
+function gen_mobius(p){
+  const pts=[];
+  for(let i=0;i<p.segs;i++){
+    const u=2*Math.PI*i/p.segs;
+    for(let j=0;j<p.widthSegs;j++){
+      const v=(j/(p.widthSegs-1)-0.5)*p.width;
+      const x=(p.radius+v*Math.cos(u/2))*Math.cos(u);
+      const y=v*Math.sin(u/2);
+      const z=(p.radius+v*Math.cos(u/2))*Math.sin(u);
+      pts.push({x,y,z});
+    }
+  }
+  return pts;
+}
+function gen_icosphere(p){
+  const t=(1+Math.sqrt(5))/2;
+  let verts=[[−1,t,0],[1,t,0],[−1,−t,0],[1,−t,0],[0,−1,t],[0,1,t],[0,−1,−t],[0,1,−t],[t,0,−1],[t,0,1],[−t,0,−1],[−t,0,1]].map(v=>{const l=Math.sqrt(v[0]**2+v[1]**2+v[2]**2);return v.map(x=>x/l*p.radius);});
+  const faces=[[0,11,5],[0,5,1],[0,1,7],[0,7,10],[0,10,11],[1,5,9],[5,11,4],[11,10,2],[10,7,6],[7,1,8],[3,9,4],[3,4,2],[3,2,6],[3,6,8],[3,8,9],[4,9,5],[2,4,11],[6,2,10],[8,6,7],[9,8,1]];
+  const pts=new Set();
+  function midpoint(a,b){return[(a[0]+b[0])/2,(a[1]+b[1])/2,(a[2]+b[2])/2].map((v,i,arr)=>{const l=Math.sqrt(arr[0]**2+arr[1]**2+arr[2]**2);return v/l*p.radius;});}
+  let subdFaces=faces;
+  for(let s=0;s<Math.min(p.subdivisions,3);s++){
+    const next=[];
+    subdFaces.forEach(f=>{
+      const a=verts[f[0]],b=verts[f[1]],c=verts[f[2]];
+      const ab=midpoint(a,b),bc=midpoint(b,c),ca=midpoint(c,a);
+      const li=verts.length;verts.push(ab,bc,ca);
+      next.push([f[0],li,li+2],[li,f[1],li+1],[li+2,li+1,f[2]],[li,li+1,li+2]);
+    });
+    subdFaces=next;
+  }
+  verts.forEach(v=>pts.add(JSON.stringify(v)));
+  return [...pts].map(s=>{const v=JSON.parse(s);return{x:v[0],y:v[1],z:v[2]};});
+}
+
+// ─── BODY PARTS ─────────────────────────────────────────────────
+function gen_body_skull(p){
+  const pts=[];
+  const r=p.radius;
+  // cranium — upper sphere
+  for(let i=0;i<=8;i++){
+    const lat=Math.PI/2-Math.PI*0.6*i/8;
+    const y=r*Math.sin(lat),cr=r*Math.cos(lat);
+    const n=Math.max(4,Math.round(12*Math.cos(lat)));
+    for(let j=0;j<n;j++){const a=2*Math.PI*j/n;pts.push({x:cr*Math.cos(a),y:y+r*0.1,z:cr*Math.sin(a)});}
+  }
+  // jaw — flattened lower arc
+  for(let j=0;j<14;j++){
+    const a=Math.PI*j/13;
+    pts.push({x:r*0.7*Math.cos(a),y:-r*0.3,z:r*0.6*Math.sin(a)});
+    pts.push({x:r*0.7*Math.cos(a),y:-r*0.3-p.jawDrop*0.4,z:r*0.6*Math.sin(a)});
+  }
+  // eye sockets — 2 circles inset
+  [-1,1].forEach(side=>{
+    for(let j=0;j<10;j++){const a=2*Math.PI*j/10;pts.push({x:side*r*0.35+r*0.2*Math.cos(a),y:r*0.15,z:-p.eyeSocket+r*0.15*Math.sin(a)});}
+  });
+  // teeth row
+  for(let t=0;t<8;t++){
+    const a=Math.PI*(t+0.5)/8;
+    pts.push({x:r*0.55*Math.cos(a),y:-r*0.3-p.jawDrop*0.3,z:r*0.5*Math.sin(a)});
+    pts.push({x:r*0.55*Math.cos(a),y:-r*0.3-p.jawDrop*0.7,z:r*0.5*Math.sin(a)});
+  }
+  return pts;
+}
+function gen_body_hand(p){
+  const pts=[];
+  const ps=p.palmSize;
+  // palm — oval grid
+  for(let i=0;i<4;i++)for(let j=0;j<4;j++){pts.push({x:(i-1.5)*ps*0.3,y:0,z:(j-1.5)*ps*0.3});}
+  // fingers
+  for(let f=0;f<p.fingerCount;f++){
+    const fx=(f-(p.fingerCount-1)/2)*ps*0.22;
+    const segLen=p.fingerLength/4;
+    for(let s=0;s<4;s++){
+      const y=ps*0.5+segLen*s;
+      const w=ps*0.08*(1-s*0.15);
+      pts.push({x:fx-w,y,z:0},{x:fx+w,y,z:0});
+      // knuckle widening
+      if(s<3){pts.push({x:fx,y:y+segLen*0.5,z:w*1.2});}
+    }
+    // fingertip
+    pts.push({x:fx,y:ps*0.5+p.fingerLength,z:0});
+  }
+  // thumb
+  const tx=-ps*0.55,ty=ps*0.1;
+  for(let s=0;s<3;s++){pts.push({x:tx-ps*0.05,y:ty+p.fingerLength*0.2*s,z:s*ps*0.08},{x:tx+ps*0.05,y:ty+p.fingerLength*0.2*s,z:s*ps*0.08});}
+  return pts;
+}
+function gen_body_ribcage(p){
+  const pts=[];
+  const hw=p.width/2;
+  // spine vertical
+  for(let i=0;i<=8;i++)pts.push({x:0,y:p.height*i/8,z:0});
+  // ribs — pairs of curved arcs
+  for(let r=0;r<p.ribs;r++){
+    const y=p.height*(r+0.5)/p.ribs;
+    const rw=hw*(0.7+0.3*Math.sin(Math.PI*r/p.ribs));
+    const rz=rw*0.5; // rib depth
+    for(let j=0;j<=10;j++){
+      const a=Math.PI*j/10;
+      pts.push({x:rw*Math.cos(a),y,z:rz*Math.sin(a)});
+      pts.push({x:-rw*Math.cos(a),y,z:rz*Math.sin(a)});
+    }
+    // sternum connection line at front
+    if(r>0&&r<p.ribs-1)pts.push({x:0,y,z:rz});
+  }
+  // pelvis ring at bottom
+  const pr=hw*0.7;
+  for(let j=0;j<16;j++){const a=2*Math.PI*j/16;pts.push({x:pr*Math.cos(a)*0.9,y:-p.height*0.1,z:pr*0.5*Math.sin(a)});}
+  return pts;
+}
+function gen_body_spine(p){
+  const pts=[];
+  const vh=p.height/p.vertebrae;
+  const hw=p.width/2;
+  for(let v=0;v<p.vertebrae;v++){
+    const y=v*vh;
+    // vertebra body — rectangle
+    pts.push({x:-hw,y,z:-hw/2},{x:hw,y,z:-hw/2},{x:-hw,y,z:hw/2},{x:hw,y,z:hw/2});
+    // spinous process (spike going back)
+    pts.push({x:0,y:y+vh*0.4,z:hw*1.5});
+    // transverse processes (side spikes)
+    pts.push({x:-hw*1.8,y,z:0},{x:hw*1.8,y,z:0});
+  }
+  return pts;
+}
+function gen_body_eye(p){
+  const pts=[];
+  const r=p.radius;
+  // eyeball — sphere
+  for(let i=0;i<=8;i++){
+    const lat=-Math.PI/2+Math.PI*i/8;
+    const y=r*Math.sin(lat),cr=r*Math.cos(lat);
+    for(let j=0;j<12;j++){const a=2*Math.PI*j/12;pts.push({x:cr*Math.cos(a),y,z:cr*Math.sin(a)});}
+  }
+  // iris ring
+  for(let j=0;j<20;j++){const a=2*Math.PI*j/20;pts.push({x:p.irisRadius*Math.cos(a),y:r*0.85,z:p.irisRadius*Math.sin(a)});}
+  // pupil
+  for(let j=0;j<12;j++){const a=2*Math.PI*j/12;pts.push({x:p.pupilR*Math.cos(a),y:r*0.95,z:p.pupilR*Math.sin(a)});}
+  // eyelid curves — top and bottom arcs
+  for(let j=0;j<16;j++){
+    const a=-Math.PI/2+Math.PI*j/15;
+    pts.push({x:r*1.05*Math.cos(a),y:r*0.7,z:r*1.05*Math.sin(a)*0.3+r*0.2});
+    pts.push({x:r*1.05*Math.cos(a),y:r*0.6,z:-r*1.05*Math.sin(a)*0.3-r*0.2});
+  }
+  return pts;
+}
+function gen_body_humanoid(p){
+  const pts=[];
+  const h=p.height, w=p.width;
+  // head (sphere)
+  const hr=h*0.1;
+  for(let i=0;i<=5;i++){const lat=-Math.PI/2+Math.PI*i/5;const y=h*0.85+hr*Math.sin(lat),r=hr*Math.cos(lat);for(let j=0;j<8;j++){const a=2*Math.PI*j/8;pts.push({x:r*Math.cos(a),y,z:r*Math.sin(a)});}}
+  // torso
+  for(let i=0;i<=5;i++){const t=i/5;const y=h*0.45+h*0.3*t;const tw=w*(0.7+0.3*(1-t));pts.push({x:-tw/2,y,z:0},{x:tw/2,y,z:0},{x:0,y,z:tw*0.3},{x:0,y,z:-tw*0.3});}
+  // arms
+  [-1,1].forEach(side=>{
+    for(let i=0;i<=6;i++){const y=h*0.75-h*0.3*i/6;const x=side*(w/2+h*0.2*i/6);pts.push({x,y,z:0});}
+    // hands
+    for(let j=0;j<4;j++){const a=2*Math.PI*j/4;pts.push({x:side*(w/2+h*0.3)+h*0.04*Math.cos(a),y:h*0.45,z:h*0.04*Math.sin(a)});}
+  });
+  // legs
+  [-1,1].forEach(side=>{
+    for(let i=0;i<=8;i++){const y=h*0.45-h*0.45*i/8;const x=side*w*0.2;pts.push({x,y,z:0});}
+    // feet
+    pts.push({x:side*w*0.2,y:0,z:-h*0.06},{x:side*w*0.2,y:0,z:h*0.08});
+  });
+  return pts;
+}
+
+// ─── FORTIFICATIONS ─────────────────────────────────────────────
+function gen_bastion_round(p){
+  const pts=[];
+  for(let ri=0;ri<=(p.wallRings||2);ri++){const y=p.wallH*ri/(p.wallRings||2);for(let j=0;j<p.bastionSegs;j++){const a=2*Math.PI*j/p.bastionSegs;pts.push({x:p.radius*Math.cos(a),y,z:p.radius*Math.sin(a)});}}
+  return pts;
+}
+function gen_bastion_square(p){
+  const pts=[];
+  const hW=p.width/2,hD=p.depth/2;
+  const rings=p.wallRings||2;
+  for(let ri=0;ri<=rings;ri++){
+    const y=p.wallH*ri/rings;
+    const sides=[{ax:-hW,az:-hD,dx:p.spacing,dz:0,n:Math.ceil(p.width/p.spacing)},{ax:hW,az:-hD,dx:0,dz:p.spacing,n:Math.ceil(p.depth/p.spacing)},{ax:hW,az:hD,dx:-p.spacing,dz:0,n:Math.ceil(p.width/p.spacing)},{ax:-hW,az:hD,dx:0,dz:-p.spacing,n:Math.ceil(p.depth/p.spacing)}];
+    sides.forEach(s=>{for(let i=0;i<s.n;i++)pts.push({x:s.ax+s.dx*i,y,z:s.az+s.dz*i});});
+  }
+  return pts;
+}
+function gen_tower(p){const pts=[];for(let ri=0;ri<=p.rings;ri++){const y=p.height*ri/p.rings;for(let j=0;j<p.points;j++){const a=2*Math.PI*j/p.points;pts.push({x:p.radius*Math.cos(a),y,z:p.radius*Math.sin(a)});}}return pts;}
+function gen_wall_line(p){const pts=[];const n=Math.ceil(p.length/p.spacing);for(let ri=0;ri<=(p.rings||2);ri++){const y=p.height*ri/(p.rings||2);for(let i=0;i<n;i++)pts.push({x:p.spacing*i-p.length/2,y,z:0});}return pts;}
+function gen_wall_arc(p){
+  const pts=[];const arcRad=p.arcDeg*Math.PI/180;const n=Math.ceil(p.radius*arcRad/p.spacing);
+  for(let ri=0;ri<=(p.rings||2);ri++){const y=p.height*ri/(p.rings||2);for(let i=0;i<=n;i++){const a=-arcRad/2+arcRad*i/n;pts.push({x:p.radius*Math.sin(a),y,z:p.radius*Math.cos(a)-p.radius});}}
+  return pts;
+}
+function gen_star_fort(p){
+  const pts=[];
+  for(let ri=0;ri<=(p.rings||2);ri++){
+    const y=p.height*ri/(p.rings||2);
+    const npts=p.points*2;
+    for(let i=0;i<=npts;i++){
+      const a=2*Math.PI*i/npts;
+      const r=i%2===0?p.outerR:p.innerR;
+      pts.push({x:r*Math.cos(a),y,z:r*Math.sin(a)});
+    }
+  }
+  return pts;
+}
+
+// ─── PRIMITIVES ─────────────────────────────────────────────────
+function gen_grid_flat(p){const pts=[];for(let row=0;row<p.rows;row++)for(let col=0;col<p.cols;col++)pts.push({x:(col-(p.cols-1)/2)*p.spacingX,y:0,z:(row-(p.rows-1)/2)*p.spacingZ});return pts;}
+function gen_staircase(p){const pts=[];for(let i=0;i<p.steps;i++){if(p.curve>0){const a=i/p.steps*p.stepD*p.steps/p.curve;pts.push({x:p.curve*Math.sin(a),y:p.stepH*i,z:p.curve*(1-Math.cos(a))});}else{pts.push({x:0,y:p.stepH*i,z:p.stepD*i-p.stepD*p.steps/2});}}return pts;}
+function gen_pyramid(p){
+  const pts=[];
+  for(let lvl=0;lvl<p.levels;lvl++){
+    const y=p.levelH*lvl;const size=p.baseSize*Math.pow(1-p.shrink/100,lvl);const n=Math.ceil(size*4/p.spacing);const half=size/2;
+    for(let i=0;i<n;i++){const t=i/n;pts.push({x:-half+size*t,y,z:-half},{x:-half+size*t,y,z:half},{x:-half,y,z:-half+size*t},{x:half,y,z:-half+size*t});}
+  }
+  return pts;
+}
+function gen_ring_platform(p){const pts=[];for(let ri=0;ri<p.rings;ri++){const r=p.innerR+(p.outerR-p.innerR)*ri/(p.rings-1||1);for(let j=0;j<p.points;j++){const a=2*Math.PI*j/p.points;pts.push({x:r*Math.cos(a),y:p.height,z:r*Math.sin(a)});}}return pts;}
+function gen_cross(p){
+  const pts=[];
+  const hw=p.armW/2,hlen=p.armLen/2;
+  for(let ri=0;ri<=(p.rings||2);ri++){
+    const y=p.height*ri/(p.rings||2);
+    // horizontal arm
+    let n=Math.ceil(p.armLen/p.spacing);for(let i=0;i<=n;i++){const x=-hlen+p.armLen*i/n;pts.push({x,y,z:-hw},{x,y,z:hw});}
+    // vertical arm
+    n=Math.ceil(p.armLen/p.spacing);for(let i=0;i<=n;i++){const z=-hlen+p.armLen*i/n;if(Math.abs(z)>hw)pts.push({x:-hw,y,z},{x:hw,y,z});}
+  }
+  return pts;
+}
+function gen_arrow(p){
+  const pts=[];
+  const shaftEnd=p.length/2-p.headL;
+  for(let ri=0;ri<=(p.rings||2);ri++){
+    const y=p.height*ri/(p.rings||2);
+    const hw=p.width/2;
+    // shaft sides
+    const n=Math.ceil(shaftEnd/p.spacing);
+    for(let i=0;i<=n;i++){const z=-p.length/2+shaftEnd*i/n;pts.push({x:-hw,y,z},{x:hw,y,z});}
+    // head — triangle
+    const hn=Math.ceil(p.headW/p.spacing);
+    for(let i=0;i<=hn;i++){
+      const t=i/hn;const z=shaftEnd+p.headL*t;const x=p.headW/2*(1-t);
+      pts.push({x,y,z},{x:-x,y,z});
+    }
+    pts.push({x:0,y,z:p.length/2});
+  }
+  return pts;
+}
+function gen_letter_D(p){
+  const pts=[];
+  const sp=p.spacing;const rings=p.rings||2;
+  for(let ri=0;ri<=rings;ri++){
+    const y=p.depth*ri/rings;
+    // vertical bar (left side)
+    const n=Math.ceil(p.size/sp);
+    for(let i=0;i<=n;i++)pts.push({x:0,y,z:p.size*i/n-p.size/2});
+    // curved right side (D bump)
+    const r=p.size*0.4;const cx=r;
+    const m=Math.ceil(Math.PI*r/sp);
+    for(let i=0;i<=m;i++){const a=Math.PI/2-Math.PI*i/m;pts.push({x:cx+r*Math.cos(a),y,z:r*Math.sin(a)});}
+    // top and bottom horizontals
+    const hn=Math.ceil(cx/sp);
+    for(let i=1;i<hn;i++){pts.push({x:cx*i/hn,y,z:p.size/2});pts.push({x:cx*i/hn,y,z:-p.size/2});}
+  }
+  return pts;
+}
+function gen_letter_Z(p){
+  const pts=[];
+  const sp=p.spacing;const rings=p.rings||2;
+  for(let ri=0;ri<=rings;ri++){
+    const y=p.depth*ri/rings;
+    const n=Math.ceil(p.size/sp);
+    // top bar
+    for(let i=0;i<=n;i++)pts.push({x:p.size*i/n-p.size/2,y,z:p.size/2});
+    // bottom bar
+    for(let i=0;i<=n;i++)pts.push({x:p.size*i/n-p.size/2,y,z:-p.size/2});
+    // diagonal stroke
+    for(let i=0;i<=n;i++){const t=i/n;pts.push({x:p.size/2-p.size*t,y,z:-p.size/2+p.size*t});}
+  }
+  return pts;
+}
+
+// ─── DISPATCH ───────────────────────────────────────────────────
+function getParams(){const shape=document.getElementById('shapeType').value;const defs=PARAMS[shape]||[];const p={};defs.forEach(d=>p[d.id]=getP(d.id));return p;}
+function computePoints(){
+  const shape=document.getElementById('shapeType').value;
+  const p=getParams();
+  const map={
+    deathstar:gen_deathstar,sphere:gen_sphere,hemisphere:p=>gen_sphere(p,true),
+    torus:gen_torus,disc:gen_disc,helix:gen_helix,cone:gen_cone,cylinder:gen_cylinder,
+    hyperboloid:gen_hyperboloid,mobius:gen_mobius,icosphere:gen_icosphere,
+    body_skull:gen_body_skull,body_hand:gen_body_hand,body_ribcage:gen_body_ribcage,
+    body_spine:gen_body_spine,body_eye:gen_body_eye,body_humanoid:gen_body_humanoid,
+    bastion_round:gen_bastion_round,bastion_square:gen_bastion_square,tower:gen_tower,
+    wall_line:gen_wall_line,wall_arc:gen_wall_arc,star_fort:gen_star_fort,
+    grid_flat:gen_grid_flat,staircase:gen_staircase,pyramid:gen_pyramid,
+    ring_platform:gen_ring_platform,cross:gen_cross,arrow:gen_arrow,
+    letter_D:gen_letter_D,letter_Z:gen_letter_Z,
+  };
+  return (map[shape]||map.sphere)(p);
+}
+
+// ─── GENERATE OUTPUT ────────────────────────────────────────────
+function generate(){
+  const obj=document.getElementById('objClass').value.trim()||'StaticObj_Container_1D';
+  const extras=document.getElementById('extraObjs').value.trim().split(',').map(s=>s.trim()).filter(Boolean);
+  const stackYOff=parseFloat(document.getElementById('stackY').value)||0;
+  const bx=getParam('posX'),by=getParam('posY'),bz=getParam('posZ');
+  const rotYdeg=getParam('rotY');
+  const scl=parseFloat(document.getElementById('scale').value)||1.0;
+  const cePersist=parseInt(document.getElementById('cePersist').value)||0;
+  const helper=document.getElementById('helper').value==='1';
+  const pts=computePoints();
+  const shape=document.getElementById('shapeType').value;
+
+  // Build all spawn entries: primary obj + extras
+  const allObjs=[obj,...extras];
+
+  let output='';
+  if(currentFmt==='initc'){
+    const lines=[];
+    if(helper){
+      lines.push(`static void SpawnObject(string className, string pos, string ori, float scale) {`);
+      lines.push(`    auto obj = GetGame().CreateObjectEx(className, pos.ToVector(), ECE_UPDATEPATHGRAPH|ECE_CREATEPHYSICS);`);
+      lines.push(`    if(obj) { obj.SetOrientation(ori.ToVector()); obj.SetScale(scale); }`);
+      lines.push(`}`);lines.push('');
+    }
+    lines.push(`// Shape: ${shape} | Objects: ${pts.length*allObjs.length} | Base: ${bx},${by},${bz}`);lines.push('');
+    pts.forEach(pt=>{
+      let[rx,rz]=rotYapply(pt.x,pt.z,rotYdeg);
+      allObjs.forEach((o,oi)=>{
+        const wx=(bx+rx).toFixed(3),wy=(by+pt.y+oi*stackYOff).toFixed(3),wz=(bz+rz).toFixed(3);
+        lines.push(`SpawnObject("${o}", "${wx} ${wy} ${wz}", "0.000000 ${rotYdeg.toFixed(6)} 0.000000", ${scl.toFixed(2)});`);
+      });
+    });
+    output=lines.join('\n');
+  } else {
+    // JSON spawner format matching TaxiRank.json
+    const objects=[];
+    pts.forEach(pt=>{
+      let[rx,rz]=rotYapply(pt.x,pt.z,rotYdeg);
+      allObjs.forEach((o,oi)=>{
+        objects.push({
+          name:o,
+          pos:[parseFloat((bx+rx).toFixed(6)),parseFloat((by+pt.y+oi*stackYOff).toFixed(6)),parseFloat((bz+rz).toFixed(6))],
+          ypr:[parseFloat(rotYdeg.toFixed(6)),0.0,0.0],
+          scale:parseFloat(scl.toFixed(4)),
+          enableCEPersistency:cePersist,
+          customString:""
+        });
+      });
+    });
+    output=JSON.stringify({Objects:objects},null,4);
+  }
+
+  document.getElementById('output').value=output;
+  const total=pts.length*allObjs.length;
+  document.getElementById('statCount').textContent=total;
+  document.getElementById('statCE').textContent=total<=50?'Low':total<=150?'Medium':'High ⚠';
+  previewShape();
+  toast(`Generated ${total} objects`);
+}
+
+// ─── 3D PREVIEW ─────────────────────────────────────────────────
+let previewPts=[],rotX=0.4,rotYp=0.5,zoom=1,dragging=false,lastMX=0,lastMY=0;
+function previewShape(){
+  previewPts=computePoints();
+  document.getElementById('previewLabel').textContent=`${document.getElementById('shapeType').value} — ${previewPts.length} pts`;
+  drawPreview();
+}
+function drawPreview(){
+  const canvas=document.getElementById('preview');
+  const W=canvas.parentElement.clientWidth,H=canvas.parentElement.clientHeight;
+  canvas.width=W;canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  if(!previewPts.length)return;
+  let mx=Infinity,my=Infinity,mz=Infinity,Mx=-Infinity,My=-Infinity,Mz=-Infinity;
+  previewPts.forEach(p=>{if(p.x<mx)mx=p.x;if(p.x>Mx)Mx=p.x;if(p.y<my)my=p.y;if(p.y>My)My=p.y;if(p.z<mz)mz=p.z;if(p.z>Mz)Mz=p.z;});
+  const cx=(mx+Mx)/2,cy=(my+My)/2,cz=(mz+Mz)/2;
+  const extent=Math.max(Mx-mx,My-my,Mz-mz,1);
+  const scale=Math.min(W,H)*0.4*zoom/extent;
+  const cosX=Math.cos(rotX),sinX=Math.sin(rotX),cosY=Math.cos(rotYp),sinY=Math.sin(rotYp);
+  function project(p){
+    let x=p.x-cx,y=p.y-cy,z=p.z-cz;
+    let x2=x*cosY+z*sinY,z2=-x*sinY+z*cosY;
+    let y2=y*cosX-z2*sinX,z3=y*sinX+z2*cosX;
+    const fov=3/(3+z3/extent);
+    return{sx:W/2+x2*scale*fov,sy:H/2-y2*scale*fov,z:z3};
+  }
+  const sorted=previewPts.map(p=>({...p,proj:project(p)})).sort((a,b)=>a.proj.z-b.proj.z);
+  sorted.forEach(p=>{
+    const{sx,sy,z}=p.proj;const depth=(z/extent+1)/2;
+    const r=Math.floor(212*depth+20),g=Math.floor(160*depth+10),b2=Math.floor(23*depth);
+    ctx.beginPath();ctx.arc(sx,sy,Math.max(1,3*zoom*depth),0,2*Math.PI);
+    ctx.fillStyle=`rgba(${r},${g},${b2},${0.4+0.6*depth})`;ctx.fill();
+  });
+  ctx.font='10px Courier New';ctx.fillStyle='#6a5a3a';
+  ctx.fillText(`${previewPts.length} pts | drag=rotate scroll=zoom`,8,H-8);
+}
+const cvs=document.getElementById('preview');
+cvs.addEventListener('mousedown',e=>{dragging=true;lastMX=e.clientX;lastMY=e.clientY;});
+window.addEventListener('mouseup',()=>dragging=false);
+window.addEventListener('mousemove',e=>{if(!dragging)return;rotYp+=(e.clientX-lastMX)*0.01;rotX+=(e.clientY-lastMY)*0.01;lastMX=e.clientX;lastMY=e.clientY;drawPreview();});
+cvs.addEventListener('wheel',e=>{zoom*=e.deltaY>0?0.9:1.1;zoom=Math.max(0.1,Math.min(10,zoom));drawPreview();e.preventDefault();},{passive:false});
+cvs.addEventListener('touchstart',e=>{if(e.touches.length===1){dragging=true;lastMX=e.touches[0].clientX;lastMY=e.touches[0].clientY;}},{passive:true});
+cvs.addEventListener('touchend',()=>dragging=false,{passive:true});
+cvs.addEventListener('touchmove',e=>{if(!dragging||e.touches.length!==1)return;rotYp+=(e.touches[0].clientX-lastMX)*0.01;rotX+=(e.touches[0].clientY-lastMY)*0.01;lastMX=e.touches[0].clientX;lastMY=e.touches[0].clientY;drawPreview();},{passive:true});
+
+// ─── OUTPUT UTILS ───────────────────────────────────────────────
+function copyCode(){const txt=document.getElementById('output').value;if(!txt)return toast('Nothing yet');navigator.clipboard.writeText(txt).then(()=>toast('Copied!'));}
+function downloadCode(){
+  const txt=document.getElementById('output').value;if(!txt)return toast('Nothing yet');
+  const shape=document.getElementById('shapeType').value;
+  const ext=currentFmt==='json'?'.json':'.c';
+  const blob=new Blob([txt],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`dankdayz_${shape}_${Date.now()}${ext}`;a.click();
+}
+function clearOutput(){document.getElementById('output').value='';document.getElementById('statCount').textContent='0';document.getElementById('statCE').textContent='—';previewPts=[];drawPreview();}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+
+previewShape();
+window.addEventListener('resize',drawPreview);
+</script>
+</body>
+</html>
