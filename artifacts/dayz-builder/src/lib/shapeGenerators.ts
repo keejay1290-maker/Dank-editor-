@@ -58,6 +58,14 @@ export function getShapePoints(shapeType: string, params: Record<string, number>
     case 'orbital_station': return gen_orbital_station(p);
     case 'azkaban_tower': return gen_azkaban_tower(p);
     case 'pyramid_stepped': return gen_pyramid_stepped(p);
+    case 'crashed_ufo': return gen_crashed_ufo(p);
+    case 'volcano': return gen_volcano(p);
+    case 'colosseum': return gen_colosseum(p);
+    case 'stonehenge': return gen_stonehenge(p);
+    case 'mushroom_cloud': return gen_mushroom_cloud(p);
+    case 'black_hole': return gen_black_hole(p);
+    case 'alien_mothership': return gen_alien_mothership(p);
+    case 'celtic_ring': return gen_celtic_ring(p);
     default: return [];
   }
 }
@@ -1214,6 +1222,297 @@ function gen_pyramid_stepped(p: Record<string, number>): Point3D[] {
       pts.push({ x: nhw, y: ry, z: -hd * (nhw / hw) }, { x: -nhw, y: ry, z: -hd * (nhw / hw) });
       pts.push({ x: nhw, y: ry, z: hd * (nhw / hw) }, { x: -nhw, y: ry, z: hd * (nhw / hw) });
     }
+  }
+  return pts;
+}
+
+function gen_crashed_ufo(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const r = p.radius;
+  // Saucer hull — flattened sphere
+  for (let i = 0; i <= 8; i++) {
+    const lat = -Math.PI / 2 + Math.PI * i / 8;
+    const y = r * 0.2 * Math.sin(lat), cr = r * Math.cos(lat);
+    for (let j = 0; j < 18; j++) { const a = 2 * Math.PI * j / 18; pts.push({ x: cr * Math.cos(a), y, z: cr * Math.sin(a) }); }
+  }
+  // Dome on top
+  for (let i = 0; i <= 5; i++) {
+    const lat = Math.PI * i / 10;
+    const y = r * 0.2 + r * 0.25 * Math.sin(lat), cr = r * 0.3 * Math.cos(lat);
+    for (let j = 0; j < 10; j++) { const a = 2 * Math.PI * j / 10; pts.push({ x: cr * Math.cos(a), y, z: cr * Math.sin(a) }); }
+  }
+  // Crash tilt — one side down, debris scattered
+  const tiltAng = (p.tiltDeg || 25) * Math.PI / 180;
+  // Crash furrow (gouge in ground)
+  const furLen = r * 1.8;
+  for (let i = 0; i <= 12; i++) {
+    const t = i / 12;
+    const fw = r * 0.25 * (1 - t * 0.6);
+    pts.push({ x: fw, y: -r * 0.15 * t, z: furLen * t });
+    pts.push({ x: -fw, y: -r * 0.15 * t, z: furLen * t });
+  }
+  // Debris chunks around crash site
+  for (let d = 0; d < (p.debris || 8); d++) {
+    const da = 2 * Math.PI * d / (p.debris || 8);
+    const dr = r * (0.8 + Math.random() * 0.8);
+    pts.push({ x: dr * Math.cos(da), y: 0, z: dr * Math.sin(da) });
+    pts.push({ x: dr * 0.7 * Math.cos(da + 0.3), y: r * 0.05, z: dr * 0.7 * Math.sin(da + 0.3) });
+  }
+  return pts;
+}
+
+function gen_volcano(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const r = p.baseRadius, h = p.height;
+  // Outer cone
+  for (let ri = 0; ri <= p.rings; ri++) {
+    const t = ri / p.rings;
+    const cr = r * (1 - t) + p.craterRadius * t, y = h * t;
+    const n = Math.max(6, Math.ceil(cr * 2 * Math.PI / (p.spacing || 8)));
+    for (let j = 0; j < n; j++) { const a = 2 * Math.PI * j / n; pts.push({ x: cr * Math.cos(a), y, z: cr * Math.sin(a) }); }
+  }
+  // Crater rim bumpy
+  for (let j = 0; j < 24; j++) {
+    const a = 2 * Math.PI * j / 24;
+    const bump = p.craterRadius * (1 + 0.15 * Math.sin(j * 3));
+    pts.push({ x: bump * Math.cos(a), y: h, z: bump * Math.sin(a) });
+    pts.push({ x: bump * Math.cos(a), y: h + p.rimHeight, z: bump * Math.sin(a) });
+  }
+  // Lava channel down one side
+  for (let i = 0; i <= 8; i++) {
+    const t = i / 8;
+    const lx = (p.craterRadius * (1 - t) + r * t) * 0.1;
+    pts.push({ x: lx, y: h * (1 - t), z: (p.craterRadius + (r - p.craterRadius) * t) * 0.85 });
+  }
+  return pts;
+}
+
+function gen_colosseum(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const r = p.radius, h = p.height;
+  // Elliptical outer wall tiers
+  const tiers = p.tiers || 3;
+  for (let tier = 0; tier < tiers; tier++) {
+    const tierH = h / tiers;
+    const tierR = r - tier * r * 0.04;
+    for (let ri = 0; ri <= 3; ri++) {
+      const y = tier * tierH + tierH * ri / 3;
+      for (let j = 0; j < 32; j++) {
+        const a = 2 * Math.PI * j / 32;
+        // Elliptical (longer than wide like the real thing)
+        pts.push({ x: tierR * Math.cos(a) * 1.2, y, z: tierR * Math.sin(a) });
+      }
+    }
+    // Arch columns at each tier
+    const archN = p.arches || 20;
+    for (let j = 0; j < archN; j++) {
+      const a = 2 * Math.PI * j / archN;
+      const ax = r * Math.cos(a) * 1.2, az = r * Math.sin(a);
+      pts.push({ x: ax, y: tier * tierH, z: az });
+      pts.push({ x: ax, y: tier * tierH + tierH, z: az });
+      // arch keystone
+      pts.push({ x: ax * 0.95, y: tier * tierH + tierH * 0.8, z: az * 0.95 });
+    }
+  }
+  // Arena floor
+  const aFloor = r * 0.55;
+  for (let j = 0; j < 16; j++) { const a = 2 * Math.PI * j / 16; pts.push({ x: aFloor * Math.cos(a) * 1.2, y: 0, z: aFloor * Math.sin(a) }); }
+  return pts;
+}
+
+function gen_stonehenge(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const outerR = p.outerRadius, innerR = p.innerRadius;
+  const stoneH = p.stoneHeight, stoneW = p.stoneWidth;
+  const n = p.outerCount || 30;
+  // Outer sarsen circle with lintels
+  for (let j = 0; j < n; j++) {
+    const a = 2 * Math.PI * j / n;
+    const sx = outerR * Math.cos(a), sz = outerR * Math.sin(a);
+    const hw = stoneW / 2;
+    // upright stone
+    for (let ri = 0; ri <= 4; ri++) { const y = stoneH * ri / 4; pts.push({ x: sx, y, z: sz }); }
+    // lintel across to next stone (every other one is a trilithon pair)
+    if (j % 2 === 0) {
+      const a2 = 2 * Math.PI * (j + 1) / n;
+      const sx2 = outerR * Math.cos(a2), sz2 = outerR * Math.sin(a2);
+      for (let k = 0; k <= 5; k++) {
+        const t = k / 5;
+        pts.push({ x: sx + (sx2 - sx) * t, y: stoneH, z: sz + (sz2 - sz) * t });
+      }
+    }
+  }
+  // Inner horseshoe trilithons
+  const triliN = p.trilithonCount || 5;
+  for (let j = 0; j < triliN; j++) {
+    const a = Math.PI * j / (triliN - 1) - Math.PI / 2;
+    const sx = innerR * Math.cos(a), sz = innerR * Math.sin(a);
+    const th = stoneH * 1.4;
+    for (let ri = 0; ri <= 4; ri++) { const y = th * ri / 4; pts.push({ x: sx - stoneW, y, z: sz }, { x: sx + stoneW, y, z: sz }); }
+    // lintel
+    for (let k = 0; k <= 4; k++) {
+      const t = k / 4; pts.push({ x: sx - stoneW + stoneW * 2 * t, y: th, z: sz });
+    }
+  }
+  // Altar stone at center
+  pts.push({ x: 0, y: 0, z: 0 }, { x: stoneW * 2, y: 0, z: 0 }, { x: 0, y: 0, z: stoneW });
+  pts.push({ x: stoneW * 2, y: 0, z: stoneW }, { x: 0, y: stoneW * 0.3, z: stoneW * 0.5 }, { x: stoneW * 2, y: stoneW * 0.3, z: stoneW * 0.5 });
+  return pts;
+}
+
+function gen_mushroom_cloud(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const r = p.radius, h = p.height;
+  // Stem (narrow cylinder flaring at base and top)
+  for (let ri = 0; ri <= 12; ri++) {
+    const t = ri / 12, y = h * 0.6 * t;
+    const cr = r * 0.15 * (1 + Math.abs(2 * t - 1) * 2);
+    for (let j = 0; j < 10; j++) { const a = 2 * Math.PI * j / 10; pts.push({ x: cr * Math.cos(a), y, z: cr * Math.sin(a) }); }
+  }
+  // Cap — torus-like mushroom head
+  const capY = h * 0.6;
+  for (let ri = 0; ri <= 8; ri++) {
+    const t = ri / 8;
+    const y = capY + h * 0.4 * t;
+    const cr = r * Math.sin(Math.PI * t);
+    for (let j = 0; j < 20; j++) { const a = 2 * Math.PI * j / 20; pts.push({ x: cr * Math.cos(a), y, z: cr * Math.sin(a) }); }
+  }
+  // Shock ring at ground
+  for (let ri = 1; ri <= 3; ri++) {
+    const cr = r * ri * 0.8;
+    for (let j = 0; j < 20; j++) { const a = 2 * Math.PI * j / 20; pts.push({ x: cr * Math.cos(a), y: r * 0.05 * ri, z: cr * Math.sin(a) }); }
+  }
+  // Rolling debris cloud ring mid-height
+  const cloudY = h * 0.3;
+  for (let j = 0; j < 24; j++) {
+    const a = 2 * Math.PI * j / 24, cr = r * 0.7;
+    pts.push({ x: cr * Math.cos(a), y: cloudY, z: cr * Math.sin(a) });
+    pts.push({ x: cr * 0.8 * Math.cos(a + 0.3), y: cloudY + h * 0.04, z: cr * 0.8 * Math.sin(a + 0.3) });
+  }
+  return pts;
+}
+
+function gen_black_hole(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const r = p.radius;
+  // Event horizon — perfect sphere
+  for (let i = 0; i <= 10; i++) {
+    const lat = -Math.PI / 2 + Math.PI * i / 10;
+    const y = r * 0.3 * Math.sin(lat), cr = r * 0.3 * Math.cos(lat);
+    for (let j = 0; j < 14; j++) { const a = 2 * Math.PI * j / 14; pts.push({ x: cr * Math.cos(a), y, z: cr * Math.sin(a) }); }
+  }
+  // Accretion disk — glowing torus
+  for (let i = 0; i < 20; i++) {
+    const u = 2 * Math.PI * i / 20;
+    for (let j = 0; j < 10; j++) {
+      const v = 2 * Math.PI * j / 10;
+      const mr = r * 0.08;
+      const disk = r * (0.5 + 0.3 * Math.random());
+      pts.push({ x: (disk + mr * Math.cos(v)) * Math.cos(u), y: mr * 0.2 * Math.sin(v), z: (disk + mr * Math.cos(v)) * Math.sin(u) });
+    }
+  }
+  // Gravitational lensing arcs
+  for (let arc = 0; arc < (p.arcs || 4); arc++) {
+    const arcA = 2 * Math.PI * arc / (p.arcs || 4);
+    for (let i = 0; i <= 20; i++) {
+      const t = i / 20;
+      const distortion = 1 + 0.4 * Math.sin(Math.PI * t);
+      const cr = r * distortion;
+      const a = arcA + (Math.PI * 1.2) * t;
+      pts.push({ x: cr * Math.cos(a), y: r * 0.05 * Math.sin(Math.PI * t), z: cr * Math.sin(a) });
+    }
+  }
+  // Jet streams (relativistic jets)
+  [-1, 1].forEach(dir => {
+    for (let i = 0; i <= 16; i++) {
+      const t = i / 16;
+      const jy = dir * r * 2 * t;
+      const jr = r * 0.1 * (1 - t * 0.8);
+      for (let j = 0; j < 6; j++) { const a = 2 * Math.PI * j / 6; pts.push({ x: jr * Math.cos(a), y: jy, z: jr * Math.sin(a) }); }
+    }
+  });
+  return pts;
+}
+
+function gen_alien_mothership(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const r = p.radius;
+  // Main disk — very wide and flat
+  for (let i = 0; i <= 6; i++) {
+    const lat = -Math.PI / 4 + Math.PI / 2 * i / 6;
+    const y = r * 0.15 * Math.sin(lat), cr = r * Math.cos(lat);
+    for (let j = 0; j < 24; j++) { const a = 2 * Math.PI * j / 24; pts.push({ x: cr * Math.cos(a), y, z: cr * Math.sin(a) }); }
+  }
+  // Central raised section
+  for (let i = 0; i <= 5; i++) {
+    const lat = 0 + Math.PI / 2 * i / 5;
+    const y = r * 0.15 + r * 0.25 * Math.sin(lat), cr = r * 0.35 * Math.cos(lat);
+    for (let j = 0; j < 14; j++) { const a = 2 * Math.PI * j / 14; pts.push({ x: cr * Math.cos(a), y, z: cr * Math.sin(a) }); }
+  }
+  // Tractor beam emitter array (ring of emitters on underside)
+  const emN = p.emitterCount || 8;
+  for (let e = 0; e < emN; e++) {
+    const ea = 2 * Math.PI * e / emN;
+    const ex = r * 0.6 * Math.cos(ea), ez = r * 0.6 * Math.sin(ea);
+    for (let j = 0; j < 8; j++) { const a = 2 * Math.PI * j / 8; pts.push({ x: ex + r * 0.06 * Math.cos(a), y: -r * 0.1, z: ez + r * 0.06 * Math.sin(a) }); }
+    // Beam extending down
+    for (let i = 0; i <= 6; i++) { pts.push({ x: ex, y: -r * 0.1 - r * 0.5 * i / 6, z: ez }); }
+  }
+  // Weapon modules around rim
+  for (let w = 0; w < 12; w++) {
+    const wa = 2 * Math.PI * w / 12;
+    const wx = r * 0.92 * Math.cos(wa), wz = r * 0.92 * Math.sin(wa);
+    pts.push({ x: wx, y: 0, z: wz });
+    pts.push({ x: wx + r * 0.08 * Math.cos(wa), y: -r * 0.05, z: wz + r * 0.08 * Math.sin(wa) });
+  }
+  // Warp nacelles — 3 huge engines at rear
+  for (let n = 0; n < 3; n++) {
+    const na = 2 * Math.PI * n / 3;
+    const nx = r * 0.7 * Math.cos(na), nz = r * 0.7 * Math.sin(na);
+    for (let ri = 0; ri <= 8; ri++) {
+      const y = -r * 0.15 + r * 0.1 * ri / 8;
+      for (let j = 0; j < 8; j++) { const a = 2 * Math.PI * j / 8; pts.push({ x: nx + r * 0.1 * Math.cos(a), y, z: nz + r * 0.1 * Math.sin(a) }); }
+    }
+  }
+  return pts;
+}
+
+function gen_celtic_ring(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const r = p.radius, h = p.height;
+  // Outer standing stones in circle
+  const stoneN = p.stoneCount || 24;
+  for (let j = 0; j < stoneN; j++) {
+    const a = 2 * Math.PI * j / stoneN;
+    const sx = r * Math.cos(a), sz = r * Math.sin(a);
+    const sw = r * 0.05;
+    for (let ri = 0; ri <= 5; ri++) { const y = h * ri / 5; pts.push({ x: sx, y, z: sz }, { x: sx + sw * Math.cos(a + Math.PI / 2), y, z: sz + sw * Math.sin(a + Math.PI / 2) }); }
+  }
+  // Inner ring at half radius
+  const innerN = Math.floor(stoneN * 0.6);
+  for (let j = 0; j < innerN; j++) {
+    const a = 2 * Math.PI * j / innerN;
+    const sx = r * 0.55 * Math.cos(a), sz = r * 0.55 * Math.sin(a);
+    for (let ri = 0; ri <= 4; ri++) { const y = h * 0.8 * ri / 4; pts.push({ x: sx, y, z: sz }); }
+  }
+  // Runic carved archways (taller paired stones with lintels)
+  const archN = p.archCount || 6;
+  for (let j = 0; j < archN; j++) {
+    const a = 2 * Math.PI * j / archN;
+    const a2 = 2 * Math.PI * (j + 0.5) / archN;
+    const sx = r * 1.1 * Math.cos(a), sz = r * 1.1 * Math.sin(a);
+    const sx2 = r * 1.1 * Math.cos(a2), sz2 = r * 1.1 * Math.sin(a2);
+    const ah = h * 1.5;
+    for (let ri = 0; ri <= 6; ri++) { const y = ah * ri / 6; pts.push({ x: sx, y, z: sz }); }
+    for (let ri = 0; ri <= 6; ri++) { const y = ah * ri / 6; pts.push({ x: sx2, y, z: sz2 }); }
+    // lintel
+    for (let k = 0; k <= 6; k++) { const t = k / 6; pts.push({ x: sx + (sx2 - sx) * t, y: ah, z: sz + (sz2 - sz) * t }); }
+  }
+  // Sacred flame at center
+  for (let i = 0; i <= 8; i++) {
+    const t = i / 8, cr = r * 0.06 * (1 - t * 0.9);
+    const y = h * 0.5 * t;
+    for (let j = 0; j < 8; j++) { const a = 2 * Math.PI * j / 8 + t * 0.5; pts.push({ x: cr * Math.cos(a), y, z: cr * Math.sin(a) }); }
   }
   return pts;
 }

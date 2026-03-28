@@ -4,6 +4,27 @@
 
 pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.
 
+## DankDayZ Ultimate Builder (artifacts/dayz-builder)
+
+React + Vite pure-frontend app for generating DayZ console object spawns.
+
+- **50+ shape generators** across groups: Sci-Fi, Mechs & Robots, Tunnels, Structures, Fortifications, Body Parts, Primitives, Epic/Unique
+- **8 new Epic/Unique shapes**: Crashed UFO, Volcano, Roman Colosseum, Stonehenge, Mushroom Cloud, Black Hole, Alien Mothership, Celtic Stone Ring
+- **Real-time 3D canvas**: `useMemo` computes points, `useEffect` debounces 60ms, auto-rotate with requestAnimationFrame
+- **Full YPR sliders**: Yaw/Pitch/Roll all live — Yaw applied to world coords, Pitch/Roll shown in 3D preview
+- **Fill Mode** with density slider (1–6 interior layers)
+- **26 Quick Presets** with searchable filter
+- **Text Maker**: renders A–Z, 0–9, punctuation in 3D with configurable extrusion depth, rings, scale
+- **Output**: init.c (with SpawnObject() helper) or JSON Spawner format
+- **Extra objects**: stack multiple object classes per spawn point with Y offset
+- No backend — pure frontend
+
+Key files:
+- `src/App.tsx` — main app, 3D renderer hook, sidebar components
+- `src/lib/shapeGenerators.ts` — all shape generation functions + `getShapePoints()` switch
+- `src/lib/shapeParams.ts` — SHAPE_DEFS with param sliders per shape + SHAPE_GROUPS
+- `src/lib/dayzObjects.ts` — DayZ object classnames + formatInitC + HELPER_FUNC
+
 ## Stack
 
 - **Monorepo tool**: pnpm workspaces

@@ -463,6 +463,78 @@ export const SHAPE_DEFS: Record<string, ShapeDef> = {
       { id: "rings", label: "Height Rings", val: 2, min: 1, max: 6, step: 1 },
     ]
   },
+
+  // ── EPIC UNIQUE ─────────────────────────────────────────────────────────────
+  crashed_ufo: {
+    label: "🛸 Crashed UFO", group: "Epic / Unique",
+    params: [
+      { id: "radius", label: "Saucer Radius (m)", val: 25, min: 5, max: 100 },
+      { id: "tiltDeg", label: "Crash Tilt Angle (°)", val: 25, min: 5, max: 60 },
+      { id: "debris", label: "Debris Pieces", val: 10, min: 4, max: 20, step: 1 },
+    ]
+  },
+  volcano: {
+    label: "🌋 Volcano", group: "Epic / Unique",
+    params: [
+      { id: "baseRadius", label: "Base Radius (m)", val: 50, min: 10, max: 200 },
+      { id: "height", label: "Peak Height (m)", val: 60, min: 10, max: 250 },
+      { id: "craterRadius", label: "Crater Radius (m)", val: 12, min: 2, max: 60 },
+      { id: "rimHeight", label: "Rim Height (m)", val: 5, min: 1, max: 20 },
+      { id: "rings", label: "Height Rings", val: 8, min: 3, max: 20, step: 1 },
+      { id: "spacing", label: "Object Spacing (m)", val: 8, min: 2, max: 25 },
+    ]
+  },
+  colosseum: {
+    label: "🏟 Roman Colosseum", group: "Epic / Unique",
+    params: [
+      { id: "radius", label: "Outer Radius (m)", val: 60, min: 20, max: 250 },
+      { id: "height", label: "Wall Height (m)", val: 30, min: 8, max: 100 },
+      { id: "tiers", label: "Tiers (floors)", val: 3, min: 1, max: 5, step: 1 },
+      { id: "arches", label: "Arches per Tier", val: 20, min: 8, max: 40, step: 1 },
+    ]
+  },
+  stonehenge: {
+    label: "🗿 Stonehenge", group: "Epic / Unique",
+    params: [
+      { id: "outerRadius", label: "Outer Ring Radius (m)", val: 30, min: 8, max: 120 },
+      { id: "innerRadius", label: "Inner Horseshoe Radius (m)", val: 16, min: 4, max: 80 },
+      { id: "stoneHeight", label: "Stone Height (m)", val: 8, min: 2, max: 30 },
+      { id: "stoneWidth", label: "Stone Width (m)", val: 2, min: 0.5, max: 8 },
+      { id: "outerCount", label: "Outer Stones", val: 30, min: 8, max: 60, step: 1 },
+      { id: "trilithonCount", label: "Inner Trilithons", val: 5, min: 3, max: 8, step: 1 },
+      { id: "archCount", label: "Outer Arch Pairs", val: 6, min: 3, max: 12, step: 1 },
+    ]
+  },
+  mushroom_cloud: {
+    label: "☢ Mushroom Cloud", group: "Epic / Unique",
+    params: [
+      { id: "radius", label: "Cap Radius (m)", val: 40, min: 10, max: 160 },
+      { id: "height", label: "Total Height (m)", val: 80, min: 20, max: 300 },
+    ]
+  },
+  black_hole: {
+    label: "🌑 Black Hole", group: "Epic / Unique",
+    params: [
+      { id: "radius", label: "Accretion Disk Radius (m)", val: 30, min: 8, max: 120 },
+      { id: "arcs", label: "Lensing Arcs", val: 4, min: 2, max: 8, step: 1 },
+    ]
+  },
+  alien_mothership: {
+    label: "🛸 Alien Mothership", group: "Epic / Unique",
+    params: [
+      { id: "radius", label: "Ship Radius (m)", val: 50, min: 15, max: 200 },
+      { id: "emitterCount", label: "Tractor Beam Emitters", val: 8, min: 3, max: 12, step: 1 },
+    ]
+  },
+  celtic_ring: {
+    label: "⭕ Celtic Stone Ring", group: "Epic / Unique",
+    params: [
+      { id: "radius", label: "Ring Radius (m)", val: 30, min: 8, max: 120 },
+      { id: "height", label: "Stone Height (m)", val: 8, min: 2, max: 30 },
+      { id: "stoneCount", label: "Standing Stones", val: 24, min: 8, max: 48, step: 1 },
+      { id: "archCount", label: "Outer Arch Gates", val: 6, min: 3, max: 12, step: 1 },
+    ]
+  },
 };
 
 export const SHAPE_GROUPS = [...new Set(Object.values(SHAPE_DEFS).map(s => s.group))];
