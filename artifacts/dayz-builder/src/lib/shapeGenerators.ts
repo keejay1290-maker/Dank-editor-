@@ -97,6 +97,7 @@ export function getShapePoints(shapeType: string, params: Record<string, number>
     case 'black_hole': return gen_black_hole(p);
     case 'alien_mothership': return gen_alien_mothership(p);
     case 'celtic_ring': return gen_celtic_ring(p);
+    case 'iron_throne': return gen_iron_throne(p);
     default: return [];
   }
 }
@@ -3871,6 +3872,99 @@ function gen_wall_perimeter(p: Record<string, number>): Point3D[] {
           });
       }
     });
+  }
+
+  return pts;
+}
+
+// ─── IRON THRONE (Game of Thrones) ────────────────────────────────────────────
+function gen_iron_throne(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const s = p.scale ?? 1;
+  const totalH = (p.height ?? 14) * s;
+  const spikeCount = Math.round(p.spikeCount ?? 11);
+
+  // === DAIS — 3 stepped tiers (ascending platform) ===
+  for (let tier = 0; tier < 3; tier++) {
+    const w = (10 - tier * 2) * s;
+    const d = (8 - tier * 1.5) * s;
+    const y = tier * 1.5 * s;
+    const sp = 1.5 * s;
+    for (let x = -w / 2; x <= w / 2; x += sp) {
+      pts.push({ x, y, z: -d / 2 });
+      pts.push({ x, y, z:  d / 2 });
+    }
+    for (let z = -d / 2 + sp; z < d / 2; z += sp) {
+      pts.push({ x: -w / 2, y, z });
+      pts.push({ x:  w / 2, y, z });
+    }
+  }
+
+  // === THRONE SEAT — raised platform ===
+  const seatY = 4.5 * s;
+  const seatW = 5 * s;
+  const seatD = 3.5 * s;
+  const sp2 = 1.2 * s;
+  for (let x = -seatW / 2; x <= seatW / 2; x += sp2) {
+    pts.push({ x, y: seatY, z: -seatD / 2 });
+    pts.push({ x, y: seatY, z:  seatD / 2 });
+  }
+  for (let z = -seatD / 2 + sp2; z < seatD / 2; z += sp2) {
+    pts.push({ x: -seatW / 2, y: seatY, z });
+    pts.push({ x:  seatW / 2, y: seatY, z });
+  }
+  for (let x = -seatW / 2 + sp2; x < seatW / 2; x += sp2 * 1.5) {
+    for (let z = -seatD / 2 + sp2; z < seatD / 2; z += sp2 * 1.5) {
+      pts.push({ x, y: seatY, z });
+    }
+  }
+
+  // === ARMRESTS — horizontal bars flanking seat ===
+  const armY = seatY + 1.5 * s;
+  for (let z = -seatD / 2 - sp2; z <= seatD / 2 + sp2; z += sp2) {
+    pts.push({ x: -seatW / 2, y: armY, z });
+    pts.push({ x:  seatW / 2, y: armY, z });
+  }
+  // armrest caps extending forward
+  for (let x = -seatW / 2 - sp2; x <= seatW / 2 + sp2; x += sp2) {
+    pts.push({ x, y: armY, z: -seatD / 2 - sp2 });
+  }
+
+  // === SWORD-SPIKE BACK — the iconic tall jagged crown ===
+  // Center spike tallest, edges shorter — classic Iron Throne silhouette
+  const backZ = seatD / 2 + 0.5 * s;
+  const backW = 9 * s;
+  for (let i = 0; i < spikeCount; i++) {
+    const t = i / (spikeCount - 1); // 0 = left edge, 1 = right edge
+    const x = -backW / 2 + t * backW;
+    const centerF = 1 - Math.abs(t - 0.5) * 1.8;
+    const spikeTopY = seatY + totalH * Math.max(0.1, centerF);
+    const spikeLen = spikeTopY - seatY;
+    const steps = Math.max(2, Math.round(spikeLen / (1.6 * s)));
+    for (let j = 0; j <= steps; j++) {
+      const y = seatY + (j / steps) * spikeLen;
+      const lean = (t - 0.5) * j * 0.4 * s; // swords splay outward from center
+      const fwd  = -j * 0.05 * s;            // subtle forward tilt
+      pts.push({ x: x + lean, y, z: backZ + fwd });
+    }
+  }
+
+  // === CROSS-SWORDS — protruding melted blades at various angles ===
+  const prongsCount = Math.round(spikeCount * 0.7);
+  for (let i = 0; i < prongsCount; i++) {
+    const t = i / prongsCount;
+    const angle = (t - 0.5) * Math.PI * 0.9; // ±81° horizontal fan
+    const baseX = (-backW / 2 + t * backW) * 0.65;
+    const baseY = seatY + 1.5 * s + (i % 4) * 2.0 * s;
+    const pLen  = 3.5 * s;
+    for (let j = 1; j <= 3; j++) {
+      const r = pLen * j / 3;
+      pts.push({
+        x: baseX + Math.sin(angle) * r,
+        y: baseY + Math.cos(angle) * r * 0.35,
+        z: backZ - r * 0.12,
+      });
+    }
   }
 
   return pts;

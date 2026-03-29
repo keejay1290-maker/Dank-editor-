@@ -766,6 +766,14 @@ export const SHAPE_DEFS: Record<string, ShapeDef> = {
       { id: "detail", label: "Detail (1=Light 2=Med 3=Heavy)", val: 2, min: 1, max: 3, step: 1    },
     ]
   },
+  iron_throne: {
+    label: "⚔ Iron Throne (GoT)", group: "Movies & TV",
+    params: [
+      { id: "scale",      label: "Overall Scale",                val: 1,    min: 0.3, max: 3,   step: 0.05 },
+      { id: "height",     label: "Back Height (m)",              val: 14,   min: 6,   max: 30,  step: 1    },
+      { id: "spikeCount", label: "Sword Spikes in Back",         val: 11,   min: 5,   max: 20,  step: 1    },
+    ]
+  },
   wall_perimeter: {
     label: "🧱 Wall Perimeter", group: "⚔ Arenas",
     params: [

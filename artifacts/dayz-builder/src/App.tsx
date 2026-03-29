@@ -378,7 +378,7 @@ const QUICK_PRESETS: Preset[] = [
   { category: "🏛️ Monuments", label: "Bastion Square", shape: "bastion_square", params: { size:40,height:8,towerRadius:5 } },
 
   // 🪑 Furniture & Thrones (pair with weapons/barrels!)
-  { category: "🪑 Furniture", label: "Weapon Throne", shape: "disc", params: { radius:4,rings:1,points:16,innerRadius:0 } },
+  { category: "🪑 Furniture", label: "Weapon Throne", shape: "iron_throne", params: { scale:0.55, height:10, spikeCount:9 } },
   { category: "🪑 Furniture", label: "Campfire Ring", shape: "disc", params: { radius:5,rings:1,points:12,innerRadius:3 } },
   { category: "🪑 Furniture", label: "Round Table", shape: "disc", params: { radius:6,rings:2,points:18,innerRadius:0 } },
   { category: "🪑 Furniture", label: "Bench (long)", shape: "wall_line", params: { length:8,height:1,rings:1,spacing:1 } },
@@ -411,13 +411,13 @@ const QUICK_PRESETS: Preset[] = [
   // 🎬 Movies & TV
   { category: "🎬 Movies", label: "Halo Ring", shape: "torus", params: { majorR:60,minorR:4,majorSegs:36,minorSegs:6 } },
   { category: "🎬 Movies", label: "AT-AT Walker", shape: "atat_walker", params: { height:30,width:20 } },
-  { category: "🎬 Movies", label: "Iron Throne", shape: "disc", params: { radius:4,rings:1,points:20,innerRadius:0 } },
-  { category: "🎬 Movies", label: "The Wall (GoT)", shape: "wall_line", params: { length:100,height:24,rings:12,spacing:2 } },
+  { category: "🎬 Movies", label: "Iron Throne", shape: "iron_throne", params: { scale:1, height:14, spikeCount:11 } },
+  { category: "🎬 Movies", label: "The Wall (GoT)", shape: "wall_line", params: { length:120,height:24,rings:12,spacing:2 } },
   { category: "🎬 Movies", label: "Eye of Sauron", shape: "eye_of_sauron", params: { height:90,towerWidth:28,eyeRadius:22 } },
   { category: "🎬 Movies", label: "Avengers Tower", shape: "skyscraper", params: { width:14,height:130,floors:26 } },
   { category: "🎬 Movies", label: "Borg Cube", shape: "borg_cube", params: { size:40,gridLines:4 } },
   { category: "🎬 Movies", label: "Mordor Gate", shape: "sci_fi_gate", params: { width:80,height:60 } },
-  { category: "🎬 Movies", label: "Minas Tirith", shape: "azkaban_tower", params: { baseRadius:35,height:90,towerCount:7 } },
+  { category: "🎬 Movies", label: "Minas Tirith", shape: "pyramid_stepped", params: { baseSize:90,height:60,steps:7,shrink:0.15,spacing:6 } },
   { category: "🎬 Movies", label: "T-800 Terminator", shape: "t800_endoskeleton", params: { height:22,width:10 } },
   { category: "🎬 Movies", label: "Squid Game Arena", shape: "disc", params: { radius:50,rings:6,points:36,innerRadius:0 } },
   { category: "🎬 Movies", label: "Predator Camp", shape: "disc", params: { radius:10,rings:2,points:12,innerRadius:6 } },
