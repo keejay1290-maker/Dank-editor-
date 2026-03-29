@@ -301,10 +301,11 @@ export const DECOR_PROPS: DecorProp[] = [
 
 export const WRECK_PROPS: DecorProp[] = [
   { classname: 'Land_Wreck_V3S_DE',              label: 'V3S Truck Wreck',     w: 2.5, d: 8.0,  h: 3.0, weight: 8,  category: 'military'   },
+  { classname: 'Land_Wreck_Ural_DE',             label: 'Ural Truck Wreck',    w: 2.7, d: 9.0,  h: 3.2, weight: 4,  category: 'military'   },
   { classname: 'Land_Wreck_Trailer_Closed_DE',   label: 'Trailer Wreck',       w: 2.5, d: 6.0,  h: 2.5, weight: 6,  category: 'military'   },
   { classname: 'Land_Wreck_BTR_DE',              label: 'BTR APC Wreck',       w: 3.0, d: 7.0,  h: 2.8, weight: 3,  category: 'military'   },
   { classname: 'Land_Wreck_hb01_aban1_blue_DE',  label: 'Hatchback Wreck',     w: 2.0, d: 4.0,  h: 1.5, weight: 6,  category: 'military'   },
-  { classname: 'Land_Wreck_offroad02_aban1_DE',  label: 'Offroad Wreck',       w: 2.0, d: 4.5,  h: 1.8, weight: 6,  category: 'military'   },
+  { classname: 'Land_Wreck_offroad02_aban1_DE',  label: 'M1025 Wreck',         w: 2.2, d: 4.6,  h: 1.8, weight: 6,  category: 'military'   },
   { classname: 'Land_Wreck_sed01_aban1_black_DE',label: 'Sedan Wreck',         w: 2.0, d: 4.5,  h: 1.5, weight: 5,  category: 'military'   },
   { classname: 'Land_Train_Wagon_Box_DE',        label: 'Train Wagon Box',     w: 3.0, d: 9.0,  h: 3.5, weight: 2,  category: 'industrial' },
   { classname: 'Land_Train_Wagon_Box_Mil_DE',    label: 'Military Wagon',      w: 3.0, d: 9.0,  h: 3.5, weight: 2,  category: 'military'   },
