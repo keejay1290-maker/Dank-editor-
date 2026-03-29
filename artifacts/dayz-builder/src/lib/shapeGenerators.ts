@@ -83,6 +83,10 @@ export function getShapePoints(shapeType: string, params: Record<string, number>
     case 'tf_ratchet': return gen_tf_ratchet(p);
     case 'tf_megatron': return gen_tf_megatron(p);
     case 'tf_starscream': return gen_tf_starscream(p);
+    case 'dragon': return gen_dragon(p);
+    case 'pirate_ship': return gen_pirate_ship(p);
+    case 'pvp_arena': return gen_pvp_arena(p);
+    case 'helipad': return gen_helipad(p);
     case 'mushroom_cloud': return gen_mushroom_cloud(p);
     case 'black_hole': return gen_black_hole(p);
     case 'alien_mothership': return gen_alien_mothership(p);
@@ -2503,6 +2507,381 @@ function gen_tf_starscream(p: Record<string, number>): Point3D[] {
     for (let i = 0; i <= 2; i++) {
       pts.push({ x: side * (1.5 * s), y: H * (.13 + i * .04), z: -H * .032 - .06 });
     }
+  });
+  return pts;
+}
+
+// ─── DRAGON ───────────────────────────────────────────────────────────────────
+function gen_dragon(p: Record<string, number>): Point3D[] {
+  const s = p.scale ?? 1;
+  const len = (p.length ?? 12) * s;
+  const wings = (p.wings ?? 8) * s;
+  const neck = (p.neck ?? 4) * s;
+  const pts: Point3D[] = [];
+  const seg = 20;
+  // Serpentine body — sinusoidal spine
+  for (let i = 0; i <= seg; i++) {
+    const t = i / seg;
+    const bx = Math.sin(t * Math.PI * 2.4) * len * 0.18;
+    const by = t * len * 0.25 + Math.sin(t * Math.PI) * len * 0.12;
+    const bz = -t * len;
+    const r = len * 0.07 * (1 - t * 0.4) + 0.2 * s;
+    for (let a = 0; a < 8; a++) {
+      const ang = (a / 8) * Math.PI * 2;
+      pts.push({ x: bx + Math.cos(ang) * r, y: by + Math.sin(ang) * r * 0.6, z: bz });
+    }
+  }
+  // Neck
+  for (let i = 0; i <= 10; i++) {
+    const t = i / 10;
+    const nx = Math.sin(t * Math.PI * 0.5) * neck * 0.4;
+    const ny = len * 0.25 + t * neck;
+    const nz = -len * 0.08 + t * neck * 0.2;
+    const r = len * 0.05 + 0.15 * s;
+    for (let a = 0; a < 6; a++) {
+      const ang = (a / 6) * Math.PI * 2;
+      pts.push({ x: nx + Math.cos(ang) * r, y: ny + Math.sin(ang) * r * 0.7, z: nz });
+    }
+  }
+  // Head
+  const hx = Math.sin(Math.PI * 0.5) * neck * 0.4, hy = len * 0.25 + neck, hz = neck * 0.2;
+  for (let i = 0; i < 5; i++) {
+    const t = i / 4;
+    const hw = len * 0.09 * (1 - t * 0.5);
+    for (let a = 0; a < 8; a++) {
+      const ang = (a / 8) * Math.PI * 2;
+      pts.push({ x: hx + Math.cos(ang) * hw, y: hy + Math.sin(ang) * hw * 0.5 + t * len * 0.05, z: hz + t * len * 0.12 });
+    }
+  }
+  // Horns
+  [-1, 1].forEach(side => {
+    for (let i = 0; i < 5; i++) {
+      pts.push({ x: hx + side * (len * 0.04 + i * len * 0.015), y: hy + len * 0.04 + i * len * 0.03, z: hz - i * len * 0.018 });
+    }
+  });
+  // Wings — swept back membrane ribs
+  [-1, 1].forEach(side => {
+    for (let r = 0; r <= 6; r++) {
+      const rib = r / 6;
+      const wy = len * 0.15 + rib * len * 0.02;
+      const wLen = wings * (1 - rib * 0.55);
+      const wz = -len * 0.2 - rib * len * 0.08;
+      for (let i = 0; i <= 8; i++) {
+        const t = i / 8;
+        pts.push({ x: side * (len * 0.07 + t * wLen), y: wy - t * wLen * 0.28, z: wz + t * wLen * 0.15 });
+      }
+    }
+    // wing membrane fill
+    for (let r = 0; r < 6; r++) {
+      const rib = r / 6;
+      const wy = len * 0.15 + rib * len * 0.02;
+      const wz = -len * 0.2 - rib * len * 0.08;
+      for (let i = 1; i <= 5; i++) {
+        const t = i / 6;
+        pts.push({ x: side * (len * 0.07 + t * wings * 0.6), y: wy - t * wings * 0.2, z: wz + rib * len * 0.05 });
+      }
+    }
+  });
+  // Tail — tapering spiral tip
+  for (let i = 0; i <= 15; i++) {
+    const t = i / 15;
+    pts.push({ x: Math.sin(t * Math.PI * 1.5) * len * 0.09 * (1 - t), y: -t * len * 0.06, z: -len - t * len * 0.35 });
+  }
+  // Legs
+  [-1, 1].forEach(side => {
+    [0.15, 0.45].forEach(zt => {
+      const bz = -zt * len;
+      for (let i = 0; i <= 5; i++) {
+        pts.push({ x: side * (len * 0.08 + i * len * 0.025), y: len * 0.01 - i * len * 0.028, z: bz });
+      }
+      // foot claws
+      [-1, 0, 1].forEach(cl => {
+        pts.push({ x: side * (len * 0.22 + cl * len * 0.03), y: 0, z: bz + cl * len * 0.03 });
+      });
+    });
+  });
+  return pts;
+}
+
+// ─── PIRATE SHIP ──────────────────────────────────────────────────────────────
+function gen_pirate_ship(p: Record<string, number>): Point3D[] {
+  const s = p.scale ?? 1;
+  const L = (p.length ?? 20) * s;
+  const W = L * 0.28;
+  const H = L * 0.3;
+  const masts = Math.round(p.masts ?? 3);
+  const pts: Point3D[] = [];
+  // Hull — double-arc cross-sections along length
+  const hullSeg = 24;
+  for (let i = 0; i <= hullSeg; i++) {
+    const t = (i / hullSeg) * 2 - 1; // -1..1 along length
+    const nt = Math.abs(t);
+    const widthMult = Math.sqrt(1 - nt * nt * 0.55); // taper at bow/stern
+    const hullW = W * widthMult;
+    const hullH = H * 0.42 * (1 - nt * 0.2);
+    const flare = 1 + (1 - nt) * 0.18; // widen at midship
+    const segs = 12;
+    for (let j = 0; j <= segs; j++) {
+      const ang = (j / segs) * Math.PI;
+      pts.push({ x: Math.cos(ang) * hullW * flare, y: Math.sin(ang) * hullH - hullH, z: t * L * 0.5 });
+    }
+  }
+  // Deck planks (flat top)
+  for (let i = -4; i <= 4; i++) {
+    for (let j = -14; j <= 14; j++) {
+      if (Math.abs(i) === 4 || Math.abs(j) === 14) continue;
+      const zt = j / 14;
+      const xLimit = W * 0.85 * Math.sqrt(1 - zt * zt * 0.6);
+      if (Math.abs(i * W * 0.11) < xLimit) {
+        pts.push({ x: i * W * 0.11, y: H * 0.01, z: zt * L * 0.45 });
+      }
+    }
+  }
+  // Railings — left and right sides
+  [-1, 1].forEach(side => {
+    for (let j = -10; j <= 10; j++) {
+      const zt = j / 10;
+      const xw = W * 0.85 * Math.sqrt(1 - zt * zt * 0.6);
+      pts.push({ x: side * xw, y: H * 0.06, z: zt * L * 0.44 });
+      pts.push({ x: side * xw, y: H * 0.14, z: zt * L * 0.44 });
+    }
+  });
+  // Bow — pointed front
+  for (let i = 0; i <= 6; i++) {
+    const t = i / 6;
+    pts.push({ x: 0, y: H * 0.08 - t * H * 0.05, z: L * 0.5 + t * L * 0.08 });
+  }
+  // Bowsprit diagonal mast
+  for (let i = 0; i <= 8; i++) {
+    const t = i / 8;
+    pts.push({ x: 0, y: H * 0.12 + t * H * 0.45, z: L * 0.45 - t * L * 0.12 });
+  }
+  // Stern castle
+  for (let i = 0; i <= 5; i++) {
+    const t = i / 5;
+    const w = W * 0.55 * (1 - t * 0.35);
+    [-1, 1].forEach(side => pts.push({ x: side * w, y: H * 0.02 + t * H * 0.4, z: -L * 0.38 - t * L * 0.02 }));
+    pts.push({ x: 0, y: H * 0.02 + t * H * 0.4, z: -L * 0.38 - t * L * 0.02 });
+  }
+  // Masts
+  const mastZ = [L * 0.28, 0, -L * 0.25].slice(0, masts);
+  const mastH = [H * 2.1, H * 2.6, H * 1.9];
+  mastZ.forEach((mz, mi) => {
+    const mh = mastH[mi];
+    for (let i = 0; i <= 16; i++) {
+      pts.push({ x: 0, y: H * 0.05 + (i / 16) * mh, z: mz });
+    }
+    // Crow's nest
+    for (let a = 0; a < 8; a++) {
+      const ang = (a / 8) * Math.PI * 2;
+      pts.push({ x: Math.cos(ang) * W * 0.08, y: H * 0.05 + mh * 0.75, z: mz + Math.sin(ang) * W * 0.08 });
+    }
+    // Yard arms
+    [0.55, 0.8].forEach(yt => {
+      const armL = W * 0.9 * (1 - yt * 0.4);
+      for (let i = 0; i <= 8; i++) {
+        const t = i / 8 * 2 - 1;
+        pts.push({ x: t * armL, y: H * 0.05 + mh * yt, z: mz });
+        // sails — triangulated mesh
+        if (i < 8) {
+          for (let k = 1; k <= 4; k++) {
+            const st = k / 5;
+            pts.push({ x: t * armL * (1 - st * 0.15), y: H * 0.05 + mh * yt - st * mh * 0.2, z: mz + st * L * 0.015 });
+          }
+        }
+      }
+    });
+  });
+  // Cannons — both sides
+  [-1, 1].forEach(side => {
+    for (let i = -3; i <= 3; i++) {
+      pts.push({ x: side * W * 0.82, y: H * 0.0, z: i * L * 0.09 });
+      pts.push({ x: side * (W * 0.82 + s * 0.5), y: H * 0.0, z: i * L * 0.09 });
+    }
+  });
+  // Flag on main mast
+  const mainMZ = mastZ[Math.floor(masts / 2)];
+  const mainMH = mastH[Math.floor(masts / 2)];
+  for (let i = 0; i <= 3; i++) {
+    for (let j = 0; j <= 4; j++) {
+      pts.push({ x: i * W * 0.1, y: H * 0.05 + mainMH + j * W * 0.06, z: mainMZ });
+    }
+  }
+  return pts;
+}
+
+// ─── PVP ARENA ────────────────────────────────────────────────────────────────
+function gen_pvp_arena(p: Record<string, number>): Point3D[] {
+  const s = p.scale ?? 1;
+  const R = (p.radius ?? 15) * s;
+  const H = (p.height ?? 5) * s;
+  const walls = Math.round(p.walls ?? 8);
+  const pts: Point3D[] = [];
+  // Outer wall — polygon ring
+  for (let i = 0; i < walls; i++) {
+    const a0 = (i / walls) * Math.PI * 2;
+    const a1 = ((i + 1) / walls) * Math.PI * 2;
+    for (let t = 0; t <= 10; t++) {
+      const ta = a0 + (a1 - a0) * (t / 10);
+      const wx = Math.cos(ta) * R, wz = Math.sin(ta) * R;
+      for (let y = 0; y <= 8; y++) {
+        pts.push({ x: wx, y: y * H / 8, z: wz });
+      }
+    }
+    // Wall gates / gaps at each vertex
+    const gx = Math.cos((i + 0.5) / walls * Math.PI * 2) * R * 0.96;
+    const gz = Math.sin((i + 0.5) / walls * Math.PI * 2) * R * 0.96;
+    pts.push({ x: gx, y: H * 0.5, z: gz });
+  }
+  // Wall top crenellations
+  for (let i = 0; i < walls * 8; i++) {
+    const ang = (i / (walls * 8)) * Math.PI * 2;
+    const cx = Math.cos(ang) * R, cz = Math.sin(ang) * R;
+    if (i % 2 === 0) pts.push({ x: cx, y: H * 1.08, z: cz });
+  }
+  // Corner towers
+  for (let i = 0; i < walls; i++) {
+    const ang = (i / walls) * Math.PI * 2;
+    const tx = Math.cos(ang) * (R + s * 0.6), tz = Math.sin(ang) * (R + s * 0.6);
+    for (let y = 0; y <= 10; y++) {
+      const tH = H * 1.4;
+      for (let a = 0; a < 6; a++) {
+        const ta = (a / 6) * Math.PI * 2;
+        pts.push({ x: tx + Math.cos(ta) * s * 1.0, y: y * tH / 10, z: tz + Math.sin(ta) * s * 1.0 });
+      }
+    }
+    // Tower top
+    pts.push({ x: tx, y: H * 1.5, z: tz });
+  }
+  // Arena floor — grid with looted crates (cross pattern)
+  const gridSteps = Math.ceil(R / (s * 2));
+  for (let ix = -gridSteps; ix <= gridSteps; ix++) {
+    for (let iz = -gridSteps; iz <= gridSteps; iz++) {
+      const fx = ix * s * 2, fz = iz * s * 2;
+      if (Math.sqrt(fx * fx + fz * fz) < R * 0.92) {
+        if (ix === 0 || iz === 0) pts.push({ x: fx, y: 0, z: fz }); // center cross
+        else if (Math.abs(ix) % 3 === 0 && Math.abs(iz) % 3 === 0) pts.push({ x: fx, y: 0, z: fz }); // loot spots
+      }
+    }
+  }
+  // Center podium / objective
+  for (let y = 0; y <= 5; y++) {
+    for (let a = 0; a < 10; a++) {
+      const ang = (a / 10) * Math.PI * 2;
+      pts.push({ x: Math.cos(ang) * s * 1.5, y: y * H * 0.1, z: Math.sin(ang) * s * 1.5 });
+    }
+  }
+  // Elevated platforms — 4 corners inside
+  [0, 1, 2, 3].forEach(i => {
+    const ang = (i / 4) * Math.PI * 2;
+    const px = Math.cos(ang) * R * 0.6, pz = Math.sin(ang) * R * 0.6;
+    for (let dx = -2; dx <= 2; dx++) {
+      for (let dz = -2; dz <= 2; dz++) {
+        if (Math.abs(dx) === 2 || Math.abs(dz) === 2) {
+          pts.push({ x: px + dx * s * 0.6, y: H * 0.38, z: pz + dz * s * 0.6 });
+        }
+      }
+    }
+    // Platform pillar
+    for (let y = 0; y <= 5; y++) {
+      pts.push({ x: px, y: y * H * 0.075, z: pz });
+    }
+  });
+  // Bleacher steps — outside ring
+  for (let i = 0; i < walls * 6; i++) {
+    const ang = (i / (walls * 6)) * Math.PI * 2;
+    for (let step = 1; step <= 3; step++) {
+      const sr = R + step * s * 0.8;
+      pts.push({ x: Math.cos(ang) * sr, y: step * H * 0.12, z: Math.sin(ang) * sr });
+    }
+  }
+  return pts;
+}
+
+// ─── HELIPAD ──────────────────────────────────────────────────────────────────
+function gen_helipad(p: Record<string, number>): Point3D[] {
+  const s = p.scale ?? 1;
+  const R = (p.radius ?? 8) * s;
+  const elevated = (p.elevated ?? 0) > 0;
+  const lights = (p.lights ?? 1) > 0;
+  const pts: Point3D[] = [];
+  const platH = elevated ? (p.height ?? 4) * s : 0;
+  // Landing circle — double ring
+  [R, R * 0.92].forEach(r => {
+    for (let i = 0; i < 64; i++) {
+      const ang = (i / 64) * Math.PI * 2;
+      pts.push({ x: Math.cos(ang) * r, y: platH, z: Math.sin(ang) * r });
+    }
+  });
+  // H marking — horizontal bars
+  for (let i = -8; i <= 8; i++) {
+    pts.push({ x: i * R * 0.1, y: platH + 0.02, z: -R * 0.35 });
+    pts.push({ x: i * R * 0.1, y: platH + 0.02, z:  R * 0.35 });
+    if (i >= -1 && i <= 1) pts.push({ x: i * R * 0.1, y: platH + 0.02, z: 0 });
+  }
+  // H vertical strokes
+  for (let i = -4; i <= 4; i++) {
+    pts.push({ x: -R * 0.35, y: platH + 0.02, z: i * R * 0.09 });
+    pts.push({ x:  R * 0.35, y: platH + 0.02, z: i * R * 0.09 });
+  }
+  // Safety stripe — dashed circle
+  for (let i = 0; i < 32; i++) {
+    if (i % 2 === 0) {
+      const ang = (i / 32) * Math.PI * 2;
+      pts.push({ x: Math.cos(ang) * R * 0.98, y: platH + 0.02, z: Math.sin(ang) * R * 0.98 });
+    }
+  }
+  // Elevated platform structure
+  if (elevated) {
+    // Support legs
+    [0, 1, 2, 3].forEach(i => {
+      const ang = (i / 4) * Math.PI * 2 + Math.PI / 4;
+      const lx = Math.cos(ang) * R * 0.75, lz = Math.sin(ang) * R * 0.75;
+      for (let y = 0; y <= 10; y++) {
+        pts.push({ x: lx, y: (y / 10) * platH, z: lz });
+      }
+      // Cross bracing
+      const ang2 = ((i + 1) / 4) * Math.PI * 2 + Math.PI / 4;
+      const lx2 = Math.cos(ang2) * R * 0.75, lz2 = Math.sin(ang2) * R * 0.75;
+      for (let k = 0; k <= 6; k++) {
+        const t = k / 6;
+        pts.push({ x: lx + (lx2 - lx) * t, y: platH * (0.3 + t * 0.15), z: lz + (lz2 - lz) * t });
+      }
+    });
+    // Platform deck edge
+    for (let i = 0; i < 32; i++) {
+      const ang = (i / 32) * Math.PI * 2;
+      pts.push({ x: Math.cos(ang) * R, y: platH, z: Math.sin(ang) * R });
+      pts.push({ x: Math.cos(ang) * R, y: platH - s * 0.4, z: Math.sin(ang) * R });
+    }
+  }
+  // Corner lights
+  if (lights) {
+    for (let i = 0; i < 8; i++) {
+      const ang = (i / 8) * Math.PI * 2;
+      const lx = Math.cos(ang) * R * 0.96, lz = Math.sin(ang) * R * 0.96;
+      pts.push({ x: lx, y: platH + s * 0.12, z: lz });
+      pts.push({ x: lx, y: platH + s * 0.25, z: lz });
+    }
+    // Windsock pole
+    for (let i = 0; i <= 8; i++) {
+      pts.push({ x: R * 0.92, y: platH + i * s * 0.25, z: R * 0.92 });
+    }
+    // Windsock
+    for (let i = 0; i <= 5; i++) {
+      const t = i / 5;
+      pts.push({ x: R * 0.92 + t * s * 0.6, y: platH + s * 2.2 - t * s * 0.4, z: R * 0.92 + t * s * 0.1 });
+    }
+  }
+  // Approach indicators — landing zone arrows (two sides)
+  [-1, 1].forEach(side => {
+    for (let i = 0; i <= 3; i++) {
+      pts.push({ x: side * (R * 1.1 + i * s * 0.8), y: platH + 0.02, z: 0 });
+    }
+    // Arrowhead
+    [-1, 0, 1].forEach(dy => {
+      pts.push({ x: side * (R * 1.1 + s * 2.8), y: platH + 0.02, z: dy * s * 0.5 });
+    });
   });
   return pts;
 }

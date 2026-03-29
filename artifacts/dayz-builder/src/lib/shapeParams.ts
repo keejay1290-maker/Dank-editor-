@@ -675,6 +675,42 @@ export const SHAPE_DEFS: Record<string, ShapeDef> = {
       { id: "scale", label: "Mech Scale", val: 1, min: 0.4, max: 3, step: 0.05 },
     ]
   },
+  dragon: {
+    label: "🐉 Dragon", group: "🦄 Fantasy & Mythic",
+    params: [
+      { id: "scale",  label: "Overall Scale",  val: 1,  min: 0.3, max: 4,  step: 0.05 },
+      { id: "length", label: "Body Length",     val: 12, min: 6,   max: 30, step: 1    },
+      { id: "wings",  label: "Wingspan",        val: 8,  min: 3,   max: 20, step: 0.5  },
+      { id: "neck",   label: "Neck Length",     val: 4,  min: 1,   max: 10, step: 0.5  },
+    ]
+  },
+  pirate_ship: {
+    label: "☠ Pirate Ship", group: "🏴‍☠️ Nautical",
+    params: [
+      { id: "scale",  label: "Overall Scale", val: 1,  min: 0.3, max: 4,  step: 0.05 },
+      { id: "length", label: "Hull Length",   val: 20, min: 10,  max: 50, step: 1    },
+      { id: "masts",  label: "Mast Count",    val: 3,  min: 1,   max: 4,  step: 1    },
+    ]
+  },
+  pvp_arena: {
+    label: "⚔ PVP Arena", group: "🏟 Structures",
+    params: [
+      { id: "scale",  label: "Overall Scale", val: 1,  min: 0.3, max: 4,   step: 0.05 },
+      { id: "radius", label: "Arena Radius",  val: 15, min: 6,   max: 40,  step: 1    },
+      { id: "height", label: "Wall Height",   val: 5,  min: 2,   max: 15,  step: 0.5  },
+      { id: "walls",  label: "Wall Segments", val: 8,  min: 4,   max: 12,  step: 1    },
+    ]
+  },
+  helipad: {
+    label: "🚁 Helipad", group: "🏟 Structures",
+    params: [
+      { id: "scale",    label: "Overall Scale",   val: 1, min: 0.3, max: 4,  step: 0.05 },
+      { id: "radius",   label: "Pad Radius",      val: 8, min: 3,   max: 25, step: 0.5  },
+      { id: "elevated", label: "Elevated (0=No)", val: 0, min: 0,   max: 1,  step: 1    },
+      { id: "height",   label: "Platform Height", val: 4, min: 1,   max: 15, step: 0.5  },
+      { id: "lights",   label: "Lights (0=No)",   val: 1, min: 0,   max: 1,  step: 1    },
+    ]
+  },
 };
 
 export const SHAPE_GROUPS = [...new Set(Object.values(SHAPE_DEFS).map(s => s.group))];

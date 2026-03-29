@@ -430,6 +430,41 @@ const QUICK_PRESETS: Preset[] = [
   { category: "🤖 Transformers", label: "Ratchet", shape: "tf_ratchet", params: { scale: 1 } },
   { category: "🤖 Transformers", label: "Megatron", shape: "tf_megatron", params: { scale: 1 } },
   { category: "🤖 Transformers", label: "Starscream", shape: "tf_starscream", params: { scale: 1 } },
+  { category: "🦄 Fantasy & Mythic", label: "Dragon",  shape: "dragon",      params: { scale: 1, length: 12, wings: 8, neck: 4 } },
+  { category: "🏴‍☠️ Nautical",      label: "Pirate Ship (3-mast)", shape: "pirate_ship", params: { scale: 1, length: 20, masts: 3 } },
+  { category: "🏴‍☠️ Nautical",      label: "Sloop (1-mast)", shape: "pirate_ship", params: { scale: 0.6, length: 12, masts: 1 } },
+  { category: "🏟 Structures",       label: "PVP Arena",  shape: "pvp_arena",  params: { scale: 1, radius: 15, height: 5, walls: 8 } },
+  { category: "🏟 Structures",       label: "Helipad",    shape: "helipad",    params: { scale: 1, radius: 8,  elevated: 0, lights: 1 } },
+  { category: "🏟 Structures",       label: "Elevated Helipad", shape: "helipad", params: { scale: 1, radius: 8, elevated: 1, height: 5, lights: 1 } },
+];
+
+// ─── FAMOUS CHERNARUS LOCATIONS ────────────────────────────────────────────────
+const FAMOUS_LOCATIONS = [
+  { name: "📍 NWAF (Northwest Airfield)",  x: 4630,  y: 135, z: 10490 },
+  { name: "📍 NEAF (Northeast Airfield)",  x: 11500, y: 130, z: 2500  },
+  { name: "📍 Balota Airstrip",            x: 4980,  y: 10,  z: 2320  },
+  { name: "📍 Krasnoe Airfield",           x: 11950, y: 148, z: 12540 },
+  { name: "📍 Tisy Military Base",         x: 1500,  y: 260, z: 11700 },
+  { name: "📍 Myshkino Military",          x: 2200,  y: 250, z: 8500  },
+  { name: "📍 Pavlovo Military",           x: 3200,  y: 300, z: 4000  },
+  { name: "📍 Kamensk Military",           x: 14800, y: 200, z: 12500 },
+  { name: "📍 Chernogorsk (Cherno)",       x: 6500,  y: 10,  z: 2500  },
+  { name: "📍 Elektrozavodsk (Elektro)",   x: 10200, y: 10,  z: 2100  },
+  { name: "📍 Berezino",                   x: 13000, y: 10,  z: 7000  },
+  { name: "📍 Krasnostav",                 x: 13000, y: 200, z: 4500  },
+  { name: "📍 Zelenogorsk",               x: 2800,  y: 250, z: 5900  },
+  { name: "📍 Vybor",                     x: 4000,  y: 200, z: 8000  },
+  { name: "📍 Stary Sobor",               x: 6200,  y: 230, z: 7800  },
+  { name: "📍 Gorka",                     x: 9000,  y: 200, z: 7200  },
+  { name: "📍 Novy Sobor",               x: 7200,  y: 200, z: 7800  },
+  { name: "📍 Lopatino",                  x: 2400,  y: 200, z: 7500  },
+  { name: "📍 Rogovo",                    x: 3200,  y: 150, z: 5200  },
+  { name: "📍 Devil's Castle",            x: 6800,  y: 400, z: 6000  },
+  { name: "📍 Altar (NW Radio Tower)",    x: 3800,  y: 380, z: 6900  },
+  { name: "📍 Black Lake (North)",        x: 7500,  y: 400, z: 12000 },
+  { name: "📍 Staroye",                   x: 10000, y: 200, z: 6500  },
+  { name: "📍 Novodmitrovsk",            x: 11400, y: 200, z: 4900  },
+  { name: "📍 Kamenka",                  x: 1800,  y: 10,  z: 2200  },
 ];
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
@@ -462,6 +497,7 @@ export default function App() {
   const [autoRotate, setAutoRotate] = useState(true);
   const [autoOrient, setAutoOrient] = useState(false);
   const [orientInward, setOrientInward] = useState(false);
+  const [jitter, setJitter] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(() => typeof window !== "undefined" && window.innerWidth >= 768);
   const [toast, setToast] = useState("");
   const [presetFilter, setPresetFilter] = useState("");
@@ -533,6 +569,19 @@ export default function App() {
     return [...rawPoints, ...extras];
   }, [rawPoints, fillMode, fillDensity, mode]);
 
+  // Bounding-box dimensions in metres (scale-adjusted) — shown live in info bar
+  const dims = useMemo(() => {
+    if (!rawPoints.length) return null;
+    const xs = rawPoints.map(p => p.x * scaleVal);
+    const ys = rawPoints.map(p => p.y * scaleVal);
+    const zs = rawPoints.map(p => p.z * scaleVal);
+    return {
+      w: (Math.max(...xs) - Math.min(...xs)).toFixed(1),
+      h: (Math.max(...ys) - Math.min(...ys)).toFixed(1),
+      d: (Math.max(...zs) - Math.min(...zs)).toFixed(1),
+    };
+  }, [rawPoints, scaleVal]);
+
   // ── REAL-TIME CANVAS UPDATE ────────────────────────────────────────────────
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -565,6 +614,12 @@ export default function App() {
     });
     setParams(newParams);
     showToast(`✓ Loaded: ${preset.label}`);
+  };
+
+  const surpriseMe = () => {
+    const pick = QUICK_PRESETS[Math.floor(Math.random() * QUICK_PRESETS.length)];
+    applyPreset(pick);
+    showToast(`🎲 Surprise: ${pick.label}`);
   };
 
   const onShapeChange = (st: string) => {
@@ -601,9 +656,11 @@ export default function App() {
 
     ptsToUse.forEach(pt => {
       const sx = pt.x * scaleVal, sy = pt.y * scaleVal, sz = pt.z * scaleVal;
-      const wx = sx * Math.cos(yawRad) - sz * Math.sin(yawRad) + posX;
+      const jx = jitter > 0 ? (Math.random() - 0.5) * jitter : 0;
+      const jz = jitter > 0 ? (Math.random() - 0.5) * jitter : 0;
+      const wx = sx * Math.cos(yawRad) - sz * Math.sin(yawRad) + posX + jx;
       const wy = sy + posY;
-      const wz = sx * Math.sin(yawRad) + sz * Math.cos(yawRad) + posZ;
+      const wz = sx * Math.sin(yawRad) + sz * Math.cos(yawRad) + posZ + jz;
 
       // Per-point yaw: auto-orient faces outward (or inward) from shape centroid
       const ptYaw = autoOrient
@@ -806,6 +863,7 @@ export default function App() {
               autoRotate={autoRotate} autoOrient={autoOrient} orientInward={orientInward}
               presetFilter={presetFilter} filteredPresets={filteredPresets}
               presetCategory={presetCategory} presetCategories={PRESET_CATEGORIES}
+              jitter={jitter} dims={dims} famousLocations={FAMOUS_LOCATIONS}
               onShapeChange={onShapeChange} setObjClass={setObjClass}
               setPosX={setPosX} setPosY={setPosY} setPosZ={setPosZ}
               setYaw={setYaw} setPitch={setPitch} setRoll={setRoll}
@@ -815,9 +873,11 @@ export default function App() {
               setParam={setParam} setAutoRotate={setAutoRotate}
               setAutoOrient={setAutoOrient} setOrientInward={setOrientInward}
               setPresetFilter={setPresetFilter} setPresetCategory={setPresetCategory}
+              setJitter={setJitter}
               onGenerate={generate}
               onClear={() => setOutput("")}
               applyPreset={applyPreset}
+              onSurpriseMe={surpriseMe}
             />
           ) : mode === "builds" ? (
             <BuildsSidebar
@@ -859,6 +919,7 @@ export default function App() {
             <span className="text-[#9a8858]">Objects</span>
             <span className={`font-bold ${displayPoints.length > 800 ? "text-[#e07a20]" : "text-[#d4a017]"}`}>{displayPoints.length}</span>
             {displayPoints.length > 800 && <span className="text-[#e07a20] text-[10px]">⚠ large!</span>}
+            {dims && <span className="text-[#8a7840] text-[10px]">{dims.w}×{dims.d}×{dims.h}m</span>}
             {mode === "builds" && <span className="text-[#27ae60] text-[10px] font-bold">● LIVE PREVIEW</span>}
             <span className="ml-auto text-[#8a7840]">Drag=rotate · Scroll=zoom</span>
           </div>
@@ -1064,6 +1125,10 @@ function ArchitectSidebar(p: any) {
               <div className="col-span-2 text-center text-[10px] text-[#8a7840] py-3">No presets match filter</div>
             )}
           </div>
+          <button onClick={p.onSurpriseMe}
+            className="mt-2 w-full py-1.5 text-[10px] font-bold rounded-sm border border-[#3a2e18] text-[#d4a017] bg-[#1a1408] hover:bg-[#221a08] hover:border-[#d4a017] transition-all">
+            🎲 Surprise Me — Random Preset
+          </button>
         </div>
       ))}
 
@@ -1155,6 +1220,21 @@ function ArchitectSidebar(p: any) {
       {/* Position */}
       {sec("pos", "📍 Base Position", (
         <div className="px-3">
+          {/* Famous Locations picker */}
+          <Lbl>Famous Chernarus Location</Lbl>
+          <select
+            className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1.5 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
+            defaultValue=""
+            onChange={e => {
+              const loc = (p.famousLocations || []).find((l: any) => l.name === e.target.value);
+              if (loc) { p.setPosX(loc.x); p.setPosY(loc.y); p.setPosZ(loc.z); }
+              e.target.value = "";
+            }}>
+            <option value="" disabled>⚡ Jump to location…</option>
+            {(p.famousLocations || []).map((loc: any) => (
+              <option key={loc.name} value={loc.name}>{loc.name}</option>
+            ))}
+          </select>
           <div className="grid grid-cols-3 gap-1.5">
             {[["X", p.posX, p.setPosX], ["Y", p.posY, p.setPosY], ["Z", p.posZ, p.setPosZ]].map(([label, val, setter]) => (
               <div key={label as string}>
@@ -1162,6 +1242,9 @@ function ArchitectSidebar(p: any) {
                 <Inp value={val as number} onChange={v => (setter as any)(parseFloat(v) || 0)} step="10" />
               </div>
             ))}
+          </div>
+          <div className="mt-1">
+            <Slider label={`Position Jitter ±${(p.jitter || 0).toFixed(1)}m`} value={p.jitter || 0} min={0} max={15} step={0.5} onChange={p.setJitter} />
           </div>
         </div>
       ))}
@@ -1235,6 +1318,7 @@ function ArchitectSidebar(p: any) {
           <div className="text-[#b09a6a]">Format</div><div className="text-[#d4a017]">{p.format === "initc" ? "init.c" : "JSON"}</div>
           <div className="text-[#b09a6a]">Mode</div><div className="text-[#d4a017]">{p.fillMode}{p.fillMode === "fill" ? ` d${p.fillDensity}` : ""}</div>
           <div className="text-[#b09a6a]">Scale</div><div className="text-[#d4a017]">{p.scaleVal.toFixed(2)}×</div>
+          {p.dims && <><div className="text-[#b09a6a]">W×D×H</div><div className="text-[#d4a017]">{p.dims.w}×{p.dims.d}×{p.dims.h}m</div></>}
           <div className="text-[#b09a6a]">Y/P/R</div><div className="text-[#d4a017]">{p.yaw}°/{p.pitch}°/{p.roll}°</div>
           <div className="text-[#b09a6a]">Orient</div><div className={p.autoOrient ? "text-[#27ae60] font-bold" : "text-[#8a7840]"}>{p.autoOrient ? (p.orientInward ? "↙ inward" : "↗ outward") : "off"}</div>
         </div>

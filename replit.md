@@ -8,12 +8,18 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 
 React + Vite pure-frontend app for generating DayZ console object spawns.
 
-- **57+ shape generators** across groups: Sci-Fi, Mechs & Robots, Tunnels, Structures, Fortifications, Body Parts, Primitives, Epic/Unique, ⚡ Lightweight, 🤖 Transformers
-- **8 new Epic/Unique shapes**: Crashed UFO, Volcano, Roman Colosseum, Stonehenge, Mushroom Cloud, Black Hole, Alien Mothership, Celtic Stone Ring
+- **61+ shape generators** across groups: Sci-Fi, Mechs & Robots, Tunnels, Structures, Fortifications, Body Parts, Primitives, Epic/Unique, ⚡ Lightweight, 🤖 Transformers, 🦄 Fantasy & Mythic, 🏴‍☠️ Nautical
+- **New shapes**: Dragon (sinuous body, swept wings, horns, legs, tail), Pirate Ship (curved hull, masts, sails, cannons), PVP Arena (octagonal walled arena with towers), Helipad (H-marking, lights, optional elevated platform)
+- **7 Transformer mechs**: Bumblebee, Optimus Prime, Ironhide, Jazz, Ratchet, Megatron, Starscream — built via shared `_buildMechPts(TFConfig)` helper
 - **Real-time 3D canvas**: `useMemo` computes points, `useEffect` debounces 60ms, auto-rotate with requestAnimationFrame
+- **Live dimensions**: bounding box W×D×H in metres displayed in info bar and stats panel
+- **Famous Locations picker**: 25 Chernarus landmarks (NWAF, NEAF, Tisy, Cherno, etc.) fill X/Y/Z instantly
+- **Position Jitter slider**: 0–15m random scatter per object (applied at generate time, perfect for organic-looking builds)
+- **🎲 Surprise Me button**: loads a random preset from the full list
 - **Full YPR sliders**: Yaw/Pitch/Roll all live — Yaw applied to world coords, Pitch/Roll shown in 3D preview
 - **Fill Mode** with density slider (1–6 interior layers)
-- **26 Quick Presets** with searchable filter
+- **Quick Presets** (60+) with searchable filter and category tabs (All, Sci-Fi, Mechs, etc.)
+- **Completed Builds gallery**: 30+ themed builds with object notes and download
 - **Text Maker**: renders A–Z, 0–9, punctuation in 3D with configurable extrusion depth, rings, scale
 - **Output**: init.c (with SpawnObject() helper) or JSON Spawner format
 - **Extra objects**: stack multiple object classes per spawn point with Y offset
