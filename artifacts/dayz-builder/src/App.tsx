@@ -77,25 +77,28 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
     if (!ctx) return;
 
     const dpr = window.devicePixelRatio || 1;
-    const W = cssDimsRef.current.w || canvas.width / dpr;
-    const H = cssDimsRef.current.h || canvas.height / dpr;
-    if (W <= 0 || H <= 0) return;
+    // Physical pixel dimensions — the actual canvas buffer size
+    const PW = canvas.width;
+    const PH = canvas.height;
+    // CSS dimensions — used for projection math (centering, spread)
+    const W = cssDimsRef.current.w || PW / dpr;
+    const H = cssDimsRef.current.h || PH / dpr;
+    if (PW <= 0 || PH <= 0) return;
 
     const pts = ptsRef.current;
     const userScale = scaleRef.current;
 
-    // Scale all drawing to physical pixels for crisp rendering
-    ctx.save();
-    ctx.scale(dpr, dpr);
+    // ── Draw directly in physical pixels — no ctx.scale, so every coordinate
+    //    is an integer screen pixel. This is the key to crispness on retina/mobile.
+    ctx.imageSmoothingEnabled = false;
     ctx.fillStyle = "#060402";
-    ctx.fillRect(0, 0, W, H);
+    ctx.fillRect(0, 0, PW, PH);
 
     if (!pts.length) {
       ctx.fillStyle = "#2e2518";
-      ctx.font = "bold 12px 'Courier New'";
+      ctx.font = `bold ${Math.round(12 * dpr)}px 'Courier New'`;
       ctx.textAlign = "center";
-      ctx.fillText("← Configure shape  ·  real-time 3D updates instantly", W / 2, H / 2);
-      ctx.restore();
+      ctx.fillText("← Configure shape  ·  real-time 3D updates instantly", Math.round(PW / 2), Math.round(PH / 2));
       return;
     }
 
@@ -103,30 +106,32 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
     const cosX = Math.cos(rx), sinX = Math.sin(rx);
     const cosY = Math.cos(ry), sinY = Math.sin(ry);
     const pitch = pitchRef.current * Math.PI / 180;
-    const roll = rollRef.current * Math.PI / 180;
+    const roll  = rollRef.current  * Math.PI / 180;
     const cosPitch = Math.cos(pitch), sinPitch = Math.sin(pitch);
-    const cosRoll = Math.cos(roll), sinRoll = Math.sin(roll);
+    const cosRoll  = Math.cos(roll),  sinRoll  = Math.sin(roll);
     const zoom = zoomRef.current;
 
-    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity, minZ = Infinity, maxZ = -Infinity;
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity,
+        minZ = Infinity, maxZ = -Infinity;
     pts.forEach(p => {
       if (!isFinite(p.x) || !isFinite(p.y) || !isFinite(p.z)) return;
       if (p.x < minX) minX = p.x; if (p.x > maxX) maxX = p.x;
       if (p.y < minY) minY = p.y; if (p.y > maxY) maxY = p.y;
       if (p.z < minZ) minZ = p.z; if (p.z > maxZ) maxZ = p.z;
     });
-    if (!isFinite(minX) || !isFinite(maxX)) { ctx.restore(); return; }
+    if (!isFinite(minX) || !isFinite(maxX)) return;
 
     const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2, cz = (minZ + maxZ) / 2;
     const spread = Math.max(maxX - minX, maxY - minY, maxZ - minZ, 1);
     const baseZoom = Math.min(W, H) * 0.4 / spread * zoom;
 
+    // Project to CSS pixels first, then scale to physical pixels at the last step
     const projected = pts.map(p => {
       if (!isFinite(p.x) || !isFinite(p.y) || !isFinite(p.z)) return null;
       let lx = (p.x - cx) * userScale, ly = (p.y - cy) * userScale, lz = (p.z - cz) * userScale;
       const ly2 = ly * cosPitch - lz * sinPitch;
       const lz2 = ly * sinPitch + lz * cosPitch;
-      const lx3 = lx * cosRoll + ly2 * sinRoll;
+      const lx3 = lx * cosRoll  + ly2 * sinRoll;
       const ly3 = -lx * sinRoll + ly2 * cosRoll;
       const lz3 = lz2;
       const rx1 = lx3 * cosY + lz3 * sinY;
@@ -134,38 +139,48 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
       const ry2 = ly3 * cosX - rz1 * sinX;
       const rz2 = ly3 * sinX + rz1 * cosX;
       const fov = 700;
-      const sc = fov / (fov + rz2 + spread * 1.5);
-      return { sx: W / 2 + rx1 * baseZoom * sc, sy: H / 2 - ry2 * baseZoom * sc, depth: rz2 };
-    }).filter(Boolean) as { sx: number; sy: number; depth: number }[];
+      const sc  = fov / (fov + rz2 + spread * 1.5);
+      // Convert to physical pixels — round to nearest integer for pixel-perfect placement
+      const px = Math.round((W / 2 + rx1 * baseZoom * sc) * dpr);
+      const py = Math.round((H / 2 - ry2 * baseZoom * sc) * dpr);
+      return { px, py, depth: rz2 };
+    }).filter(Boolean) as { px: number; py: number; depth: number }[];
 
     projected.sort((a, b) => b.depth - a.depth);
     const maxD = spread * 1.5, minD = -spread * 1.5;
-    // Adaptive dot size — smaller when many points, slightly bigger when few
-    const baseDot = Math.max(1.2, Math.min(2.8, 400 / Math.sqrt(pts.length + 1))) * zoom;
 
-    projected.forEach(({ sx, sy, depth }) => {
+    // Dot radius in physical pixels — minimum 1 physical pixel for single-pixel crispness
+    const baseDotPhys = Math.max(1, Math.min(5 * dpr, (400 / Math.sqrt(pts.length + 1)) * zoom * dpr));
+
+    projected.forEach(({ px, py, depth }) => {
       const t = Math.max(0, Math.min(1, (depth - minD) / (maxD - minD)));
-      // Front points brighter gold/amber, back points darker brown
       const r = Math.round(210 * t + 55 * (1 - t));
       const g = Math.round(155 * t + 80 * (1 - t));
-      const b = Math.round(20 * t + 8 * (1 - t));
+      const b = Math.round(20  * t + 8  * (1 - t));
       const alpha = 0.6 + 0.4 * t;
-      // Snap to physical pixel boundaries for maximum sharpness
-      const psx = Math.round(sx * dpr) / dpr;
-      const psy = Math.round(sy * dpr) / dpr;
-      ctx.beginPath();
-      ctx.arc(psx, psy, baseDot, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
-      ctx.fill();
+      // ── Crisp rendering strategy:
+      //    radius ≤ 2px → fillRect (pixel-perfect square, zero blur)
+      //    radius  > 2px → arc at integer physical-pixel centre
+      const rad = baseDotPhys;
+      if (rad <= 2) {
+        const s = Math.max(1, Math.round(rad * 2));
+        ctx.fillRect(px - (s >> 1), py - (s >> 1), s, s);
+      } else {
+        ctx.beginPath();
+        ctx.arc(px, py, rad, 0, Math.PI * 2);
+        ctx.fill();
+      }
     });
 
-    // HUD overlay
-    ctx.fillStyle = "rgba(212,160,23,0.85)";
-    ctx.font = `bold 11px 'Courier New'`;
+    // HUD — scale font to physical pixels
+    ctx.fillStyle = "rgba(212,160,23,0.9)";
+    ctx.font = `bold ${Math.round(11 * dpr)}px 'Courier New'`;
     ctx.textAlign = "left";
-    ctx.fillText(`● LIVE  ${pts.length.toLocaleString()} pts  ×${zoom.toFixed(2)}`, 9, 17);
-
-    ctx.restore();
+    ctx.fillText(
+      `● LIVE  ${pts.length.toLocaleString()} pts  ×${zoom.toFixed(2)}`,
+      Math.round(9 * dpr), Math.round(17 * dpr)
+    );
   }, [canvasRef]);
 
   const zoomStep = useCallback((factor: number) => {
