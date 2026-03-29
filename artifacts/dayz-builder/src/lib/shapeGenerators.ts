@@ -43,6 +43,7 @@ export function getShapePoints(shapeType: string, params: Record<string, number>
     case 'letter_D': return gen_letter_D(p);
     case 'letter_Z': return gen_letter_Z(p);
     case 'mech_bipedal': return gen_mech_bipedal(p);
+    case 't800_endoskeleton': return gen_t800_endoskeleton(p);
     case 'mech_minigun': return gen_mech_minigun(p);
     case 'mech_walker': return gen_mech_walker(p);
     case 'millennium_falcon': return gen_millennium_falcon(p);
@@ -634,6 +635,133 @@ function letterPoints(letter: string, size: number, depth: number, spacing: numb
 
 function gen_letter_D(p: Record<string, number>): Point3D[] { return letterPoints('D', p.size, p.depth, p.spacing, p.rings); }
 function gen_letter_Z(p: Record<string, number>): Point3D[] { return letterPoints('Z', p.size, p.depth, p.spacing, p.rings); }
+
+// ─── T-800 ENDOSKELETON ──────────────────────────────────────────
+function gen_t800_endoskeleton(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const h = p.height, w = p.width;
+  const hW = w * 0.22; // head half-width
+
+  // ── HEAD (skull cage) ──────────────────────────────────────────
+  const headTop = h, headBot = h * 0.87, headMid = (headTop + headBot) / 2;
+  // Cranium rings
+  for (let ri = 0; ri <= 2; ri++) {
+    const y = headBot + (headTop - headBot) * ri / 2;
+    const r = hW * (0.75 + 0.25 * ri / 2);
+    for (let j = 0; j < 10; j++) { const a = 2 * Math.PI * j / 10; pts.push({ x: r * Math.cos(a), y, z: r * Math.sin(a) }); }
+  }
+  // Eye sockets (two oblong rings, front-facing)
+  [-1, 1].forEach(side => {
+    const ex = side * hW * 0.42;
+    for (let j = 0; j < 8; j++) {
+      const a = 2 * Math.PI * j / 8;
+      pts.push({ x: ex + hW * 0.28 * Math.cos(a), y: headMid + hW * 0.05, z: -hW * 0.8 + hW * 0.12 * Math.sin(a) });
+    }
+    pts.push({ x: ex, y: headMid, z: -hW * 0.88 }); // glowing eye
+  });
+  // Cheekbones (front arcs)
+  [-1, 1].forEach(side => {
+    for (let j = 0; j <= 4; j++) {
+      const t = j / 4, a = -Math.PI * 0.25 + Math.PI * 0.5 * t;
+      pts.push({ x: side * hW * 0.88 * Math.cos(a), y: headMid - hW * 0.12, z: -hW * 0.7 * Math.sin(a + Math.PI / 2) });
+    }
+  });
+  // Jaw / lower skull
+  for (let j = 0; j < 10; j++) { const a = 2 * Math.PI * j / 10; pts.push({ x: hW * 0.78 * Math.cos(a), y: headBot + hW * 0.1, z: hW * 0.62 * Math.sin(a) }); }
+  // Teeth row
+  for (let i = -4; i <= 4; i++) { if (i !== 0) pts.push({ x: i * hW * 0.18, y: headBot, z: -hW * 0.62 }); }
+
+  // ── NECK (vertebrae cross) ─────────────────────────────────────
+  for (let i = 0; i <= 5; i++) {
+    const y = h * 0.82 + (headBot - h * 0.82) * i / 5;
+    pts.push({ x: -hW * 0.22, y, z: 0 }, { x: hW * 0.22, y, z: 0 });
+    pts.push({ x: 0, y, z: -hW * 0.22 }, { x: 0, y, z: hW * 0.22 });
+  }
+
+  // ── SPINE (posterior) ──────────────────────────────────────────
+  for (let i = 0; i <= 14; i++) { pts.push({ x: 0, y: h * 0.18 + h * 0.64 * i / 14, z: w * 0.13 }); }
+
+  // ── RIBCAGE ───────────────────────────────────────────────────
+  const chestTop = h * 0.8, chestBot = h * 0.54;
+  const numRibs = 8;
+  for (let ri = 0; ri < numRibs; ri++) {
+    const y = chestBot + (chestTop - chestBot) * ri / (numRibs - 1);
+    const ribW = w * 0.44 * (1 - ri * 0.012);
+    const ribD = w * 0.21;
+    // Front arc of rib (9 points)
+    for (let j = -4; j <= 4; j++) {
+      const t = j / 4;
+      pts.push({ x: t * ribW, y, z: -Math.sqrt(Math.max(0, 1 - t * t)) * ribD });
+    }
+    // Side rib segments (going backward)
+    [-1, 1].forEach(side => {
+      for (let j = 0; j <= 3; j++) {
+        const t = j / 3;
+        pts.push({ x: side * ribW * (0.85 + 0.15 * t), y, z: -ribD * (1 - t) + ribD * 0.55 * t });
+      }
+    });
+  }
+  // Sternum (central line)
+  for (let i = 0; i <= 6; i++) { pts.push({ x: 0, y: chestBot + (chestTop - chestBot) * i / 6, z: -w * 0.18 }); }
+
+  // ── PELVIS ────────────────────────────────────────────────────
+  const pelvisY = h * 0.5;
+  for (let j = 0; j <= 10; j++) {
+    const a = Math.PI * j / 10;
+    pts.push({ x: w * 0.38 * Math.cos(a), y: pelvisY, z: w * 0.19 * Math.sin(a) });
+  }
+  pts.push({ x: -w * 0.35, y: pelvisY - h * 0.04, z: 0 }, { x: w * 0.35, y: pelvisY - h * 0.04, z: 0 });
+  pts.push({ x: -w * 0.25, y: pelvisY - h * 0.07, z: 0 }, { x: w * 0.25, y: pelvisY - h * 0.07, z: 0 });
+
+  // ── ARMS ──────────────────────────────────────────────────────
+  [-1, 1].forEach(side => {
+    const sX = side * w * 0.5, sY = h * 0.77;
+    const eX = side * w * 0.57, eY = h * 0.6;
+    const wX = side * w * 0.62, wY = h * 0.43;
+    // Upper arm
+    for (let i = 0; i <= 7; i++) {
+      const t = i / 7;
+      const r = w * 0.075 - w * 0.01 * t;
+      for (let j = 0; j < 6; j++) { const a = 2 * Math.PI * j / 6; pts.push({ x: sX + (eX - sX) * t + r * Math.cos(a), y: sY + (eY - sY) * t, z: r * Math.sin(a) }); }
+    }
+    // Elbow joint
+    for (let j = 0; j < 8; j++) { const a = 2 * Math.PI * j / 8; pts.push({ x: eX + w * 0.09 * Math.cos(a), y: eY, z: w * 0.09 * Math.sin(a) }); }
+    // Forearm
+    for (let i = 0; i <= 7; i++) {
+      const t = i / 7, r = w * 0.062;
+      for (let j = 0; j < 5; j++) { const a = 2 * Math.PI * j / 5; pts.push({ x: eX + (wX - eX) * t + r * Math.cos(a), y: eY + (wY - eY) * t, z: r * Math.sin(a) }); }
+    }
+    // Hand
+    for (let j = 0; j < 6; j++) { const a = 2 * Math.PI * j / 6; pts.push({ x: wX + w * 0.1 * Math.cos(a), y: wY - h * 0.02, z: w * 0.07 * Math.sin(a) }); }
+  });
+
+  // ── LEGS ──────────────────────────────────────────────────────
+  [-1, 1].forEach(side => {
+    const lx = side * w * 0.22;
+    const kneeY = pelvisY - h * 0.27;
+    const ankleY = kneeY - h * 0.24;
+    // Upper leg (femur — thick)
+    for (let i = 0; i <= 10; i++) {
+      const t = i / 10, r = w * 0.1 - w * 0.025 * t;
+      for (let j = 0; j < 8; j++) { const a = 2 * Math.PI * j / 8; pts.push({ x: lx + r * Math.cos(a), y: pelvisY - t * h * 0.27, z: r * Math.sin(a) }); }
+    }
+    // Knee cap
+    for (let j = 0; j < 10; j++) { const a = 2 * Math.PI * j / 10; pts.push({ x: lx + w * 0.12 * Math.cos(a), y: kneeY, z: w * 0.12 * Math.sin(a) }); }
+    // Shin (thinner)
+    for (let i = 0; i <= 10; i++) {
+      const t = i / 10, r = w * 0.068;
+      for (let j = 0; j < 6; j++) { const a = 2 * Math.PI * j / 6; pts.push({ x: lx + r * Math.cos(a), y: kneeY - t * h * 0.24, z: r * Math.sin(a) }); }
+    }
+    // Ankle joint
+    for (let j = 0; j < 8; j++) { const a = 2 * Math.PI * j / 8; pts.push({ x: lx + w * 0.085 * Math.cos(a), y: ankleY, z: w * 0.085 * Math.sin(a) }); }
+    // Foot
+    pts.push({ x: lx - w * 0.13, y: 0, z: -w * 0.08 }, { x: lx + w * 0.13, y: 0, z: -w * 0.08 });
+    pts.push({ x: lx - w * 0.1, y: 0, z: w * 0.14 }, { x: lx + w * 0.1, y: 0, z: w * 0.14 });
+    pts.push({ x: lx, y: 0, z: -w * 0.2 }); // front toe
+  });
+
+  return pts;
+}
 
 // ─── SCI-FI SHAPES ───────────────────────────────────────────────
 

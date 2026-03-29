@@ -160,6 +160,13 @@ export const SHAPE_DEFS: Record<string, ShapeDef> = {
       { id: "width", label: "Shoulder Width (m)", val: 14, min: 4, max: 60 },
     ]
   },
+  t800_endoskeleton: {
+    label: "💀 T-800 Endoskeleton", group: "Mechs",
+    params: [
+      { id: "height", label: "Total Height (m)", val: 22, min: 8, max: 80 },
+      { id: "width", label: "Shoulder Width (m)", val: 10, min: 4, max: 50 },
+    ]
+  },
   mech_minigun: {
     label: "🔫 Mech — Minigun Turret", group: "Mechs",
     params: [

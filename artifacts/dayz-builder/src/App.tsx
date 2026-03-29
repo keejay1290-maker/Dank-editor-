@@ -149,8 +149,11 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
       const g = Math.round(155 * t + 80 * (1 - t));
       const b = Math.round(20 * t + 8 * (1 - t));
       const alpha = 0.6 + 0.4 * t;
+      // Snap to physical pixel boundaries for maximum sharpness
+      const psx = Math.round(sx * dpr) / dpr;
+      const psy = Math.round(sy * dpr) / dpr;
       ctx.beginPath();
-      ctx.arc(sx, sy, baseDot, 0, Math.PI * 2);
+      ctx.arc(psx, psy, baseDot, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
       ctx.fill();
     });
@@ -355,11 +358,11 @@ const QUICK_PRESETS: Preset[] = [
   { category: "🎬 Movies", label: "Borg Cube", shape: "bastion_square", params: { size:40,height:10,towerRadius:5 } },
   { category: "🎬 Movies", label: "Mordor Gate", shape: "sci_fi_gate", params: { width:80,height:60 } },
   { category: "🎬 Movies", label: "Minas Tirith", shape: "azkaban_tower", params: { baseRadius:35,height:90,towerCount:7 } },
-  { category: "🎬 Movies", label: "T-800 Terminator", shape: "mech_bipedal", params: { height:30,width:16 } },
+  { category: "🎬 Movies", label: "T-800 Terminator", shape: "t800_endoskeleton", params: { height:22,width:10 } },
   { category: "🎬 Movies", label: "Squid Game Arena", shape: "disc", params: { radius:50,rings:6,points:36,innerRadius:0 } },
-  { category: "🎬 Movies", label: "Predator Camp", shape: "disc", params: { radius:8,rings:1,points:10,innerRadius:5 } },
+  { category: "🎬 Movies", label: "Predator Camp", shape: "disc", params: { radius:10,rings:2,points:12,innerRadius:6 } },
   { category: "🎬 Movies", label: "Nether Portal", shape: "sci_fi_gate", params: { width:16,height:22 } },
-  { category: "🎬 Movies", label: "Star Destroyer", shape: "pyramid_stepped", params: { baseSize:100,height:30,steps:4,shrink:0.25,spacing:4 } },
+  { category: "🎬 Movies", label: "Star Destroyer", shape: "pyramid_stepped", params: { baseSize:120,height:20,steps:3,shrink:0.3,spacing:6 } },
 ];
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
@@ -423,17 +426,33 @@ export default function App() {
     return getShapePoints(shapeType, params);
   }, [mode, shapeType, params, textInput, textLetterH, textSpacing, textDepth, textRings]);
 
-  // Apply fill mode with density
+  // Apply fill mode with density — smart per-Y-level fill
   const displayPoints = useMemo(() => {
     if (mode === "text" || fillMode === "frame") return rawPoints;
     const extras: Point3D[] = [];
-    const cx = rawPoints.reduce((s, p) => s + p.x, 0) / (rawPoints.length || 1);
-    const cz = rawPoints.reduce((s, p) => s + p.z, 0) / (rawPoints.length || 1);
+    if (!rawPoints.length) return rawPoints;
+    // Bin points by Y level so each horizontal cross-section fills toward its
+    // own centroid — this preserves silhouette on mechs, buildings, etc.
+    const yMin = rawPoints.reduce((m, p) => Math.min(m, p.y), Infinity);
+    const yMax = rawPoints.reduce((m, p) => Math.max(m, p.y), -Infinity);
+    const binSize = Math.max(0.05, (yMax - yMin) * 0.025); // 2.5% of height per bin
+    const yGroups = new Map<number, Point3D[]>();
     rawPoints.forEach(p => {
-      for (let i = 1; i <= fillDensity; i++) {
-        const t = i / (fillDensity + 1);
-        extras.push({ x: p.x + (cx - p.x) * t, y: p.y, z: p.z + (cz - p.z) * t });
-      }
+      const key = Math.round(p.y / binSize) * binSize;
+      if (!yGroups.has(key)) yGroups.set(key, []);
+      yGroups.get(key)!.push(p);
+    });
+    yGroups.forEach(levelPts => {
+      if (levelPts.length < 2) return;
+      const lCx = levelPts.reduce((s, p) => s + p.x, 0) / levelPts.length;
+      const lCz = levelPts.reduce((s, p) => s + p.z, 0) / levelPts.length;
+      const avgY = levelPts.reduce((s, p) => s + p.y, 0) / levelPts.length;
+      levelPts.forEach(p => {
+        for (let i = 1; i <= fillDensity; i++) {
+          const t = i / (fillDensity + 1);
+          extras.push({ x: p.x + (lCx - p.x) * t, y: avgY, z: p.z + (lCz - p.z) * t });
+        }
+      });
     });
     return [...rawPoints, ...extras];
   }, [rawPoints, fillMode, fillDensity, mode]);
