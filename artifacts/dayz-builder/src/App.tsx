@@ -400,7 +400,7 @@ const QUICK_PRESETS: Preset[] = [
   { category: "🏛️ Monuments", label: "Bastion Square",shape: "bastion_square",  params: { size:40,height:8,towerRadius:5 },                                                suggestedClass: "Land_Castle_Wall_3m_DE" },
 
   // 🪑 Furniture & Thrones
-  { category: "🪑 Furniture", label: "Weapon Throne", shape: "iron_throne", params: { scale:0.55, height:10, spikeCount:9 },  suggestedClass: "Mosin9130" },
+  { category: "🪑 Furniture", label: "Weapon Throne", shape: "iron_throne", params: { scale:0.55, height:10, spikeCount:9 },  suggestedClass: "OrientalMachete" },
   { category: "🪑 Furniture", label: "Campfire Ring", shape: "disc",        params: { radius:5,rings:1,points:12,innerRadius:3 }, suggestedClass: "Barrel_Red" },
   { category: "🪑 Furniture", label: "Round Table",   shape: "disc",        params: { radius:6,rings:2,points:18,innerRadius:0 }, suggestedClass: "Land_BarrierConcrete_02_DE" },
   { category: "🪑 Furniture", label: "Bench (long)",  shape: "wall_line",   params: { length:8,height:1,rings:1,spacing:1 },      suggestedClass: "Land_BarrierConcrete_01_DE" },
@@ -410,8 +410,8 @@ const QUICK_PRESETS: Preset[] = [
   { category: "🪑 Furniture", label: "Barrel Ring",   shape: "disc",        params: { radius:6,rings:1,points:8,innerRadius:5 },  suggestedClass: "Barrel_Blue" },
 
   // ⚔️ Medieval & Fantasy
-  { category: "⚔️ Medieval", label: "Sword Circle", shape: "disc",          params: { radius:8,rings:1,points:16,innerRadius:6 },  suggestedClass: "Mosin9130" },
-  { category: "⚔️ Medieval", label: "Weapon Wall",  shape: "wall_line",     params: { length:30,height:8,rings:8,spacing:2 },      suggestedClass: "AKM" },
+  { category: "⚔️ Medieval", label: "Sword Circle", shape: "disc",          params: { radius:8,rings:1,points:16,innerRadius:6 },  suggestedClass: "OrientalMachete" },
+  { category: "⚔️ Medieval", label: "Weapon Wall",  shape: "wall_line",     params: { length:30,height:8,rings:8,spacing:2 },      suggestedClass: "OrientalMachete" },
   { category: "⚔️ Medieval", label: "Castle Wall",  shape: "bastion_square",params: { size:80,height:12,towerRadius:8 },            suggestedClass: "Land_Castle_Wall_3m_DE" },
   { category: "⚔️ Medieval", label: "Guard Tower",  shape: "tower",         params: { radius:5,height:20,rings:6,points:12 },      suggestedClass: "Land_Castle_Tower_Round_DE" },
   { category: "⚔️ Medieval", label: "Arena Floor",  shape: "disc",          params: { radius:25,rings:4,points:32,innerRadius:0 }, suggestedClass: "Land_ConcreteSlab_01_DE" },
@@ -433,7 +433,7 @@ const QUICK_PRESETS: Preset[] = [
   // 🎬 Movies & TV
   { category: "🎬 Movies", label: "Halo Ring",      shape: "torus",            params: { majorR:60,minorR:4,majorSegs:36,minorSegs:6 },               suggestedClass: "Land_Wall_Concrete_4m_DE" },
   { category: "🎬 Movies", label: "AT-AT Walker",   shape: "atat_walker",      params: { height:30,width:20 },                                        suggestedClass: "StaticObj_Container_1D" },
-  { category: "🎬 Movies", label: "Iron Throne",    shape: "iron_throne",      params: { scale:1, height:14, spikeCount:11 },                         suggestedClass: "Mosin9130" },
+  { category: "🎬 Movies", label: "Iron Throne",    shape: "iron_throne",      params: { scale:1, height:14, spikeCount:11 },                         suggestedClass: "OrientalMachete" },
   { category: "🎬 Movies", label: "The Wall (GoT)", shape: "wall_line",        params: { length:120,height:24,rings:12,spacing:2 },                   suggestedClass: "Land_Castle_Wall2_30" },
   { category: "🎬 Movies", label: "Eye of Sauron",  shape: "eye_of_sauron",    params: { height:90,towerWidth:28,eyeRadius:22 },                      suggestedClass: "Land_Castle_Tower_Round_DE" },
   { category: "🎬 Movies", label: "Avengers Tower", shape: "skyscraper",       params: { width:14,height:130,floors:26 },                             suggestedClass: "Land_HouseBlock_5F" },
