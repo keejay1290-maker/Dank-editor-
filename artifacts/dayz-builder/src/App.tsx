@@ -6,8 +6,9 @@ import { COMPLETED_BUILDS, CompletedBuild } from "@/lib/completedBuilds";
 import WeaponBuilder from "@/WeaponBuilder";
 import BunkerMaker from "@/BunkerMaker";
 import MazeMaker from "@/MazeMaker";
+import RaceTrackMaker from "@/RaceTrackMaker";
 
-type EditorMode = "architect" | "text" | "builds" | "weapons" | "bunker" | "maze";
+type EditorMode = "architect" | "text" | "builds" | "weapons" | "bunker" | "maze" | "race";
 type OutputFormat = "initc" | "json";
 type FillMode = "frame" | "fill";
 
@@ -998,6 +999,10 @@ export default function App() {
               className={`px-2 py-1.5 text-[10px] rounded-sm font-bold tracking-wider transition-all ${mode === "maze" ? "bg-[#9b59b6] text-white" : "text-[#9b59b6] opacity-70 hover:opacity-100"}`}>
               🌀 MAZE
             </button>
+            <button onClick={() => setMode("race")}
+              className={`px-2 py-1.5 text-[10px] rounded-sm font-bold tracking-wider transition-all ${mode === "race" ? "bg-[#e74c3c] text-white" : "text-[#e74c3c] opacity-70 hover:opacity-100"}`}>
+              🏁 RACE
+            </button>
           </div>
           <div className="w-2 h-2 rounded-full bg-[#27ae60] animate-pulse shrink-0" title="Live preview active" />
         </div>
@@ -1013,12 +1018,15 @@ export default function App() {
         {/* ── MAZE MAKER MODE (full-panel takeover) ── */}
         {mode === "maze" && <MazeMaker />}
 
+        {/* ── RACE TRACK MAKER MODE (full-panel takeover) ── */}
+        {mode === "race" && <RaceTrackMaker />}
+
         {/* ── SIDEBAR ── */}
         {/* Mobile backdrop */}
-        {mode !== "weapons" && mode !== "bunker" && mode !== "maze" && sidebarOpen && (
+        {mode !== "weapons" && mode !== "bunker" && mode !== "maze" && mode !== "race" && sidebarOpen && (
           <div className="fixed inset-0 bg-black/50 z-20 md:hidden" onClick={() => setSidebarOpen(false)} />
         )}
-        <div className={`${(mode === "weapons" || mode === "bunker" || mode === "maze") ? "hidden" : ""} ${sidebarOpen ? "w-72" : "w-0"} shrink-0 bg-[#0e0c08] border-r border-[#2e2518] overflow-y-auto flex flex-col transition-all duration-200 z-30 md:relative md:z-auto ${sidebarOpen ? "absolute inset-y-0 left-0 md:relative" : "overflow-hidden"}`}>
+        <div className={`${(mode === "weapons" || mode === "bunker" || mode === "maze" || mode === "race") ? "hidden" : ""} ${sidebarOpen ? "w-72" : "w-0"} shrink-0 bg-[#0e0c08] border-r border-[#2e2518] overflow-y-auto flex flex-col transition-all duration-200 z-30 md:relative md:z-auto ${sidebarOpen ? "absolute inset-y-0 left-0 md:relative" : "overflow-hidden"}`}>
           {mode === "architect" ? (
             <ArchitectSidebar
               shapeType={shapeType} params={params} paramDefs={currentParamDefs}
@@ -1082,7 +1090,7 @@ export default function App() {
         </div>
 
         {/* ── MAIN PANEL ── */}
-        <div className={`${(mode === "weapons" || mode === "bunker" || mode === "maze") ? "hidden" : ""} flex-1 flex flex-col overflow-hidden`}>
+        <div className={`${(mode === "weapons" || mode === "bunker" || mode === "maze" || mode === "race") ? "hidden" : ""} flex-1 flex flex-col overflow-hidden`}>
           {/* Info bar */}
           <div className="flex items-center gap-3 px-3 py-1 bg-[#0e0c08] border-b border-[#2e2518] text-[11px] shrink-0">
             <span className="text-[#9a8858]">Shape</span>
