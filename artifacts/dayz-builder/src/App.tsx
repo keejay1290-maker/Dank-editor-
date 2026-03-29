@@ -495,6 +495,7 @@ export default function App() {
 
   // Architect
   const [shapeType, setShapeType] = useState("deathstar");
+  const [selectedPresetLabel, setSelectedPresetLabel] = useState<string>("Death Star");
   const [params, setParams] = useState<Record<string, number>>(() => {
     const d: Record<string, number> = {};
     SHAPE_DEFS["deathstar"].params.forEach(p => { d[p.id] = p.val; });
@@ -659,6 +660,7 @@ export default function App() {
 
   const applyPreset = (preset: typeof QUICK_PRESETS[0]) => {
     setShapeType(preset.shape);
+    setSelectedPresetLabel(preset.label);
     const newParams: Record<string, number> = {};
     SHAPE_DEFS[preset.shape]?.params.forEach(p => {
       newParams[p.id] = (preset.params as any)[p.id] ?? p.val;
@@ -704,6 +706,7 @@ export default function App() {
 
   const onShapeChange = (st: string) => {
     setShapeType(st);
+    setSelectedPresetLabel("");
     const newParams: Record<string, number> = {};
     SHAPE_DEFS[st]?.params.forEach(p => { newParams[p.id] = p.val; });
     setParams(newParams);
@@ -974,6 +977,7 @@ export default function App() {
               onGenerate={generate}
               onClear={() => setOutput("")}
               applyPreset={applyPreset}
+              selectedPresetLabel={selectedPresetLabel}
               onSurpriseMe={surpriseMe}
               buildNotes={buildNotes} setBuildNotes={setBuildNotes}
               captureCurrentState={captureCurrentState} restoreState={restoreState}
@@ -1400,7 +1404,7 @@ function ArchitectSidebar(p: any) {
           <div className="grid grid-cols-2 gap-1 max-h-52 overflow-y-auto pr-0.5">
             {p.filteredPresets.map((preset: any) => (
               <button key={preset.label} onClick={() => p.applyPreset(preset)}
-                className={`text-left text-[10px] px-2 py-1.5 rounded-sm border transition-all truncate ${p.shapeType === preset.shape ? "border-[#d4a017] text-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] text-[#c0aa70] hover:border-[#6a5a3a] hover:text-[#c8b99a]"}`}>
+                className={`text-left text-[10px] px-2 py-1.5 rounded-sm border transition-all truncate ${p.selectedPresetLabel === preset.label ? "border-[#d4a017] text-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] text-[#c0aa70] hover:border-[#6a5a3a] hover:text-[#c8b99a]"}`}>
                 {preset.label}
               </button>
             ))}
