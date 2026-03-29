@@ -1241,9 +1241,8 @@ function gen_crashed_ufo(p: Record<string, number>): Point3D[] {
     const y = r * 0.2 + r * 0.25 * Math.sin(lat), cr = r * 0.3 * Math.cos(lat);
     for (let j = 0; j < 10; j++) { const a = 2 * Math.PI * j / 10; pts.push({ x: cr * Math.cos(a), y, z: cr * Math.sin(a) }); }
   }
-  // Crash tilt — one side down, debris scattered
-  const tiltAng = (p.tiltDeg || 25) * Math.PI / 180;
-  // Crash furrow (gouge in ground)
+  // Crash furrow (gouge in ground) — tilt applied via debris placement
+  const tiltFactor = Math.sin((p.tiltDeg || 25) * Math.PI / 180);
   const furLen = r * 1.8;
   for (let i = 0; i <= 12; i++) {
     const t = i / 12;
@@ -1251,12 +1250,13 @@ function gen_crashed_ufo(p: Record<string, number>): Point3D[] {
     pts.push({ x: fw, y: -r * 0.15 * t, z: furLen * t });
     pts.push({ x: -fw, y: -r * 0.15 * t, z: furLen * t });
   }
-  // Debris chunks around crash site
-  for (let d = 0; d < (p.debris || 8); d++) {
-    const da = 2 * Math.PI * d / (p.debris || 8);
-    const dr = r * (0.8 + Math.random() * 0.8);
+  // Debris chunks around crash site — spread influenced by tilt
+  const debrisN = p.debris || 8;
+  for (let d = 0; d < debrisN; d++) {
+    const da = 2 * Math.PI * d / debrisN;
+    const dr = r * (0.8 + tiltFactor * 0.4) + r * 0.4 * Math.sin(d * 2.1);
     pts.push({ x: dr * Math.cos(da), y: 0, z: dr * Math.sin(da) });
-    pts.push({ x: dr * 0.7 * Math.cos(da + 0.3), y: r * 0.05, z: dr * 0.7 * Math.sin(da + 0.3) });
+    pts.push({ x: dr * 0.7 * Math.cos(da + 0.3), y: r * 0.05 * tiltFactor, z: dr * 0.7 * Math.sin(da + 0.3) });
   }
   return pts;
 }
@@ -1343,7 +1343,7 @@ function gen_stonehenge(p: Record<string, number>): Point3D[] {
     }
   }
   // Inner horseshoe trilithons
-  const triliN = p.trilithonCount || 5;
+  const triliN = Math.max(2, p.trilithonCount || 5);
   for (let j = 0; j < triliN; j++) {
     const a = Math.PI * j / (triliN - 1) - Math.PI / 2;
     const sx = innerR * Math.cos(a), sz = innerR * Math.sin(a);

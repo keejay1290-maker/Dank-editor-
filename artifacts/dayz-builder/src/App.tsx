@@ -101,10 +101,12 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
 
     let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity, minZ = Infinity, maxZ = -Infinity;
     pts.forEach(p => {
+      if (!isFinite(p.x) || !isFinite(p.y) || !isFinite(p.z)) return;
       if (p.x < minX) minX = p.x; if (p.x > maxX) maxX = p.x;
       if (p.y < minY) minY = p.y; if (p.y > maxY) maxY = p.y;
       if (p.z < minZ) minZ = p.z; if (p.z > maxZ) maxZ = p.z;
     });
+    if (!isFinite(minX) || !isFinite(maxX)) return; // all points were NaN/Inf
     const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2, cz = (minZ + maxZ) / 2;
     const spread = Math.max(maxX - minX, maxY - minY, maxZ - minZ, 1);
     const baseZoom = Math.min(W, H) * 0.38 / spread * zoom;
@@ -220,21 +222,36 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
     };
   }, [draw]);
 
-  // Resize observer
+  // Resize observer — wrap in rAF to avoid "ResizeObserver loop limit exceeded"
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !canvas.parentElement) return;
+    let rafId: number | null = null;
     const obs = new ResizeObserver(() => {
-      const rect = canvas.parentElement!.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
-      draw();
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const parent = canvas.parentElement;
+        if (!parent) return;
+        const rect = parent.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          canvas.width = rect.width;
+          canvas.height = rect.height;
+          draw();
+        }
+        rafId = null;
+      });
     });
     obs.observe(canvas.parentElement);
     const rect = canvas.parentElement.getBoundingClientRect();
-    canvas.width = rect.width; canvas.height = rect.height;
+    if (rect.width > 0 && rect.height > 0) {
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
     draw();
-    return () => obs.disconnect();
+    return () => {
+      obs.disconnect();
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
   }, [draw]);
 
   return { updatePoints, startAutoRotate, stopAutoRotate, draw };
