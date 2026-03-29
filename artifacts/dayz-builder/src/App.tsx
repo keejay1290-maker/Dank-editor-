@@ -337,7 +337,7 @@ const QUICK_PRESETS: Preset[] = [
   // 💀 Dark & Horror
   { category: "💀 Dark", label: "Skull Giant", shape: "body_skull", params: { radius:18,eyeSocket:5,jawDrop:8 } },
   { category: "💀 Dark", label: "Mushroom Cloud", shape: "mushroom_cloud", params: { radius:40,height:80 } },
-  { category: "💀 Dark", label: "Volcano", shape: "volcano", params: { baseRadius:50,height:60,craterRadius:12,rimHeight:5,rings:8,spacing:8 } },
+  { category: "💀 Dark", label: "Volcano", shape: "volcano", params: { baseRadius:50,height:32,craterRadius:10,rimHeight:4,rings:10,spacing:6 } },
   { category: "💀 Dark", label: "Rib Cage", shape: "body_ribcage", params: { width:8,height:14,ribs:8 } },
   { category: "💀 Dark", label: "Humanoid", shape: "body_humanoid", params: { height:20,width:8 } },
 
@@ -350,12 +350,12 @@ const QUICK_PRESETS: Preset[] = [
 
   // 🎬 Movies & TV
   { category: "🎬 Movies", label: "Halo Ring", shape: "torus", params: { majorR:60,minorR:4,majorSegs:36,minorSegs:6 } },
-  { category: "🎬 Movies", label: "AT-AT Walker", shape: "mech_walker", params: { height:28,width:22 } },
-  { category: "🎬 Movies", label: "Iron Throne", shape: "disc", params: { radius:3,rings:1,points:16,innerRadius:0 } },
+  { category: "🎬 Movies", label: "AT-AT Walker", shape: "atat_walker", params: { height:30,width:20 } },
+  { category: "🎬 Movies", label: "Iron Throne", shape: "disc", params: { radius:4,rings:1,points:20,innerRadius:0 } },
   { category: "🎬 Movies", label: "The Wall (GoT)", shape: "wall_line", params: { length:100,height:24,rings:12,spacing:2 } },
-  { category: "🎬 Movies", label: "Eye of Sauron", shape: "volcano", params: { baseRadius:35,height:55,craterRadius:6,rimHeight:6,rings:8,spacing:8 } },
+  { category: "🎬 Movies", label: "Eye of Sauron", shape: "eye_of_sauron", params: { height:90,towerWidth:28,eyeRadius:22 } },
   { category: "🎬 Movies", label: "Avengers Tower", shape: "skyscraper", params: { width:14,height:130,floors:26 } },
-  { category: "🎬 Movies", label: "Borg Cube", shape: "bastion_square", params: { size:40,height:10,towerRadius:5 } },
+  { category: "🎬 Movies", label: "Borg Cube", shape: "borg_cube", params: { size:40,gridLines:4 } },
   { category: "🎬 Movies", label: "Mordor Gate", shape: "sci_fi_gate", params: { width:80,height:60 } },
   { category: "🎬 Movies", label: "Minas Tirith", shape: "azkaban_tower", params: { baseRadius:35,height:90,towerCount:7 } },
   { category: "🎬 Movies", label: "T-800 Terminator", shape: "t800_endoskeleton", params: { height:22,width:10 } },

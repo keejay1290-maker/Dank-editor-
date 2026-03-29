@@ -167,6 +167,28 @@ export const SHAPE_DEFS: Record<string, ShapeDef> = {
       { id: "width", label: "Shoulder Width (m)", val: 10, min: 4, max: 50 },
     ]
   },
+  atat_walker: {
+    label: "🐘 AT-AT Walker", group: "Mechs",
+    params: [
+      { id: "height", label: "Total Height (m)", val: 30, min: 10, max: 100 },
+      { id: "width", label: "Body Width (m)", val: 20, min: 8, max: 80 },
+    ]
+  },
+  borg_cube: {
+    label: "🟩 Borg Cube", group: "Sci-Fi",
+    params: [
+      { id: "size", label: "Cube Size (m)", val: 40, min: 10, max: 200 },
+      { id: "gridLines", label: "Grid Lines per Face", val: 4, min: 2, max: 8, step: 1 },
+    ]
+  },
+  eye_of_sauron: {
+    label: "👁 Eye of Sauron", group: "Sci-Fi",
+    params: [
+      { id: "height", label: "Total Height (m)", val: 90, min: 30, max: 300 },
+      { id: "towerWidth", label: "Tower Base Width (m)", val: 28, min: 8, max: 100 },
+      { id: "eyeRadius", label: "Eye Radius (m)", val: 22, min: 8, max: 80 },
+    ]
+  },
   mech_minigun: {
     label: "🔫 Mech — Minigun Turret", group: "Mechs",
     params: [

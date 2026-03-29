@@ -44,6 +44,9 @@ export function getShapePoints(shapeType: string, params: Record<string, number>
     case 'letter_Z': return gen_letter_Z(p);
     case 'mech_bipedal': return gen_mech_bipedal(p);
     case 't800_endoskeleton': return gen_t800_endoskeleton(p);
+    case 'atat_walker': return gen_atat_walker(p);
+    case 'borg_cube': return gen_borg_cube(p);
+    case 'eye_of_sauron': return gen_eye_of_sauron(p);
     case 'mech_minigun': return gen_mech_minigun(p);
     case 'mech_walker': return gen_mech_walker(p);
     case 'millennium_falcon': return gen_millennium_falcon(p);
@@ -1391,27 +1394,221 @@ function gen_crashed_ufo(p: Record<string, number>): Point3D[] {
 
 function gen_volcano(p: Record<string, number>): Point3D[] {
   const pts: Point3D[] = [];
-  const r = p.baseRadius, h = p.height;
-  // Outer cone
-  for (let ri = 0; ri <= p.rings; ri++) {
-    const t = ri / p.rings;
-    const cr = r * (1 - t) + p.craterRadius * t, y = h * t;
-    const n = Math.max(6, Math.ceil(cr * 2 * Math.PI / (p.spacing || 8)));
+  const r = p.baseRadius, h = p.height, cR = p.craterRadius;
+  // Curved sides: power curve gives wide base that steepens near top (Mt Fuji profile)
+  const rings = p.rings || 10;
+  for (let ri = 0; ri <= rings; ri++) {
+    const t = ri / rings;
+    // Exponential taper: very gentle at base, steep near crater
+    const cr = cR + (r - cR) * Math.pow(1 - t, 1.8);
+    const y = h * Math.pow(t, 0.8); // compress height at top → flatter summit shoulder
+    const n = Math.max(8, Math.round(cr * Math.PI * 2 / (p.spacing || 6)));
     for (let j = 0; j < n; j++) { const a = 2 * Math.PI * j / n; pts.push({ x: cr * Math.cos(a), y, z: cr * Math.sin(a) }); }
   }
-  // Crater rim bumpy
-  for (let j = 0; j < 24; j++) {
-    const a = 2 * Math.PI * j / 24;
-    const bump = p.craterRadius * (1 + 0.15 * Math.sin(j * 3));
+  // Wide flat base skirt (extra ring at ground to emphasise breadth)
+  for (let j = 0; j < 32; j++) { const a = 2 * Math.PI * j / 32; pts.push({ x: r * Math.cos(a), y: 0, z: r * Math.sin(a) }); }
+  // Crater rim — jagged bumps for rocky look
+  for (let j = 0; j < 28; j++) {
+    const a = 2 * Math.PI * j / 28;
+    const bump = cR * (1 + 0.22 * Math.sin(j * 5 + 1));
     pts.push({ x: bump * Math.cos(a), y: h, z: bump * Math.sin(a) });
-    pts.push({ x: bump * Math.cos(a), y: h + p.rimHeight, z: bump * Math.sin(a) });
+    pts.push({ x: bump * 0.85 * Math.cos(a), y: h + p.rimHeight, z: bump * 0.85 * Math.sin(a) });
   }
-  // Lava channel down one side
+  // Crater interior (concave bowl)
+  for (let ri = 1; ri <= 3; ri++) {
+    const cr2 = cR * 0.8 * (1 - ri / 4);
+    const cy = h - h * 0.06 * ri;
+    for (let j = 0; j < 16; j++) { const a = 2 * Math.PI * j / 16; pts.push({ x: cr2 * Math.cos(a), y: cy, z: cr2 * Math.sin(a) }); }
+  }
+  // Lava flows: 3 streams down the sides
+  [0, 2.1, 4.4].forEach(startA => {
+    for (let i = 0; i <= 10; i++) {
+      const t = i / 10;
+      const cr3 = cR + (r - cR) * Math.pow(t, 0.7);
+      const a = startA + 0.18 * Math.sin(t * 8);
+      pts.push({ x: cr3 * Math.cos(a), y: h * (1 - t), z: cr3 * Math.sin(a) });
+    }
+  });
+  return pts;
+}
+
+// Eye of Sauron: Barad-dûr spire + fiery oval eye + flame corona
+function gen_eye_of_sauron(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const h = p.height, tw = p.towerWidth, eR = p.eyeRadius;
+
+  // ── BARAD-DÛR TOWER (4-sided tapering dark spire) ─────────────
+  const towerTop = h * 0.62;
+  for (let ri = 0; ri <= 18; ri++) {
+    const t = ri / 18;
+    const y = towerTop * t;
+    const w = tw * Math.pow(1 - t, 0.7); // tapers more steeply
+    const hw = w * 0.5, hd = w * 0.42;
+    pts.push({ x: -hw, y, z: -hd }, { x: hw, y, z: -hd }, { x: hw, y, z: hd }, { x: -hw, y, z: hd });
+    // Buttress fins every 4 rings
+    if (ri > 0 && ri % 3 === 0 && t < 0.85) {
+      const fin = w * 0.35;
+      [-1, 1].forEach(side => {
+        pts.push({ x: side * (hw + fin), y, z: 0 });
+        pts.push({ x: side * (hw + fin * 0.5), y, z: -hd });
+        pts.push({ x: side * (hw + fin * 0.5), y, z: hd });
+      });
+    }
+  }
+  // Spire needle tip
+  for (let i = 0; i <= 8; i++) {
+    const t = i / 8, r = tw * 0.1 * (1 - t);
+    for (let j = 0; j < 5; j++) { const a = 2 * Math.PI * j / 5; pts.push({ x: r * Math.cos(a), y: towerTop + h * 0.06 * t, z: r * Math.sin(a) }); }
+  }
+  // Dark platform/battlement ring at tower base
+  [tw * 1.1, tw * 1.5, tw * 2.0].forEach(br => {
+    const n = Math.round(br * 2.5);
+    for (let j = 0; j < n; j++) { const a = 2 * Math.PI * j / n; pts.push({ x: br * Math.cos(a), y: 0, z: br * Math.sin(a) }); }
+  });
+
+  // ── THE EYE (wide oval / cat-eye ellipse above tower) ──────────
+  const eyeY = h * 0.75;
+  const eRx = eR, eRz = eR * 0.32; // wide & narrow (slit eye)
+  // Outer eye ring (oval)
+  for (let j = 0; j < 44; j++) {
+    const a = 2 * Math.PI * j / 44;
+    pts.push({ x: eRx * Math.cos(a), y: eyeY + eRz * 0.35 * Math.sin(a * 2), z: eRz * Math.sin(a) });
+  }
+  // Mid iris ring
+  for (let j = 0; j < 28; j++) {
+    const a = 2 * Math.PI * j / 28;
+    pts.push({ x: eRx * 0.55 * Math.cos(a), y: eyeY + eRz * 0.25 * Math.sin(a * 2), z: eRz * 0.55 * Math.sin(a) });
+  }
+  // Vertical pupil slit (the slit in the eye)
+  for (let i = -5; i <= 5; i++) {
+    const t = i / 5;
+    pts.push({ x: eRx * 0.04, y: eyeY + eRz * t, z: eRz * 0.08 * Math.sign(t || 1) * Math.abs(t) });
+  }
+  // Horizontal eyelid lines (upper and lower arcs)
+  [-1, 1].forEach(lid => {
+    for (let j = -8; j <= 8; j++) {
+      const t = j / 8;
+      pts.push({ x: eRx * 0.9 * t, y: eyeY + lid * eRz * 0.7 * Math.sqrt(1 - t * t), z: eRz * 0.12 * lid });
+    }
+  });
+
+  // ── FLAME CORONA (radiating spikes of fire around the eye) ─────
+  const numFlames = 20;
+  for (let j = 0; j < numFlames; j++) {
+    const a = 2 * Math.PI * j / numFlames;
+    // Vary flame lengths using a deterministic wave
+    const flLen = eRx * (0.5 + 0.5 * Math.abs(Math.sin(j * 1.9 + 0.7)));
+    const bx = eRx * 0.95 * Math.cos(a), bz = eRz * 0.95 * Math.sin(a);
+    const mx = (eRx + flLen * 0.5) * Math.cos(a), mz = (eRz + flLen * 0.25) * Math.sin(a);
+    const tx2 = (eRx + flLen) * Math.cos(a), tz2 = (eRz + flLen * 0.4) * Math.sin(a);
+    pts.push({ x: bx, y: eyeY, z: bz });
+    pts.push({ x: mx, y: eyeY + flLen * 0.35, z: mz });
+    pts.push({ x: tx2, y: eyeY + flLen * 0.65, z: tz2 });
+  }
+
+  return pts;
+}
+
+// AT-AT Walker: 4-legged quadruped body + neck + boxy head with twin cannons
+function gen_atat_walker(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const h = p.height, w = p.width;
+  const legH = h * 0.42;
+
+  // ── 4 LEGS (column legs, 2 on each side) ──────────────────────
+  const legCX = w * 0.38, legCZ = w * 0.45;
+  [[legCX, legCZ], [legCX, -legCZ], [-legCX, legCZ], [-legCX, -legCZ]].forEach(([lx, lz]) => {
+    // Upper leg joint at body attach
+    for (let j = 0; j < 8; j++) { const a = 2 * Math.PI * j / 8; pts.push({ x: lx + w * 0.08 * Math.cos(a), y: legH, z: lz + w * 0.08 * Math.sin(a) }); }
+    // Leg column
+    for (let i = 0; i <= 10; i++) { const r = w * 0.06; const y = legH * i / 10; for (let j = 0; j < 6; j++) { const a = 2 * Math.PI * j / 6; pts.push({ x: lx + r * Math.cos(a), y, z: lz + r * Math.sin(a) }); } }
+    // Ankle
+    for (let j = 0; j < 8; j++) { const a = 2 * Math.PI * j / 8; pts.push({ x: lx + w * 0.09 * Math.cos(a), y: legH * 0.38, z: lz + w * 0.09 * Math.sin(a) }); }
+    // Flat foot (rectangular pad)
+    pts.push({ x: lx - w * 0.12, y: 0, z: lz - w * 0.14 }, { x: lx + w * 0.12, y: 0, z: lz - w * 0.14 });
+    pts.push({ x: lx - w * 0.12, y: 0, z: lz + w * 0.14 }, { x: lx + w * 0.12, y: 0, z: lz + w * 0.14 });
+    pts.push({ x: lx, y: 0, z: lz - w * 0.18 }); // forward toe
+  });
+
+  // ── BODY (massive rectangular hull elevated on legs) ──────────
+  const bodyY = legH, bodyTop = bodyY + h * 0.32;
+  const bW = w * 0.52, bD = w * 0.58;
+  for (let ri = 0; ri <= 5; ri++) {
+    const y = bodyY + h * 0.32 * ri / 5;
+    pts.push({ x: -bW, y, z: -bD }, { x: bW, y, z: -bD }, { x: bW, y, z: bD }, { x: -bW, y, z: bD });
+  }
+  // Vertical corner edges
+  [[bW, bD], [bW, -bD], [-bW, bD], [-bW, -bD]].forEach(([ex, ez]) => {
+    for (let i = 0; i <= 4; i++) { pts.push({ x: ex, y: bodyY + h * 0.32 * i / 4, z: ez }); }
+  });
+  // Undercarriage panel lines (3 horizontal ribs on underside)
+  for (let ri = 0; ri <= 2; ri++) {
+    const z2 = -bD + bD * 2 * ri / 2;
+    pts.push({ x: -bW, y: bodyY + h * 0.04, z: z2 }, { x: bW, y: bodyY + h * 0.04, z: z2 });
+  }
+
+  // ── NECK (forward-extending from front of body) ────────────────
+  const neckLen = w * 0.5;
   for (let i = 0; i <= 8; i++) {
     const t = i / 8;
-    const lx = (p.craterRadius * (1 - t) + r * t) * 0.1;
-    pts.push({ x: lx, y: h * (1 - t), z: (p.craterRadius + (r - p.craterRadius) * t) * 0.85 });
+    const y = bodyTop - h * 0.04 + h * 0.1 * t;
+    const nz = -bD - neckLen * t;
+    pts.push({ x: -w * 0.1, y, z: nz }, { x: w * 0.1, y, z: nz });
+    if (i % 2 === 0) pts.push({ x: 0, y: y + h * 0.04, z: nz }, { x: 0, y: y - h * 0.04, z: nz });
   }
+
+  // ── HEAD (rectangular box with viewport & twin cannons) ────────
+  const headZ = -bD - neckLen;
+  const headY = bodyTop + h * 0.03;
+  const hW2 = w * 0.18, hD = w * 0.2, hH = h * 0.13;
+  for (let ri = 0; ri <= 3; ri++) {
+    const y = headY + hH * ri / 3;
+    pts.push({ x: -hW2, y, z: headZ - hD }, { x: hW2, y, z: headZ - hD });
+    pts.push({ x: hW2, y, z: headZ + hD }, { x: -hW2, y, z: headZ + hD });
+  }
+  // Viewport strip (windows across front of head)
+  for (let i = -3; i <= 3; i++) { pts.push({ x: i * hW2 * 0.3, y: headY + hH * 0.7, z: headZ - hD - w * 0.01 }); }
+  // Twin chin cannons (two long barrels hanging below front)
+  [-1, 1].forEach(side => {
+    const cx = side * hW2 * 0.55;
+    for (let i = 0; i <= 10; i++) { pts.push({ x: cx, y: headY + hH * 0.2, z: headZ - hD - w * 0.38 * i / 10 }); }
+    for (let j = 0; j < 6; j++) { const a = 2 * Math.PI * j / 6; pts.push({ x: cx + w * 0.04 * Math.cos(a), y: headY + hH * 0.2, z: headZ - hD - w * 0.38 + w * 0.03 * Math.sin(a) }); }
+  });
+
+  return pts;
+}
+
+// Borg Cube: wireframe cube with Borg-style circuitry grid on all 6 faces
+function gen_borg_cube(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const s = p.size * 0.5; // half-edge
+  const g = Math.max(2, Math.round(p.gridLines || 4));
+
+  // Helper: draw a face grid (normal axis = n, axes = u/v)
+  const face = (n: 'x' | 'y' | 'z', nVal: number, uA: 'x' | 'y' | 'z', vA: 'x' | 'y' | 'z') => {
+    for (let ui = 0; ui <= g; ui++) {
+      for (let vi = 0; vi <= g; vi++) {
+        const uV = -s + 2 * s * ui / g;
+        const vV = -s + 2 * s * vi / g;
+        const pt: Point3D = { x: 0, y: 0, z: 0 };
+        pt[n] = nVal; pt[uA] = uV; pt[vA] = vV;
+        pts.push(pt);
+      }
+    }
+    // Extra structural lines (Borg circuitry channels)
+    [Math.round(g / 3), Math.round(2 * g / 3)].forEach(ci => {
+      const cV = -s + 2 * s * ci / g;
+      for (let k = 0; k <= g; k++) {
+        const kV = -s + 2 * s * k / g;
+        const p1: Point3D = { x: 0, y: 0, z: 0 }; p1[n] = nVal; p1[uA] = cV; p1[vA] = kV;
+        const p2: Point3D = { x: 0, y: 0, z: 0 }; p2[n] = nVal; p2[uA] = kV; p2[vA] = cV;
+        pts.push(p1, p2);
+      }
+    });
+  };
+  face('z', s, 'x', 'y'); face('z', -s, 'x', 'y');
+  face('x', s, 'y', 'z'); face('x', -s, 'y', 'z');
+  face('y', s, 'x', 'z'); face('y', -s, 'x', 'z');
   return pts;
 }
 
