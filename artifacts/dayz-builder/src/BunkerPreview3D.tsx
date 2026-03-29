@@ -19,15 +19,21 @@ const SEC_COLOR: Record<PlacedObject["section"], THREE.Color> = {
   decor:    new THREE.Color("#8a7040"),
 };
 
-// ─── Approximate box size for each section type ───────────────────────────────
+// ─── Box size for each section type ───────────────────────────────────────────
+// Dimensions: [width-X, height-Y, depth-Z]
+// Tunnel pieces use CELL_LEN=9 for Z depth so adjacent segments are flush.
+// Branch pieces are placed with yaw=90/270 so their W/D are swapped in world space.
+// Entrance height=10 bridges from surface (Y=0) down to Level 1 (Y=-5).
 function secBox(sec: PlacedObject["section"]): [number, number, number] {
   switch (sec) {
-    case "room":     return [9,   0.3,  9  ];   // thin floor slab
-    case "stair":    return [2,   6,    4  ];
-    case "decor":    return [1.2, 1.2,  1.2];
-    case "panel":    return [3,   3,    0.3];
-    case "exterior": return [0.3, 3.5,  9  ];
-    default:         return [0.35, 3.5, 9  ];   // tunnel / branch / entrance / exit
+    case "entrance": return [6,   10,  13 ];  // tall: surface→underground; deep: spans toward connector
+    case "exit":     return [5,   10,   5 ];  // exit hatch — stair blocks handle vertical
+    case "panel":    return [0.5,  1.5,  0.3];
+    case "room":     return [14,   4.5, 16 ];  // proper 3D room volume
+    case "stair":    return [4.5,  5,   4.5];  // one stair block (~STAIR_BLOCK_H)
+    case "exterior": return [1,    3.5,  9 ];  // wall panel
+    case "decor":    return [1.2,  1.2,  1.2];
+    default:         return [9,    3.5,  9 ];  // tunnel/branch/connector — full junction footprint
   }
 }
 
