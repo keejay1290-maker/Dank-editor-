@@ -98,6 +98,13 @@ export function getShapePoints(shapeType: string, params: Record<string, number>
     case 'alien_mothership': return gen_alien_mothership(p);
     case 'celtic_ring': return gen_celtic_ring(p);
     case 'iron_throne': return gen_iron_throne(p);
+    case 'gothic_arch': return gen_gothic_arch(p);
+    case 'bridge_truss': return gen_bridge_truss(p);
+    case 'amphitheater': return gen_amphitheater(p);
+    case 'vaulted_ceiling': return gen_vaulted_ceiling(p);
+    case 'pitched_roof': return gen_pitched_roof(p);
+    case 'log_cabin': return gen_log_cabin(p);
+    case 'freeway_curve': return gen_freeway_curve(p);
     default: return [];
   }
 }
@@ -3965,6 +3972,573 @@ function gen_iron_throne(p: Record<string, number>): Point3D[] {
         z: backZ - r * 0.12,
       });
     }
+  }
+
+  return pts;
+}
+
+// ─── GOTHIC ARCH ─────────────────────────────────────────────────────────────
+// Series of pointed Gothic arches (arcade). bays = number of arches along depth axis.
+function gen_gothic_arch(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const w = p.width ?? 12;      // arch inner clear width
+  const h = p.height ?? 16;     // apex height from ground
+  const depth = p.depth ?? 60;  // total length of arcade
+  const bays = Math.max(1, Math.round(p.bays ?? 5));
+  const thickness = p.thickness ?? 2; // arch ring depth (front+back face)
+  const pillarW = p.pillarW ?? 2.5;   // width of each pillar
+
+  const baySpacing = depth / bays;
+  const N = 24; // points per arch half
+
+  // Pointed gothic arch: two circles offset from centre so they intersect at top
+  // Each half uses radius = 0.7*w centred at ±w/2 from arch centre
+  const R = w * 0.72;
+
+  function archPoints(zPos: number): void {
+    // Left half arc: centre at (-w/2 + R*overlap, springH) where springH = 0
+    // Standard gothic: circles centred at 0 and w, radius = w
+    for (let i = 0; i <= N; i++) {
+      const t = i / N; // 0 = base, 1 = apex
+      // left arc: centre (0, 0), radius R — sweeps from 90° clockwise to 60° ish
+      const a = (Math.PI / 2) + t * (Math.PI / 3);
+      const x = -w / 2 + R - R * Math.cos(a);
+      const y = R * Math.sin(a);
+      if (y >= 0 && y <= h) {
+        pts.push({ x, y, z: zPos });
+        pts.push({ x, y, z: zPos + thickness });
+      }
+    }
+    for (let i = 0; i <= N; i++) {
+      const t = i / N;
+      const a = (Math.PI / 2) + t * (Math.PI / 3);
+      const x = w / 2 - R + R * Math.cos(a);
+      const y = R * Math.sin(a);
+      if (y >= 0 && y <= h) {
+        pts.push({ x, y, z: zPos });
+        pts.push({ x, y, z: zPos + thickness });
+      }
+    }
+    // Floor line & pillar base
+    const pSteps = Math.max(2, Math.round(pillarW / 1.5));
+    for (let j = 0; j <= pSteps; j++) {
+      const frac = j / pSteps;
+      pts.push({ x: -w / 2 - pillarW * frac, y: 0, z: zPos });
+      pts.push({ x:  w / 2 + pillarW * frac, y: 0, z: zPos });
+    }
+    // Pillar height
+    const pillarSteps = Math.max(2, Math.round(h * 0.4 / 2));
+    for (let j = 0; j <= pillarSteps; j++) {
+      const py = (j / pillarSteps) * h * 0.4;
+      pts.push({ x: -w / 2 - pillarW / 2, y: py, z: zPos });
+      pts.push({ x:  w / 2 + pillarW / 2, y: py, z: zPos });
+    }
+  }
+
+  // Place arches along depth axis
+  for (let b = 0; b <= bays; b++) {
+    archPoints(b * baySpacing);
+  }
+  // Connecting top spine (ridge line) along arcade length
+  const ridgeSteps = Math.max(8, bays * 4);
+  for (let i = 0; i <= ridgeSteps; i++) {
+    pts.push({ x: 0, y: h, z: (i / ridgeSteps) * depth });
+  }
+  // Side walkway (at bottom) along length
+  const walkSteps = Math.max(8, bays * 4);
+  for (let i = 0; i <= walkSteps; i++) {
+    const z = (i / walkSteps) * depth;
+    pts.push({ x: -w / 2 - pillarW, y: 0, z });
+    pts.push({ x:  w / 2 + pillarW, y: 0, z });
+  }
+  return pts;
+}
+
+// ─── BRIDGE TRUSS ─────────────────────────────────────────────────────────────
+// Warren truss bridge with diagonal members, top/bottom chords, and deck beams.
+function gen_bridge_truss(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const length = p.length ?? 80;
+  const height = p.height ?? 12;
+  const width  = p.width  ?? 10;
+  const panels = Math.max(4, Math.round(p.panels ?? 12));
+  const supportPillars = Math.round(p.pillars ?? 2);
+
+  const panelLen = length / panels;
+  const hw = width / 2;
+
+  // For each of 2 side trusses (at +hw and -hw)
+  for (const side of [-hw, hw]) {
+    // Top chord
+    const topSteps = panels * 4;
+    for (let i = 0; i <= topSteps; i++) {
+      pts.push({ x: (i / topSteps) * length, y: height, z: side });
+    }
+    // Bottom chord (deck level)
+    for (let i = 0; i <= topSteps; i++) {
+      pts.push({ x: (i / topSteps) * length, y: 0, z: side });
+    }
+    // Vertical end posts
+    const postSteps = Math.max(3, Math.round(height / 3));
+    for (let j = 0; j <= postSteps; j++) {
+      pts.push({ x: 0,      y: (j / postSteps) * height, z: side });
+      pts.push({ x: length, y: (j / postSteps) * height, z: side });
+    }
+    // Warren diagonals — alternating direction
+    for (let i = 0; i < panels; i++) {
+      const x0 = i * panelLen;
+      const x1 = (i + 1) * panelLen;
+      const diagSteps = Math.max(4, Math.round(Math.sqrt(panelLen ** 2 + height ** 2) / 2));
+      if (i % 2 === 0) {
+        // diagonal: bottom-left to top-right
+        for (let k = 0; k <= diagSteps; k++) {
+          const t = k / diagSteps;
+          pts.push({ x: x0 + t * panelLen, y: t * height, z: side });
+        }
+      } else {
+        // diagonal: top-left to bottom-right
+        for (let k = 0; k <= diagSteps; k++) {
+          const t = k / diagSteps;
+          pts.push({ x: x0 + t * panelLen, y: height - t * height, z: side });
+        }
+      }
+    }
+  }
+
+  // Cross-deck beams (connecting the two sides at bottom and top)
+  const beamCount = panels + 1;
+  const crossSteps = Math.max(4, Math.round(width / 2));
+  for (let i = 0; i < beamCount; i++) {
+    const bx = i * panelLen;
+    for (let k = 0; k <= crossSteps; k++) {
+      const z = -hw + (k / crossSteps) * width;
+      pts.push({ x: bx, y: 0,      z });
+      pts.push({ x: bx, y: height, z });
+    }
+  }
+
+  // Deck surface cross-planks
+  const deckPlanks = Math.max(panels, 16);
+  for (let i = 0; i <= deckPlanks; i++) {
+    const x = (i / deckPlanks) * length;
+    for (let k = 0; k <= crossSteps; k++) {
+      pts.push({ x, y: 0, z: -hw + (k / crossSteps) * width });
+    }
+  }
+
+  // Under-structure support pillars
+  if (supportPillars > 0) {
+    const pillarH = p.pillarH ?? 12;
+    for (let i = 1; i <= supportPillars; i++) {
+      const px = length * i / (supportPillars + 1);
+      const pSteps = Math.max(4, Math.round(pillarH / 2));
+      for (let j = 0; j <= pSteps; j++) {
+        const py = -pillarH + (j / pSteps) * pillarH;
+        pts.push({ x: px, y: py, z: -hw });
+        pts.push({ x: px, y: py, z:  hw });
+      }
+      // Footing
+      for (let k = 0; k <= crossSteps; k++) {
+        pts.push({ x: px, y: -pillarH, z: -hw + (k / crossSteps) * width });
+      }
+    }
+  }
+
+  return pts;
+}
+
+// ─── AMPHITHEATER ─────────────────────────────────────────────────────────────
+// Tiered semi-circular seating bowl — arena/event venue.
+function gen_amphitheater(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const innerR   = p.innerR  ?? 12;   // stage/floor radius
+  const rows     = Math.max(2, Math.round(p.rows ?? 8));
+  const rowD     = p.rowD    ?? 3.5;  // depth per row
+  const rowH     = p.rowH    ?? 1.5;  // rise per row
+  const arcDeg   = p.arcDeg  ?? 200;  // arc of seating (180 = semi, 360 = full)
+  const ptsPerRow = Math.max(12, Math.round(p.segsPerRow ?? 28));
+  const withStage = (p.stage ?? 1) > 0;
+
+  const arcRad = arcDeg * Math.PI / 180;
+  const startAngle = -arcRad / 2 - Math.PI / 2;
+
+  for (let r = 0; r < rows; r++) {
+    const radius = innerR + r * rowD;
+    const y = r * rowH;
+    for (let i = 0; i <= ptsPerRow; i++) {
+      const a = startAngle + (i / ptsPerRow) * arcRad;
+      pts.push({ x: radius * Math.cos(a), y, z: radius * Math.sin(a) });
+    }
+    // Riser (vertical face of each tier)
+    const riserSteps = Math.max(2, Math.round(rowH / 0.8));
+    for (let i = 0; i <= ptsPerRow; i++) {
+      const a = startAngle + (i / ptsPerRow) * arcRad;
+      for (let j = 0; j <= riserSteps; j++) {
+        const ry = (r - 1) * rowH + (j / riserSteps) * rowH;
+        if (ry >= 0) pts.push({ x: radius * Math.cos(a), y: ry, z: radius * Math.sin(a) });
+      }
+    }
+  }
+
+  // Stage floor
+  if (withStage) {
+    const stageR = innerR;
+    const stageSegs = Math.max(12, Math.round(p.segsPerRow ?? 28));
+    const stageRings = Math.max(2, Math.round(stageR / 4));
+    for (let ri = 0; ri <= stageRings; ri++) {
+      const r = (ri / stageRings) * stageR;
+      for (let i = 0; i < stageSegs; i++) {
+        const a = 2 * Math.PI * i / stageSegs;
+        pts.push({ x: r * Math.cos(a), y: 0, z: r * Math.sin(a) });
+      }
+    }
+  }
+
+  // Outer retaining walls at the two open ends
+  const outerR = innerR + rows * rowD;
+  const wallSteps = Math.max(4, Math.round(rows * rowH / 2));
+  for (let j = 0; j <= wallSteps; j++) {
+    const wy = (j / wallSteps) * (rows * rowH);
+    const a0 = startAngle;
+    const a1 = startAngle + arcRad;
+    pts.push({ x: innerR * Math.cos(a0), y: wy, z: innerR * Math.sin(a0) });
+    pts.push({ x: outerR * Math.cos(a0), y: wy, z: outerR * Math.sin(a0) });
+    pts.push({ x: innerR * Math.cos(a1), y: wy, z: innerR * Math.sin(a1) });
+    pts.push({ x: outerR * Math.cos(a1), y: wy, z: outerR * Math.sin(a1) });
+  }
+
+  return pts;
+}
+
+// ─── VAULTED CEILING ──────────────────────────────────────────────────────────
+// Barrel vault with optional cross-ribbing — cathedral/crypt ceiling.
+function gen_vaulted_ceiling(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const width  = p.width  ?? 16;  // span of each arch
+  const length = p.length ?? 50;  // length of the vault
+  const bays   = Math.max(1, Math.round(p.bays ?? 5));
+  const ribSegs = Math.max(8, Math.round(p.ribSegs ?? 16)); // points per arch rib
+  const withFloor = (p.floor ?? 0) > 0;
+  const withWalls = (p.walls ?? 1) > 0;
+
+  const bayLen  = length / bays;
+  const hw      = width / 2;
+  const archR   = hw; // semi-circular: radius = half-width
+  const apex    = archR; // height of apex above springing line
+
+  // Longitudinal rib spacing (along length)
+  const longRibs = Math.max(4, Math.round(p.longRibs ?? 8));
+
+  // Main transverse arch ribs (at each bay boundary)
+  for (let b = 0; b <= bays; b++) {
+    const z = b * bayLen;
+    for (let i = 0; i <= ribSegs; i++) {
+      const a = (i / ribSegs) * Math.PI;
+      const x = -hw + archR - archR * Math.cos(a); // from left pillar
+      const y = archR * Math.sin(a);
+      pts.push({ x: x - hw + archR, y, z }); // correct: x from -hw to +hw
+    }
+  }
+
+  // Longitudinal barrel surface — lines running along the vault length
+  for (let i = 0; i <= longRibs; i++) {
+    const a = (i / longRibs) * Math.PI;
+    const x = -hw + archR * (1 - Math.cos(a));
+    const y = archR * Math.sin(a);
+    const lenSteps = Math.max(8, bays * 4);
+    for (let j = 0; j <= lenSteps; j++) {
+      pts.push({ x: x - hw + archR, y, z: (j / lenSteps) * length });
+    }
+  }
+
+  // Cross-groin ribs (diagonal — Gothic cross vault feel)
+  for (let b = 0; b < bays; b++) {
+    const z0 = b * bayLen;
+    const z1 = (b + 1) * bayLen;
+    const groinSteps = Math.max(8, Math.round(Math.sqrt((bayLen) ** 2 + (width) ** 2) / 2));
+    for (let i = 0; i <= groinSteps; i++) {
+      const t = i / groinSteps;
+      const a = t * Math.PI;
+      const y = archR * Math.sin(a) * 0.9;
+      // diagonal left-front to right-back
+      pts.push({ x: -hw + t * width, y, z: z0 + t * bayLen });
+      // diagonal right-front to left-back
+      pts.push({ x: hw - t * width, y, z: z0 + t * bayLen });
+    }
+  }
+
+  // Side walls (pillars down to floor)
+  if (withWalls) {
+    const wallH = p.wallH ?? 4;
+    const wallSteps = Math.max(4, Math.round(wallH / 2));
+    for (let b = 0; b <= bays; b++) {
+      const z = b * bayLen;
+      for (let j = 0; j <= wallSteps; j++) {
+        const wy = -wallH + (j / wallSteps) * wallH;
+        pts.push({ x: -hw, y: wy, z });
+        pts.push({ x:  hw, y: wy, z });
+      }
+    }
+    // Longitudinal wall bottom line
+    const longSteps = bays * 4;
+    for (let i = 0; i <= longSteps; i++) {
+      pts.push({ x: -hw, y: -(p.wallH ?? 4), z: (i / longSteps) * length });
+      pts.push({ x:  hw, y: -(p.wallH ?? 4), z: (i / longSteps) * length });
+    }
+  }
+
+  // Floor
+  if (withFloor) {
+    const floorY = -(p.wallH ?? 4);
+    const fx = Math.max(4, Math.round(width / 3));
+    const fz = Math.max(4, bays * 3);
+    for (let i = 0; i <= fx; i++) {
+      for (let j = 0; j <= fz; j++) {
+        pts.push({ x: -hw + (i / fx) * width, y: floorY, z: (j / fz) * length });
+      }
+    }
+  }
+
+  return pts;
+}
+
+// ─── PITCHED ROOF FRAME ───────────────────────────────────────────────────────
+// Peaked roof truss system — rafters, ridge beam, collar ties, king posts.
+function gen_pitched_roof(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const width  = p.width  ?? 20;   // total width (eave to eave)
+  const length = p.length ?? 40;   // ridge length
+  const pitch  = p.pitch  ?? 8;    // rise from eave to ridge
+  const bays   = Math.max(2, Math.round(p.bays ?? 8)); // number of rafter pairs
+  const withCollarTie = (p.collarTie ?? 1) > 0;
+  const withKingPost  = (p.kingPost  ?? 1) > 0;
+
+  const hw     = width / 2;
+  const bayLen = length / bays;
+  const rafterLen = Math.sqrt(hw ** 2 + pitch ** 2);
+  const rafterSteps = Math.max(6, Math.round(rafterLen / 2));
+
+  for (let b = 0; b <= bays; b++) {
+    const z = b * bayLen;
+    // Left rafter: from (-hw, 0) to (0, pitch)
+    for (let i = 0; i <= rafterSteps; i++) {
+      const t = i / rafterSteps;
+      pts.push({ x: -hw + t * hw, y: t * pitch, z });
+    }
+    // Right rafter: from (hw, 0) to (0, pitch)
+    for (let i = 0; i <= rafterSteps; i++) {
+      const t = i / rafterSteps;
+      pts.push({ x: hw - t * hw, y: t * pitch, z });
+    }
+    // Tie beam (bottom of truss, eave to eave)
+    const tieSteps = Math.max(4, Math.round(width / 3));
+    for (let i = 0; i <= tieSteps; i++) {
+      pts.push({ x: -hw + (i / tieSteps) * width, y: 0, z });
+    }
+    // Collar tie (at 50% height)
+    if (withCollarTie) {
+      const ct = 0.5;
+      const ctW = hw * (1 - ct);
+      const ctY = pitch * ct;
+      const ctSteps = Math.max(3, Math.round(ctW * 2 / 2));
+      for (let i = 0; i <= ctSteps; i++) {
+        pts.push({ x: -ctW + (i / ctSteps) * ctW * 2, y: ctY, z });
+      }
+    }
+    // King post (centre vertical)
+    if (withKingPost) {
+      const kpH = pitch * 0.6;
+      const kpSteps = Math.max(3, Math.round(kpH / 2));
+      for (let j = 0; j <= kpSteps; j++) {
+        pts.push({ x: 0, y: (j / kpSteps) * kpH, z });
+      }
+    }
+  }
+
+  // Ridge beam (along length at apex)
+  const ridgeSteps = Math.max(8, bays * 4);
+  for (let i = 0; i <= ridgeSteps; i++) {
+    pts.push({ x: 0, y: pitch, z: (i / ridgeSteps) * length });
+  }
+  // Eave plates (top of walls, eave level, along each side)
+  const eaveSteps = Math.max(8, bays * 4);
+  for (let i = 0; i <= eaveSteps; i++) {
+    const z = (i / eaveSteps) * length;
+    pts.push({ x: -hw, y: 0, z });
+    pts.push({ x:  hw, y: 0, z });
+  }
+
+  return pts;
+}
+
+// ─── LOG CABIN ────────────────────────────────────────────────────────────────
+// Classic log cabin outline — stacked log walls, door & window openings, gable.
+function gen_log_cabin(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const width    = p.width    ?? 16;  // X extent
+  const depth    = p.depth    ?? 12;  // Z extent
+  const height   = p.height   ?? 8;   // wall height
+  const logGap   = p.logGap   ?? 1.2; // vertical spacing between log rows
+  const doorW    = p.doorW    ?? 3;
+  const doorH    = p.doorH    ?? 5;
+  const windowW  = p.windowW  ?? 2.5;
+  const windowH  = p.windowH  ?? 2;
+  const withRoof = (p.roof    ?? 1) > 0;
+  const roofPitch = p.roofPitch ?? 5;
+
+  const hw = width / 2;
+  const hd = depth / 2;
+  const rows = Math.max(2, Math.round(height / logGap));
+  const logStepsX = Math.max(4, Math.round(width / 2));
+  const logStepsZ = Math.max(4, Math.round(depth / 2));
+
+  // Helper: draw a horizontal log segment on one wall, skipping opening
+  const drawLog = (y: number, axis: 'x' | 'z', from: number, to: number,
+                   fixed: number, oppFixed: number,
+                   openStart?: number, openEnd?: number) => {
+    const steps = Math.max(4, Math.round(Math.abs(to - from) / 1.5));
+    for (let i = 0; i <= steps; i++) {
+      const v = from + (i / steps) * (to - from);
+      if (openStart !== undefined && openEnd !== undefined &&
+          v >= openStart && v <= openEnd) continue;
+      if (axis === 'x') {
+        pts.push({ x: v, y, z: fixed });
+        pts.push({ x: v, y, z: oppFixed });
+      } else {
+        pts.push({ x: fixed, y, z: v });
+        pts.push({ x: oppFixed, y, z: v });
+      }
+    }
+  };
+
+  for (let r = 0; r <= rows; r++) {
+    const y = (r / rows) * height;
+    // Front wall (z = -hd): door opening in centre
+    const doorSide = doorW / 2;
+    const frontOpen = y < doorH ? { s: -doorSide, e: doorSide } : undefined;
+    drawLog(y, 'x', -hw, hw, -hd, -hd, frontOpen?.s, frontOpen?.e);
+    // Back wall (z = +hd): window opening
+    const backOpen = (y > height * 0.3 && y < height * 0.3 + windowH) ? { s: -windowW / 2, e: windowW / 2 } : undefined;
+    drawLog(y, 'x', -hw, hw, hd, hd, backOpen?.s, backOpen?.e);
+    // Left wall (x = -hw)
+    const leftOpen = (y > height * 0.35 && y < height * 0.35 + windowH) ? { s: -windowW / 2, e: windowW / 2 } : undefined;
+    drawLog(y, 'z', -hd, hd, -hw, -hw, leftOpen?.s, leftOpen?.e);
+    // Right wall (x = +hw)
+    drawLog(y, 'z', -hd, hd, hw, hw, leftOpen?.s, leftOpen?.e);
+  }
+
+  // Corner notches (little protrusions at each corner, every other log)
+  const notch = 0.6;
+  for (let r = 0; r <= rows; r += 2) {
+    const y = (r / rows) * height;
+    for (const [cx, cz] of [[-hw, -hd], [hw, -hd], [-hw, hd], [hw, hd]]) {
+      const sx = Math.sign(cx), sz = Math.sign(cz);
+      for (let k = 0; k <= 3; k++) {
+        pts.push({ x: cx + sx * notch * (k / 3), y, z: cz });
+        pts.push({ x: cx, y, z: cz + sz * notch * (k / 3) });
+      }
+    }
+  }
+
+  // Gabled roof
+  if (withRoof) {
+    const ridgeY = height + roofPitch;
+    // Gable ends (triangular faces at z = ±hd)
+    for (const gz of [-hd, hd]) {
+      const gStepsY = Math.max(4, Math.round(roofPitch / 1.5));
+      for (let j = 0; j <= gStepsY; j++) {
+        const t = j / gStepsY;
+        const gW = hw * (1 - t);
+        const gy = height + t * roofPitch;
+        const gStepsX = Math.max(3, Math.round(gW * 2 / 1.5));
+        for (let i = 0; i <= gStepsX; i++) {
+          pts.push({ x: -gW + (i / gStepsX) * gW * 2, y: gy, z: gz });
+        }
+      }
+    }
+    // Ridge beam
+    const ridgeSteps = Math.max(6, Math.round(depth / 2));
+    for (let i = 0; i <= ridgeSteps; i++) {
+      pts.push({ x: 0, y: ridgeY, z: -hd + (i / ridgeSteps) * depth });
+    }
+    // Rafters (along eaves)
+    const rafterSegs = Math.max(4, Math.round(depth / 3));
+    const rafterSteps = Math.max(4, Math.round(Math.sqrt(hw ** 2 + roofPitch ** 2) / 2));
+    for (let i = 0; i <= rafterSegs; i++) {
+      const z = -hd + (i / rafterSegs) * depth;
+      for (let j = 0; j <= rafterSteps; j++) {
+        const t = j / rafterSteps;
+        pts.push({ x: -hw + t * hw, y: height + t * roofPitch, z });
+        pts.push({ x:  hw - t * hw, y: height + t * roofPitch, z });
+      }
+    }
+  }
+
+  return pts;
+}
+
+// ─── FREEWAY CURVE ────────────────────────────────────────────────────────────
+// Elevated curved road/pier section — inspired by DayZDisco Freeway Creator 2.0.
+// arcDeg=0 = straight; arcDeg=90 = quarter curve; arcDeg=180 = U-turn.
+function gen_freeway_curve(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const segments  = Math.max(4, Math.round(p.segments ?? 12));  // sections along road
+  const segLen    = p.segLen    ?? 10;    // length of each straight segment (m)
+  const roadW     = p.roadW     ?? 10;   // road deck width
+  const arcDegPerSeg = p.arcDeg ?? 0;   // turning angle per segment (degrees)
+  const withPillars  = (p.pillars ?? 1) > 0;
+  const pillarH   = p.pillarH   ?? 8;
+  const deckSteps = Math.max(4, Math.round(roadW / 2));
+
+  // Walk along the road, accumulating heading direction
+  let cx = 0, cz = 0, headingDeg = 0;
+
+  for (let s = 0; s < segments; s++) {
+    const rad = headingDeg * Math.PI / 180;
+    const dx = Math.sin(rad), dz = Math.cos(rad);
+    // Perpendicular (right hand side)
+    const px = Math.cos(rad), pz = -Math.sin(rad);
+
+    const x0 = cx, z0 = cz;
+    const x1 = cx + dx * segLen, z1 = cz + dz * segLen;
+
+    // Road deck surface (cross-section lines along the segment)
+    const longSteps = Math.max(4, Math.round(segLen / 2));
+    for (let i = 0; i <= longSteps; i++) {
+      const t = i / longSteps;
+      const mx = x0 + t * (x1 - x0);
+      const mz = z0 + t * (z1 - z0);
+      // Cross-deck beam
+      for (let k = 0; k <= deckSteps; k++) {
+        const off = -roadW / 2 + (k / deckSteps) * roadW;
+        pts.push({ x: mx + off * px, y: 0, z: mz + off * pz });
+      }
+    }
+
+    // Guardrails (left and right edges, along the segment)
+    const railSteps = Math.max(4, Math.round(segLen / 2));
+    for (let i = 0; i <= railSteps; i++) {
+      const t = i / railSteps;
+      const mx = x0 + t * (x1 - x0);
+      const mz = z0 + t * (z1 - z0);
+      pts.push({ x: mx + (roadW / 2) * px, y: 1.2, z: mz + (roadW / 2) * pz });
+      pts.push({ x: mx - (roadW / 2) * px, y: 1.2, z: mz - (roadW / 2) * pz });
+    }
+
+    // Support pillar at the start of each segment
+    if (withPillars) {
+      const pillarSteps = Math.max(4, Math.round(pillarH / 2));
+      for (let j = 0; j <= pillarSteps; j++) {
+        const py = -pillarH + (j / pillarSteps) * pillarH;
+        // Two pillars per segment (left and right)
+        pts.push({ x: cx + (roadW * 0.35) * px, y: py, z: cz + (roadW * 0.35) * pz });
+        pts.push({ x: cx - (roadW * 0.35) * px, y: py, z: cz - (roadW * 0.35) * pz });
+      }
+    }
+
+    // Advance position and turn
+    cx = x1; cz = z1;
+    headingDeg += arcDegPerSeg;
   }
 
   return pts;

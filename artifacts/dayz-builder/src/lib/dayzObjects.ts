@@ -554,6 +554,80 @@ export const DAYZ_OBJECTS: DayzObject[] = [
   { value: "HatchbackWheel",                label: "Hatchback Wheel",                  group: "Parts" },
   { value: "OffroadWheel",                  label: "Offroad Wheel",                    group: "Parts" },
   { value: "TruckWheel",                    label: "Truck Wheel",                      group: "Parts" },
+
+  // ─── Hay Bales & Stacked Crates ──────────────────────────────────────────
+  // Source: DayZDisco Architecture Generator & Text Sign Maker object list
+  { value: "HayBale",                        label: "Hay Bale (loose) ★ text fave",    group: "Hay Bales & Crates" },
+  { value: "HayBale_Packed",                 label: "Hay Bale Packed (round)",          group: "Hay Bales & Crates" },
+  { value: "HayBale_Packed_Stack",           label: "Hay Bale Packed Stack (2-high)",   group: "Hay Bales & Crates" },
+  { value: "HayBale_Decayed",                label: "Hay Bale Decayed (rotted)",        group: "Hay Bales & Crates" },
+  { value: "StaticObj_Misc_WoodenCrate",     label: "Wooden Crate (single)",            group: "Hay Bales & Crates" },
+  { value: "StaticObj_Misc_WoodenCrate_3x",  label: "Wooden Crate Stack 3x",           group: "Hay Bales & Crates" },
+  { value: "StaticObj_Misc_WoodenCrate_5x",  label: "Wooden Crate Stack 5x",           group: "Hay Bales & Crates" },
+  { value: "StaticObj_Misc_Pallet",          label: "Wooden Pallet (flat)",             group: "Hay Bales & Crates" },
+  { value: "StaticObj_Misc_BoxWooden",       label: "Wooden Box (big crate)",           group: "Hay Bales & Crates" },
+  { value: "vaulting_box_small",             label: "Vaulting Box Small (gymnastics)",  group: "Hay Bales & Crates" },
+  { value: "vaulting_box_large",             label: "Vaulting Box Large",               group: "Hay Bales & Crates" },
+  { value: "StaticObj_Misc_WoodPile_Forest1",label: "Wood Pile Forest 1",              group: "Hay Bales & Crates" },
+  { value: "StaticObj_Misc_WoodPile_Forest2",label: "Wood Pile Forest 2",              group: "Hay Bales & Crates" },
+
+  // ─── Shipping Containers (Text Making) ───────────────────────────────────
+  // Large shipping containers — great for spelling & landmarks
+  { value: "StaticObj_Container_1D",         label: "Container Dark ★ BEST TEXT OBJ", group: "Shipping Containers" },
+  { value: "StaticObj_Container_1C",         label: "Container Cargo (blue-grey)",     group: "Shipping Containers" },
+  { value: "StaticObj_Container_1Nr",        label: "Container Numbered",              group: "Shipping Containers" },
+  { value: "Land_Container_1D",              label: "Land Container Dark",             group: "Shipping Containers" },
+  { value: "Land_Container_1C",              label: "Land Container Cargo",            group: "Shipping Containers" },
+  { value: "ContainerBox_Yellow",            label: "Container Box Yellow (small)",    group: "Shipping Containers" },
+  { value: "ContainerBox_Green",             label: "Container Box Green (small)",     group: "Shipping Containers" },
+  { value: "ContainerBox_White",             label: "Container Box White (small)",     group: "Shipping Containers" },
+
+  // ─── Elevated Roads & Bridges ─────────────────────────────────────────────
+  // Source: DayZDisco Freeway Creator 2.0 — confirmed classnames
+  { value: "Land_Pier_Floating_50m",         label: "Floating Pier 50m ★ FREEWAY",    group: "Roads & Bridges" },
+  { value: "StaticObj_Bridge_Wood2",         label: "Wooden Bridge 20m",               group: "Roads & Bridges" },
+  { value: "StaticObj_Ice_Sea_Square_50m",   label: "Ice Sea Platform 50m (Sakhal)",   group: "Roads & Bridges" },
+  { value: "Land_Pier_Floating_DE",          label: "Floating Pier Section (DE)",       group: "Roads & Bridges" },
+  { value: "Land_Bridge_Concrete_10m_DE",    label: "Concrete Bridge 10m",             group: "Roads & Bridges" },
+  { value: "Land_Bridge_Concrete_20m_DE",    label: "Concrete Bridge 20m",             group: "Roads & Bridges" },
+  { value: "Land_Bridge_Wood_10m_DE",        label: "Wooden Bridge 10m (DE)",          group: "Roads & Bridges" },
+  { value: "Land_Road_Main_25m_DE",          label: "Road Section 25m (DE)",           group: "Roads & Bridges" },
+  { value: "Land_Road_Main_Cor_DE",          label: "Road Corner (DE)",                group: "Roads & Bridges" },
+
+  // ─── Text Maker Objects ───────────────────────────────────────────────────
+  // Best objects for spelling visible from above (armbands, stars, speakers)
+  // Source: DayZDisco Text Sign Maker 2.0 & Sign Maker 1.0
+  { value: "StaticObj_Airfield_Light_PAPI1",        label: "PAPI Light ★ BEST ABOVE",         group: "Text Objects" },
+  { value: "StaticObj_Airfield_Light_Strobe_01",    label: "Strobe Light (flashing)",          group: "Text Objects" },
+  { value: "StaticObj_Airfield_Light_Centreline_01",label: "Centreline Light",                 group: "Text Objects" },
+  { value: "ArmBandBlack",                          label: "Armband Black ★ wall text",        group: "Text Objects" },
+  { value: "ArmBandYellow",                         label: "Armband Yellow",                   group: "Text Objects" },
+  { value: "ArmBandRed",                            label: "Armband Red",                      group: "Text Objects" },
+  { value: "ArmBandGreen",                          label: "Armband Green",                    group: "Text Objects" },
+  { value: "ArmBandBlue",                           label: "Armband Blue",                     group: "Text Objects" },
+  { value: "ArmBandOrange",                         label: "Armband Orange",                   group: "Text Objects" },
+  { value: "ArmBandWhite",                          label: "Armband White",                    group: "Text Objects" },
+  { value: "StaticObj_Container_1D",                label: "Container Dark (large letter)",    group: "Text Objects" },
+  { value: "HayBale",                               label: "Hay Bale (medium letter)",         group: "Text Objects" },
+
+  // ─── StaticObj Decor & Scenery ───────────────────────────────────────────
+  // Source: Real bunker JSON files & DayZDisco Architecture Generator
+  { value: "StaticObj_Roadblock_Bags_Long",    label: "Sandbag Roadblock Long",          group: "StaticObj Decor" },
+  { value: "StaticObj_Roadblock_Pillbox",      label: "Sandbag Pillbox",                 group: "StaticObj Decor" },
+  { value: "StaticObj_Mil_HBarrier_4m",        label: "HESCO Barrier 4m (StaticObj)",    group: "StaticObj Decor" },
+  { value: "StaticObj_Mil_CamoNet_Big_nato",   label: "Camo Net Big NATO",               group: "StaticObj Decor" },
+  { value: "StaticObj_Monument_War2",          label: "War Monument 2",                   group: "StaticObj Decor" },
+  { value: "StaticObj_Monument_Soldiers",      label: "Soldiers Monument",               group: "StaticObj Decor" },
+  { value: "StaticObj_Statue_General",         label: "General Statue",                  group: "StaticObj Decor" },
+  { value: "StaticObj_Wall_IndCnc_10",         label: "Industrial Concrete Wall 10m",    group: "StaticObj Decor" },
+  { value: "StaticObj_Wall_IndCnc3_2_4",       label: "Industrial Concrete Wall 3-2-4",  group: "StaticObj Decor" },
+  { value: "StaticObj_Pipe_Small_Stairs",      label: "Small Pipe Stairs",               group: "StaticObj Decor" },
+  { value: "StaticObj_Platform1_Stairs_Block", label: "Platform 1 Stairs Block",         group: "StaticObj Decor" },
+  { value: "StaticObj_Garbage_Pile4",          label: "Garbage Pile 4",                  group: "StaticObj Decor" },
+  { value: "StaticObj_Furniture_fireplace_grill", label: "Fireplace Grill",             group: "StaticObj Decor" },
+  { value: "StaticObj_ammoboxes_single",       label: "Ammo Box Single (StaticObj)",     group: "StaticObj Decor" },
+  { value: "StaticObj_Underground_Corridor_Main_Gate_L", label: "Underground Corridor Gate Left", group: "StaticObj Decor" },
+  { value: "StaticObj_Underground_Corridor_Main_Gate_R", label: "Underground Corridor Gate Right", group: "StaticObj Decor" },
 ];
 
 export const OBJECT_GROUPS = [...new Set(DAYZ_OBJECTS.map(o => o.group))];

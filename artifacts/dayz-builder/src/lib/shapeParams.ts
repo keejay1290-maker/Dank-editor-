@@ -791,6 +791,92 @@ export const SHAPE_DEFS: Record<string, ShapeDef> = {
       { id: "towerH",      label: "Tower Height",                 val: 8,  min: 3,   max: 24,  step: 0.5  },
     ]
   },
+
+  // ─── ARCHITECTURE (DayZDisco-inspired) ──────────────────────────────────
+  gothic_arch: {
+    label: "⛪ Gothic Arch Arcade", group: "🏛 Architecture",
+    params: [
+      { id: "width",     label: "Arch Inner Width (m)",     val: 12,  min: 4,  max: 40,  step: 0.5 },
+      { id: "height",    label: "Arch Apex Height (m)",     val: 16,  min: 6,  max: 40,  step: 0.5 },
+      { id: "depth",     label: "Arcade Total Length (m)",  val: 60,  min: 10, max: 200, step: 1   },
+      { id: "bays",      label: "Number of Bays",           val: 5,   min: 1,  max: 20,  step: 1   },
+      { id: "thickness", label: "Arch Ring Thickness (m)",  val: 2,   min: 0.5,max: 6,   step: 0.5 },
+      { id: "pillarW",   label: "Pillar Width (m)",         val: 2.5, min: 1,  max: 8,   step: 0.5 },
+    ]
+  },
+  bridge_truss: {
+    label: "🌉 Bridge Truss", group: "🌉 Bridges",
+    params: [
+      { id: "length",   label: "Bridge Length (m)",         val: 80,  min: 20, max: 300, step: 1   },
+      { id: "height",   label: "Truss Height (m)",          val: 12,  min: 4,  max: 40,  step: 0.5 },
+      { id: "width",    label: "Road Width (m)",            val: 10,  min: 4,  max: 30,  step: 0.5 },
+      { id: "panels",   label: "Truss Panels",              val: 12,  min: 4,  max: 32,  step: 1   },
+      { id: "pillars",  label: "Support Pillars (0=none)",  val: 2,   min: 0,  max: 8,   step: 1   },
+      { id: "pillarH",  label: "Pillar Height Below (m)",   val: 12,  min: 2,  max: 40,  step: 0.5 },
+    ]
+  },
+  amphitheater: {
+    label: "🏟 Amphitheater", group: "🏟 Amphitheater",
+    params: [
+      { id: "innerR",     label: "Stage Radius (m)",          val: 12, min: 4,   max: 60,  step: 0.5 },
+      { id: "rows",       label: "Seating Rows",              val: 8,  min: 2,   max: 20,  step: 1   },
+      { id: "rowD",       label: "Row Depth (m)",             val: 3.5,min: 1.5, max: 8,   step: 0.5 },
+      { id: "rowH",       label: "Row Rise (m)",              val: 1.5,min: 0.5, max: 4,   step: 0.25},
+      { id: "arcDeg",     label: "Arc of Seating (°) 180=semi 360=full", val: 200, min: 90, max: 360, step: 5 },
+      { id: "segsPerRow", label: "Segments per Row",          val: 28, min: 12,  max: 60,  step: 2   },
+      { id: "stage",      label: "Include Stage Floor (0/1)", val: 1,  min: 0,   max: 1,   step: 1   },
+    ]
+  },
+  vaulted_ceiling: {
+    label: "🕌 Vaulted Ceiling / Barrel Vault", group: "🏛 Architecture",
+    params: [
+      { id: "width",    label: "Vault Span Width (m)",      val: 16, min: 4,  max: 60,  step: 0.5 },
+      { id: "length",   label: "Vault Length (m)",          val: 50, min: 10, max: 200, step: 1   },
+      { id: "bays",     label: "Number of Bays",            val: 5,  min: 1,  max: 20,  step: 1   },
+      { id: "ribSegs",  label: "Points per Arch Rib",       val: 16, min: 6,  max: 32,  step: 2   },
+      { id: "longRibs", label: "Longitudinal Rib Lines",    val: 8,  min: 4,  max: 20,  step: 1   },
+      { id: "walls",    label: "Side Walls (0=no 1=yes)",   val: 1,  min: 0,  max: 1,   step: 1   },
+      { id: "wallH",    label: "Wall Height Below (m)",     val: 4,  min: 1,  max: 20,  step: 0.5 },
+      { id: "floor",    label: "Floor (0=no 1=yes)",        val: 0,  min: 0,  max: 1,   step: 1   },
+    ]
+  },
+  pitched_roof: {
+    label: "🏠 Pitched Roof Frame", group: "🏛 Architecture",
+    params: [
+      { id: "width",      label: "Roof Span Width (m)",     val: 20, min: 4,  max: 80,  step: 0.5 },
+      { id: "length",     label: "Roof Length (m)",         val: 40, min: 4,  max: 200, step: 1   },
+      { id: "pitch",      label: "Ridge Height / Pitch (m)",val: 8,  min: 2,  max: 30,  step: 0.5 },
+      { id: "bays",       label: "Rafter Bay Count",        val: 8,  min: 2,  max: 30,  step: 1   },
+      { id: "collarTie",  label: "Collar Ties (0=no 1=yes)",val: 1,  min: 0,  max: 1,   step: 1   },
+      { id: "kingPost",   label: "King Posts (0=no 1=yes)", val: 1,  min: 0,  max: 1,   step: 1   },
+    ]
+  },
+  log_cabin: {
+    label: "🪵 Log Cabin", group: "🪵 Log Cabin",
+    params: [
+      { id: "width",     label: "Cabin Width (m)",          val: 16, min: 6,  max: 50,  step: 0.5 },
+      { id: "depth",     label: "Cabin Depth (m)",          val: 12, min: 6,  max: 50,  step: 0.5 },
+      { id: "height",    label: "Wall Height (m)",          val: 7,  min: 3,  max: 20,  step: 0.5 },
+      { id: "logGap",    label: "Log Row Spacing (m)",      val: 1.2,min: 0.5,max: 4,   step: 0.1 },
+      { id: "doorW",     label: "Door Width (m)",           val: 3,  min: 1,  max: 6,   step: 0.5 },
+      { id: "doorH",     label: "Door Height (m)",          val: 5,  min: 2,  max: 10,  step: 0.5 },
+      { id: "windowW",   label: "Window Width (m)",         val: 2.5,min: 1,  max: 6,   step: 0.5 },
+      { id: "windowH",   label: "Window Height (m)",        val: 2,  min: 0.5,max: 5,   step: 0.5 },
+      { id: "roof",      label: "Include Gabled Roof (0/1)",val: 1,  min: 0,  max: 1,   step: 1   },
+      { id: "roofPitch", label: "Roof Pitch Height (m)",    val: 5,  min: 1,  max: 15,  step: 0.5 },
+    ]
+  },
+  freeway_curve: {
+    label: "🛣 Freeway / Elevated Road", group: "🛣 Freeway",
+    params: [
+      { id: "segments", label: "Road Segments",              val: 12, min: 2,  max: 40,  step: 1   },
+      { id: "segLen",   label: "Segment Length (m)",         val: 10, min: 5,  max: 30,  step: 1   },
+      { id: "roadW",    label: "Road Deck Width (m)",        val: 10, min: 4,  max: 30,  step: 0.5 },
+      { id: "arcDeg",   label: "Turn per Segment (°) 0=straight 15=U-turn", val: 0, min: -30, max: 30, step: 0.5 },
+      { id: "pillars",  label: "Support Pillars (0=no 1=yes)",val: 1, min: 0,  max: 1,   step: 1   },
+      { id: "pillarH",  label: "Pillar Depth Below (m)",    val: 8,  min: 2,  max: 30,  step: 0.5 },
+    ]
+  },
 };
 
 export const SHAPE_GROUPS = [...new Set(Object.values(SHAPE_DEFS).map(s => s.group))];

@@ -36,8 +36,9 @@ const TEXT_FONT: Record<string, number[][]> = {
   ".":[[0.5,0.05]], ",":[[0.5,0.1],[0.4,-0.1]], " ":[],
 };
 
-function getTextPoints(text: string, letterH: number, letterSpacing: number, depth: number, rings: number): Point3D[] {
-  const pts: Point3D[] = [];
+function getTextPoints(text: string, letterH: number, letterSpacing: number, depth: number, rings: number, arcDeg = 0): Point3D[] {
+  // First pass: collect all flat points and track total text width
+  const flatPts: Array<{ x: number; y: number; z: number }> = [];
   let xOffset = 0;
   for (const ch of text.toUpperCase()) {
     const segs = TEXT_FONT[ch] || TEXT_FONT[" "];
@@ -49,14 +50,31 @@ function getTextPoints(text: string, letterH: number, letterSpacing: number, dep
         const n = Math.max(2, Math.ceil(dist * letterH / 4));
         for (let k = 0; k <= n; k++) {
           const t = k / n;
-          pts.push({ x: xOffset + (x1 + (x2 - x1) * t) * letterH, y, z: (z1 + (z2 - z1) * t) * letterH });
+          flatPts.push({ x: xOffset + (x1 + (x2 - x1) * t) * letterH, y, z: (z1 + (z2 - z1) * t) * letterH });
         }
       }
     }
     xOffset += letterH * letterSpacing;
     if (ch === " ") xOffset -= letterH * 0.4;
   }
-  return pts;
+  const totalW = xOffset;
+
+  // If no arc, return flat
+  if (Math.abs(arcDeg) < 1 || totalW < 0.1) return flatPts;
+
+  // Arc mode: curve text along a horizontal arc in the XZ (ground) plane
+  // arcDeg = total angular span of the text (positive = curves toward Z+)
+  const arcRad = arcDeg * Math.PI / 180;
+  const R = totalW / arcRad; // arc radius
+  const sign = arcDeg > 0 ? 1 : -1;
+
+  return flatPts.map(pt => {
+    // Map pt.x (horizontal text position) to an angle on the arc, centred
+    const theta = (pt.x / totalW) * arcRad - arcRad / 2;
+    const ax = R * Math.sin(theta) * sign;
+    const az = R * (1 - Math.cos(theta)) * sign; // z offset for curvature
+    return { x: ax, y: pt.y, z: pt.z + az };
+  });
 }
 
 // ─── 3D RENDERER ─────────────────────────────────────────────────────────────
@@ -457,6 +475,38 @@ const QUICK_PRESETS: Preset[] = [
   { category: "⚔ Arenas", label: "Wall Perimeter (50m)", shape: "wall_perimeter",  params: { scale: 1, width: 50, depth: 50, wallSpacing: 3, wallH: 4, gapN: 1, gapS: 1, gapE: 0, gapW: 0, gapWidth: 5, corners: 1, towerH: 10 } },
   { category: "⚔ Arenas", label: "Concrete Wall Base",   shape: "wall_perimeter",  params: { scale: 1, width: 40, depth: 25, wallSpacing: 4, wallH: 4, gapN: 0, gapS: 1, gapE: 0, gapW: 0, gapWidth: 4, corners: 1, towerH: 9 } },
   { category: "⚔ Arenas", label: "Huge Fortress Wall",   shape: "wall_perimeter",  params: { scale: 1, width: 80, depth: 60, wallSpacing: 3, wallH: 5, gapN: 0, gapS: 1, gapE: 1, gapW: 0, gapWidth: 6, corners: 1, towerH: 14 } },
+
+  // ─── Architecture (from DayZDisco Architecture Generator) ─────────────────
+  { category: "🏛 Architecture", label: "Gothic Arcade (5 bays)", shape: "gothic_arch", params: { width: 12, height: 16, depth: 60, bays: 5, thickness: 2, pillarW: 2.5 } },
+  { category: "🏛 Architecture", label: "Gothic Hall (3 bays)",   shape: "gothic_arch", params: { width: 10, height: 14, depth: 36, bays: 3, thickness: 2, pillarW: 2 } },
+  { category: "🏛 Architecture", label: "Gothic Cathedral Nave",  shape: "gothic_arch", params: { width: 16, height: 22, depth: 80, bays: 7, thickness: 2.5, pillarW: 3 } },
+  { category: "🏛 Architecture", label: "Barrel Vault (small)",   shape: "vaulted_ceiling", params: { width: 12, length: 30, bays: 4, ribSegs: 14, longRibs: 8, walls: 1, floor: 0, wallH: 5 } },
+  { category: "🏛 Architecture", label: "Cathedral Vault (grand)",shape: "vaulted_ceiling", params: { width: 20, length: 60, bays: 6, ribSegs: 18, longRibs: 10, walls: 1, floor: 1, wallH: 6 } },
+  { category: "🏛 Architecture", label: "Crypt Vault (low)",      shape: "vaulted_ceiling", params: { width: 8, length: 25, bays: 4, ribSegs: 10, longRibs: 6, walls: 1, floor: 0, wallH: 3 } },
+  { category: "🏛 Architecture", label: "Pitched Roof (house)",   shape: "pitched_roof", params: { width: 16, length: 20, pitch: 6, bays: 6, collarTie: 1, kingPost: 1 } },
+  { category: "🏛 Architecture", label: "Barn Roof (large)",      shape: "pitched_roof", params: { width: 24, length: 40, pitch: 10, bays: 10, collarTie: 1, kingPost: 1 } },
+  { category: "🏛 Architecture", label: "Cathedral Roof Frame",   shape: "pitched_roof", params: { width: 30, length: 60, pitch: 14, bays: 14, collarTie: 1, kingPost: 1 } },
+
+  // ─── Amphitheaters ─────────────────────────────────────────────────────────
+  { category: "🏟 Amphitheater", label: "Semi Arena (8 rows)",    shape: "amphitheater", params: { innerR: 12, rows: 8, rowD: 3.5, rowH: 1.5, arcDeg: 200, segsPerRow: 28, stage: 1 } },
+  { category: "🏟 Amphitheater", label: "Full Bowl (12 rows)",    shape: "amphitheater", params: { innerR: 15, rows: 12, rowD: 3, rowH: 1.2, arcDeg: 360, segsPerRow: 36, stage: 1 } },
+  { category: "🏟 Amphitheater", label: "Compact Arena (6 rows)", shape: "amphitheater", params: { innerR: 8, rows: 6, rowD: 3, rowH: 1.5, arcDeg: 180, segsPerRow: 24, stage: 1 } },
+
+  // ─── Log Cabins ────────────────────────────────────────────────────────────
+  { category: "🪵 Log Cabin", label: "Small Log Cabin",  shape: "log_cabin", params: { width: 12, depth: 10, height: 6, logGap: 1.2, doorW: 2.5, doorH: 4, windowW: 2, windowH: 1.5, roof: 1, roofPitch: 4 } },
+  { category: "🪵 Log Cabin", label: "Large Log Cabin",  shape: "log_cabin", params: { width: 18, depth: 14, height: 8, logGap: 1.2, doorW: 3, doorH: 5, windowW: 2.5, windowH: 2, roof: 1, roofPitch: 6 } },
+  { category: "🪵 Log Cabin", label: "Log Cabin (no roof)", shape: "log_cabin", params: { width: 16, depth: 12, height: 7, logGap: 1.2, doorW: 3, doorH: 5, windowW: 2.5, windowH: 2, roof: 0, roofPitch: 0 } },
+
+  // ─── Bridges ───────────────────────────────────────────────────────────────
+  { category: "🌉 Bridges", label: "Short Bridge (40m)",   shape: "bridge_truss", params: { length: 40, height: 10, width: 10, panels: 8, pillars: 0 } },
+  { category: "🌉 Bridges", label: "River Bridge (80m)",   shape: "bridge_truss", params: { length: 80, height: 12, width: 10, panels: 12, pillars: 2, pillarH: 12 } },
+  { category: "🌉 Bridges", label: "Highway Bridge (120m)",shape: "bridge_truss", params: { length: 120, height: 15, width: 14, panels: 16, pillars: 3, pillarH: 15 } },
+
+  // ─── Freeway / Elevated Roads ──────────────────────────────────────────────
+  { category: "🛣 Freeway", label: "Straight Highway",     shape: "freeway_curve", params: { segments: 10, segLen: 15, roadW: 12, arcDeg: 0, pillars: 1, pillarH: 8 } },
+  { category: "🛣 Freeway", label: "Gentle Curve (90°)",   shape: "freeway_curve", params: { segments: 12, segLen: 10, roadW: 10, arcDeg: 7.5, pillars: 1, pillarH: 8 } },
+  { category: "🛣 Freeway", label: "Sharp Curve (180°)",   shape: "freeway_curve", params: { segments: 12, segLen: 8, roadW: 10, arcDeg: 15, pillars: 1, pillarH: 8 } },
+  { category: "🛣 Freeway", label: "On-Ramp Spiral",       shape: "freeway_curve", params: { segments: 16, segLen: 8, roadW: 8, arcDeg: 20, pillars: 1, pillarH: 10 } },
 ];
 
 // Arena shapes available for randomization
@@ -549,6 +599,7 @@ export default function App() {
   const [textPosZ, setTextPosZ] = useState(12600);
   const [textFormat, setTextFormat] = useState<OutputFormat>("initc");
   const [textOutput, setTextOutput] = useState("");
+  const [textArcDeg, setTextArcDeg] = useState(0);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { updatePoints, startAutoRotate, stopAutoRotate, zoomStep, resetZoom } = use3DCanvas(canvasRef);
@@ -585,14 +636,14 @@ export default function App() {
   // ── COMPUTE SHAPE POINTS ──────────────────────────────────────────────────
   const rawPoints = useMemo(() => {
     if (mode === "text") {
-      return getTextPoints(textInput, textLetterH, textSpacing, textDepth, textRings);
+      return getTextPoints(textInput, textLetterH, textSpacing, textDepth, textRings, textArcDeg);
     }
     if (mode === "builds" && selectedBuildId) {
       const b = COMPLETED_BUILDS.find(b => b.id === selectedBuildId);
       if (b) return getShapePoints(b.shape, b.params);
     }
     return getShapePoints(shapeType, params);
-  }, [mode, shapeType, params, selectedBuildId, textInput, textLetterH, textSpacing, textDepth, textRings]);
+  }, [mode, shapeType, params, selectedBuildId, textInput, textLetterH, textSpacing, textDepth, textRings, textArcDeg]);
 
   // Apply fill mode with density — smart per-Y-level fill
   const displayPoints = useMemo(() => {
@@ -1018,11 +1069,12 @@ export default function App() {
               textLetterH={textLetterH} textSpacing={textSpacing} textDepth={textDepth}
               textRings={textRings} textPosX={textPosX} textPosY={textPosY} textPosZ={textPosZ}
               textFormat={textFormat} objCount={displayPoints.length}
+              textArcDeg={textArcDeg}
               setTextInput={setTextInput} setTextObj={setTextObj} setTextScale={setTextScale}
               setTextLetterH={setTextLetterH} setTextSpacing={setTextSpacing}
               setTextDepth={setTextDepth} setTextRings={setTextRings}
               setTextPosX={setTextPosX} setTextPosY={setTextPosY} setTextPosZ={setTextPosZ}
-              setTextFormat={setTextFormat}
+              setTextFormat={setTextFormat} setTextArcDeg={setTextArcDeg}
               onGenerate={generateText}
               textObjSearch={textObjSearch} setTextObjSearch={setTextObjSearch}
             />
@@ -1762,6 +1814,21 @@ function TextSidebar(p: any) {
         <Slider label="Extrusion Depth (m)" value={p.textDepth} min={0} max={40} step={1} onChange={p.setTextDepth} />
         <Slider label="Height Rings" value={p.textRings} min={1} max={6} step={1} onChange={p.setTextRings} />
         <Slider label="Scale" value={p.textScale} min={0.1} max={10} step={0.1} onChange={p.setTextScale} />
+        <div className="flex items-center justify-between mb-0.5">
+          <Lbl>Arc Bend (°) — 0=straight, 180=semicircle, 360=full ring</Lbl>
+          {p.textArcDeg !== 0 && (
+            <button onClick={() => p.setTextArcDeg(0)}
+              className="text-[9px] px-1.5 py-0.5 border border-[#6a5a3a] text-[#b09a6a] rounded-sm hover:border-[#d4a017] hover:text-[#d4a017] transition-all">
+              Reset
+            </button>
+          )}
+        </div>
+        <Slider label="" value={p.textArcDeg} min={-360} max={360} step={5} onChange={p.setTextArcDeg} />
+        {Math.abs(p.textArcDeg) >= 1 && (
+          <div className="text-[9px] text-[#d4a017] mb-1.5 px-0.5">
+            {Math.abs(p.textArcDeg) < 180 ? "Arc curve" : Math.abs(p.textArcDeg) < 360 ? "Horseshoe arc" : "Full circle"} — {p.textArcDeg > 0 ? "curves Z+" : "curves Z-"}
+          </div>
+        )}
       </div>
 
       <Sec>📦 Object — Quick Picks ⚡</Sec>
