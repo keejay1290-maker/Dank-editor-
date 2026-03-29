@@ -358,7 +358,8 @@ export default function TrackPreview3D(props: Track3DSceneProps) {
   return (
     <WebGLErrorBoundary>
       <Canvas
-        gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
+        dpr={[1, 2]}
+        gl={{ antialias: false, alpha: false, powerPreference: "default", preserveDrawingBuffer: false }}
         camera={{ fov: 48, near: 1, far: 2000, position: [0, 100, 150] }}
         style={{ background: "#080c14", width: "100%", height: "100%" }}
       >

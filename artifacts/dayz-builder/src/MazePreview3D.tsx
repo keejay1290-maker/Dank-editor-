@@ -134,8 +134,9 @@ export default function MazePreview3D({
       <WebGLErrorBoundary>
         <Canvas
           camera={{ fov: 50, near: 0.1, far: 50000 }}
-          gl={{ antialias: true, alpha: false }}
-          style={{ background: "#0a0804" }}
+          dpr={[1, 2]}
+          gl={{ antialias: false, alpha: false, powerPreference: "default", preserveDrawingBuffer: false }}
+          style={{ background: "#0a0804", width: "100%", height: "100%" }}
         >
           <Scene spawns={spawns} wallObj={wallObj} cellSz={cellSz} />
         </Canvas>

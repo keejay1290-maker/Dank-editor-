@@ -135,7 +135,7 @@ export default function PointCloud3D({
 }) {
   if (!points.length) {
     return (
-      <div className="w-full h-full flex items-center justify-center bg-[#060402] text-[#2e2518] text-[11px] font-mono select-none">
+      <div className="absolute inset-0 flex items-center justify-center bg-[#060402] text-[#2e2518] text-[11px] font-mono select-none">
         Configure shape — real-time 3D preview updates instantly
       </div>
     );
@@ -143,7 +143,7 @@ export default function PointCloud3D({
 
   if (!isWebGLAvailable()) {
     return (
-      <div className="w-full h-full flex flex-col items-center justify-center bg-[#060402] gap-2">
+      <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#060402] gap-2">
         <div className="text-[#4a3820] text-[11px] uppercase tracking-wider">3D Preview Unavailable</div>
         <div className="text-[#3a3010] text-[9px] text-center max-w-[220px] leading-relaxed">WebGL is not supported in this environment. Code export still works normally.</div>
       </div>
@@ -151,12 +151,20 @@ export default function PointCloud3D({
   }
 
   return (
-    <div className="w-full h-full relative">
+    // Use absolute inset so iOS Safari doesn't compute zero height from h-full chains
+    <div className="absolute inset-0" style={{ background: "#060402" }}>
       <WebGLErrorBoundary>
         <Canvas
           camera={{ fov: 50, near: 0.01, far: 50000 }}
-          gl={{ antialias: true, alpha: false }}
-          style={{ background: "#060402" }}
+          // Cap DPR at 2 — iPhones have DPR=3 which exhausts the WebGL context silently
+          dpr={[1, 2]}
+          gl={{
+            antialias: false,        // too expensive at 2× DPR on mobile
+            alpha: false,
+            powerPreference: "default", // "high-performance" can fail on iOS
+            preserveDrawingBuffer: false,
+          }}
+          style={{ background: "#060402", width: "100%", height: "100%" }}
         >
           <Scene
             points={points}
