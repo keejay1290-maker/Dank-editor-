@@ -547,6 +547,7 @@ function VehiclePanel() {
   const [lootSlots, setLootSlots] = useState<Record<string, VehicleLootSlot>>({});
   const [activeSlotId, setActiveSlotId] = useState<string | null>(null);
   const [lootCategory, setLootCategory] = useState("All");
+  const [lootSearch, setLootSearch] = useState("");
   const [posX, setPosX] = useState(7419.0);
   const [posY, setPosY] = useState(383.5);
   const [posZ, setPosZ] = useState(5695.0);
@@ -570,7 +571,12 @@ function VehiclePanel() {
 
   const clearAll = () => { setLootSlots({}); setActiveSlotId(null); };
 
-  const filteredItems = lootCategory === "All" ? LOOT_ITEMS : LOOT_ITEMS.filter(i => i.category === lootCategory);
+  const filteredItems = LOOT_ITEMS.filter(i => {
+    const catOk = lootCategory === "All" || i.category === lootCategory;
+    const q = lootSearch.trim().toLowerCase();
+    const searchOk = !q || i.name.toLowerCase().includes(q) || i.classname.toLowerCase().includes(q);
+    return catOk && searchOk;
+  });
   const filledCount = vehicle.slots.filter(s => lootSlots[s.id]?.itemClassname).length;
 
   const output = buildVehicleExport(vehicle, lootSlots, posX, posY, posZ, vehYaw, fmt);
@@ -630,6 +636,15 @@ function VehiclePanel() {
                 <span className="text-[8px] text-[#6a5a3a]">(1–5 copies)</span>
               </div>
 
+              {/* Search */}
+              <input
+                type="text"
+                placeholder="Search items..."
+                value={lootSearch}
+                onChange={e => setLootSearch(e.target.value)}
+                className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[9px] px-2 py-0.5 rounded-sm mb-1.5 focus:outline-none focus:border-[#3498db]"
+              />
+
               {/* Category filter */}
               <div className="flex flex-wrap gap-0.5 mb-1.5">
                 {['All', ...LOOT_CATEGORIES].map(cat => (
@@ -649,6 +664,9 @@ function VehiclePanel() {
                 }`}>— Empty (no loot) —</button>
 
               <div className="flex flex-col gap-0.5 max-h-52 overflow-y-auto">
+                {filteredItems.length === 0 && (
+                  <div className="text-[#6a5a3a] text-[8px] text-center py-3">No items match — try a different search or category</div>
+                )}
                 {filteredItems.map(item => {
                   const isSelected = lootSlots[activeSlotId]?.itemClassname === item.classname;
                   return (

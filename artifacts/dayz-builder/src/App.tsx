@@ -458,7 +458,7 @@ const QUICK_PRESETS: Preset[] = [
 ];
 
 // Arena shapes available for randomization
-const ARENA_SHAPES = ['arena_colosseum', 'arena_fort', 'arena_maze', 'arena_siege', 'arena_compound', 'pvp_arena'] as const;
+const ARENA_SHAPES = ['arena_colosseum', 'arena_fort', 'arena_maze', 'arena_siege', 'arena_compound', 'pvp_arena', 'wall_perimeter'] as const;
 
 // ─── FAMOUS CHERNARUS LOCATIONS ────────────────────────────────────────────────
 const FAMOUS_LOCATIONS = [
@@ -725,7 +725,7 @@ export default function App() {
       lines.push(`// Asset: ${objClass}   Base: <${posX}, ${posY}, ${posZ}>`);
       lines.push(`// YPR: ${pitch}° / ${yaw}° / ${roll}°   Scale: ${scaleVal}${autoOrient ? "   [Auto-Orient: ON]" : ""}`);
       lines.push(`// Mode: ${fillMode}${fillMode === "fill" ? " density " + fillDensity : ""}   Objects: ${ptsToUse.length * (1 + extras.length)}`);
-      if (buildNotes.trim()) lines.push(`// Notes: ${buildNotes.trim()}`);
+      if (buildNotes.trim()) lines.push(`// Notes: ${buildNotes.trim().replace(/\n+/g, " | ")}`);
       lines.push(``);
     }
 
@@ -959,7 +959,7 @@ export default function App() {
               setScaleVal={setScaleVal} setFillMode={setFillMode} setFillDensity={setFillDensity}
               setFormat={setFormat} setCePersist={setCePersist} setIncludeHelper={setIncludeHelper}
               setExtraObjs={setExtraObjs} setStackY={setStackY}
-              setParam={setParam} setAutoRotate={setAutoRotate}
+              setParam={setParam} setParams={setParams} setAutoRotate={setAutoRotate}
               setAutoOrient={setAutoOrient} setOrientInward={setOrientInward}
               setPresetFilter={setPresetFilter} setPresetCategory={setPresetCategory}
               setJitter={setJitter}
@@ -1181,22 +1181,35 @@ function SaveLoadPanel({ captureState, onLoad }: { captureState: () => any; onLo
     try { return JSON.parse(localStorage.getItem("dayz_builder_saves") ?? "[]"); } catch { return []; }
   });
   const [saveName, setSaveName] = useState("");
+  const [saveErr, setSaveErr] = useState("");
 
   const persist = (updated: SaveSlot[]) => {
     setSaves(updated);
-    localStorage.setItem("dayz_builder_saves", JSON.stringify(updated));
+    try {
+      localStorage.setItem("dayz_builder_saves", JSON.stringify(updated));
+    } catch {
+      setSaveErr("Storage full — delete a save first");
+      setTimeout(() => setSaveErr(""), 3000);
+    }
   };
   const save = () => {
-    if (!saveName.trim()) return;
-    persist([{ id: Date.now().toString(), name: saveName.trim(), timestamp: Date.now(), data: captureState() }, ...saves].slice(0, 8));
+    const name = saveName.trim();
+    if (!name) return;
+    if (saves.some(s => s.name === name)) {
+      setSaveErr(`"${name}" already exists — rename or delete it first`);
+      setTimeout(() => setSaveErr(""), 3000);
+      return;
+    }
+    persist([{ id: Date.now().toString(), name, timestamp: Date.now(), data: captureState() }, ...saves].slice(0, 8));
     setSaveName("");
+    setSaveErr("");
   };
 
   return (
     <div className="px-3">
-      <div className="flex gap-1 mb-2">
+      <div className="flex gap-1 mb-1">
         <input type="text" placeholder="Name this build..." value={saveName}
-          onChange={e => setSaveName(e.target.value)}
+          onChange={e => { setSaveName(e.target.value); setSaveErr(""); }}
           onKeyDown={e => e.key === "Enter" && save()}
           className="flex-1 bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[10px] px-2 py-1 rounded-sm focus:outline-none focus:border-[#d4a017]" />
         <button onClick={save} disabled={!saveName.trim()}
@@ -1204,6 +1217,7 @@ function SaveLoadPanel({ captureState, onLoad }: { captureState: () => any; onLo
           Save
         </button>
       </div>
+      {saveErr && <div className="text-[#c0392b] text-[8px] mb-1.5 leading-tight">{saveErr}</div>}
       {saves.length === 0 ? (
         <div className="text-[#5a4820] text-[9px] py-1.5 text-center">No saves yet — name your build above and hit Save</div>
       ) : (
@@ -1290,9 +1304,11 @@ function SpacingCalcPanel() {
         {numInput("Fixed Y (height)", fixedY, setFixedY, "383")}
       </div>
       {dist !== null && (
-        <div className="text-[#d4a017] text-[9px] mb-1.5">
-          Distance: <strong>{dist.toFixed(2)}m</strong>
-          {pts.length > 1 && <span className="text-[#8a7840]"> · {(dist / (pts.length - 1)).toFixed(2)}m gap</span>}
+        <div className={`text-[9px] mb-1.5 ${dist === 0 ? 'text-[#c0392b]' : 'text-[#d4a017]'}`}>
+          {dist === 0
+            ? '⚠ Points A and B are the same — all objects will stack!'
+            : <><strong>Distance: {dist.toFixed(2)}m</strong>{pts.length > 1 && <span className="text-[#8a7840]"> · {(dist / (pts.length - 1)).toFixed(2)}m gap</span>}</>
+          }
         </div>
       )}
       {pts.length > 0 && (
@@ -1484,6 +1500,15 @@ function ArchitectSidebar(p: any) {
                   onChange={v => p.setParam(def.id, v)}
                 />
               ))}
+              <button
+                onClick={() => {
+                  const defaults: Record<string, number> = {};
+                  p.paramDefs.forEach((def: ParamDef) => { defaults[def.id] = def.val; });
+                  p.setParams(defaults);
+                }}
+                className="mt-1 text-[8px] text-[#6a5a3a] hover:text-[#d4a017] transition-colors border border-[#2e2518] hover:border-[#d4a01744] px-2 py-0.5 rounded-sm w-full">
+                ↺ Reset to defaults
+              </button>
             </div>
           )}
         </div>
@@ -1625,6 +1650,23 @@ function ArchitectSidebar(p: any) {
           <div className="text-[#b09a6a]">Orient</div><div className={p.autoOrient ? "text-[#27ae60] font-bold" : "text-[#8a7840]"}>{p.autoOrient ? (p.orientInward ? "↙ inward" : "↗ outward") : "off"}</div>
         </div>
       </div>
+
+      {/* Object count warning */}
+      {p.objCount > 1000 && (
+        <div className="px-3 mx-3 mt-2">
+          <div className="rounded-sm border border-[#c0392b55] bg-[#1a0808] px-2 py-1.5 text-[8px] text-[#c0392b] leading-snug">
+            ⚠ <strong>{p.objCount} objects</strong> — DayZ console may struggle above ~1 000.
+            {p.fillMode === "fill" ? " Try lowering Fill Density or switching to Frame mode." : " Consider a smaller shape or higher spacing."}
+          </div>
+        </div>
+      )}
+      {p.objCount > 500 && p.objCount <= 1000 && (
+        <div className="px-3 mx-3 mt-2">
+          <div className="rounded-sm border border-[#d4a01744] bg-[#1a1408] px-2 py-1.5 text-[8px] text-[#c8a050] leading-snug">
+            ℹ <strong>{p.objCount} objects</strong> — getting large. Test server performance before final use.
+          </div>
+        </div>
+      )}
 
       {/* Buttons */}
       <div className="px-3 mt-3 flex flex-col gap-1.5">
