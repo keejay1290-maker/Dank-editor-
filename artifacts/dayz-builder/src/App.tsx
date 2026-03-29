@@ -400,7 +400,7 @@ const QUICK_PRESETS: Preset[] = [
   { category: "🏛️ Monuments", label: "Bastion Square",shape: "bastion_square",  params: { size:40,height:8,towerRadius:5 },                                                suggestedClass: "Land_Castle_Wall_3m_DE" },
 
   // 🪑 Furniture & Thrones
-  { category: "🪑 Furniture", label: "Weapon Throne", shape: "iron_throne", params: { scale:0.55, height:10, spikeCount:9 },  suggestedClass: "OrientalMachete" },
+  { category: "🪑 Furniture", label: "Weapon Throne", shape: "iron_throne", params: { scale:0.55, height:10, spikeCount:9 },  suggestedClass: "Sword" },
   { category: "🪑 Furniture", label: "Campfire Ring", shape: "disc",        params: { radius:5,rings:1,points:12,innerRadius:3 }, suggestedClass: "Barrel_Red" },
   { category: "🪑 Furniture", label: "Round Table",   shape: "disc",        params: { radius:6,rings:2,points:18,innerRadius:0 }, suggestedClass: "Land_BarrierConcrete_02_DE" },
   { category: "🪑 Furniture", label: "Bench (long)",  shape: "wall_line",   params: { length:8,height:1,rings:1,spacing:1 },      suggestedClass: "Land_BarrierConcrete_01_DE" },
@@ -410,8 +410,8 @@ const QUICK_PRESETS: Preset[] = [
   { category: "🪑 Furniture", label: "Barrel Ring",   shape: "disc",        params: { radius:6,rings:1,points:8,innerRadius:5 },  suggestedClass: "Barrel_Blue" },
 
   // ⚔️ Medieval & Fantasy
-  { category: "⚔️ Medieval", label: "Sword Circle", shape: "disc",          params: { radius:8,rings:1,points:16,innerRadius:6 },  suggestedClass: "OrientalMachete" },
-  { category: "⚔️ Medieval", label: "Weapon Wall",  shape: "wall_line",     params: { length:30,height:8,rings:8,spacing:2 },      suggestedClass: "OrientalMachete" },
+  { category: "⚔️ Medieval", label: "Sword Circle", shape: "disc",          params: { radius:8,rings:1,points:16,innerRadius:6 },  suggestedClass: "Sword" },
+  { category: "⚔️ Medieval", label: "Weapon Wall",  shape: "wall_line",     params: { length:30,height:8,rings:8,spacing:2 },      suggestedClass: "Sword" },
   { category: "⚔️ Medieval", label: "Castle Wall",  shape: "bastion_square",params: { size:80,height:12,towerRadius:8 },            suggestedClass: "Land_Castle_Wall_3m_DE" },
   { category: "⚔️ Medieval", label: "Guard Tower",  shape: "tower",         params: { radius:5,height:20,rings:6,points:12 },      suggestedClass: "Land_Castle_Tower_Round_DE" },
   { category: "⚔️ Medieval", label: "Arena Floor",  shape: "disc",          params: { radius:25,rings:4,points:32,innerRadius:0 }, suggestedClass: "Land_ConcreteSlab_01_DE" },
@@ -433,7 +433,7 @@ const QUICK_PRESETS: Preset[] = [
   // 🎬 Movies & TV
   { category: "🎬 Movies", label: "Halo Ring",      shape: "torus",            params: { majorR:60,minorR:4,majorSegs:36,minorSegs:6 },               suggestedClass: "Land_Wall_Concrete_4m_DE" },
   { category: "🎬 Movies", label: "AT-AT Walker",   shape: "atat_walker",      params: { height:30,width:20 },                                        suggestedClass: "StaticObj_Container_1D" },
-  { category: "🎬 Movies", label: "Iron Throne",    shape: "iron_throne",      params: { scale:1, height:14, spikeCount:11 },                         suggestedClass: "OrientalMachete" },
+  { category: "🎬 Movies", label: "Iron Throne",    shape: "iron_throne",      params: { scale:1, height:14, spikeCount:11 },                         suggestedClass: "Sword" },
   { category: "🎬 Movies", label: "The Wall (GoT)", shape: "wall_line",        params: { length:120,height:24,rings:12,spacing:2 },                   suggestedClass: "Land_Castle_Wall2_30" },
   { category: "🎬 Movies", label: "Eye of Sauron",  shape: "eye_of_sauron",    params: { height:90,towerWidth:28,eyeRadius:22 },                      suggestedClass: "Land_Castle_Tower_Round_DE" },
   { category: "🎬 Movies", label: "Avengers Tower", shape: "skyscraper",       params: { width:14,height:130,floors:26 },                             suggestedClass: "Land_HouseBlock_5F" },
@@ -537,9 +537,9 @@ const QUICK_PRESETS: Preset[] = [
   // New Shapes
   { category: "🚀 Sci-Fi",    label: "Saturn Planet",          shape: "saturn",        params: { bodyRadius: 25, ringInner: 38, ringOuter: 60, tilt: 25, latSegs: 8, lonSegs: 16, ringSegs: 36 }, suggestedClass: "DZ\\rocks_bliss\\stone9_moss.p3d" },
   { category: "🚀 Sci-Fi",    label: "Saturn (mini)",          shape: "saturn",        params: { bodyRadius: 14, ringInner: 22, ringOuter: 36, tilt: 20, latSegs: 6, lonSegs: 12, ringSegs: 28 }, suggestedClass: "DZ\\rocks_bliss\\stone10_moss.p3d" },
-  { category: "⚔️ Medieval",  label: "Crown (5-point)",        shape: "crown",         params: { radius: 12, baseH: 6,  spikeH: 8,  points: 5 }, suggestedClass: "DZ\\rocks_bliss\\rock_spike1.p3d" },
-  { category: "⚔️ Medieval",  label: "Crown (7-point)",        shape: "crown",         params: { radius: 18, baseH: 7,  spikeH: 11, points: 7 }, suggestedClass: "DZ\\rocks_bliss\\rock_spike1.p3d" },
-  { category: "⚔️ Medieval",  label: "Imperial Crown",         shape: "crown",         params: { radius: 28, baseH: 10, spikeH: 18, points: 9 }, suggestedClass: "Land_Castle_Wall_3m_DE" },
+  { category: "⚔️ Medieval",  label: "Crown (5-point)",        shape: "crown",         params: { radius: 12, baseH: 6,  spikeH: 8,  points: 5 }, suggestedClass: "NorseHelm" },
+  { category: "⚔️ Medieval",  label: "Crown (7-point)",        shape: "crown",         params: { radius: 18, baseH: 7,  spikeH: 11, points: 7 }, suggestedClass: "NorseHelm" },
+  { category: "⚔️ Medieval",  label: "Imperial Crown",         shape: "crown",         params: { radius: 28, baseH: 10, spikeH: 18, points: 9 }, suggestedClass: "GreatHelm" },
   { category: "🏟 Structures", label: "Olympic Rings",         shape: "olympic_rings", params: { ringR: 12, tubeR: 2,   segs: 28 }, suggestedClass: "Land_Wall_Concrete_4m_DE" },
   { category: "🏟 Structures", label: "Olympic Rings (giant)", shape: "olympic_rings", params: { ringR: 22, tubeR: 3.5, segs: 40 }, suggestedClass: "Land_Wall_Concrete_8m_DE" },
 ];

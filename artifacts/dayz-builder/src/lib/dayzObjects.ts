@@ -566,7 +566,11 @@ export const DAYZ_OBJECTS: DayzObject[] = [
   { value: "SawedoffMosin9130_Camo",         label: "Sawed-off Mosin Camo",             group: "Firearms" },
   { value: "SawedoffMosin9130_Green",        label: "Sawed-off Mosin Green",            group: "Firearms" },
 
-  // ─── Melee Weapons (from types.xml MELEE section — 29 items, all verified) ─
+  // ─── Melee Weapons (from types.xml MELEE section — all verified) ──────────
+  { value: "Sword",                          label: "Sword ★",                          group: "Melee" },
+  { value: "Mace",                           label: "Mace ★",                           group: "Melee" },
+  { value: "NorseHelm",                      label: "Norse Helm ★",                     group: "Melee" },
+  { value: "GreatHelm",                      label: "Great Helm ★",                     group: "Melee" },
   { value: "BaseballBat",                    label: "Baseball Bat",                     group: "Melee" },
   { value: "NailedBaseballBat",              label: "Baseball Bat (Nailed)",            group: "Melee" },
   { value: "BarbedBaseballBat",              label: "Baseball Bat (Barbed)",            group: "Melee" },
