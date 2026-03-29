@@ -31,11 +31,17 @@ React + Vite pure-frontend app for generating DayZ console object spawns.
 - All objects console-safe (Xbox/PS5 vanilla DayZ)
 - No backend — pure frontend
 
+- **🏗 Bunker Maker**: Full-panel mode for random underground bunker generation. Options: seed, 1-3 underground levels, 4 sizes (compact/standard/large/mega), 4 atmosphere styles (military/industrial/abandoned/horror), spine axis (N-S or E-W), exterior wall enclosure, convoy wrecks in tunnels, decorative props (sparse/normal/heavy), concrete floors, Sakhal keypad panels (DayZ 1.25+). Outputs init.c or JSON Spawner. 2D floor plan SVG preview with per-level view. Includes entrance bunker, emergency exit, HQ barracks rooms, container corridors, stair/ladder transitions, vehicle convoys, decorative clutter, and HESCO/castle exterior enclosure walls.
+- **Weapon & Vehicle Builder mobile fix**: `mobileView` state toggle (⚙ Configure / 📋 Output) on small screens
+
 Key files:
-- `src/App.tsx` — main app, 3D renderer hook, sidebar components
+- `src/App.tsx` — main app, 3D renderer hook, sidebar components; EditorMode = architect|text|builds|weapons|bunker
 - `src/lib/shapeGenerators.ts` — all shape generation functions + `getShapePoints()` switch
 - `src/lib/shapeParams.ts` — SHAPE_DEFS with param sliders per shape + SHAPE_GROUPS
 - `src/lib/dayzObjects.ts` — DayZ object classnames + formatInitC + HELPER_FUNC
+- `src/lib/bunkerData.ts` — all bunker piece definitions, decor props, style/size presets
+- `src/lib/bunkerGenerator.ts` — seeded Mulberry32 RNG, spine+branch layout generator, init.c/JSON exporters
+- `src/BunkerMaker.tsx` — full-panel Bunker Maker UI component
 
 ## Stack
 
