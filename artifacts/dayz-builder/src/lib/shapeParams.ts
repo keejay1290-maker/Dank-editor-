@@ -631,6 +631,50 @@ export const SHAPE_DEFS: Record<string, ShapeDef> = {
       { id: "radius", label: "Guy-Wire Radius (m)", val: 8, min: 4, max: 20 },
     ]
   },
+
+  // ── 🤖 TRANSFORMERS ─────────────────────────────────────────────────────────
+  tf_bumblebee: {
+    label: "🟡 Bumblebee", group: "🤖 Transformers",
+    params: [
+      { id: "scale", label: "Mech Scale", val: 1, min: 0.4, max: 3, step: 0.05 },
+    ]
+  },
+  tf_optimus: {
+    label: "🔴 Optimus Prime", group: "🤖 Transformers",
+    params: [
+      { id: "scale", label: "Mech Scale", val: 1, min: 0.4, max: 3, step: 0.05 },
+    ]
+  },
+  tf_ironhide: {
+    label: "⚫ Ironhide", group: "🤖 Transformers",
+    params: [
+      { id: "scale", label: "Mech Scale", val: 1, min: 0.4, max: 3, step: 0.05 },
+    ]
+  },
+  tf_jazz: {
+    label: "⚪ Jazz", group: "🤖 Transformers",
+    params: [
+      { id: "scale", label: "Mech Scale", val: 1, min: 0.4, max: 3, step: 0.05 },
+    ]
+  },
+  tf_ratchet: {
+    label: "🟢 Ratchet", group: "🤖 Transformers",
+    params: [
+      { id: "scale", label: "Mech Scale", val: 1, min: 0.4, max: 3, step: 0.05 },
+    ]
+  },
+  tf_megatron: {
+    label: "🩶 Megatron", group: "🤖 Transformers",
+    params: [
+      { id: "scale", label: "Mech Scale", val: 1, min: 0.4, max: 3, step: 0.05 },
+    ]
+  },
+  tf_starscream: {
+    label: "🩵 Starscream", group: "🤖 Transformers",
+    params: [
+      { id: "scale", label: "Mech Scale", val: 1, min: 0.4, max: 3, step: 0.05 },
+    ]
+  },
 };
 
 export const SHAPE_GROUPS = [...new Set(Object.values(SHAPE_DEFS).map(s => s.group))];

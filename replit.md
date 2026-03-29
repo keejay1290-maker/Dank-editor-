@@ -8,7 +8,7 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 
 React + Vite pure-frontend app for generating DayZ console object spawns.
 
-- **50+ shape generators** across groups: Sci-Fi, Mechs & Robots, Tunnels, Structures, Fortifications, Body Parts, Primitives, Epic/Unique
+- **57+ shape generators** across groups: Sci-Fi, Mechs & Robots, Tunnels, Structures, Fortifications, Body Parts, Primitives, Epic/Unique, ⚡ Lightweight, 🤖 Transformers
 - **8 new Epic/Unique shapes**: Crashed UFO, Volcano, Roman Colosseum, Stonehenge, Mushroom Cloud, Black Hole, Alien Mothership, Celtic Stone Ring
 - **Real-time 3D canvas**: `useMemo` computes points, `useEffect` debounces 60ms, auto-rotate with requestAnimationFrame
 - **Full YPR sliders**: Yaw/Pitch/Roll all live — Yaw applied to world coords, Pitch/Roll shown in 3D preview

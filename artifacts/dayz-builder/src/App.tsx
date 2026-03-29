@@ -422,6 +422,14 @@ const QUICK_PRESETS: Preset[] = [
   { category: "🎬 Movies", label: "Predator Camp", shape: "disc", params: { radius:10,rings:2,points:12,innerRadius:6 } },
   { category: "🎬 Movies", label: "Nether Portal", shape: "sci_fi_gate", params: { width:16,height:22 } },
   { category: "🎬 Movies", label: "Star Destroyer", shape: "pyramid_stepped", params: { baseSize:120,height:20,steps:3,shrink:0.3,spacing:6 } },
+  // ── Transformers ──────────────────────────────────────────────────────────
+  { category: "🤖 Transformers", label: "Bumblebee", shape: "tf_bumblebee", params: { scale: 1 } },
+  { category: "🤖 Transformers", label: "Optimus Prime", shape: "tf_optimus", params: { scale: 1 } },
+  { category: "🤖 Transformers", label: "Ironhide", shape: "tf_ironhide", params: { scale: 1 } },
+  { category: "🤖 Transformers", label: "Jazz", shape: "tf_jazz", params: { scale: 1 } },
+  { category: "🤖 Transformers", label: "Ratchet", shape: "tf_ratchet", params: { scale: 1 } },
+  { category: "🤖 Transformers", label: "Megatron", shape: "tf_megatron", params: { scale: 1 } },
+  { category: "🤖 Transformers", label: "Starscream", shape: "tf_starscream", params: { scale: 1 } },
 ];
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────

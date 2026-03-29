@@ -76,6 +76,13 @@ export function getShapePoints(shapeType: string, params: Record<string, number>
     case 'bunker_line': return gen_bunker_line(p);
     case 'power_relay': return gen_power_relay(p);
     case 'radio_outpost': return gen_radio_outpost(p);
+    case 'tf_bumblebee': return gen_tf_bumblebee(p);
+    case 'tf_optimus': return gen_tf_optimus(p);
+    case 'tf_ironhide': return gen_tf_ironhide(p);
+    case 'tf_jazz': return gen_tf_jazz(p);
+    case 'tf_ratchet': return gen_tf_ratchet(p);
+    case 'tf_megatron': return gen_tf_megatron(p);
+    case 'tf_starscream': return gen_tf_starscream(p);
     case 'mushroom_cloud': return gen_mushroom_cloud(p);
     case 'black_hole': return gen_black_hole(p);
     case 'alien_mothership': return gen_alien_mothership(p);
@@ -2029,6 +2036,475 @@ function gen_radio_outpost(p: Record<string, number>): Point3D[] {
   pts.push({x:-r*0.5, y:0, z:-r*0.35}); // instrument shed L
   pts.push({x: r*0.5, y:0, z:-r*0.35}); // instrument shed R
   return pts; // 6 pts
+}
+
+// ─── 🤖 TRANSFORMER MECHS — Movie-accurate humanoid robot point clouds ─────────
+// Shared low-level drawing primitives used by all 7 character generators
+function _tfRing(pts: Point3D[], cx: number, cy: number, cz: number, rx: number, rz: number, n: number) {
+  for (let i = 0; i < n; i++) {
+    const a = Math.PI * 2 * i / n;
+    pts.push({ x: cx + rx * Math.cos(a), y: cy, z: cz + rz * Math.sin(a) });
+  }
+}
+function _tfCol(pts: Point3D[], x: number, z: number, y0: number, y1: number, n: number) {
+  for (let i = 0; i <= n; i++) pts.push({ x, y: y0 + (y1 - y0) * i / n, z });
+}
+function _tfBox(pts: Point3D[], cx: number, cy: number, cz: number, w: number, h: number, d: number, slices = 3) {
+  const hw = w / 2, hd = d / 2;
+  for (let i = 0; i <= slices; i++) {
+    const y = cy + h * i / slices;
+    pts.push({ x: cx - hw, y, z: cz - hd }, { x: cx + hw, y, z: cz - hd },
+              { x: cx - hw, y, z: cz + hd }, { x: cx + hw, y, z: cz + hd });
+  }
+  [0, h].forEach(dy => {
+    for (let i = 0; i <= 3; i++) {
+      const t = i / 3;
+      pts.push({ x: cx - hw + w * t, y: cy + dy, z: cz - hd },
+               { x: cx - hw + w * t, y: cy + dy, z: cz + hd },
+               { x: cx - hw, y: cy + dy, z: cz - hd + d * t },
+               { x: cx + hw, y: cy + dy, z: cz - hd + d * t });
+    }
+  });
+}
+// Shared mech body builder — called by each character generator
+interface TFConfig {
+  H: number;        // total height (m)
+  chW: number;      // chest width
+  chD: number;      // chest depth
+  legSp: number;    // half-distance between legs
+  legW: number;     // leg width
+  armX: number;     // arm x offset from chest edge
+  canon: 0|1|2;     // 0=none, 1=right arm, 2=both arms
+  wings: number;    // wing span each side (0=none)
+  stacks: boolean;  // smokestack columns on shoulders (truck)
+  grill: boolean;   // truck grille rows on chest
+  jetNose: boolean; // jet cockpit plate on chest
+  medCross: boolean;// medical cross on chest
+  headType: 0|1|2|3;// 0=round/bee, 1=bucket/prime, 2=seeker/jet, 3=alien/megatron
+  headW: number;    // head width
+  headH: number;    // head height
+  spoiler: boolean; // rear spoiler wing (Jazz)
+}
+function _buildMechPts(c: TFConfig): Point3D[] {
+  const pts: Point3D[] = [];
+  const H = c.H;
+  // Y breakpoints (bottom up)
+  const fY  = 0,       anY = H*.10, knY = H*.27, hipY = H*.43,
+        wstY= H*.51,   chBY= H*.54, chTY= H*.79, shY = H*.81,
+        nkY = H*.84,   hdBY= H*.87, hdTY= H*1.0;
+  const chH = chTY - chBY;
+
+  // ── FEET (wide toe, forward-pointing)
+  [-c.legSp, c.legSp].forEach(lx => {
+    for (let i = 0; i <= 3; i++) pts.push({ x: lx, y: fY, z: -c.chD * .6 + i * c.chD * .4 });
+    pts.push({ x: lx - c.legW * .7, y: fY, z: -c.chD * .6 },
+             { x: lx + c.legW * .7, y: fY, z: -c.chD * .6 });
+    _tfCol(pts, lx, -c.chD * .25, fY, anY, 2);
+  });
+
+  // ── LOWER LEGS / SHINS
+  [-c.legSp, c.legSp].forEach(lx => {
+    for (let i = 0; i <= 5; i++) {
+      const y = anY + (knY - anY) * i / 5;
+      pts.push({ x: lx - c.legW, y, z: -c.chD * .28 },
+               { x: lx + c.legW, y, z: -c.chD * .28 });
+      if (i === 0 || i === 5) {
+        pts.push({ x: lx - c.legW, y, z: c.chD * .28 },
+                 { x: lx + c.legW, y, z: c.chD * .28 });
+      }
+    }
+  });
+
+  // ── KNEES (protruding front plates)
+  [-c.legSp, c.legSp].forEach(lx => {
+    _tfRing(pts, lx, knY, -c.chD * .4, c.legW * .7, c.legW * .4, 6);
+    pts.push({ x: lx, y: knY + H * .02, z: -c.chD * .55 });
+  });
+
+  // ── THIGHS (slightly wider than shins, taper toward knee)
+  [-c.legSp, c.legSp].forEach(lx => {
+    for (let i = 0; i <= 5; i++) {
+      const t = i / 5, y = knY + (hipY - knY) * t;
+      const tw = c.legW * (.9 + .25 * t);
+      pts.push({ x: lx - tw, y, z: -c.chD * .25 },
+               { x: lx + tw, y, z: -c.chD * .25 });
+      if (i === 0 || i === 5) pts.push({ x: lx, y, z: c.chD * .25 });
+    }
+  });
+
+  // ── PELVIS (hip plate)
+  const pelW = c.legSp * 2.2;
+  _tfBox(pts, 0, hipY, 0, pelW, H * .05, c.chD * .8, 2);
+  // crotch
+  _tfCol(pts, 0, 0, hipY - H * .03, hipY, 2);
+
+  // ── WAIST (narrow barrel joint)
+  _tfRing(pts, 0, wstY, 0, c.chW * .22, c.chD * .22, 7);
+  _tfRing(pts, 0, wstY + H * .015, 0, c.chW * .26, c.chD * .26, 7);
+
+  // ── CHEST (main hero torso box — wider toward shoulders)
+  for (let i = 0; i <= 6; i++) {
+    const t = i / 6, y = chBY + chH * t;
+    const cw = c.chW * (.75 + .25 * t);
+    pts.push({ x: -cw / 2, y, z: -c.chD / 2 }, { x: cw / 2, y, z: -c.chD / 2 });
+    if (i === 0 || i === 6) {
+      pts.push({ x: -cw / 2, y, z: c.chD / 2 }, { x: cw / 2, y, z: c.chD / 2 });
+    }
+    if (i % 2 === 0) pts.push({ x: 0, y, z: -c.chD / 2 - .1 }); // front midline
+  }
+  // chest back vertical edges
+  _tfCol(pts, -c.chW / 2, c.chD / 2, chBY, chTY, 4);
+  _tfCol(pts,  c.chW / 2, c.chD / 2, chBY, chTY, 4);
+
+  // Truck grille (Optimus/Ironhide)
+  if (c.grill) {
+    for (let row = 0; row < 5; row++) {
+      const gy = chBY + chH * (.12 + row * .16);
+      for (let col = -3; col <= 3; col++) {
+        pts.push({ x: col * c.chW * .12, y: gy, z: -c.chD / 2 - .08 });
+      }
+    }
+  }
+  // Jet cockpit plate (Starscream)
+  if (c.jetNose) {
+    const jy = chBY + chH * .5;
+    for (let i = -2; i <= 2; i++) pts.push({ x: i * c.chW * .1, y: jy + i * H * .018, z: -c.chD / 2 - H * .035 });
+    pts.push({ x: 0, y: jy - H * .05, z: -c.chD / 2 - H * .07 }); // nose tip
+  }
+  // Medical cross (Ratchet)
+  if (c.medCross) {
+    const my = chBY + chH * .5;
+    [-1, 0, 1].forEach(dx => pts.push({ x: dx * c.chW * .12, y: my, z: -c.chD / 2 - .05 }));
+    [-1, 0, 1].forEach(dy => pts.push({ x: 0, y: my + dy * H * .04, z: -c.chD / 2 - .05 }));
+  }
+
+  // ── SHOULDERS (angular armor pads)
+  [-1, 1].forEach(side => {
+    const sx = side * (c.chW / 2 + H * .035);
+    _tfRing(pts, sx, shY, 0, H * .04, H * .035, 6);
+    // shoulder armor plate — faces outward
+    for (let i = 0; i <= 3; i++) {
+      pts.push({ x: sx + side * H * .02 * i / 3, y: shY - H * .03 * i, z: -c.chD * .3 });
+    }
+    // smokestack columns on shoulder (Optimus/truck type)
+    if (c.stacks) {
+      for (let si = 0; si <= 5; si++) {
+        pts.push({ x: sx + side * H * .025, y: chTY + si * H * .07, z: c.chD * .35 });
+      }
+    }
+  });
+
+  // ── UPPER ARMS (extend outward from shoulder then drop)
+  [-1, 1].forEach(side => {
+    const ax = side * (c.chW / 2 + c.armX);
+    const armTopY = shY - H * .03;
+    // horizontal segment (from body to elbow)
+    for (let i = 0; i <= 4; i++) {
+      const t = i / 4;
+      pts.push({ x: side * (c.chW / 2 + H * .035 + c.armX * .5 * t), y: armTopY - H * .025 * t, z: -H * .02 },
+               { x: side * (c.chW / 2 + H * .035 + c.armX * .5 * t), y: armTopY - H * .025 * t, z:  H * .015 });
+    }
+    // elbow ring
+    _tfRing(pts, ax, armTopY - H * .12, -H * .02, H * .028, H * .02, 5);
+    // forearm — drops down from elbow
+    const elbY = armTopY - H * .12;
+    for (let i = 0; i <= 5; i++) {
+      const y = elbY - H * .18 * i / 5;
+      pts.push({ x: ax - H * .022, y, z: -H * .018 },
+               { x: ax + H * .022, y, z: -H * .018 });
+    }
+    // cannon barrel on arm (Megatron=right huge, Ironhide=both)
+    if ((c.canon === 1 && side === 1) || c.canon === 2) {
+      const canY = elbY - H * .12;
+      for (let i = 0; i <= 5; i++) {
+        pts.push({ x: ax + side * H * .06 * (i / 5), y: canY - H * .04 * i / 5, z: -H * .045 - i * H * .025 });
+      }
+      // cannon muzzle ring
+      _tfRing(pts, ax + side * H * .06, canY - H * .04, -H * .16, H * .03, H * .02, 6);
+    }
+    // hand / fist
+    _tfRing(pts, ax, elbY - H * .21, -H * .018, H * .025, H * .018, 5);
+    pts.push({ x: ax, y: elbY - H * .26, z: -H * .02 }); // lower fist point
+  });
+
+  // ── WINGS (Starscream / flying types)
+  if (c.wings > 0) {
+    [-1, 1].forEach(side => {
+      // main wing spar — sweeps back and out
+      for (let i = 0; i <= 6; i++) {
+        const t = i / 6;
+        pts.push({ x: side * (c.chW / 2 + c.wings * t), y: shY - H * .06 * t, z: c.chD * .3 + H * .12 * t });
+      }
+      // leading edge strip
+      for (let i = 0; i <= 4; i++) {
+        const t = i / 4;
+        pts.push({ x: side * (c.chW / 2 + c.wings * (.5 + .5 * t)), y: shY - H * .09, z: c.chD * .1 + H * .06 * t });
+      }
+      // wing tip point
+      pts.push({ x: side * (c.chW / 2 + c.wings + H * .05), y: shY - H * .12, z: c.chD * .3 + H * .18 });
+    });
+  }
+
+  // Rear spoiler (Jazz)
+  if (c.spoiler) {
+    for (let i = -2; i <= 2; i++) {
+      pts.push({ x: i * c.chW * .25, y: chTY + H * .04, z: c.chD * .55 });
+    }
+    _tfCol(pts, -c.chW * .4, c.chD * .5, chTY, chTY + H * .035, 2);
+    _tfCol(pts,  c.chW * .4, c.chD * .5, chTY, chTY + H * .035, 2);
+  }
+
+  // ── NECK
+  _tfCol(pts, 0, -H * .01, nkY, hdBY, 2);
+
+  // ── HEAD — 4 distinctive styles
+  switch (c.headType) {
+    case 0: { // Round helm with visor + antennae (Bumblebee / Jazz / Ironhide / Ratchet)
+      const hR = c.headW / 2;
+      _tfRing(pts, 0, hdBY + c.headH * .3, -hR * .4, hR, hR * .7, 8);
+      _tfRing(pts, 0, hdBY + c.headH * .7, -hR * .3, hR * .75, hR * .5, 8);
+      pts.push({ x: 0, y: hdTY, z: 0 }); // crown top
+      // visor strip (eyes)
+      for (let i = -3; i <= 3; i++) pts.push({ x: i * hR * .25, y: hdBY + c.headH * .4, z: -hR - .05 });
+      // antennae
+      pts.push({ x: -hR * .6, y: hdTY + H * .015, z: -hR * .3 });
+      pts.push({  x: hR * .6, y: hdTY + H * .015, z: -hR * .3 });
+      break;
+    }
+    case 1: { // Bucket helmet (Optimus Prime)
+      const hw = c.headW / 2, hd2 = c.chD * .38;
+      _tfBox(pts, 0, hdBY, 0, c.headW, c.headH, hd2 * 2, 3);
+      // face plate / mouthguard strip
+      for (let i = -2; i <= 2; i++) pts.push({ x: i * hw * .4, y: hdBY + c.headH * .3, z: -hd2 - .05 });
+      // eye slots
+      pts.push({ x: -hw * .4, y: hdBY + c.headH * .65, z: -hd2 - .05 });
+      pts.push({  x: hw * .4, y: hdBY + c.headH * .65, z: -hd2 - .05 });
+      // crest fin
+      _tfCol(pts, 0, -hd2 * .3, hdBY + c.headH, hdBY + c.headH + H * .025, 2);
+      pts.push({ x: -hw * .2, y: hdTY + H * .01, z: -hd2 * .3 });
+      pts.push({  x: hw * .2, y: hdTY + H * .01, z: -hd2 * .3 });
+      break;
+    }
+    case 2: { // Seeker jet helm (Starscream — swept crown ridge, angular)
+      const hR2 = c.headW / 2;
+      _tfRing(pts, 0, hdBY + c.headH * .35, -hR2 * .35, hR2, hR2 * .65, 8);
+      _tfRing(pts, 0, hdBY + c.headH * .72, -hR2 * .25, hR2 * .65, hR2 * .45, 8);
+      // swept-back crown ridge
+      for (let i = 0; i <= 4; i++) {
+        pts.push({ x: 0, y: hdBY + c.headH * (.7 + i * .1), z: -hR2 * .2 + i * hR2 * .35 });
+      }
+      // lateral intake bumps
+      pts.push({ x: -hR2 * .85, y: hdBY + c.headH * .5, z: 0 });
+      pts.push({  x: hR2 * .85, y: hdBY + c.headH * .5, z: 0 });
+      // red eye visor
+      for (let i = -2; i <= 2; i++) pts.push({ x: i * hR2 * .28, y: hdBY + c.headH * .42, z: -hR2 - .05 });
+      break;
+    }
+    case 3: { // Alien angular helm (Megatron — no face, spiked)
+      const hw = c.headW / 2;
+      [[-hw,-c.chD*.3],[hw,-c.chD*.3],[-hw,c.chD*.3],[hw,c.chD*.3]].forEach(([hx,hz]) => {
+        pts.push({ x: hx, y: hdBY, z: hz });
+        pts.push({ x: hx * .6, y: hdTY - H * .02, z: hz * .6 });
+      });
+      // swept crown spike
+      pts.push({ x: 0, y: hdTY, z: -c.chD * .15 });
+      pts.push({ x: 0, y: hdTY + H * .03, z: 0 });
+      // red eye slot
+      for (let i = -3; i <= 3; i++) pts.push({ x: i * hw * .22, y: hdBY + c.headH * .55, z: -c.chD * .35 });
+      // lateral face spikes
+      pts.push({ x: -hw - H * .02, y: hdBY + c.headH * .5, z: -c.chD * .1 });
+      pts.push({  x: hw + H * .02, y: hdBY + c.headH * .5, z: -c.chD * .1 });
+      break;
+    }
+  }
+  return pts;
+}
+
+// ── Individual character generators ──────────────────────────────────────────
+
+function gen_tf_bumblebee(p: Record<string, number>): Point3D[] {
+  // Chevy Camaro car-mech — compact, wide chest, sporty legs, visor helm, antennae
+  const s = p.scale ?? 1;
+  const H = 12 * s;
+  const pts = _buildMechPts({
+    H, chW: 4.8 * s, chD: 2.0 * s, legSp: 1.6 * s, legW: 0.9 * s,
+    armX: H * .065, canon: 0, wings: 0, stacks: false,
+    grill: false, jetNose: false, medCross: false, spoiler: false,
+    headType: 0, headW: H * .1, headH: H * .13,
+  });
+  // Car hood chest plate (Camaro stripe)
+  for (let i = -1; i <= 1; i++) {
+    const gy = H * .55 + H * .06 * (i + 1);
+    pts.push({ x: i * H * .04, y: gy, z: -H * .111 }, { x: 0, y: gy + H * .03, z: -H * .11 - .05 });
+  }
+  // Door wings folded onto back/sides
+  [-1, 1].forEach(side => {
+    for (let i = 0; i <= 3; i++) {
+      pts.push({ x: side * (2.5 * s + i * s * .25), y: H * .72 - i * H * .04, z: H * .085 + i * .1 });
+    }
+  });
+  // Shoulder wheel arches
+  [-1, 1].forEach(side => {
+    for (let i = 0; i < 6; i++) {
+      const a = Math.PI * 2 * i / 6;
+      pts.push({ x: side * (2.4 * s + .55 * s * Math.cos(a)), y: H * .73 + .55 * s * Math.sin(a), z: 0 });
+    }
+  });
+  return pts;
+}
+
+function gen_tf_optimus(p: Record<string, number>): Point3D[] {
+  // Peterbilt 379 semi-truck mech — tallest, massive chest, bucket helm, smoke stacks
+  const s = p.scale ?? 1;
+  const H = 16 * s;
+  const pts = _buildMechPts({
+    H, chW: 6.5 * s, chD: 2.6 * s, legSp: 2.0 * s, legW: 1.2 * s,
+    armX: H * .08, canon: 0, wings: 0, stacks: true,
+    grill: true, jetNose: false, medCross: false, spoiler: false,
+    headType: 1, headW: H * .105, headH: H * .13,
+  });
+  // Truck front bumper at feet
+  for (let i = -3; i <= 3; i++) pts.push({ x: i * s * .5, y: 0, z: -1.5 * s });
+  // Fuel tank cylinders at hip sides
+  [-1, 1].forEach(side => {
+    for (let i = 0; i < 5; i++) {
+      const a = Math.PI * i / 4;
+      pts.push({ x: side * (3.5 * s + .5 * s * Math.cos(a)), y: H * .43, z: .5 * s * Math.sin(a) });
+    }
+  });
+  // Windshield plate above grille
+  for (let i = -2; i <= 2; i++) pts.push({ x: i * s * .7, y: H * .76, z: -H * .145 });
+  return pts;
+}
+
+function gen_tf_ironhide(p: Record<string, number>): Point3D[] {
+  // GMC Topkick off-road truck mech — bulkiest build, dual forearm cannons
+  const s = p.scale ?? 1;
+  const H = 13 * s;
+  const pts = _buildMechPts({
+    H, chW: 6.0 * s, chD: 2.4 * s, legSp: 2.1 * s, legW: 1.2 * s,
+    armX: H * .09, canon: 2, wings: 0, stacks: false,
+    grill: true, jetNose: false, medCross: false, spoiler: false,
+    headType: 0, headW: H * .115, headH: H * .14,
+  });
+  // Extra armour plates on thighs
+  [-1, 1].forEach(side => {
+    for (let i = 0; i <= 3; i++) {
+      pts.push({ x: side * (2.3 * s + H * .01), y: H * (.27 + i * .04), z: -H * .025 - .1 });
+    }
+  });
+  // Wheel wells on shins
+  [-1, 1].forEach(side => {
+    for (let i = 0; i < 6; i++) {
+      const a = Math.PI * 2 * i / 6;
+      pts.push({ x: side * (2.1 * s + .6 * s * Math.cos(a)), y: H * .17 + .6 * s * Math.sin(a), z: H * .02 });
+    }
+  });
+  return pts;
+}
+
+function gen_tf_jazz(p: Record<string, number>): Point3D[] {
+  // Pontiac Solstice sports-car mech — slender, athletic, rear spoiler
+  const s = p.scale ?? 1;
+  const H = 12 * s;
+  const pts = _buildMechPts({
+    H, chW: 4.2 * s, chD: 1.8 * s, legSp: 1.4 * s, legW: 0.75 * s,
+    armX: H * .06, canon: 0, wings: 0, stacks: false,
+    grill: false, jetNose: false, medCross: false, spoiler: true,
+    headType: 0, headW: H * .09, headH: H * .12,
+  });
+  // Solstice racing stripe on chest
+  for (let i = -4; i <= 4; i++) {
+    pts.push({ x: i * H * .03, y: H * .62 + Math.abs(i) * H * .015, z: -H * .092 - .05 });
+  }
+  // Slim ankle spoilers
+  [-1, 1].forEach(side => {
+    for (let i = 0; i <= 2; i++) pts.push({ x: side * (1.5 * s + i * .3 * s), y: H * .08, z: .4 * s });
+  });
+  return pts;
+}
+
+function gen_tf_ratchet(p: Record<string, number>): Point3D[] {
+  // Hummer H2 rescue mech — stocky, blocky, medical cross, search-and-rescue gear
+  const s = p.scale ?? 1;
+  const H = 12 * s;
+  const pts = _buildMechPts({
+    H, chW: 5.6 * s, chD: 2.3 * s, legSp: 1.9 * s, legW: 1.1 * s,
+    armX: H * .07, canon: 0, wings: 0, stacks: false,
+    grill: true, jetNose: false, medCross: true, spoiler: false,
+    headType: 0, headW: H * .115, headH: H * .14,
+  });
+  // Roof-rack sensor array on top of chest
+  for (let i = -3; i <= 3; i++) {
+    pts.push({ x: i * s * .6, y: H * .8 + H * .025, z: H * .08 });
+    if (Math.abs(i) <= 1) pts.push({ x: i * s * .6, y: H * .8 + H * .065, z: H * .08 });
+  }
+  // Heavy shoulder pads (roof sections)
+  [-1, 1].forEach(side => {
+    _tfBox(pts, side * (3.0 * s), H * .78, H * .06, 1.2 * s, H * .05, H * .12, 1);
+  });
+  return pts;
+}
+
+function gen_tf_megatron(p: Record<string, number>): Point3D[] {
+  // Cybertronian jet / tank leader — alien angular build, massive right fusion cannon
+  const s = p.scale ?? 1;
+  const H = 15 * s;
+  const pts = _buildMechPts({
+    H, chW: 4.5 * s, chD: 2.0 * s, legSp: 1.7 * s, legW: 1.0 * s,
+    armX: H * .11, canon: 1, wings: 0, stacks: false,
+    grill: false, jetNose: false, medCross: false, spoiler: false,
+    headType: 3, headW: H * .105, headH: H * .14,
+  });
+  // Alien chest spines / Cybertronian armour plates
+  for (let i = -2; i <= 2; i++) {
+    pts.push({ x: i * H * .05, y: H * .7 + Math.abs(i) * H * .015, z: -H * .105 - .06 });
+  }
+  // Fusion cannon housing (right shoulder extension)
+  for (let i = 0; i <= 5; i++) {
+    pts.push({ x: H * .33 + i * H * .035, y: H * .72 - i * H * .01, z: -H * .04 });
+  }
+  _tfRing(pts, H * .5, H * .67, -H * .04, H * .055, H * .04, 7);
+  // Leg armour spines
+  [-1, 1].forEach(side => {
+    for (let i = 0; i <= 3; i++) {
+      pts.push({ x: side * (1.7 * s + i * H * .012), y: H * (.28 + i * .03), z: -H * .032 - .05 });
+    }
+  });
+  // Jet alt-mode wing stubs on back
+  [-1, 1].forEach(side => {
+    for (let i = 0; i <= 3; i++) {
+      pts.push({ x: side * (2.3 * s + i * H * .02), y: H * .65 - i * H * .02, z: H * .1 + i * H * .04 });
+    }
+  });
+  return pts;
+}
+
+function gen_tf_starscream(p: Record<string, number>): Point3D[] {
+  // F-22 Raptor air commander — lean frame, massive swept wings, jet cockpit chest
+  const s = p.scale ?? 1;
+  const H = 14 * s;
+  const pts = _buildMechPts({
+    H, chW: 4.0 * s, chD: 1.9 * s, legSp: 1.5 * s, legW: 0.85 * s,
+    armX: H * .07, canon: 0, wings: 6.0 * s, stacks: false,
+    grill: false, jetNose: true, medCross: false, spoiler: false,
+    headType: 2, headW: H * .095, headH: H * .125,
+  });
+  // Vertical tail fins on back
+  [-1, 1].forEach(side => {
+    for (let i = 0; i <= 4; i++) {
+      pts.push({ x: side * (s * 1.0 + i * s * .15), y: H * .75 + i * H * .05, z: H * .1 });
+    }
+    // tail fin tip
+    pts.push({ x: side * (1.6 * s), y: H * .97, z: H * .1 });
+  });
+  // Leg-mounted missile pods
+  [-1, 1].forEach(side => {
+    for (let i = 0; i <= 2; i++) {
+      pts.push({ x: side * (1.5 * s), y: H * (.13 + i * .04), z: -H * .032 - .06 });
+    }
+  });
+  return pts;
 }
 
 export function applyTransform(
