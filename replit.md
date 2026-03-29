@@ -8,7 +8,7 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 
 React + Vite pure-frontend app for generating DayZ console object spawns.
 
-- **65+ shape generators** across groups: Sci-Fi, Mechs & Robots, Tunnels, Structures, Fortifications, Body Parts, Primitives, Epic/Unique, ⚡ Lightweight, 🤖 Transformers, 🦄 Fantasy & Mythic, 🏴‍☠️ Nautical, ⚔ Arenas
+- **66+ shape generators** including new `wall_perimeter` (rectangular base perimeter with configurable wall spacing, gate positions on any 4 sides, corner towers) across groups: Sci-Fi, Mechs & Robots, Tunnels, Structures, Fortifications, Body Parts, Primitives, Epic/Unique, ⚡ Lightweight, 🤖 Transformers, 🦄 Fantasy & Mythic, 🏴‍☠️ Nautical, ⚔ Arenas
 - **6 Arena generators**: pvp_arena (ring), arena_colosseum (Roman oval), arena_fort (square castle), arena_maze (procedural labyrinth), arena_siege (asymmetric attacker/defender), arena_compound (military grid) — all with Lightweight/Medium/Heavy detail levels
 - **Detail levels (1/2/3)** on all arena generators: Lightweight = perimeter only; Medium = + staircase ramp access, interior cover clusters (pallets, crates, barricades), wall-top walkway access points; Heavy = + barbed wire cap, full perimeter walkway, loot barrel rings, elevated platform elements
 - **New object groups in selector**: "⚔ Arena & Castle Walls" (castle stone walls, HESCO, concrete, brick, palisade, barbed wire), "🪵 Crates & Storage" (wooden crates, pallets, garbage containers, barrels), "🪜 Steps & Access" (pier ladders, concrete stairs, military platforms, watchtowers)

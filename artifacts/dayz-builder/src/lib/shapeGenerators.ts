@@ -92,6 +92,7 @@ export function getShapePoints(shapeType: string, params: Record<string, number>
     case 'arena_maze': return gen_arena_maze(p);
     case 'arena_siege': return gen_arena_siege(p);
     case 'arena_compound': return gen_arena_compound(p);
+    case 'wall_perimeter': return gen_wall_perimeter(p);
     case 'mushroom_cloud': return gen_mushroom_cloud(p);
     case 'black_hole': return gen_black_hole(p);
     case 'alien_mothership': return gen_alien_mothership(p);
@@ -3808,6 +3809,70 @@ function gen_arena_compound(p: Record<string, number>): Point3D[] {
       [-hw, hw].forEach(wx => pts.push({ x: wx, y: H * 1.2, z: wz }));
     }
   }
+  return pts;
+}
+
+function gen_wall_perimeter(p: Record<string, number>): Point3D[] {
+  const s       = p.scale ?? 1;
+  const W       = (p.width ?? 30) * s;
+  const D       = (p.depth ?? 30) * s;
+  const wallH   = (p.wallH ?? 3) * s;
+  const spacing = Math.max(0.5, (p.wallSpacing ?? 3) * s);
+  const gapN    = (p.gapN ?? 0) > 0.5;
+  const gapS    = (p.gapS ?? 1) > 0.5;
+  const gapE    = (p.gapE ?? 0) > 0.5;
+  const gapW    = (p.gapW ?? 0) > 0.5;
+  const gapHW   = (p.gapWidth ?? 4) * s / 2;
+  const corners = (p.corners ?? 1) > 0.5;
+  const tH      = (p.towerH ?? 8) * s;
+
+  const pts: Point3D[] = [];
+  const hw = W / 2, hd = D / 2;
+  const wallLayers   = Math.max(2, Math.round(wallH / 1.5));
+  const towerLayers  = Math.max(3, Math.round(tH / 1.5));
+
+  const addSide = (
+    x1: number, z1: number, x2: number, z2: number, hasGate: boolean
+  ) => {
+    const len = Math.sqrt((x2 - x1) ** 2 + (z2 - z1) ** 2);
+    const n   = Math.ceil(len / spacing);
+    const cx  = (x1 + x2) / 2, cz = (z1 + z2) / 2;
+    for (let i = 0; i <= n; i++) {
+      const t  = i / n;
+      const wx = x1 + (x2 - x1) * t, wz = z1 + (z2 - z1) * t;
+      const distFromMid = Math.sqrt((wx - cx) ** 2 + (wz - cz) ** 2);
+      if (hasGate && distFromMid < gapHW) {
+        if (Math.abs(distFromMid - gapHW) < spacing * 0.75) {
+          for (let y = 0; y <= towerLayers; y++)
+            pts.push({ x: wx, y: (y / towerLayers) * tH, z: wz });
+        }
+        continue;
+      }
+      for (let y = 0; y <= wallLayers; y++)
+        pts.push({ x: wx, y: (y / wallLayers) * wallH, z: wz });
+    }
+  };
+
+  addSide(-hw,  hd,  hw,  hd,  gapN);
+  addSide(-hw, -hd,  hw, -hd,  gapS);
+  addSide( hw, -hd,  hw,  hd,  gapE);
+  addSide(-hw, -hd, -hw,  hd,  gapW);
+
+  if (corners) {
+    const tR = spacing * 0.8;
+    ([[-hw, -hd], [hw, -hd], [hw, hd], [-hw, hd]] as [number, number][]).forEach(([cx, cz]) => {
+      for (let a = 0; a < 8; a++) {
+        const ang = (a / 8) * Math.PI * 2;
+        for (let y = 0; y <= towerLayers; y++)
+          pts.push({
+            x: cx + Math.cos(ang) * tR,
+            y: (y / towerLayers) * tH,
+            z: cz + Math.sin(ang) * tR,
+          });
+      }
+    });
+  }
+
   return pts;
 }
 

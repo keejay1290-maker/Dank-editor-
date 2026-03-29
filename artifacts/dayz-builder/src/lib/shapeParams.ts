@@ -766,6 +766,23 @@ export const SHAPE_DEFS: Record<string, ShapeDef> = {
       { id: "detail", label: "Detail (1=Light 2=Med 3=Heavy)", val: 2, min: 1, max: 3, step: 1    },
     ]
   },
+  wall_perimeter: {
+    label: "🧱 Wall Perimeter", group: "⚔ Arenas",
+    params: [
+      { id: "scale",       label: "Overall Scale",                val: 1,  min: 0.3, max: 3,   step: 0.05 },
+      { id: "width",       label: "Width E-W (m)",                val: 30, min: 6,   max: 300, step: 1    },
+      { id: "depth",       label: "Depth N-S (m)",                val: 30, min: 6,   max: 300, step: 1    },
+      { id: "wallSpacing", label: "Wall Object Spacing (m)",      val: 3,  min: 1,   max: 8,   step: 0.5  },
+      { id: "wallH",       label: "Wall Height",                  val: 3,  min: 1,   max: 12,  step: 0.5  },
+      { id: "gapN",        label: "Gate North (0=No 1=Yes)",      val: 0,  min: 0,   max: 1,   step: 1    },
+      { id: "gapS",        label: "Gate South (0=No 1=Yes)",      val: 1,  min: 0,   max: 1,   step: 1    },
+      { id: "gapE",        label: "Gate East (0=No 1=Yes)",       val: 0,  min: 0,   max: 1,   step: 1    },
+      { id: "gapW",        label: "Gate West (0=No 1=Yes)",       val: 0,  min: 0,   max: 1,   step: 1    },
+      { id: "gapWidth",    label: "Gate Width (m)",               val: 4,  min: 2,   max: 16,  step: 0.5  },
+      { id: "corners",     label: "Corner Towers (0=No 1=Yes)",   val: 1,  min: 0,   max: 1,   step: 1    },
+      { id: "towerH",      label: "Tower Height",                 val: 8,  min: 3,   max: 24,  step: 0.5  },
+    ]
+  },
 };
 
 export const SHAPE_GROUPS = [...new Set(Object.values(SHAPE_DEFS).map(s => s.group))];

@@ -451,6 +451,10 @@ const QUICK_PRESETS: Preset[] = [
   { category: "⚔ Arenas", label: "Siege (Massive Keep)",  shape: "arena_siege",    params: { scale: 1, width: 50, wallH: 8, towerH: 22 } },
   { category: "⚔ Arenas", label: "Military Compound",    shape: "arena_compound",  params: { scale: 1, width: 32, depth: 24, height: 4, rows: 3 } },
   { category: "⚔ Arenas", label: "Compound (Big Grid)",  shape: "arena_compound",  params: { scale: 1.2, width: 48, depth: 36, height: 4, rows: 5 } },
+  { category: "⚔ Arenas", label: "Wall Perimeter (30m)", shape: "wall_perimeter",  params: { scale: 1, width: 30, depth: 30, wallSpacing: 3, wallH: 3, gapN: 0, gapS: 1, gapE: 0, gapW: 0, gapWidth: 4, corners: 1, towerH: 8 } },
+  { category: "⚔ Arenas", label: "Wall Perimeter (50m)", shape: "wall_perimeter",  params: { scale: 1, width: 50, depth: 50, wallSpacing: 3, wallH: 4, gapN: 1, gapS: 1, gapE: 0, gapW: 0, gapWidth: 5, corners: 1, towerH: 10 } },
+  { category: "⚔ Arenas", label: "Concrete Wall Base",   shape: "wall_perimeter",  params: { scale: 1, width: 40, depth: 25, wallSpacing: 4, wallH: 4, gapN: 0, gapS: 1, gapE: 0, gapW: 0, gapWidth: 4, corners: 1, towerH: 9 } },
+  { category: "⚔ Arenas", label: "Huge Fortress Wall",   shape: "wall_perimeter",  params: { scale: 1, width: 80, depth: 60, wallSpacing: 3, wallH: 5, gapN: 0, gapS: 1, gapE: 1, gapW: 0, gapWidth: 6, corners: 1, towerH: 14 } },
 ];
 
 // Arena shapes available for randomization
@@ -516,6 +520,7 @@ export default function App() {
   const [autoOrient, setAutoOrient] = useState(false);
   const [orientInward, setOrientInward] = useState(false);
   const [jitter, setJitter] = useState(0);
+  const [buildNotes, setBuildNotes] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(() => typeof window !== "undefined" && window.innerWidth >= 768);
   const [toast, setToast] = useState("");
   const [presetFilter, setPresetFilter] = useState("");
@@ -543,6 +548,34 @@ export default function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { updatePoints, startAutoRotate, stopAutoRotate, zoomStep, resetZoom } = use3DCanvas(canvasRef);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // ── SAVE / LOAD STATE ─────────────────────────────────────────────────────
+  const captureCurrentState = useCallback(() => ({
+    shapeType, params, posX, posY, posZ, yaw, pitch, roll,
+    scaleVal, fillMode, fillDensity, format, objClass, extraObjs,
+    stackY, jitter, autoOrient, orientInward, buildNotes,
+  }), [shapeType, params, posX, posY, posZ, yaw, pitch, roll,
+    scaleVal, fillMode, fillDensity, format, objClass, extraObjs,
+    stackY, jitter, autoOrient, orientInward, buildNotes]);
+
+  const restoreState = useCallback((s: any) => {
+    setShapeType(s.shapeType ?? "deathstar");
+    setParams(s.params ?? {});
+    setPosX(s.posX ?? 12000); setPosY(s.posY ?? 150); setPosZ(s.posZ ?? 12600);
+    setYaw(s.yaw ?? 0); setPitch(s.pitch ?? 0); setRoll(s.roll ?? 0);
+    setScaleVal(s.scaleVal ?? 1);
+    setFillMode(s.fillMode ?? "frame");
+    setFillDensity(s.fillDensity ?? 2);
+    setFormat(s.format ?? "initc");
+    setObjClass(s.objClass ?? "StaticObj_Container_1D");
+    setExtraObjs(s.extraObjs ?? "");
+    setStackY(s.stackY ?? 0);
+    setJitter(s.jitter ?? 0);
+    setAutoOrient(s.autoOrient ?? false);
+    setOrientInward(s.orientInward ?? false);
+    setBuildNotes(s.buildNotes ?? "");
+    setMode("architect");
+  }, []);
 
   // ── COMPUTE SHAPE POINTS ──────────────────────────────────────────────────
   const rawPoints = useMemo(() => {
@@ -692,6 +725,7 @@ export default function App() {
       lines.push(`// Asset: ${objClass}   Base: <${posX}, ${posY}, ${posZ}>`);
       lines.push(`// YPR: ${pitch}° / ${yaw}° / ${roll}°   Scale: ${scaleVal}${autoOrient ? "   [Auto-Orient: ON]" : ""}`);
       lines.push(`// Mode: ${fillMode}${fillMode === "fill" ? " density " + fillDensity : ""}   Objects: ${ptsToUse.length * (1 + extras.length)}`);
+      if (buildNotes.trim()) lines.push(`// Notes: ${buildNotes.trim()}`);
       lines.push(``);
     }
 
@@ -933,6 +967,8 @@ export default function App() {
               onClear={() => setOutput("")}
               applyPreset={applyPreset}
               onSurpriseMe={surpriseMe}
+              buildNotes={buildNotes} setBuildNotes={setBuildNotes}
+              captureCurrentState={captureCurrentState} restoreState={restoreState}
             />
           ) : mode === "builds" ? (
             <BuildsSidebar
@@ -1136,7 +1172,154 @@ function Slider({ label, value, min, max, step = "any", onChange }: { label: str
   );
 }
 
+// ─── SAVE / LOAD PANEL ────────────────────────────────────────────────────────
+
+interface SaveSlot { id: string; name: string; timestamp: number; data: Record<string, any> }
+
+function SaveLoadPanel({ captureState, onLoad }: { captureState: () => any; onLoad: (s: any) => void }) {
+  const [saves, setSaves] = useState<SaveSlot[]>(() => {
+    try { return JSON.parse(localStorage.getItem("dayz_builder_saves") ?? "[]"); } catch { return []; }
+  });
+  const [saveName, setSaveName] = useState("");
+
+  const persist = (updated: SaveSlot[]) => {
+    setSaves(updated);
+    localStorage.setItem("dayz_builder_saves", JSON.stringify(updated));
+  };
+  const save = () => {
+    if (!saveName.trim()) return;
+    persist([{ id: Date.now().toString(), name: saveName.trim(), timestamp: Date.now(), data: captureState() }, ...saves].slice(0, 8));
+    setSaveName("");
+  };
+
+  return (
+    <div className="px-3">
+      <div className="flex gap-1 mb-2">
+        <input type="text" placeholder="Name this build..." value={saveName}
+          onChange={e => setSaveName(e.target.value)}
+          onKeyDown={e => e.key === "Enter" && save()}
+          className="flex-1 bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[10px] px-2 py-1 rounded-sm focus:outline-none focus:border-[#d4a017]" />
+        <button onClick={save} disabled={!saveName.trim()}
+          className="px-2 py-1 text-[10px] font-bold rounded-sm border border-[#d4a017] text-[#d4a017] hover:bg-[#d4a017] hover:text-[#0a0804] transition-all disabled:opacity-30 disabled:cursor-not-allowed">
+          Save
+        </button>
+      </div>
+      {saves.length === 0 ? (
+        <div className="text-[#5a4820] text-[9px] py-1.5 text-center">No saves yet — name your build above and hit Save</div>
+      ) : (
+        <div className="flex flex-col gap-1">
+          {saves.map(slot => (
+            <div key={slot.id} className="flex items-center gap-1 border border-[#2e2518] rounded-sm px-2 py-1 bg-[#060402]">
+              <div className="flex-1 min-w-0">
+                <div className="text-[#c8b99a] text-[10px] font-bold truncate">{slot.name}</div>
+                <div className="text-[#5a4820] text-[8px]">{new Date(slot.timestamp).toLocaleDateString()} · {slot.data.shapeType}</div>
+              </div>
+              <button onClick={() => onLoad(slot.data)}
+                className="px-1.5 py-0.5 text-[8px] text-[#d4a017] border border-[#d4a01733] hover:border-[#d4a017] rounded-sm transition-all shrink-0">
+                Load
+              </button>
+              <button onClick={() => persist(saves.filter(s => s.id !== slot.id))}
+                className="px-1.5 py-0.5 text-[8px] text-[#c0392b] border border-[#c0392b33] hover:border-[#c0392b] rounded-sm transition-all shrink-0">
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+      <div className="text-[#4a3820] text-[8px] mt-1.5">{saves.length}/8 slots · Stored in your browser only</div>
+    </div>
+  );
+}
+
+// ─── SPACING CALCULATOR ────────────────────────────────────────────────────────
+
+function SpacingCalcPanel() {
+  const [ax, setAx] = useState(""); const [az, setAz] = useState("");
+  const [bx, setBx] = useState(""); const [bz, setBz] = useState("");
+  const [count, setCount] = useState(5);
+  const [fixedY, setFixedY] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  const pts = useMemo(() => {
+    const nax = parseFloat(ax), naz = parseFloat(az);
+    const nbx = parseFloat(bx), nbz = parseFloat(bz);
+    if (isNaN(nax) || isNaN(naz) || isNaN(nbx) || isNaN(nbz)) return [];
+    const n = Math.max(2, Math.min(20, count));
+    const y = parseFloat(fixedY) || 0;
+    return Array.from({ length: n }, (_, i) => ({
+      x: nax + (nbx - nax) * (i / (n - 1)),
+      y,
+      z: naz + (nbz - naz) * (i / (n - 1)),
+    }));
+  }, [ax, az, bx, bz, count, fixedY]);
+
+  const dist = useMemo(() => {
+    const nax = parseFloat(ax), naz = parseFloat(az);
+    const nbx = parseFloat(bx), nbz = parseFloat(bz);
+    if (isNaN(nax) || isNaN(naz) || isNaN(nbx) || isNaN(nbz)) return null;
+    return Math.sqrt((nbx - nax) ** 2 + (nbz - naz) ** 2);
+  }, [ax, az, bx, bz]);
+
+  const outText = pts.map(p => `${p.x.toFixed(3)}, ${p.y.toFixed(3)}, ${p.z.toFixed(3)}`).join("\n");
+  const copy = () => {
+    if (!outText) return;
+    navigator.clipboard.writeText(outText).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1500); });
+  };
+
+  const numInput = (label: string, val: string, set: (v: string) => void, ph: string) => (
+    <div>
+      <div className="text-[8px] text-[#9a8858] mb-0.5">{label}</div>
+      <input type="number" value={val} onChange={e => set(e.target.value)} placeholder={ph}
+        className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[10px] px-2 py-1 rounded-sm focus:outline-none focus:border-[#d4a017]" />
+    </div>
+  );
+
+  return (
+    <div className="px-3">
+      <div className="text-[#7a6a2a] text-[8px] mb-2 leading-tight">Enter two world coordinates to get evenly-spaced points between them.</div>
+      <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 mb-2">
+        {numInput("Point A — X", ax, setAx, "7400")}
+        {numInput("Point A — Z", az, setAz, "5600")}
+        {numInput("Point B — X", bx, setBx, "7430")}
+        {numInput("Point B — Z", bz, setBz, "5600")}
+        <div>
+          <div className="text-[8px] text-[#9a8858] mb-0.5">Points (2–20)</div>
+          <input type="number" min={2} max={20} value={count} onChange={e => setCount(+e.target.value)}
+            className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[10px] px-2 py-1 rounded-sm focus:outline-none focus:border-[#d4a017]" />
+        </div>
+        {numInput("Fixed Y (height)", fixedY, setFixedY, "383")}
+      </div>
+      {dist !== null && (
+        <div className="text-[#d4a017] text-[9px] mb-1.5">
+          Distance: <strong>{dist.toFixed(2)}m</strong>
+          {pts.length > 1 && <span className="text-[#8a7840]"> · {(dist / (pts.length - 1)).toFixed(2)}m gap</span>}
+        </div>
+      )}
+      {pts.length > 0 && (
+        <>
+          <div className="flex items-center justify-between mb-1">
+            <div className="text-[8px] text-[#9a8858]">{pts.length} coordinates:</div>
+            <button onClick={copy}
+              className={`text-[8px] px-1.5 py-0.5 rounded-sm border transition-all ${copied ? "border-[#27ae60] text-[#27ae60]" : "border-[#d4a01733] text-[#d4a017] hover:border-[#d4a017]"}`}>
+              {copied ? "✓ Copied" : "Copy All"}
+            </button>
+          </div>
+          <div className="bg-[#060402] border border-[#1e1c18] rounded-sm p-2 max-h-36 overflow-y-auto">
+            {pts.map((p, i) => (
+              <div key={i} className="text-[9px] font-mono text-[#7ec060] leading-relaxed">
+                <span className="text-[#5a4820] mr-1">{i + 1}.</span>
+                {p.x.toFixed(3)}, {p.y.toFixed(3)}, {p.z.toFixed(3)}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 // ─── ARCHITECT SIDEBAR ────────────────────────────────────────────────────────
+
 function ArchitectSidebar(p: any) {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const toggle = (k: string) => setCollapsed(prev => ({ ...prev, [k]: !prev[k] }));
@@ -1398,6 +1581,36 @@ function ArchitectSidebar(p: any) {
             )}
           </div>
         </div>
+      ))}
+
+      {/* 💾 Save / Load */}
+      {sec("saveload", "💾 Save / Load Builds", (
+        <SaveLoadPanel captureState={p.captureCurrentState} onLoad={p.restoreState} />
+      ))}
+
+      {/* 📝 Build Notes */}
+      {sec("notes", "📝 Build Notes", (
+        <div className="px-3">
+          <div className="text-[#7a6a2a] text-[8px] mb-1.5 leading-tight">Notes are embedded as comments in your init.c export.</div>
+          <textarea
+            value={p.buildNotes}
+            onChange={e => p.setBuildNotes(e.target.value)}
+            placeholder="e.g. North arena, Troitskoe base — added March 2025&#10;Use Land_Castle_Wall_3m_DE for frame objects..."
+            rows={4}
+            className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[10px] px-2 py-1.5 rounded-sm resize-none focus:outline-none focus:border-[#d4a017] placeholder-[#3a2e18] leading-relaxed"
+          />
+          {p.buildNotes.trim() && (
+            <button onClick={() => p.setBuildNotes("")}
+              className="mt-1 text-[8px] text-[#5a4820] hover:text-[#9a8858] transition-colors">
+              Clear notes
+            </button>
+          )}
+        </div>
+      ))}
+
+      {/* 📐 Spacing Calculator */}
+      {sec("spacing", "📐 Object Spacing Calculator", (
+        <SpacingCalcPanel />
       ))}
 
       {/* Stats */}
