@@ -1,13 +1,18 @@
-import { useRef, useEffect, useMemo } from "react";
+import { useMemo, useEffect, useRef } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import type { Point3D } from "@/lib/shapeGenerators";
 import { WebGLErrorBoundary, isWebGLAvailable } from "@/WebGLErrorBoundary";
 
-// ─── Inner scene: InstancedMesh for fast point-cloud rendering ────────────────
+// ─── Inner scene: plain THREE.Points with vertex colours ─────────────────────
+// Much more compatible than InstancedMesh+setColorAt (iOS WebGL extension issues)
 function Scene({
-  points, globalPitch, globalRoll, globalScale, autoRotate,
+  points,
+  globalPitch,
+  globalRoll,
+  globalScale,
+  autoRotate,
 }: {
   points: Point3D[];
   globalPitch: number;
@@ -15,12 +20,14 @@ function Scene({
   globalScale: number;
   autoRotate: boolean;
 }) {
-  const meshRef = useRef<THREE.InstancedMesh>(null);
-  const dummy  = useMemo(() => new THREE.Object3D(), []);
-  const count  = points.length;
+  const count = points.length;
+  const { camera } = useThree();
+  const controlsRef = useRef<any>(null);
 
-  const { cx, cy, cz, spread } = useMemo(() => {
-    if (!count) return { cx: 0, cy: 0, cz: 0, spread: 20 };
+  // Build BufferGeometry with positions + vertex colours — no extensions needed
+  const { geo, spread } = useMemo(() => {
+    if (!count) return { geo: new THREE.BufferGeometry(), spread: 20 };
+
     let minX = Infinity, maxX = -Infinity;
     let minY = Infinity, maxY = -Infinity;
     let minZ = Infinity, maxZ = -Infinity;
@@ -29,91 +36,79 @@ function Scene({
       if (p.y < minY) minY = p.y; if (p.y > maxY) maxY = p.y;
       if (p.z < minZ) minZ = p.z; if (p.z > maxZ) maxZ = p.z;
     }
-    return {
-      cx: (minX + maxX) / 2,
-      cy: (minY + maxY) / 2,
-      cz: (minZ + maxZ) / 2,
-      spread: Math.max(maxX - minX, maxY - minY, maxZ - minZ, 1),
-    };
-  }, [points, count]);
-
-  // Box size: 2% of spread, clamped
-  const boxSize = Math.max(0.4, Math.min(2.5, spread * 0.022));
-
-  // Update instanced matrices + per-instance color
-  useEffect(() => {
-    const mesh = meshRef.current;
-    if (!mesh || !count) return;
-
-    let minY = Infinity, maxY = -Infinity;
-    for (const p of points) {
-      if (p.y < minY) minY = p.y;
-      if (p.y > maxY) maxY = p.y;
-    }
+    const cx = (minX + maxX) / 2;
+    const cy = (minY + maxY) / 2;
+    const cz = (minZ + maxZ) / 2;
+    const sp = Math.max(maxX - minX, maxY - minY, maxZ - minZ, 1);
     const rangeY = Math.max(maxY - minY, 0.001);
-    const color  = new THREE.Color();
+
+    const pos = new Float32Array(count * 3);
+    const col = new Float32Array(count * 3);
 
     for (let i = 0; i < count; i++) {
       const p = points[i];
-      dummy.position.set(p.x - cx, p.y - cy, p.z - cz);
-      dummy.scale.setScalar(1);
-      dummy.updateMatrix();
-      mesh.setMatrixAt(i, dummy.matrix);
+      pos[i * 3]     = p.x - cx;
+      pos[i * 3 + 1] = p.y - cy;
+      pos[i * 3 + 2] = p.z - cz;
 
-      // Gold → deep amber depth gradient (matches existing canvas palette)
+      // Gold → deep amber gradient by Y height
       const t = (p.y - minY) / rangeY;
-      color.setRGB(
-        (220 * t + 55 * (1 - t)) / 255,
-        (155 * t + 75 * (1 - t)) / 255,
-        (20  * t + 8  * (1 - t)) / 255,
-      );
-      mesh.setColorAt(i, color);
+      col[i * 3]     = (220 * t + 55  * (1 - t)) / 255;
+      col[i * 3 + 1] = (155 * t + 75  * (1 - t)) / 255;
+      col[i * 3 + 2] = ( 20 * t +  8  * (1 - t)) / 255;
     }
-    mesh.instanceMatrix.needsUpdate = true;
-    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-  }, [points, cx, cy, cz, count, dummy]);
 
-  // Auto-fit camera whenever points or scale change
-  const { camera } = useThree();
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    g.setAttribute("color",    new THREE.BufferAttribute(col, 3));
+    return { geo: g, spread: sp };
+  }, [points, count]);
+
+  // Position camera to frame all points — update OrbitControls too
   useEffect(() => {
     if (!count) return;
     const d = spread * globalScale * 1.8;
-    camera.position.set(d * 0.65, d * 0.5, d);
-    (camera as THREE.PerspectiveCamera).far = d * 20;
+    const px = d * 0.65, py = d * 0.5, pz = d;
+    camera.position.set(px, py, pz);
+    (camera as THREE.PerspectiveCamera).near = Math.max(0.01, d * 0.001);
+    (camera as THREE.PerspectiveCamera).far  = d * 30;
     camera.lookAt(0, 0, 0);
     camera.updateProjectionMatrix();
+    // Sync OrbitControls so it doesn't fight the new camera position
+    if (controlsRef.current) {
+      controlsRef.current.target.set(0, 0, 0);
+      controlsRef.current.update();
+    }
   }, [spread, globalScale, camera, count]);
 
   if (!count) return null;
+
+  // Cap point size — iOS GLES has max ~64px; keep it below that
+  const ptSize = Math.min(48, Math.max(2, spread * globalScale * 0.02));
 
   const pitchR = globalPitch * Math.PI / 180;
   const rollR  = globalRoll  * Math.PI / 180;
 
   return (
     <>
-      <ambientLight intensity={0.55} />
-      <directionalLight position={[1, 2, 1.5]} intensity={0.9} />
-      <directionalLight position={[-1, 0.5, -1]} intensity={0.25} color="#8080ff" />
-
-      {/* Global pitch+roll wraps the entire point cloud */}
       <group rotation={[pitchR, 0, rollR]} scale={globalScale}>
-        <instancedMesh
-          ref={meshRef}
-          key={count}
-          args={[undefined, undefined, count]}
-          frustumCulled={false}
-        >
-          <boxGeometry args={[boxSize, boxSize, boxSize]} />
-          <meshStandardMaterial vertexColors roughness={0.6} metalness={0.1} />
-        </instancedMesh>
+        <points geometry={geo}>
+          <pointsMaterial
+            size={ptSize}
+            vertexColors
+            sizeAttenuation
+          />
+        </points>
       </group>
 
       <OrbitControls
+        ref={controlsRef}
         makeDefault
         autoRotate={autoRotate}
         autoRotateSpeed={1.5}
         dampingFactor={0.12}
         enableDamping
+        target={[0, 0, 0]}
       />
     </>
   );
@@ -151,17 +146,15 @@ export default function PointCloud3D({
   }
 
   return (
-    // Use absolute inset so iOS Safari doesn't compute zero height from h-full chains
     <div className="absolute inset-0" style={{ background: "#060402" }}>
       <WebGLErrorBoundary>
         <Canvas
           camera={{ fov: 50, near: 0.01, far: 50000 }}
-          // Cap DPR at 2 — iPhones have DPR=3 which exhausts the WebGL context silently
           dpr={[1, 2]}
           gl={{
-            antialias: false,        // too expensive at 2× DPR on mobile
+            antialias: false,
             alpha: false,
-            powerPreference: "default", // "high-performance" can fail on iOS
+            powerPreference: "default",
             preserveDrawingBuffer: false,
           }}
           style={{ background: "#060402", width: "100%", height: "100%" }}
