@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, Suspense } from "react";
+import TrackPreview3D from "./Track3D";
 import { formatInitC, HELPER_FUNC } from "@/lib/dayzObjects";
 
 // ─── TYPES ────────────────────────────────────────────────────────────────────
@@ -658,32 +659,47 @@ export default function RaceTrackMaker() {
         </div>
       </div>
 
-      {/* ── CENTER: MAP PREVIEW ───────────────────────────────────────────────── */}
+      {/* ── CENTER: 3D PREVIEW ────────────────────────────────────────────────── */}
       <div className={`${mobileTab !== "map" ? "hidden md:flex" : "flex"} flex-col flex-1 min-w-0 overflow-hidden border-r border-[#2e2518] md:mt-0 mt-9`}>
         <div className="flex items-center gap-2 px-3 py-2 border-b border-[#2e2518] shrink-0">
-          <span className="text-[#9a8858] text-[10px] uppercase tracking-wider">Top-Down Preview</span>
+          <span className="text-[#9a8858] text-[10px] uppercase tracking-wider">3D Preview</span>
           <span className="text-[#4a3a1a] text-[9px]">— {PRESETS[preset].label} · {radiusX}×{radiusZ}m · {trackWidth}m wide</span>
           <span className={`ml-auto text-[9px] font-bold px-2 py-0.5 rounded-sm ${objectCounts.total > 1500 ? "bg-[#e67e22]/20 text-[#e67e22]" : "bg-[#27ae60]/20 text-[#27ae60]"}`}>
             {objectCounts.total} objects
           </span>
         </div>
-        <div className="flex-1 min-h-0 bg-[#060402]">
-          <TrackPreview waypoints={waypoints} trackWidth={trackWidth}
-            addText={addText} addBarriers={addBarriers} />
+        <div className="flex-1 min-h-0 relative">
+          <Suspense fallback={
+            <div className="absolute inset-0 flex items-center justify-center bg-[#080c14]">
+              <span className="text-[#4a3820] text-[11px] tracking-widest animate-pulse">LOADING 3D...</span>
+            </div>
+          }>
+            <TrackPreview3D
+              waypoints={waypoints}
+              trackWidth={trackWidth}
+              addText={addText}
+              addBarriers={addBarriers}
+              barrierLen={barrierDef.len}
+            />
+          </Suspense>
+          {/* Interaction hint overlay */}
+          <div className="absolute bottom-2 right-2 pointer-events-none">
+            <div className="text-[7.5px] text-[#3a3020] bg-[#0a0804]/80 px-2 py-1 rounded-sm backdrop-blur-sm border border-[#2e2518]">
+              Drag to orbit · Scroll to zoom · Right-drag to pan
+            </div>
+          </div>
         </div>
         {/* Legend strip */}
         <div className="shrink-0 border-t border-[#2e2518] bg-[#0e0c08] px-3 py-2">
-          <div className="text-[8px] text-[#6a5a3a] leading-relaxed">
-            <span className="text-[#27ae60] font-bold">━</span> Start line  ·
-            <span className="text-[#e74c3c] font-bold"> ╌</span> Finish line  ·
-            <span className="text-[#e74c3c] font-bold"> ━</span> Barriers  ·
-            <span className="text-[#3a3020] font-bold"> ╌</span> Centreline  ·
-            <span className="text-[#27ae60] font-bold"> ● </span>Start  ·
-            <span className="text-[#e74c3c] font-bold"> ● </span>Finish
+          <div className="text-[8px] text-[#6a5a3a] leading-relaxed flex flex-wrap gap-x-3 gap-y-0.5">
+            <span><span className="text-[#27ae60] font-bold">━</span> Start line (green gantry)</span>
+            <span><span className="text-[#e74c3c] font-bold">━</span> Finish line (checker)</span>
+            <span><span className="text-[#c0bab2] font-bold">█</span> Jersey barriers</span>
+            <span><span className="text-[#787878] font-bold">█</span> Concrete floor tiles</span>
           </div>
           <div className="text-[7.5px] text-[#4a3820] mt-1">
-            Floor panels (pitch=90°): {Math.ceil(trackWidth/4)} rows of {floorObj} laid flat.
-            Barriers: {barrierDef.label} placed {barrierDef.len}m apart on each side.
+            Floor: {Math.ceil(trackWidth/4)} rows of {floorObj} laid flat (pitch=90°).
+            Barriers: {barrierDef.label}, {barrierDef.len}m per block, each side.
           </div>
         </div>
       </div>
