@@ -58,7 +58,7 @@ function getTextPoints(text: string, letterH: number, letterSpacing: number, dep
 }
 
 // ─── 3D RENDERER ─────────────────────────────────────────────────────────────
-function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
+function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
   const rotRef = useRef({ x: -0.4, y: 0.5 });
   const dragRef = useRef({ dragging: false, lx: 0, ly: 0 });
   const zoomRef = useRef(2.0);
@@ -645,11 +645,12 @@ export default function App() {
     if (!def) return;
     const newParams: Record<string, number> = {};
     def.params.forEach(pd => {
-      const lo = pd.min + (pd.max - pd.min) * 0.2;
-      const hi = pd.max - (pd.max - pd.min) * 0.1;
+      const lo   = pd.min + (pd.max - pd.min) * 0.2;
+      const hi   = pd.max - (pd.max - pd.min) * 0.1;
+      const step = pd.step ?? 1;
       let v = lo + Math.random() * (hi - lo);
-      if (pd.step >= 1) v = Math.round(v);
-      else v = Math.round(v / pd.step) * pd.step;
+      if (step >= 1) v = Math.round(v);
+      else v = Math.round(v / step) * step;
       newParams[pd.id] = v;
     });
     setShapeType(shapeKey);
