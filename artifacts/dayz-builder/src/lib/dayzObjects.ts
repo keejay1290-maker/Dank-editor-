@@ -5,18 +5,67 @@ export interface DayzObject {
 }
 
 export const DAYZ_OBJECTS: DayzObject[] = [
+  // ─── ⚔ Arena & Castle Walls ── BEST FOR PvP ARENAS ──────────────────────
+  // ★ RECOMMENDED: Land_Castle_Wall_3m_DE — authentic stone height, perfect for arena perimeters
+  // ★ ALSO GREAT:  Land_Wall_Concrete_4m_DE — modern fortress feel, excellent cover height
+  { value: "Land_Castle_Wall_3m_DE",     label: "Castle Stone Wall 3m ★ BEST ARENA WALL", group: "Arena & Castle Walls" },
+  { value: "Land_Castle_Wall_6m_DE",     label: "Castle Stone Wall 6m (tall)",             group: "Arena & Castle Walls" },
+  { value: "Land_Castle_Gate_DE",        label: "Castle Gate Archway",                      group: "Arena & Castle Walls" },
+  { value: "Land_Castle_Bastion_DE",     label: "Castle Bastion Section",                   group: "Arena & Castle Walls" },
+  { value: "Land_Castle_Tower_Round_DE", label: "Castle Round Tower",                       group: "Arena & Castle Walls" },
+  { value: "Land_Castle_Tower_Square_DE", label: "Castle Square Tower",                    group: "Arena & Castle Walls" },
+  { value: "Land_Wall_Stone_3m_DE",      label: "Stone Ruin Wall 3m",                       group: "Arena & Castle Walls" },
+  { value: "Land_Wall_Stone_6m_DE",      label: "Stone Ruin Wall 6m",                       group: "Arena & Castle Walls" },
+  { value: "Land_Wall_Stone_Corner_DE",  label: "Stone Ruin Corner",                        group: "Arena & Castle Walls" },
+  { value: "Land_Wall_Stone_Gate_DE",    label: "Stone Ruin Gate",                          group: "Arena & Castle Walls" },
+  { value: "Land_Wall_Concrete_4m_DE",   label: "Concrete Wall 4m ★ BEST MODERN",          group: "Arena & Castle Walls" },
+  { value: "Land_Wall_Concrete_8m_DE",   label: "Concrete Wall 8m (long run)",              group: "Arena & Castle Walls" },
+  { value: "Land_Wall_Brick_4m_DE",      label: "Brick Wall 4m",                            group: "Arena & Castle Walls" },
+  { value: "Land_Wall_Brick_8m_DE",      label: "Brick Wall 8m",                            group: "Arena & Castle Walls" },
+  { value: "Land_HBarrier_5m_DE",        label: "HESCO Barrier 5m ★ BEST MILITARY",         group: "Arena & Castle Walls" },
+  { value: "Land_HBarrier_10m_DE",       label: "HESCO Barrier 10m (long)",                 group: "Arena & Castle Walls" },
+  { value: "Land_HBarrier_Corner_DE",    label: "HESCO Barrier Corner",                     group: "Arena & Castle Walls" },
+  { value: "Land_BarrierConcrete_01_DE", label: "Jersey Barrier Long ★ CLASSIC",            group: "Arena & Castle Walls" },
+  { value: "Land_BarrierConcrete_02_DE", label: "Jersey Barrier Short",                     group: "Arena & Castle Walls" },
+  { value: "Land_Fence_Palisade_4m_DE",  label: "Wooden Palisade 4m",                       group: "Arena & Castle Walls" },
+  { value: "Land_Fence_Palisade_8m_DE",  label: "Wooden Palisade 8m",                       group: "Arena & Castle Walls" },
+  { value: "Land_Fence_Palisade_Gate_DE", label: "Palisade Gate",                          group: "Arena & Castle Walls" },
+  { value: "Land_Sandbag_Wall_DE",       label: "Sandbag Wall",                             group: "Arena & Castle Walls" },
+  { value: "Land_Sandbag_Corner_DE",     label: "Sandbag Corner",                           group: "Arena & Castle Walls" },
+  { value: "Land_BarbedWire_01_DE",      label: "Barbed Wire (wall topper)",                group: "Arena & Castle Walls" },
+
+  // ─── 🪵 Wooden Crates, Pallets & Storage ─────────────────────────────────
+  { value: "WoodenCrate",               label: "Wooden Crate ★ best loot/obstacle",  group: "Crates & Storage" },
+  { value: "WoodenCrateSmall",          label: "Wooden Crate Small",                 group: "Crates & Storage" },
+  { value: "PalletBox_DE",             label: "Pallet Box (stackable) ★",            group: "Crates & Storage" },
+  { value: "Pallet_EP1",               label: "Wooden Pallet (flat)",                group: "Crates & Storage" },
+  { value: "GarbageContainer_Yellow_DE","label":"Garbage Container Yellow",           group: "Crates & Storage" },
+  { value: "GarbageContainer_Green_DE", label: "Garbage Container Green",             group: "Crates & Storage" },
+  { value: "Barrel_Blue",               label: "Barrel Blue",                         group: "Crates & Storage" },
+  { value: "Barrel_Green",              label: "Barrel Green",                        group: "Crates & Storage" },
+  { value: "Barrel_Yellow",             label: "Barrel Yellow",                       group: "Crates & Storage" },
+  { value: "Barrel_Red",                label: "Barrel Red",                          group: "Crates & Storage" },
+  { value: "Land_GasTank_Cylindrical",  label: "Gas Tank (cylinder)",                 group: "Crates & Storage" },
+  { value: "Land_GasTank_Big",          label: "Gas Tank (big)",                      group: "Crates & Storage" },
+
+  // ─── 🪜 Steps, Ladders & Platforms ───────────────────────────────────────
+  // TIP: Stack Jersey Barriers (Barrier 2 on top of Barrier 1) as steps for multi-level arenas
+  { value: "Land_PierLadder_DE",            label: "Pier Ladder (climb) ★ best step",          group: "Steps & Access" },
+  { value: "Land_Stairs_Concrete_DE",       label: "Concrete Stairs (set)",                    group: "Steps & Access" },
+  { value: "Land_Concrete_Step_DE",         label: "Concrete Step (single)",                   group: "Steps & Access" },
+  { value: "Land_BarrierConcrete_02_DE",    label: "Jersey Barrier Short (use as step/riser)",  group: "Steps & Access" },
+  { value: "Land_BarrierConcrete_01_DE",    label: "Jersey Barrier Long (ground level)",        group: "Steps & Access" },
+  { value: "Land_Platform_Mil_DE",          label: "Military Platform",                        group: "Steps & Access" },
+  { value: "Land_Pier_DE",                  label: "Pier Section (raised walkway)",             group: "Steps & Access" },
+  { value: "Land_Pier_Long_DE",             label: "Pier Section Long (ramp/walkway)",          group: "Steps & Access" },
+  { value: "Land_Mil_WatchtowerL_DE",       label: "Mil Watchtower L (multi-level)",            group: "Steps & Access" },
+  { value: "Land_Mil_WatchtowerH_DE",       label: "Mil Watchtower H (multi-level tall)",       group: "Steps & Access" },
+
   // ─── Containers / Industrial ───────────────────────────────────────────────
-  { value: "StaticObj_Container_1D", label: "Shipping Container 1D", group: "Containers" },
-  { value: "StaticObj_Container_1C", label: "Shipping Container 1C", group: "Containers" },
-  { value: "Land_Container_1Bo_DE", label: "Container 1Bo (dark)", group: "Containers" },
-  { value: "Land_Container_1Aoh_DE", label: "Container 1Aoh", group: "Containers" },
-  { value: "Land_GasTank_Cylindrical", label: "Gas Tank (cylinder)", group: "Containers" },
-  { value: "Land_GasTank_Big", label: "Gas Tank (big)", group: "Containers" },
-  { value: "Barrel_Blue", label: "Barrel Blue", group: "Containers" },
-  { value: "Barrel_Green", label: "Barrel Green", group: "Containers" },
-  { value: "Barrel_Yellow", label: "Barrel Yellow", group: "Containers" },
-  { value: "Barrel_Red", label: "Barrel Red", group: "Containers" },
-  { value: "Pallet_EP1", label: "Pallet (wooden)", group: "Containers" },
+  { value: "StaticObj_Container_1D",    label: "Shipping Container 1D",  group: "Containers" },
+  { value: "StaticObj_Container_1C",    label: "Shipping Container 1C",  group: "Containers" },
+  { value: "Land_Container_1Bo_DE",     label: "Container 1Bo (dark)",   group: "Containers" },
+  { value: "Land_Container_1Aoh_DE",    label: "Container 1Aoh",         group: "Containers" },
 
   // ─── Wrecks / Vehicles ─────────────────────────────────────────────────────
   { value: "Land_Wreck_V3S_DE", label: "Wreck V3S Truck", group: "Wrecks" },

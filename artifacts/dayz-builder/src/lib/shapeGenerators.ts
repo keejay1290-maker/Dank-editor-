@@ -2721,6 +2721,7 @@ function gen_pvp_arena(p: Record<string, number>): Point3D[] {
   const R = (p.radius ?? 15) * s;
   const H = (p.height ?? 5) * s;
   const walls = Math.round(p.walls ?? 8);
+  const detail = Math.round(p.detail ?? 2);
   const pts: Point3D[] = [];
   // Outer wall — polygon ring
   for (let i = 0; i < walls; i++) {
@@ -2792,12 +2793,61 @@ function gen_pvp_arena(p: Record<string, number>): Point3D[] {
       pts.push({ x: px, y: y * H * 0.075, z: pz });
     }
   });
-  // Bleacher steps — outside ring
-  for (let i = 0; i < walls * 6; i++) {
-    const ang = (i / (walls * 6)) * Math.PI * 2;
-    for (let step = 1; step <= 3; step++) {
-      const sr = R + step * s * 0.8;
-      pts.push({ x: Math.cos(ang) * sr, y: step * H * 0.12, z: Math.sin(ang) * sr });
+  // Bleacher steps — outside ring (lightweight always)
+  if (detail >= 1) {
+    for (let i = 0; i < walls * 6; i++) {
+      const ang = (i / (walls * 6)) * Math.PI * 2;
+      for (let step = 1; step <= 3; step++) {
+        const sr = R + step * s * 0.8;
+        pts.push({ x: Math.cos(ang) * sr, y: step * H * 0.12, z: Math.sin(ang) * sr });
+      }
+    }
+  }
+  // ── MEDIUM: stair ramps (4 ramps from floor up to wall walkway) + barricade cover clusters ──
+  if (detail >= 2) {
+    for (let i = 0; i < 4; i++) {
+      const ang = ((i + 0.5) / 4) * Math.PI * 2;
+      const rx = Math.cos(ang) * (R - s * 1.5), rz = Math.sin(ang) * (R - s * 1.5);
+      for (let step = 0; step <= 5; step++) {
+        pts.push({ x: rx + Math.cos(ang) * step * s * 0.55, y: step * H * 0.14, z: rz + Math.sin(ang) * step * s * 0.55 });
+      }
+    }
+    // Cover barricades at 4 diagonal floor positions
+    [0.125, 0.375, 0.625, 0.875].forEach(f => {
+      const ax = Math.cos(f * Math.PI * 2) * R * 0.45, az = Math.sin(f * Math.PI * 2) * R * 0.45;
+      for (let di = -2; di <= 2; di++) {
+        pts.push({ x: ax + di * s * 0.65, y: 0, z: az });
+        pts.push({ x: ax, y: 0, z: az + di * s * 0.65 });
+      }
+      // Stacked crate (2 high)
+      pts.push({ x: ax, y: s * 0.7, z: az });
+    });
+  }
+  // ── HEAVY: wall walkway + barrel loot ring + barbed wire cap ──
+  if (detail >= 3) {
+    // Inner wall walkway at 75% height
+    for (let i = 0; i < walls * 14; i++) {
+      const ang = (i / (walls * 14)) * Math.PI * 2;
+      pts.push({ x: Math.cos(ang) * R * 0.88, y: H * 0.75, z: Math.sin(ang) * R * 0.88 });
+    }
+    // Loot barrel ring at 8 positions near wall
+    for (let i = 0; i < 8; i++) {
+      const ang = (i / 8) * Math.PI * 2;
+      const bx = Math.cos(ang) * R * 0.72, bz = Math.sin(ang) * R * 0.72;
+      for (let dy = 0; dy <= 2; dy++) pts.push({ x: bx, y: dy * s * 0.45, z: bz });
+    }
+    // Garbage containers as extra cover (4 positions)
+    [0, Math.PI / 2, Math.PI, Math.PI * 1.5].forEach(ang => {
+      const cx = Math.cos(ang) * R * 0.35, cz = Math.sin(ang) * R * 0.35;
+      for (let dx = -1; dx <= 1; dx++) {
+        pts.push({ x: cx + dx * s * 0.9, y: 0, z: cz });
+        pts.push({ x: cx + dx * s * 0.9, y: s * 0.8, z: cz });
+      }
+    });
+    // Barbed wire top of wall
+    for (let i = 0; i < walls * 18; i++) {
+      const ang = (i / (walls * 18)) * Math.PI * 2;
+      pts.push({ x: Math.cos(ang) * R, y: H * 1.18, z: Math.sin(ang) * R });
     }
   }
   return pts;
@@ -2898,6 +2948,7 @@ function gen_arena_colosseum(p: Record<string, number>): Point3D[] {
   const rZ = (p.radiusZ ?? 15) * s;
   const H = (p.height ?? 7) * s;
   const tiers = Math.max(1, Math.round(p.tiers ?? 3));
+  const detail = Math.round(p.detail ?? 2);
   const pts: Point3D[] = [];
   const segs = 72;
 
@@ -2982,6 +3033,47 @@ function gen_arena_colosseum(p: Record<string, number>): Point3D[] {
       }
     }
   }
+  // ── MEDIUM: vomitorium stairways (4 tunnel access ramps) + cover barrels on sand ──
+  if (detail >= 2) {
+    [0, Math.PI / 2, Math.PI, Math.PI * 1.5].forEach(ang => {
+      const startX = Math.cos(ang) * flX * 0.45, startZ = Math.sin(ang) * flZ * 0.45;
+      const endX   = Math.cos(ang) * rX * 0.72,  endZ   = Math.sin(ang) * rZ * 0.72;
+      for (let step = 0; step <= 5; step++) {
+        const t = step / 5;
+        pts.push({ x: startX + (endX - startX) * t, y: step * H * 0.12, z: startZ + (endZ - startZ) * t });
+        if (step < 5) {
+          pts.push({ x: startX + (endX - startX) * t + Math.sin(ang) * s * 0.9, y: step * H * 0.12, z: startZ + (endZ - startZ) * t - Math.cos(ang) * s * 0.9 });
+          pts.push({ x: startX + (endX - startX) * t - Math.sin(ang) * s * 0.9, y: step * H * 0.12, z: startZ + (endZ - startZ) * t + Math.cos(ang) * s * 0.9 });
+        }
+      }
+    });
+    // Barrel/crate cover on floor at 6 positions
+    for (let i = 0; i < 6; i++) {
+      const ang = (i / 6) * Math.PI * 2;
+      const bx = Math.cos(ang) * flX * 0.65, bz = Math.sin(ang) * flZ * 0.65;
+      pts.push({ x: bx, y: 0, z: bz });
+      pts.push({ x: bx, y: s * 0.7, z: bz });
+    }
+  }
+  // ── HEAVY: wall walkway ring + pallet stacks at arches + barbed wire cap ──
+  if (detail >= 3) {
+    const taper = 1 - (tiers - 1) * 0.055;
+    for (let i = 0; i < 80; i++) {
+      const ang = (i / 80) * Math.PI * 2;
+      pts.push({ x: Math.cos(ang) * rX * taper * 0.9, y: H * 0.85, z: Math.sin(ang) * rZ * taper * 0.9 });
+    }
+    // Pallet/crate stacks under every arch
+    for (let i = 0; i < segs; i += 8) {
+      const ang = (i / segs) * Math.PI * 2;
+      const ax = Math.cos(ang) * rX * taper * 0.96, az = Math.sin(ang) * rZ * taper * 0.96;
+      for (let dy = 0; dy <= 2; dy++) pts.push({ x: ax, y: dy * s * 0.5, z: az });
+    }
+    // Barbed wire on parapet
+    for (let i = 0; i < 96; i++) {
+      const ang = (i / 96) * Math.PI * 2;
+      pts.push({ x: Math.cos(ang) * rX * taper, y: H * 1.18, z: Math.sin(ang) * rZ * taper });
+    }
+  }
   return pts;
 }
 
@@ -2992,6 +3084,7 @@ function gen_arena_fort(p: Record<string, number>): Point3D[] {
   const D = (p.depth ?? 28) * s;
   const H = (p.height ?? 6) * s;
   const bastions = (p.bastions ?? 1) > 0;
+  const detail = Math.round(p.detail ?? 2);
   const pts: Point3D[] = [];
   const hw = W / 2, hd = D / 2;
 
@@ -3094,6 +3187,56 @@ function gen_arena_fort(p: Record<string, number>): Point3D[] {
     }
   });
 
+  // ── MEDIUM: staircase ramps up to each corner bastion + wall-walk access ──
+  if (detail >= 2) {
+    [[-hw, -hd], [hw, -hd], [hw, hd], [-hw, hd]].forEach(([tx, tz]) => {
+      const dirX = -Math.sign(tx), dirZ = -Math.sign(tz);
+      for (let step = 0; step <= 5; step++) {
+        pts.push({ x: tx + dirX * step * s * 0.55, y: step * H * 0.15, z: tz + dirZ * step * s * 0.55 });
+        pts.push({ x: tx + dirX * step * s * 0.55 + Math.abs(dirZ) * s * 0.6, y: step * H * 0.15, z: tz + dirZ * step * s * 0.55 });
+      }
+    });
+    // Wall-walk sections along each side at H*0.7
+    const wwSegsW = Math.ceil(W / (s * 2));
+    for (let i = 0; i <= wwSegsW; i++) {
+      const wx = -hw + (i / wwSegsW) * W;
+      [-hd, hd].forEach(wz => pts.push({ x: wx, y: H * 0.72, z: wz * 0.93 }));
+    }
+    // Pallet/garbage-container covers: 6 positions per half
+    [[0, -hd * 0.65], [0, hd * 0.65]].forEach(([hcx, hcz]) => {
+      for (let dx = -2; dx <= 2; dx++) {
+        pts.push({ x: hcx + dx * s * 1.1, y: 0, z: hcz });
+        pts.push({ x: hcx + dx * s * 1.1, y: s * 0.85, z: hcz });
+      }
+    });
+  }
+  // ── HEAVY: full perimeter wall-walk + barbed wire cap + murder holes + crate towers ──
+  if (detail >= 3) {
+    // Outer parapet walkway (on top of walls)
+    const wwW = Math.ceil(W / (s * 1.2)), wwD = Math.ceil(D / (s * 1.2));
+    for (let i = 0; i <= wwW; i++) {
+      const wx = -hw + (i / wwW) * W;
+      [-hd, hd].forEach(wz => pts.push({ x: wx, y: H * 1.0, z: wz * 0.97 }));
+    }
+    for (let i = 0; i <= wwD; i++) {
+      const wz = -hd + (i / wwD) * D;
+      [-hw, hw].forEach(wx => pts.push({ x: wx * 0.97, y: H * 1.0, z: wz }));
+    }
+    // Barbed wire on crenellations
+    for (let i = 0; i <= Math.ceil(W / (s * 0.8)); i++) {
+      const wx = -hw + (i / Math.ceil(W / (s * 0.8))) * W;
+      [-hd, hd].forEach(wz => pts.push({ x: wx, y: H * 1.22, z: wz }));
+    }
+    // Crate towers inside — 4 stackable pallet columns at quadrant centres
+    [[-hw * 0.55, -hd * 0.55], [hw * 0.55, -hd * 0.55], [-hw * 0.55, hd * 0.55], [hw * 0.55, hd * 0.55]].forEach(([cx, cz]) => {
+      for (let y = 0; y <= 4; y++) pts.push({ x: cx, y: y * s * 0.6, z: cz });
+    });
+    // Murder hole drops (drop points along wall inset)
+    for (let i = 1; i < 4; i++) {
+      const wx = -hw + (i / 4) * W;
+      [-hd, hd].forEach(wz => pts.push({ x: wx, y: H * 0.9, z: wz * 0.88 }));
+    }
+  }
   return pts;
 }
 
@@ -3102,6 +3245,7 @@ function gen_arena_maze(p: Record<string, number>): Point3D[] {
   const s = p.scale ?? 1;
   const size = Math.max(6, Math.round((p.size ?? 10)));
   const H = (p.wallH ?? 3) * s;
+  const detail = Math.round(p.detail ?? 2);
   const pts: Point3D[] = [];
 
   // Recursive-backtracker–style maze encoded as wall segments
@@ -3185,6 +3329,47 @@ function gen_arena_maze(p: Record<string, number>): Point3D[] {
       pts.push({ x: lx, y: 0, z: lz });
     }
   }
+  // ── MEDIUM: stacked crates at dead ends + barbed wire on outer boundary ──
+  if (detail >= 2) {
+    // Outer boundary barbed wire (top of perimeter walls)
+    for (let c = 0; c < cellW; c++) {
+      pts.push({ x: offX + c * cellSz + cellSz * 0.5, y: H * 1.1, z: offZ });
+      pts.push({ x: offX + c * cellSz + cellSz * 0.5, y: H * 1.1, z: offZ + cellH * cellSz });
+    }
+    for (let r = 0; r < cellH; r++) {
+      pts.push({ x: offX,                y: H * 1.1, z: offZ + r * cellSz + cellSz * 0.5 });
+      pts.push({ x: offX + cellW * cellSz, y: H * 1.1, z: offZ + r * cellSz + cellSz * 0.5 });
+    }
+    // Stacked crate pairs at dead ends (every 3rd loot position)
+    let cnt = 0;
+    for (let r = 0; r < cellH; r += 2) {
+      for (let c = 0; c < cellW; c += 2) {
+        if (cnt++ % 3 === 0) {
+          const lx = offX + c * cellSz + cellSz * 0.5, lz = offZ + r * cellSz + cellSz * 0.5;
+          pts.push({ x: lx, y: s * 0.7, z: lz });
+        }
+      }
+    }
+  }
+  // ── HEAVY: elevated platform in center room + wall topper gang planks ──
+  if (detail >= 3) {
+    // Elevated platform at center podium
+    const cxc = 0, czc = 0;
+    for (let y = 1; y <= 3; y++) {
+      for (let a = 0; a < 8; a++) {
+        const ang = (a / 8) * Math.PI * 2;
+        pts.push({ x: cxc + Math.cos(ang) * s * 1.6, y: y * H * 0.25, z: czc + Math.sin(ang) * s * 1.6 });
+      }
+    }
+    // Gang-plank access ramps to top of walls (4 diagonal)
+    [[-cellSz, -cellSz], [cellSz, -cellSz], [-cellSz, cellSz], [cellSz, cellSz]].forEach(([dx, dz]) => {
+      const wx = offX + cellW * cellSz * 0.5 + dx, wz = offZ + cellH * cellSz * 0.5 + dz;
+      for (let step = 0; step <= 4; step++) {
+        const t = step / 4;
+        pts.push({ x: wx + dx * t * 0.4, y: t * H, z: wz + dz * t * 0.4 });
+      }
+    });
+  }
   return pts;
 }
 
@@ -3194,6 +3379,7 @@ function gen_arena_siege(p: Record<string, number>): Point3D[] {
   const W = (p.width ?? 35) * s;
   const wallH = (p.wallH ?? 6) * s;
   const towerH = (p.towerH ?? 14) * s;
+  const detail = Math.round(p.detail ?? 2);
   const pts: Point3D[] = [];
   const hw = W / 2;
 
@@ -3291,6 +3477,62 @@ function gen_arena_siege(p: Record<string, number>): Point3D[] {
     for (let y = 0; y <= 2; y++) pts.push({ x: Math.cos(ang) * boundR, y: y * s, z: Math.sin(ang) * boundR });
   }
 
+  // ── MEDIUM: wall-walk on curtain wall + stair towers + attacker crate cover ──
+  if (detail >= 2) {
+    const wallLen2 = W * 0.88, wallZ2 = -W * 0.3;
+    // Wall-walk on curtain top
+    for (let i = 0; i <= 12; i++) {
+      const wx = -wallLen2 / 2 + (i / 12) * wallLen2;
+      pts.push({ x: wx, y: wallH * 0.9, z: wallZ2 * 0.93 });
+    }
+    // Stair ramp at each wall tower (3 towers)
+    [-wallLen2 * 0.42, 0, wallLen2 * 0.42].forEach(tx => {
+      for (let step = 0; step <= 5; step++) {
+        pts.push({ x: tx, y: step * wallH * 0.22, z: wallZ2 + step * s * 0.6 });
+        pts.push({ x: tx + s * 0.8, y: step * wallH * 0.22, z: wallZ2 + step * s * 0.6 });
+      }
+    });
+    // Attacker-side wooden crate cover clusters
+    [-hw * 0.35, hw * 0.35].forEach(lx => {
+      for (let i = -2; i <= 2; i++) {
+        pts.push({ x: lx + i * s * 0.7, y: 0, z: W * 0.28 });
+        pts.push({ x: lx + i * s * 0.7, y: s * 0.8, z: W * 0.28 });
+      }
+    });
+    // Keep stair ramp (double-staircase)
+    const keepZ2 = W * 0.18, keepR2 = s * 4.5;
+    [-1, 1].forEach(side => {
+      for (let step = 0; step <= 7; step++) {
+        pts.push({ x: side * s * 1.5, y: step * towerH * 0.12, z: keepZ2 - keepR2 - step * s * 0.5 });
+      }
+    });
+  }
+  // ── HEAVY: tower walkway rings + keep balcony barbed wire + pallet stacks ──
+  if (detail >= 3) {
+    // Tower cap rings (walkway on top of each wall tower)
+    const wallLen3 = W * 0.88, wallZ3 = -W * 0.3;
+    [-wallLen3 * 0.42, 0, wallLen3 * 0.42].forEach(tx => {
+      for (let a = 0; a < 12; a++) {
+        const ang = (a / 12) * Math.PI * 2;
+        pts.push({ x: tx + Math.cos(ang) * s * 2.4, y: wallH * 1.5, z: wallZ3 + Math.sin(ang) * s * 2.4 });
+      }
+    });
+    // Keep top platform walkway
+    const keepZ3 = W * 0.18;
+    for (let a = 0; a < 18; a++) {
+      const ang = (a / 18) * Math.PI * 2;
+      pts.push({ x: Math.cos(ang) * s * 3.5, y: towerH * 1.05, z: keepZ3 + Math.sin(ang) * s * 3.5 });
+    }
+    // Barbed wire on outer ring
+    for (let a = 0; a < 56; a++) {
+      const ang = (a / 56) * Math.PI * 2;
+      pts.push({ x: Math.cos(ang) * boundR, y: s * 1.3, z: Math.sin(ang) * boundR });
+    }
+    // Pallet stacks flanking gate
+    [-s * 3, s * 3].forEach(ox => {
+      for (let y = 0; y <= 3; y++) pts.push({ x: ox, y: y * s * 0.55, z: wallZ3 });
+    });
+  }
   return pts;
 }
 
@@ -3301,6 +3543,7 @@ function gen_arena_compound(p: Record<string, number>): Point3D[] {
   const D = (p.depth ?? 24) * s;
   const H = (p.height ?? 4) * s;
   const rows = Math.max(1, Math.round(p.rows ?? 3)); // interior cover rows
+  const detail = Math.round(p.detail ?? 2);
   const pts: Point3D[] = [];
   const hw = W / 2, hd = D / 2;
 
@@ -3385,6 +3628,49 @@ function gen_arena_compound(p: Record<string, number>): Point3D[] {
     pts.push({ x: i * hw * 0.35, y: s, z: -hd });
     pts.push({ x: i * hw * 0.35, y: 0, z: hd });
     pts.push({ x: i * hw * 0.35, y: s, z: hd });
+  }
+  // ── MEDIUM: watchtower stair ladders + garbage-container cover rows ──
+  if (detail >= 2) {
+    // External ladder rungs at each corner tower
+    [[-hw, -hd], [hw, -hd], [hw, hd], [-hw, hd]].forEach(([tx, tz]) => {
+      for (let step = 0; step <= 6; step++) {
+        pts.push({ x: tx + Math.sign(tx) * s * 0.4, y: step * H * 0.22, z: tz });
+        pts.push({ x: tx, y: step * H * 0.22, z: tz + Math.sign(tz) * s * 0.4 });
+      }
+    });
+    // Garbage container clusters at 6 interior positions
+    [[-hw * 0.5, 0], [hw * 0.5, 0], [0, -hd * 0.4], [0, hd * 0.4],
+     [-hw * 0.55, -hd * 0.45], [hw * 0.55, hd * 0.45]].forEach(([cx, cz]) => {
+      for (let dy = 0; dy <= 1; dy++) pts.push({ x: cx, y: dy * s * 0.9, z: cz });
+      pts.push({ x: cx + s * 1.1, y: 0, z: cz });
+      pts.push({ x: cx - s * 1.1, y: 0, z: cz });
+    });
+    // Wall-top walk (inset from outer edge)
+    for (let i = 0; i <= Math.ceil(W / (s * 1.8)); i++) {
+      const wx = -hw * 0.94 + (i / Math.ceil(W / (s * 1.8))) * W * 0.94;
+      [-hd, hd].forEach(wz => pts.push({ x: wx, y: H * 0.88, z: wz * 0.95 }));
+    }
+  }
+  // ── HEAVY: full perimeter parapet walk + wooden crate towers + barbed cap ──
+  if (detail >= 3) {
+    // Side wall-top walks
+    for (let i = 0; i <= Math.ceil(D / (s * 1.8)); i++) {
+      const wz = -hd * 0.94 + (i / Math.ceil(D / (s * 1.8))) * D * 0.94;
+      [-hw, hw].forEach(wx => pts.push({ x: wx * 0.95, y: H * 0.88, z: wz }));
+    }
+    // Wooden crate towers at all 4 quadrant objectives
+    [[0, -hd * 0.55], [0, hd * 0.55], [-hw * 0.55, 0], [hw * 0.55, 0]].forEach(([ox, oz]) => {
+      for (let y = 0; y <= 4; y++) pts.push({ x: ox, y: y * s * 0.65, z: oz });
+    });
+    // Barbed wire cap on perimeter
+    for (let i = 0; i <= Math.ceil(W / (s * 0.9)); i++) {
+      const wx = -hw + (i / Math.ceil(W / (s * 0.9))) * W;
+      [-hd, hd].forEach(wz => pts.push({ x: wx, y: H * 1.2, z: wz }));
+    }
+    for (let i = 0; i <= Math.ceil(D / (s * 0.9)); i++) {
+      const wz = -hd + (i / Math.ceil(D / (s * 0.9))) * D;
+      [-hw, hw].forEach(wx => pts.push({ x: wx, y: H * 1.2, z: wz }));
+    }
   }
   return pts;
 }

@@ -8,8 +8,13 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 
 React + Vite pure-frontend app for generating DayZ console object spawns.
 
-- **61+ shape generators** across groups: Sci-Fi, Mechs & Robots, Tunnels, Structures, Fortifications, Body Parts, Primitives, Epic/Unique, ⚡ Lightweight, 🤖 Transformers, 🦄 Fantasy & Mythic, 🏴‍☠️ Nautical
-- **New shapes**: Dragon (sinuous body, swept wings, horns, legs, tail), Pirate Ship (curved hull, masts, sails, cannons), PVP Arena (octagonal walled arena with towers), Helipad (H-marking, lights, optional elevated platform)
+- **65+ shape generators** across groups: Sci-Fi, Mechs & Robots, Tunnels, Structures, Fortifications, Body Parts, Primitives, Epic/Unique, ⚡ Lightweight, 🤖 Transformers, 🦄 Fantasy & Mythic, 🏴‍☠️ Nautical, ⚔ Arenas
+- **6 Arena generators**: pvp_arena (ring), arena_colosseum (Roman oval), arena_fort (square castle), arena_maze (procedural labyrinth), arena_siege (asymmetric attacker/defender), arena_compound (military grid) — all with Lightweight/Medium/Heavy detail levels
+- **Detail levels (1/2/3)** on all arena generators: Lightweight = perimeter only; Medium = + staircase ramp access, interior cover clusters (pallets, crates, barricades), wall-top walkway access points; Heavy = + barbed wire cap, full perimeter walkway, loot barrel rings, elevated platform elements
+- **New object groups in selector**: "⚔ Arena & Castle Walls" (castle stone walls, HESCO, concrete, brick, palisade, barbed wire), "🪵 Crates & Storage" (wooden crates, pallets, garbage containers, barrels), "🪜 Steps & Access" (pier ladders, concrete stairs, military platforms, watchtowers)
+- **Best wall recommendations**: Castle Stone Wall 3m (★ best medieval arena), HESCO 5m (★ best military), Concrete Wall 4m (★ best modern) — all console-safe Xbox/PS5
+- **3 featured PvP builds** in Completed Builds: ⭐ HESCO Combat Ring (lightweight, 280 obj), ⭐ Castle Fortress (medium, 520 obj), ⭐ Grand Roman Colosseum (heavy, 900 obj)
+- **Arena Maker panel**: ROLL RANDOM ARENA button + 6 type tiles + "Randomize This Type Again"
 - **7 Transformer mechs**: Bumblebee, Optimus Prime, Ironhide, Jazz, Ratchet, Megatron, Starscream — built via shared `_buildMechPts(TFConfig)` helper
 - **Real-time 3D canvas**: `useMemo` computes points, `useEffect` debounces 60ms, auto-rotate with requestAnimationFrame
 - **Live dimensions**: bounding box W×D×H in metres displayed in info bar and stats panel
@@ -18,11 +23,12 @@ React + Vite pure-frontend app for generating DayZ console object spawns.
 - **🎲 Surprise Me button**: loads a random preset from the full list
 - **Full YPR sliders**: Yaw/Pitch/Roll all live — Yaw applied to world coords, Pitch/Roll shown in 3D preview
 - **Fill Mode** with density slider (1–6 interior layers)
-- **Quick Presets** (60+) with searchable filter and category tabs (All, Sci-Fi, Mechs, etc.)
-- **Completed Builds gallery**: 30+ themed builds with object notes and download
+- **Quick Presets** (60+) with searchable filter and category tabs (All, Sci-Fi, Mechs, Arenas, etc.)
+- **Completed Builds gallery**: 35+ themed builds with object notes and download
 - **Text Maker**: renders A–Z, 0–9, punctuation in 3D with configurable extrusion depth, rings, scale
 - **Output**: init.c (with SpawnObject() helper) or JSON Spawner format
 - **Extra objects**: stack multiple object classes per spawn point with Y offset
+- All objects console-safe (Xbox/PS5 vanilla DayZ)
 - No backend — pure frontend
 
 Key files:

@@ -695,10 +695,11 @@ export const SHAPE_DEFS: Record<string, ShapeDef> = {
   pvp_arena: {
     label: "⚔ PVP Arena", group: "🏟 Structures",
     params: [
-      { id: "scale",  label: "Overall Scale", val: 1,  min: 0.3, max: 4,   step: 0.05 },
-      { id: "radius", label: "Arena Radius",  val: 15, min: 6,   max: 40,  step: 1    },
-      { id: "height", label: "Wall Height",   val: 5,  min: 2,   max: 15,  step: 0.5  },
-      { id: "walls",  label: "Wall Segments", val: 8,  min: 4,   max: 12,  step: 1    },
+      { id: "scale",  label: "Overall Scale",            val: 1,  min: 0.3, max: 4,   step: 0.05 },
+      { id: "radius", label: "Arena Radius",             val: 15, min: 6,   max: 40,  step: 1    },
+      { id: "height", label: "Wall Height",              val: 5,  min: 2,   max: 15,  step: 0.5  },
+      { id: "walls",  label: "Wall Segments",            val: 8,  min: 4,   max: 12,  step: 1    },
+      { id: "detail", label: "Detail (1=Light 2=Med 3=Heavy)", val: 2, min: 1, max: 3, step: 1   },
     ]
   },
   helipad: {
@@ -714,48 +715,53 @@ export const SHAPE_DEFS: Record<string, ShapeDef> = {
   arena_colosseum: {
     label: "🏛 Colosseum", group: "⚔ Arenas",
     params: [
-      { id: "scale",   label: "Overall Scale",  val: 1,  min: 0.3, max: 4,  step: 0.05 },
-      { id: "radiusX", label: "Major Radius (m)", val: 22, min: 10, max: 50, step: 1   },
-      { id: "radiusZ", label: "Minor Radius (m)", val: 15, min: 8,  max: 35, step: 1   },
-      { id: "height",  label: "Wall Height (m)", val: 7,  min: 3,   max: 20, step: 0.5 },
-      { id: "tiers",   label: "Seating Tiers",  val: 3,  min: 1,   max: 4,  step: 1   },
+      { id: "scale",   label: "Overall Scale",              val: 1,  min: 0.3, max: 4,  step: 0.05 },
+      { id: "radiusX", label: "Major Radius (m)",           val: 22, min: 10,  max: 50, step: 1    },
+      { id: "radiusZ", label: "Minor Radius (m)",           val: 15, min: 8,   max: 35, step: 1    },
+      { id: "height",  label: "Wall Height (m)",            val: 7,  min: 3,   max: 20, step: 0.5  },
+      { id: "tiers",   label: "Seating Tiers",              val: 3,  min: 1,   max: 4,  step: 1    },
+      { id: "detail",  label: "Detail (1=Light 2=Med 3=Heavy)", val: 2, min: 1, max: 3, step: 1   },
     ]
   },
   arena_fort: {
     label: "🏰 Fortress Arena", group: "⚔ Arenas",
     params: [
-      { id: "scale",   label: "Overall Scale", val: 1,  min: 0.3, max: 4,  step: 0.05 },
-      { id: "width",   label: "Width (m)",     val: 28, min: 15,  max: 60, step: 1    },
-      { id: "depth",   label: "Depth (m)",     val: 28, min: 15,  max: 60, step: 1    },
-      { id: "height",  label: "Wall Height",   val: 6,  min: 3,   max: 15, step: 0.5  },
-      { id: "bastions",label: "Bastions (0=No)", val: 1, min: 0,  max: 1,  step: 1    },
+      { id: "scale",   label: "Overall Scale",              val: 1,  min: 0.3, max: 4,  step: 0.05 },
+      { id: "width",   label: "Width (m)",                  val: 28, min: 15,  max: 60, step: 1    },
+      { id: "depth",   label: "Depth (m)",                  val: 28, min: 15,  max: 60, step: 1    },
+      { id: "height",  label: "Wall Height",                val: 6,  min: 3,   max: 15, step: 0.5  },
+      { id: "bastions",label: "Bastions (0=No)",            val: 1,  min: 0,   max: 1,  step: 1    },
+      { id: "detail",  label: "Detail (1=Light 2=Med 3=Heavy)", val: 2, min: 1, max: 3, step: 1   },
     ]
   },
   arena_maze: {
     label: "🌀 Maze Arena", group: "⚔ Arenas",
     params: [
-      { id: "scale", label: "Overall Scale", val: 1,  min: 0.3, max: 3,  step: 0.05 },
-      { id: "size",  label: "Grid Size",     val: 10, min: 4,   max: 18, step: 1    },
-      { id: "wallH", label: "Wall Height",   val: 3,  min: 1.5, max: 8,  step: 0.5  },
+      { id: "scale",  label: "Overall Scale",               val: 1,  min: 0.3, max: 3,  step: 0.05 },
+      { id: "size",   label: "Grid Size",                   val: 10, min: 4,   max: 18, step: 1    },
+      { id: "wallH",  label: "Wall Height",                 val: 3,  min: 1.5, max: 8,  step: 0.5  },
+      { id: "detail", label: "Detail (1=Light 2=Med 3=Heavy)", val: 2, min: 1, max: 3, step: 1    },
     ]
   },
   arena_siege: {
     label: "⚔ Siege Arena", group: "⚔ Arenas",
     params: [
-      { id: "scale",   label: "Overall Scale",    val: 1,  min: 0.3, max: 4,  step: 0.05 },
-      { id: "width",   label: "Arena Width (m)",  val: 35, min: 20,  max: 70, step: 1    },
-      { id: "wallH",   label: "Defender Wall H",  val: 6,  min: 3,   max: 12, step: 0.5  },
-      { id: "towerH",  label: "Keep Height (m)",  val: 14, min: 6,   max: 30, step: 1    },
+      { id: "scale",   label: "Overall Scale",              val: 1,  min: 0.3, max: 4,  step: 0.05 },
+      { id: "width",   label: "Arena Width (m)",            val: 35, min: 20,  max: 70, step: 1    },
+      { id: "wallH",   label: "Defender Wall H",            val: 6,  min: 3,   max: 12, step: 0.5  },
+      { id: "towerH",  label: "Keep Height (m)",            val: 14, min: 6,   max: 30, step: 1    },
+      { id: "detail",  label: "Detail (1=Light 2=Med 3=Heavy)", val: 2, min: 1, max: 3, step: 1   },
     ]
   },
   arena_compound: {
     label: "🪖 Compound Arena", group: "⚔ Arenas",
     params: [
-      { id: "scale",  label: "Overall Scale", val: 1,  min: 0.3, max: 4,  step: 0.05 },
-      { id: "width",  label: "Width (m)",     val: 32, min: 15,  max: 70, step: 1    },
-      { id: "depth",  label: "Depth (m)",     val: 24, min: 15,  max: 50, step: 1    },
-      { id: "height", label: "Wall Height",   val: 4,  min: 2,   max: 10, step: 0.5  },
-      { id: "rows",   label: "Cover Rows",    val: 3,  min: 1,   max: 6,  step: 1    },
+      { id: "scale",  label: "Overall Scale",               val: 1,  min: 0.3, max: 4,  step: 0.05 },
+      { id: "width",  label: "Width (m)",                   val: 32, min: 15,  max: 70, step: 1    },
+      { id: "depth",  label: "Depth (m)",                   val: 24, min: 15,  max: 50, step: 1    },
+      { id: "height", label: "Wall Height",                 val: 4,  min: 2,   max: 10, step: 0.5  },
+      { id: "rows",   label: "Cover Rows",                  val: 3,  min: 1,   max: 6,  step: 1    },
+      { id: "detail", label: "Detail (1=Light 2=Med 3=Heavy)", val: 2, min: 1, max: 3, step: 1    },
     ]
   },
 };
