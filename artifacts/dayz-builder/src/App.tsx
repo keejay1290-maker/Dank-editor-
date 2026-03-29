@@ -526,6 +526,8 @@ export default function App() {
   const [buildNotes, setBuildNotes] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(() => typeof window !== "undefined" && window.innerWidth >= 768);
   const [toast, setToast] = useState("");
+  const [objSearch, setObjSearch] = useState("");
+  const [textObjSearch, setTextObjSearch] = useState("");
   const [presetFilter, setPresetFilter] = useState("");
   const [presetCategory, setPresetCategory] = useState("All");
 
@@ -997,6 +999,7 @@ export default function App() {
               onSurpriseMe={surpriseMe}
               buildNotes={buildNotes} setBuildNotes={setBuildNotes}
               captureCurrentState={captureCurrentState} restoreState={restoreState}
+              objSearch={objSearch} setObjSearch={setObjSearch}
             />
           ) : mode === "builds" ? (
             <BuildsSidebar
@@ -1021,6 +1024,7 @@ export default function App() {
               setTextPosX={setTextPosX} setTextPosY={setTextPosY} setTextPosZ={setTextPosZ}
               setTextFormat={setTextFormat}
               onGenerate={generateText}
+              textObjSearch={textObjSearch} setTextObjSearch={setTextObjSearch}
             />
           )}
         </div>
@@ -1472,16 +1476,42 @@ function ArchitectSidebar(p: any) {
       {/* Object */}
       {sec("obj", "📦 Object Class", (
         <div className="px-3">
-          <Lbl>Quick Select</Lbl>
+          <Lbl>Search Objects (27 groups, 494+ items)</Lbl>
+          <input
+            type="text"
+            placeholder="Search classname or label..."
+            value={p.objSearch || ""}
+            onChange={e => p.setObjSearch(e.target.value)}
+            className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1 rounded-sm mb-1 focus:outline-none focus:border-[#8a6a0f]"
+          />
+          {(p.objSearch || "").length > 0 && (
+            <div className="text-[9px] text-[#7a6040] mb-1">
+              {DAYZ_OBJECTS.filter(o => `${o.label} ${o.value}`.toLowerCase().includes((p.objSearch || "").toLowerCase())).length} matches
+            </div>
+          )}
           <select className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1.5 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
-            onChange={e => p.setObjClass(e.target.value)} value={p.objClass}>
-            {OBJECT_GROUPS.map(group => (
-              <optgroup key={group} label={group}>
-                {DAYZ_OBJECTS.filter(o => o.group === group).map(o => (
-                  <option key={o.value} value={o.value}>{o.label}</option>
-                ))}
-              </optgroup>
-            ))}
+            onChange={e => { p.setObjClass(e.target.value); p.setObjSearch(""); }} value={p.objClass}>
+            {(() => {
+              const q = (p.objSearch || "").toLowerCase().trim();
+              if (!q) {
+                return OBJECT_GROUPS.map((group: string) => (
+                  <optgroup key={group} label={group}>
+                    {DAYZ_OBJECTS.filter(o => o.group === group).map(o => (
+                      <option key={o.value} value={o.value}>{o.label}</option>
+                    ))}
+                  </optgroup>
+                ));
+              }
+              const matches = DAYZ_OBJECTS.filter(o => `${o.label} ${o.value}`.toLowerCase().includes(q));
+              const groups = [...new Set(matches.map(o => o.group))];
+              return groups.map((group: string) => (
+                <optgroup key={group} label={group}>
+                  {matches.filter(o => o.group === group).map(o => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
+                  ))}
+                </optgroup>
+              ));
+            })()}
           </select>
           <Lbl>Classname / Path</Lbl>
           <Inp type="text" value={p.objClass} onChange={v => p.setObjClass(v)} />
@@ -1753,16 +1783,37 @@ function TextSidebar(p: any) {
             </button>
           ))}
         </div>
-        <div className="text-[9px] text-[#b09a6a] mb-1.5 uppercase tracking-wider">All objects</div>
+        <div className="text-[9px] text-[#b09a6a] mb-1.5 uppercase tracking-wider">All objects — search to filter</div>
+        <input
+          type="text"
+          placeholder="Search classname or label..."
+          value={p.textObjSearch || ""}
+          onChange={(e: any) => p.setTextObjSearch(e.target.value)}
+          className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1 rounded-sm mb-1 focus:outline-none focus:border-[#8a6a0f]"
+        />
         <select className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1.5 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
-          value={p.textObj} onChange={(e: any) => p.setTextObj(e.target.value)}>
-          {OBJECT_GROUPS.map((group: string) => (
-            <optgroup key={group} label={group}>
-              {DAYZ_OBJECTS.filter((o: any) => o.group === group).map((o: any) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </optgroup>
-          ))}
+          value={p.textObj} onChange={(e: any) => { p.setTextObj(e.target.value); p.setTextObjSearch(""); }}>
+          {(() => {
+            const q = (p.textObjSearch || "").toLowerCase().trim();
+            if (!q) {
+              return OBJECT_GROUPS.map((group: string) => (
+                <optgroup key={group} label={group}>
+                  {DAYZ_OBJECTS.filter((o: any) => o.group === group).map((o: any) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
+                  ))}
+                </optgroup>
+              ));
+            }
+            const matches = DAYZ_OBJECTS.filter((o: any) => `${o.label} ${o.value}`.toLowerCase().includes(q));
+            const groups = [...new Set(matches.map((o: any) => o.group))];
+            return groups.map((group: string) => (
+              <optgroup key={group} label={group}>
+                {matches.filter((o: any) => o.group === group).map((o: any) => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </optgroup>
+            ));
+          })()}
         </select>
         <Lbl>Custom Classname (type any valid DayZ class)</Lbl>
         <input type="text" value={p.textObj} onChange={(e: any) => p.setTextObj(e.target.value)}
