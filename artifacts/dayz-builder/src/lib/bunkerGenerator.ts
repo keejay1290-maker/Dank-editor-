@@ -159,8 +159,8 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
     stairPositions.push(rng.int(1, spineLengths[lv] - 1));
   }
 
-  // EXIT position — far end of level 1 spine
-  const exitSpinePos = spineLengths[0] + 1;
+  // EXIT position — immediately after the last level-1 spine segment
+  const exitSpinePos = spineLengths[0];
 
   // ─────────────────────────────────────────────────────────────────────────────
   // SURFACE LEVEL — Entrance & Exit
@@ -182,14 +182,15 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
     place(PIECE_GATE_R.classname, 'Entrance Gate Right', 2, 0, -CELL_LEN + 5.5, 0, 0, 'entrance');
   }
 
-  // Emergency exit at far end of spine
-  place(PIECE_ENTRANCE_SMALL.classname, 'Emergency Exit', 0, 0, exitSpinePos * CELL_LEN + CELL_LEN, 180, 0, 'exit');
+  // Emergency exit — surface hatch aligned with exit stairwell centre
+  const exitZ = exitSpinePos * CELL_LEN + CELL_LEN * 0.5;
+  place(PIECE_ENTRANCE_SMALL.classname, 'Emergency Exit', 0, 0, exitZ, 180, 0, 'exit');
 
-  // Interior exit panel (underground, near exit stairwell)
+  // Interior exit panel (underground, beside exit stairwell)
   if (opts.useSakhalPanels) {
-    place(PIECE_PANEL_INTERIOR.classname, 'Interior Exit Panel (Sakhal)', 4, LEVEL_DEPTH[1] + 0.5, exitSpinePos * CELL_LEN, 270, 1, 'panel');
+    place(PIECE_PANEL_INTERIOR.classname, 'Interior Exit Panel (Sakhal)', 4, LEVEL_DEPTH[1] + 0.5, exitZ - CELL_LEN * 0.4, 270, 1, 'panel');
   } else {
-    place(PIECE_PANEL.classname, 'Interior Exit Panel', 4, LEVEL_DEPTH[1] + 0.5, exitSpinePos * CELL_LEN, 270, 1, 'panel');
+    place(PIECE_PANEL.classname, 'Interior Exit Panel', 4, LEVEL_DEPTH[1] + 0.5, exitZ - CELL_LEN * 0.4, 270, 1, 'panel');
   }
 
   // ─────────────────────────────────────────────────────────────────────────────
@@ -263,14 +264,16 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
 
     // ── Exit stairwell (Level 1 to surface exit) ──────────────────────────────
     if (lv === 1) {
-      const ez = exitSpinePos * CELL_LEN + CELL_LEN * 0.5;
-      const numBlocks = Math.ceil(Math.abs(dy) / STAIR_BLOCK_H);
-      for (let f = 0; f < numBlocks; f++) {
+      // Connecting tunnel piece — bridges the gap from spine end to exit stairwell
+      place(style.tunnelStraight.classname, 'Exit Approach Tunnel', 0, dy, exitZ, 0, lv, 'tunnel');
+      tunnelCount++;
+      // Stair blocks rising from underground to surface
+      const numExitBlocks = Math.ceil(Math.abs(dy) / STAIR_BLOCK_H);
+      for (let f = 0; f < numExitBlocks; f++) {
         const stairY = dy + f * STAIR_BLOCK_H;
-        const pc = f === 0 ? PIECE_STAIRS_BLOCK.classname : PIECE_STAIRS_BLOCK.classname;
-        place(pc, `Exit Stair Block ${f + 1}`, 0, stairY, ez, 0, lv, 'stair');
+        place(PIECE_STAIRS_BLOCK.classname, `Exit Stair Block ${f + 1}`, 0, stairY, exitZ, 0, lv, 'stair');
       }
-      place(PIECE_STAIRS_EXIT.classname, 'Exit Stair Top', 0, 0, ez, 0, 0, 'exit');
+      place(PIECE_STAIRS_EXIT.classname, 'Exit Stair Top', 0, 0, exitZ, 0, 0, 'exit');
     }
 
     // ── Branch rooms off the spine ────────────────────────────────────────────
