@@ -737,10 +737,12 @@ export const SHAPE_DEFS: Record<string, ShapeDef> = {
   arena_maze: {
     label: "🌀 Maze Arena", group: "⚔ Arenas",
     params: [
-      { id: "scale",  label: "Overall Scale",               val: 1,  min: 0.3, max: 3,  step: 0.05 },
-      { id: "size",   label: "Grid Size",                   val: 10, min: 4,   max: 18, step: 1    },
-      { id: "wallH",  label: "Wall Height",                 val: 3,  min: 1.5, max: 8,  step: 0.5  },
-      { id: "detail", label: "Detail (1=Light 2=Med 3=Heavy)", val: 2, min: 1, max: 3, step: 1    },
+      { id: "scale",  label: "Overall Scale",               val: 1,    min: 0.3, max: 3,     step: 0.05 },
+      { id: "size",   label: "Grid Size",                   val: 10,   min: 5,   max: 18,    step: 1    },
+      { id: "wallH",  label: "Wall Height",                 val: 3,    min: 1.5, max: 8,     step: 0.5  },
+      { id: "seed",   label: "Maze Seed (roll for new maze)", val: 42, min: 1,   max: 9999,  step: 1    },
+      { id: "roomSz", label: "Winner Room Size (cells)",    val: 3,    min: 2,   max: 5,     step: 1    },
+      { id: "detail", label: "Detail (1=Light 2=Med 3=Heavy)", val: 2, min: 1,   max: 3,     step: 1    },
     ]
   },
   arena_siege: {

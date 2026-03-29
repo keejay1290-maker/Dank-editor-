@@ -3242,131 +3242,267 @@ function gen_arena_fort(p: Record<string, number>): Point3D[] {
 
 // ─── ARENA MAZE ───────────────────────────────────────────────────────────────
 function gen_arena_maze(p: Record<string, number>): Point3D[] {
-  const s = p.scale ?? 1;
-  const size = Math.max(6, Math.round((p.size ?? 10)));
-  const H = (p.wallH ?? 3) * s;
-  const detail = Math.round(p.detail ?? 2);
+  const s       = p.scale  ?? 1;
+  const size    = Math.max(5, Math.round(p.size  ?? 10));
+  const H       = (p.wallH  ?? 3) * s;
+  const seed    = Math.round(p.seed   ?? 42);
+  const roomSz  = Math.min(Math.round(p.roomSz ?? 3), Math.floor(size / 2) - 1 || 1);
+  const detail  = Math.round(p.detail ?? 2);
   const pts: Point3D[] = [];
 
-  // Recursive-backtracker–style maze encoded as wall segments
-  // We deterministically generate a maze from the size parameter as seed
   const cellW = size, cellH = size;
-  // Wall grid: hWalls[row][col] = horizontal wall present, vWalls[row][col] = vertical wall
+  const mid   = Math.floor(size / 2);
+
+  // ── Seeded LCG RNG — different seed = completely different maze ──
+  let rng = (seed * 6364136223846793005 + 1) >>> 0;
+  const rand = () => {
+    rng ^= rng << 13; rng ^= rng >> 17; rng ^= rng << 5;
+    return (rng >>> 0) / 0xffffffff;
+  };
+  // Warm up the RNG
+  for (let i = 0; i < 32; i++) rand();
+
+  // ── Winner's room: clear a (roomSz×roomSz) zone at the grid centre ──
+  const roomR0 = mid - Math.floor(roomSz / 2);
+  const roomR1 = roomR0 + roomSz - 1;   // inclusive
+  const roomC0 = mid - Math.floor(roomSz / 2);
+  const roomC1 = roomC0 + roomSz - 1;
+
+  // Wall grids (true = wall present)
   const hWalls: boolean[][] = Array.from({ length: cellH + 1 }, () => Array(cellW).fill(true));
   const vWalls: boolean[][] = Array.from({ length: cellH }, () => Array(cellW + 1).fill(true));
   const visited = Array.from({ length: cellH }, () => Array(cellW).fill(false));
 
-  // Deterministic maze carve using a seeded stack-based DFS
-  const seed = size * 17 + 3;
-  let rng = seed;
-  const rand = () => { rng = (rng * 1664525 + 1013904223) & 0xffffffff; return (rng >>> 0) / 0xffffffff; };
+  // Pre-clear all cells inside the winner's room and remove their internal walls
+  for (let r = roomR0; r <= roomR1; r++) {
+    for (let c = roomC0; c <= roomC1; c++) {
+      visited[r][c] = true;
+      if (r > roomR0) hWalls[r][c] = false;      // horizontal wall above
+      if (c > roomC0) vWalls[r][c] = false;      // vertical wall to the left
+    }
+  }
+  // Carve exactly one entry corridor from the centre of each side of the winner's room
+  // into the first adjacent cell (the DFS will connect these to the rest of the maze)
+  const roomMidR = Math.floor((roomR0 + roomR1) / 2);
+  const roomMidC = Math.floor((roomC0 + roomC1) / 2);
+  if (roomR0 > 0)        hWalls[roomR0][roomMidC]     = false; // North door
+  if (roomR1 < cellH-1)  hWalls[roomR1+1][roomMidC]   = false; // South door
+  if (roomC0 > 0)        vWalls[roomMidR][roomC0]     = false; // West door
+  if (roomC1 < cellW-1)  vWalls[roomMidR][roomC1+1]   = false; // East door
 
-  const stack: [number, number][] = [[Math.floor(cellH / 2), Math.floor(cellW / 2)]];
-  visited[Math.floor(cellH / 2)][Math.floor(cellW / 2)] = true;
+  // ── Recursive-backtracker DFS — generates a perfect maze ──
+  // Start the DFS from a cell adjacent to each door so all 4 doors connect
+  const starts: [number, number][] = [];
+  if (roomR0 > 0 && !visited[roomR0-1][roomMidC])        { starts.push([roomR0-1, roomMidC]); visited[roomR0-1][roomMidC] = true; }
+  if (roomR1 < cellH-1 && !visited[roomR1+1][roomMidC])  { starts.push([roomR1+1, roomMidC]); visited[roomR1+1][roomMidC] = true; }
+  if (roomC0 > 0 && !visited[roomMidR][roomC0-1])        { starts.push([roomMidR, roomC0-1]); visited[roomMidR][roomC0-1] = true; }
+  if (roomC1 < cellW-1 && !visited[roomMidR][roomC1+1])  { starts.push([roomMidR, roomC1+1]); visited[roomMidR][roomC1+1] = true; }
+
+  // Also start from the four corner cells of the grid for full coverage
+  [[0,0],[0,cellW-1],[cellH-1,0],[cellH-1,cellW-1]].forEach(([r,c]) => {
+    if (!visited[r][c]) { visited[r][c] = true; starts.push([r, c]); }
+  });
+
+  const stack: [number, number][] = [...starts];
+
   while (stack.length) {
-    const [r, c] = stack[stack.length - 1];
-    const neighbors: [number, number, string][] = [];
-    if (r > 0 && !visited[r - 1][c]) neighbors.push([r - 1, c, 'N']);
-    if (r < cellH - 1 && !visited[r + 1][c]) neighbors.push([r + 1, c, 'S']);
-    if (c > 0 && !visited[r][c - 1]) neighbors.push([r, c - 1, 'W']);
-    if (c < cellW - 1 && !visited[r][c + 1]) neighbors.push([r, c + 1, 'E']);
-    if (!neighbors.length) { stack.pop(); continue; }
-    const [nr, nc, dir] = neighbors[Math.floor(rand() * neighbors.length)];
+    const idx = stack.length - 1;
+    const [r, c] = stack[idx];
+    const nbrs: [number, number, string][] = [];
+    if (r > 0 && !visited[r-1][c]) nbrs.push([r-1, c, 'N']);
+    if (r < cellH-1 && !visited[r+1][c]) nbrs.push([r+1, c, 'S']);
+    if (c > 0 && !visited[r][c-1]) nbrs.push([r, c-1, 'W']);
+    if (c < cellW-1 && !visited[r][c+1]) nbrs.push([r, c+1, 'E']);
+    if (!nbrs.length) { stack.splice(idx, 1); continue; }
+    const [nr, nc, dir] = nbrs[Math.floor(rand() * nbrs.length)];
     visited[nr][nc] = true;
-    if (dir === 'N') hWalls[r][c] = false;
-    else if (dir === 'S') hWalls[r + 1][c] = false;
-    else if (dir === 'W') vWalls[r][c] = false;
-    else if (dir === 'E') vWalls[r][c + 1] = false;
+    if (dir === 'N')      hWalls[r][c]     = false;
+    else if (dir === 'S') hWalls[r+1][c]   = false;
+    else if (dir === 'W') vWalls[r][c]     = false;
+    else if (dir === 'E') vWalls[r][c+1]   = false;
     stack.push([nr, nc]);
   }
 
-  // Render walls as point chains
-  const cellSz = s * 2.5;
-  const offX = -(cellW * cellSz) / 2, offZ = -(cellH * cellSz) / 2;
-  const wallH = H;
+  // ── Render maze walls as vertical point columns ──
+  const cellSz   = s * 2.5;
+  const offX     = -(cellW * cellSz) / 2;
+  const offZ     = -(cellH * cellSz) / 2;
   const wallSteps = 3;
-  // Horizontal walls
+
+  // Helper: skip wall segments that are INSIDE the winner's room
+  const inRoom  = (r: number, c: number) => r >= roomR0 && r <= roomR1 && c >= roomC0 && c <= roomC1;
+  // Skip a boundary wall only if BOTH cells it separates are inside the room
+  const hSkip   = (r: number, c: number) => inRoom(r, c) && inRoom(r-1, c);
+  const vSkip   = (r: number, c: number) => inRoom(r, c) && inRoom(r, c-1);
+
   for (let r = 0; r <= cellH; r++) {
     for (let c = 0; c < cellW; c++) {
       if (!hWalls[r][c]) continue;
-      const x1 = offX + c * cellSz, z = offZ + r * cellSz;
-      const x2 = x1 + cellSz;
+      if (r > 0 && hSkip(r, c)) continue;
+      const x1 = offX + c * cellSz, z = offZ + r * cellSz, x2 = x1 + cellSz;
       for (let i = 0; i <= wallSteps; i++) {
         const wx = x1 + (x2 - x1) * (i / wallSteps);
-        for (let y = 0; y <= 3; y++) pts.push({ x: wx, y: y * wallH / 3, z });
+        for (let y = 0; y <= 3; y++) pts.push({ x: wx, y: y * H / 3, z });
       }
     }
   }
-  // Vertical walls
   for (let r = 0; r < cellH; r++) {
     for (let c = 0; c <= cellW; c++) {
       if (!vWalls[r][c]) continue;
-      const x = offX + c * cellSz, z1 = offZ + r * cellSz;
-      const z2 = z1 + cellSz;
+      if (c > 0 && vSkip(r, c)) continue;
+      const x = offX + c * cellSz, z1 = offZ + r * cellSz, z2 = z1 + cellSz;
       for (let i = 0; i <= wallSteps; i++) {
         const wz = z1 + (z2 - z1) * (i / wallSteps);
-        for (let y = 0; y <= 3; y++) pts.push({ x, y: y * wallH / 3, z: wz });
+        for (let y = 0; y <= 3; y++) pts.push({ x, y: y * H / 3, z: wz });
       }
     }
   }
-  // Entry/exit gates — N center & S center (remove a wall segment)
-  // already carved by the DFS; just add gate pillars
-  [[offX + cellW * cellSz * 0.5, offZ - cellSz * 0.5], [offX + cellW * cellSz * 0.5, offZ + cellH * cellSz + cellSz * 0.5]].forEach(([gx, gz]) => {
+
+  // ── N/S outer maze entry pillars ──
+  [[offX + cellW * cellSz * 0.5, offZ - cellSz * 0.5],
+   [offX + cellW * cellSz * 0.5, offZ + cellH * cellSz + cellSz * 0.5]].forEach(([gx, gz]) => {
     [-1, 1].forEach(side => {
-      for (let y = 0; y <= 4; y++) pts.push({ x: gx + side * cellSz * 0.35, y: y * wallH / 4, z: gz });
+      for (let y = 0; y <= 4; y++) pts.push({ x: gx + side * cellSz * 0.35, y: y * H / 4, z: gz });
     });
   });
-  // Center room (clear + podium)
-  const cxc = 0, czc = 0;
-  for (let a = 0; a < 8; a++) {
-    const ang = (a / 8) * Math.PI * 2;
-    for (let y = 0; y <= 3; y++) pts.push({ x: cxc + Math.cos(ang) * s * 2, y: y * s * 0.5, z: czc + Math.sin(ang) * s * 2 });
-  }
-  // Loot drops scattered through corridors
-  for (let r = 0; r < cellH; r += 2) {
-    for (let c = 0; c < cellW; c += 2) {
-      const lx = offX + c * cellSz + cellSz * 0.5, lz = offZ + r * cellSz + cellSz * 0.5;
-      pts.push({ x: lx, y: 0, z: lz });
+
+  // ── Winner's Room: explicit square walls with 4 arched doorways + corner pillars ──
+  const rxMin = offX + roomC0 * cellSz;
+  const rxMax = offX + (roomC1 + 1) * cellSz;
+  const rzMin = offZ + roomR0 * cellSz;
+  const rzMax = offZ + (roomR1 + 1) * cellSz;
+  const rCX   = (rxMin + rxMax) / 2;
+  const rCZ   = (rzMin + rzMax) / 2;
+  const doorHalfW = cellSz * 0.38; // half-width of each arched doorway
+
+  // Corner pillars of the winner's room (tall, prominent)
+  [[rxMin, rzMin],[rxMax, rzMin],[rxMin, rzMax],[rxMax, rzMax]].forEach(([px, pz]) => {
+    for (let y = 0; y <= 6; y++) pts.push({ x: px, y: y * H / 5, z: pz });
+    pts.push({ x: px, y: H * 1.3, z: pz });
+  });
+
+  // 4 sides: draw wall segments, skip the doorway gap at the centre of each side
+  const wSteps = Math.ceil((rxMax - rxMin) / (s * 0.8));
+  for (let i = 0; i <= wSteps; i++) {
+    const t  = i / wSteps;
+    const wx = rxMin + t * (rxMax - rxMin);
+    const nearDoor = Math.abs(wx - rCX) < doorHalfW;
+    if (!nearDoor) {
+      [rzMin, rzMax].forEach(wz => {
+        for (let y = 0; y <= 4; y++) pts.push({ x: wx, y: y * H / 4, z: wz });
+        pts.push({ x: wx, y: H * 1.1, z: wz }); // merlon
+      });
+    } else {
+      // Arch crown over doorway
+      for (let a = 0; a <= 5; a++) {
+        const ang = (a / 5) * Math.PI;
+        const ax  = rCX + Math.cos(ang) * doorHalfW * 0.9;
+        const ay  = Math.sin(ang) * H * 0.45 + H * 0.1;
+        [rzMin, rzMax].forEach(wz => pts.push({ x: ax, y: ay, z: wz }));
+      }
     }
   }
-  // ── MEDIUM: stacked crates at dead ends + barbed wire on outer boundary ──
-  if (detail >= 2) {
-    // Outer boundary barbed wire (top of perimeter walls)
-    for (let c = 0; c < cellW; c++) {
-      pts.push({ x: offX + c * cellSz + cellSz * 0.5, y: H * 1.1, z: offZ });
-      pts.push({ x: offX + c * cellSz + cellSz * 0.5, y: H * 1.1, z: offZ + cellH * cellSz });
+  const dSteps = Math.ceil((rzMax - rzMin) / (s * 0.8));
+  for (let i = 0; i <= dSteps; i++) {
+    const t  = i / dSteps;
+    const wz = rzMin + t * (rzMax - rzMin);
+    const nearDoor = Math.abs(wz - rCZ) < doorHalfW;
+    if (!nearDoor) {
+      [rxMin, rxMax].forEach(wx => {
+        for (let y = 0; y <= 4; y++) pts.push({ x: wx, y: y * H / 4, z: wz });
+        pts.push({ x: wx, y: H * 1.1, z: wz });
+      });
+    } else {
+      for (let a = 0; a <= 5; a++) {
+        const ang = (a / 5) * Math.PI;
+        const az  = rCZ + Math.cos(ang) * doorHalfW * 0.9;
+        const ay  = Math.sin(ang) * H * 0.45 + H * 0.1;
+        [rxMin, rxMax].forEach(wx => pts.push({ x: wx, y: ay, z: az }));
+      }
     }
-    for (let r = 0; r < cellH; r++) {
-      pts.push({ x: offX,                y: H * 1.1, z: offZ + r * cellSz + cellSz * 0.5 });
-      pts.push({ x: offX + cellW * cellSz, y: H * 1.1, z: offZ + r * cellSz + cellSz * 0.5 });
+  }
+
+  // ── Winner's Room: raised loot podium at centre ──
+  // Square podium platform (3 tiers) — place your prize loot here
+  const podSteps  = Math.ceil((rxMax - rxMin) * 0.38 / (s * 0.7));
+  const podR      = (rxMax - rxMin) * 0.38;
+  for (let tier = 0; tier < 3; tier++) {
+    const pr = podR - tier * podR * 0.28;
+    const py = tier * H * 0.2;
+    for (let i = 0; i <= podSteps * 4; i++) {
+      const ang = (i / (podSteps * 4)) * Math.PI * 2;
+      pts.push({ x: rCX + Math.cos(ang) * pr, y: py, z: rCZ + Math.sin(ang) * pr });
     }
-    // Stacked crate pairs at dead ends (every 3rd loot position)
-    let cnt = 0;
-    for (let r = 0; r < cellH; r += 2) {
-      for (let c = 0; c < cellW; c += 2) {
-        if (cnt++ % 3 === 0) {
-          const lx = offX + c * cellSz + cellSz * 0.5, lz = offZ + r * cellSz + cellSz * 0.5;
-          pts.push({ x: lx, y: s * 0.7, z: lz });
+    // Flat top surface point grid
+    if (tier === 2) {
+      for (let dx = -2; dx <= 2; dx++) {
+        for (let dz = -2; dz <= 2; dz++) {
+          pts.push({ x: rCX + dx * pr * 0.35, y: py + H * 0.05, z: rCZ + dz * pr * 0.35 });
         }
       }
     }
   }
-  // ── HEAVY: elevated platform in center room + wall topper gang planks ──
-  if (detail >= 3) {
-    // Elevated platform at center podium
-    const cxc = 0, czc = 0;
-    for (let y = 1; y <= 3; y++) {
-      for (let a = 0; a < 8; a++) {
-        const ang = (a / 8) * Math.PI * 2;
-        pts.push({ x: cxc + Math.cos(ang) * s * 1.6, y: y * H * 0.25, z: czc + Math.sin(ang) * s * 1.6 });
+  // Loot spawn markers on podium surface (for the winner's prize)
+  const lootRad = podR * 0.5;
+  for (let i = 0; i < 6; i++) {
+    const ang = (i / 6) * Math.PI * 2;
+    pts.push({ x: rCX + Math.cos(ang) * lootRad, y: H * 0.4 + s * 0.1, z: rCZ + Math.sin(ang) * lootRad });
+    pts.push({ x: rCX + Math.cos(ang) * lootRad, y: H * 0.4 + s * 0.6, z: rCZ + Math.sin(ang) * lootRad });
+  }
+  pts.push({ x: rCX, y: H * 0.4, z: rCZ });        // centre loot point
+  pts.push({ x: rCX, y: H * 0.4 + s * 0.8, z: rCZ }); // second tier
+
+  // Loot drops scattered through corridors
+  for (let r = 0; r < cellH; r += 2) {
+    for (let c = 0; c < cellW; c += 2) {
+      if (inRoom(r, c)) continue; // skip inside winner's room
+      const lx = offX + c * cellSz + cellSz * 0.5, lz = offZ + r * cellSz + cellSz * 0.5;
+      pts.push({ x: lx, y: 0, z: lz });
+    }
+  }
+
+  // ── MEDIUM: outer barbed-wire cap + stacked dead-end crates ──
+  if (detail >= 2) {
+    for (let c = 0; c < cellW; c++) {
+      pts.push({ x: offX + c * cellSz + cellSz * 0.5, y: H * 1.12, z: offZ });
+      pts.push({ x: offX + c * cellSz + cellSz * 0.5, y: H * 1.12, z: offZ + cellH * cellSz });
+    }
+    for (let r = 0; r < cellH; r++) {
+      pts.push({ x: offX,                  y: H * 1.12, z: offZ + r * cellSz + cellSz * 0.5 });
+      pts.push({ x: offX + cellW * cellSz, y: H * 1.12, z: offZ + r * cellSz + cellSz * 0.5 });
+    }
+    let cnt = 0;
+    for (let r = 0; r < cellH; r += 2) {
+      for (let c = 0; c < cellW; c += 2) {
+        if (inRoom(r, c)) continue;
+        if (cnt++ % 3 === 0) {
+          pts.push({ x: offX + c * cellSz + cellSz * 0.5, y: s * 0.7, z: offZ + r * cellSz + cellSz * 0.5 });
+        }
       }
     }
-    // Gang-plank access ramps to top of walls (4 diagonal)
-    [[-cellSz, -cellSz], [cellSz, -cellSz], [-cellSz, cellSz], [cellSz, cellSz]].forEach(([dx, dz]) => {
-      const wx = offX + cellW * cellSz * 0.5 + dx, wz = offZ + cellH * cellSz * 0.5 + dz;
-      for (let step = 0; step <= 4; step++) {
-        const t = step / 4;
-        pts.push({ x: wx + dx * t * 0.4, y: t * H, z: wz + dz * t * 0.4 });
+  }
+
+  // ── HEAVY: winner's room elevated parapet ring + gang-plank ramps ──
+  if (detail >= 3) {
+    // Elevated walkway on top of winner's room walls
+    const wRingSteps = 32;
+    for (let i = 0; i <= wRingSteps; i++) {
+      const t  = i / wRingSteps;
+      const wx = rxMin + t * (rxMax - rxMin);
+      [rzMin, rzMax].forEach(wz => pts.push({ x: wx, y: H * 1.05, z: wz }));
+    }
+    for (let i = 0; i <= wRingSteps; i++) {
+      const t  = i / wRingSteps;
+      const wz = rzMin + t * (rzMax - rzMin);
+      [rxMin, rxMax].forEach(wx => pts.push({ x: wx, y: H * 1.05, z: wz }));
+    }
+    // 4 ramp access points — one per corridor leading to each doorway
+    [[rCX, rzMin - cellSz], [rCX, rzMax + cellSz],
+     [rxMin - cellSz, rCZ], [rxMax + cellSz, rCZ]].forEach(([sx, sz]) => {
+      const dx = sx === rCX ? 0 : (sx < rCX ? 1 : -1);
+      const dz = sz === rCZ ? 0 : (sz < rCZ ? 1 : -1);
+      for (let step = 0; step <= 5; step++) {
+        pts.push({ x: sx + dx * step * s * 0.4, y: step * H * 0.18, z: sz + dz * step * s * 0.4 });
       }
     });
   }
