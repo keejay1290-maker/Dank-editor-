@@ -54,7 +54,10 @@ export function buildFloorTiles(waypoints: Pt[], trackWidth: number): TileXfm[] 
     const p1 = waypoints[i], p2 = waypoints[(i + 1) % n];
     const { fx, fz, rx, rz, len, yaw } = segDir(p1, p2);
     if (len < 0.1) continue;
-    const yr = -(yaw * Math.PI / 180);
+    // Three.js: rotY=θ rotates local+Z to world (sin θ, 0, cos θ).
+    // DayZ yaw=0→North(+Z), yaw=90→East(+X) = atan2(fx,fz) in degrees.
+    // So rotY = +yaw*(π/180) aligns local Z with the segment's forward direction.
+    const yr = yaw * Math.PI / 180;
     const nAlong = Math.ceil(len / TILE_ALONG);
     for (let a = 0; a < nAlong; a++) {
       const t = a * TILE_ALONG + TILE_ALONG / 2;
@@ -78,7 +81,7 @@ export function buildBarriers(waypoints: Pt[], trackWidth: number, barrierLen: n
     const p1 = waypoints[i], p2 = waypoints[(i + 1) % n];
     const { fx, fz, rx, rz, len, yaw } = segDir(p1, p2);
     if (len < 0.1) continue;
-    const yr = -(yaw * Math.PI / 180);
+    const yr = yaw * Math.PI / 180;
     const nb = Math.ceil(len / barrierLen);
     for (let b = 0; b < nb; b++) {
       const t = b * barrierLen + barrierLen / 2;
@@ -99,7 +102,7 @@ export function buildCenterDashes(waypoints: Pt[]): TileXfm[] {
     const p1 = waypoints[i], p2 = waypoints[(i + 1) % n];
     const { fx, fz, len, yaw } = segDir(p1, p2);
     if (len < 0.1) continue;
-    const yr = -(yaw * Math.PI / 180);
+    const yr = yaw * Math.PI / 180;
     const nd = Math.floor(len / DASH_STEP);
     for (let d = 0; d < nd; d++) {
       const t = d * DASH_STEP + DASH_LEN / 2;
@@ -218,8 +221,8 @@ function StartFinish({ waypoints, trackWidth }: { waypoints: Pt[]; trackWidth: n
 
   const nStripes = 12; // checker columns across track width
   const sw = trackWidth / nStripes;
-  const startYr  = -(startSeg.yaw  * Math.PI / 180);
-  const finishYr = -(finishSeg.yaw * Math.PI / 180);
+  const startYr  = startSeg.yaw  * Math.PI / 180;
+  const finishYr = finishSeg.yaw * Math.PI / 180;
 
   const stripes: React.ReactElement[] = [];
   for (let c = 0; c < nStripes; c++) {
