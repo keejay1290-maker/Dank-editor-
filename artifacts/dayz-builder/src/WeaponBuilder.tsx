@@ -288,6 +288,7 @@ function WeaponPanel() {
   const [fmt, setFmt]   = useState<'json' | 'initc'>('json');
   const [copied, setCopied] = useState(false);
   const [expandedSlot, setExpandedSlot] = useState<SlotType | null>(null);
+  const [mobileView, setMobileView] = useState<'config' | 'output'>('config');
 
   const weapon = WEAPON_MAP[weaponId];
 
@@ -338,9 +339,21 @@ function WeaponPanel() {
   };
 
   return (
-    <div className="flex h-full overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden">
+      {/* Mobile toggle — only visible on small screens */}
+      <div className="flex sm:hidden border-b border-[#2e2518] bg-[#12100a] shrink-0">
+        <button onClick={() => setMobileView('config')}
+          className={`flex-1 py-2 text-[10px] font-bold transition-all border-b-2 ${mobileView === 'config' ? 'text-[#e67e22] border-[#e67e22]' : 'text-[#8a7840] border-transparent'}`}>
+          ⚙ Configure
+        </button>
+        <button onClick={() => setMobileView('output')}
+          className={`flex-1 py-2 text-[10px] font-bold transition-all border-b-2 ${mobileView === 'output' ? 'text-[#e67e22] border-[#e67e22]' : 'text-[#8a7840] border-transparent'}`}>
+          📋 Output
+        </button>
+      </div>
+      <div className="flex flex-1 min-h-0 overflow-hidden">
       {/* Sidebar */}
-      <div className="w-72 shrink-0 border-r border-[#2e2518] bg-[#0e0c08] flex flex-col overflow-y-auto">
+      <div className={`w-full sm:w-72 shrink-0 border-r border-[#2e2518] bg-[#0e0c08] flex-col overflow-y-auto ${mobileView === 'output' ? 'hidden sm:flex' : 'flex'}`}>
         <div className="px-3 py-2 border-b border-[#2e2518]">
           <div className="text-[#9a8858] text-[9px] uppercase tracking-wider mb-1.5">Select Weapon</div>
           {WEAPON_CATEGORIES.map(cat => {
@@ -484,7 +497,7 @@ function WeaponPanel() {
       </div>
 
       {/* Main panel */}
-      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+      <div className={`flex-1 flex-col overflow-hidden min-w-0 ${mobileView === 'config' ? 'hidden sm:flex' : 'flex'}`}>
         <div className="flex items-center gap-3 px-3 py-1.5 bg-[#0e0c08] border-b border-[#2e2518] shrink-0">
           <span className="text-[#e67e22] font-bold text-[11px]">{weapon.name}</span>
           <span className="text-[#6a5a3a] text-[10px]">{weapon.classname}</span>
@@ -536,6 +549,7 @@ function WeaponPanel() {
           </div>
         </div>
       </div>
+      </div>
     </div>
   );
 }
@@ -554,6 +568,7 @@ function VehiclePanel() {
   const [vehYaw, setVehYaw] = useState(0);
   const [fmt, setFmt] = useState<'json' | 'initc'>('json');
   const [copied, setCopied] = useState(false);
+  const [mobileView, setMobileView] = useState<'config' | 'output'>('config');
 
   const vehicle = VEHICLE_MAP[vehicleId];
 
@@ -598,9 +613,21 @@ function VehiclePanel() {
   const activeSlot = vehicle.slots.find(s => s.id === activeSlotId) ?? null;
 
   return (
-    <div className="flex h-full overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden">
+      {/* Mobile toggle — only visible on small screens */}
+      <div className="flex sm:hidden border-b border-[#2e2518] bg-[#12100a] shrink-0">
+        <button onClick={() => setMobileView('config')}
+          className={`flex-1 py-2 text-[10px] font-bold transition-all border-b-2 ${mobileView === 'config' ? 'text-[#3498db] border-[#3498db]' : 'text-[#8a7840] border-transparent'}`}>
+          ⚙ Configure
+        </button>
+        <button onClick={() => setMobileView('output')}
+          className={`flex-1 py-2 text-[10px] font-bold transition-all border-b-2 ${mobileView === 'output' ? 'text-[#3498db] border-[#3498db]' : 'text-[#8a7840] border-transparent'}`}>
+          📋 Output
+        </button>
+      </div>
+      <div className="flex flex-1 min-h-0 overflow-hidden">
       {/* Sidebar */}
-      <div className="w-72 shrink-0 border-r border-[#2e2518] bg-[#0e0c08] flex flex-col overflow-y-auto">
+      <div className={`w-full sm:w-72 shrink-0 border-r border-[#2e2518] bg-[#0e0c08] flex-col overflow-y-auto ${mobileView === 'output' ? 'hidden sm:flex' : 'flex'}`}>
         <div className="px-3 py-2 border-b border-[#2e2518]">
           <div className="text-[#9a8858] text-[9px] uppercase tracking-wider mb-1.5">Select Vehicle</div>
           <div className="flex flex-col gap-0.5">
@@ -733,7 +760,7 @@ function VehiclePanel() {
       </div>
 
       {/* Main panel */}
-      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+      <div className={`flex-1 flex-col overflow-hidden min-w-0 ${mobileView === 'config' ? 'hidden sm:flex' : 'flex'}`}>
         <div className="flex items-center gap-3 px-3 py-1.5 bg-[#0e0c08] border-b border-[#2e2518] shrink-0">
           <span className="text-[#3498db] font-bold text-[11px]">{vehicle.icon} {vehicle.name}</span>
           <span className="text-[#6a5a3a] text-[10px]">{vehicle.classname}</span>
@@ -793,6 +820,7 @@ function VehiclePanel() {
             💡 Tip: Vehicle spawns first, then loot items around/inside it. Loot positions auto-rotate with vehicle yaw. All items appear on server restart.
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
