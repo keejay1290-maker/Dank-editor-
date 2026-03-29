@@ -75,7 +75,7 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
     const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = window.devicePixelRatio || 1;
     const W = cssDimsRef.current.w || canvas.width / dpr;
     const H = cssDimsRef.current.h || canvas.height / dpr;
     if (W <= 0 || H <= 0) return;
@@ -252,7 +252,7 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
     const resizeCanvas = (parent: Element) => {
       const rect = parent.getBoundingClientRect();
       if (rect.width <= 0 || rect.height <= 0) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2); // cap at 2× to avoid over-blur on 3×
+      const dpr = window.devicePixelRatio || 1;
       cssDimsRef.current = { w: rect.width, h: rect.height };
       canvas.width = Math.round(rect.width * dpr);
       canvas.height = Math.round(rect.height * dpr);
@@ -344,6 +344,22 @@ const QUICK_PRESETS: Preset[] = [
   { category: "🌿 Nature", label: "Landing Pad", shape: "disc", params: { radius:20,rings:3,points:24,innerRadius:0 } },
   { category: "🌿 Nature", label: "Sphere", shape: "sphere", params: { radius:25,latSegs:8,lonSegs:12 } },
   { category: "🌿 Nature", label: "Helix Spiral", shape: "helix", params: { radius:15,height:30,turns:4,pointsPerTurn:12,strands:1 } },
+
+  // 🎬 Movies & TV
+  { category: "🎬 Movies", label: "Halo Ring", shape: "torus", params: { majorR:60,minorR:4,majorSegs:36,minorSegs:6 } },
+  { category: "🎬 Movies", label: "AT-AT Walker", shape: "mech_walker", params: { height:28,width:22 } },
+  { category: "🎬 Movies", label: "Iron Throne", shape: "disc", params: { radius:3,rings:1,points:16,innerRadius:0 } },
+  { category: "🎬 Movies", label: "The Wall (GoT)", shape: "wall_line", params: { length:100,height:24,rings:12,spacing:2 } },
+  { category: "🎬 Movies", label: "Eye of Sauron", shape: "volcano", params: { baseRadius:35,height:55,craterRadius:6,rimHeight:6,rings:8,spacing:8 } },
+  { category: "🎬 Movies", label: "Avengers Tower", shape: "skyscraper", params: { width:14,height:130,floors:26 } },
+  { category: "🎬 Movies", label: "Borg Cube", shape: "bastion_square", params: { size:40,height:10,towerRadius:5 } },
+  { category: "🎬 Movies", label: "Mordor Gate", shape: "sci_fi_gate", params: { width:80,height:60 } },
+  { category: "🎬 Movies", label: "Minas Tirith", shape: "azkaban_tower", params: { baseRadius:35,height:90,towerCount:7 } },
+  { category: "🎬 Movies", label: "T-800 Terminator", shape: "mech_bipedal", params: { height:30,width:16 } },
+  { category: "🎬 Movies", label: "Squid Game Arena", shape: "disc", params: { radius:50,rings:6,points:36,innerRadius:0 } },
+  { category: "🎬 Movies", label: "Predator Camp", shape: "disc", params: { radius:8,rings:1,points:10,innerRadius:5 } },
+  { category: "🎬 Movies", label: "Nether Portal", shape: "sci_fi_gate", params: { width:16,height:22 } },
+  { category: "🎬 Movies", label: "Star Destroyer", shape: "pyramid_stepped", params: { baseSize:100,height:30,steps:4,shrink:0.25,spacing:4 } },
 ];
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
@@ -568,13 +584,13 @@ export default function App() {
             <span className="text-[#c0392b] font-black text-base tracking-widest">DAYZ</span>
             <span className="text-[10px] border border-[#8b1a1a] text-[#c0392b] px-1 py-0.5 rounded-sm hidden sm:inline">ULTIMATE v3</span>
           </div>
-          <div className="text-[#4a3a22] text-[9px] tracking-widest hidden sm:block">REAL-TIME 3D · SHAPES · TUNNELS · MECHS · TEXT · CONSOLE SAFE</div>
+          <div className="text-[#9a8858] text-[9px] tracking-widest hidden sm:block">REAL-TIME 3D · SHAPES · TUNNELS · MECHS · TEXT · CONSOLE SAFE</div>
         </div>
         <div className="ml-auto flex items-center gap-1.5">
           <div className="flex gap-0.5 border border-[#2e2518] rounded-sm p-0.5">
             {(["architect", "text"] as EditorMode[]).map(m => (
               <button key={m} onClick={() => setMode(m)}
-                className={`px-2 py-1.5 text-[10px] rounded-sm font-bold tracking-wider transition-all ${mode === m ? "bg-[#d4a017] text-[#0a0804]" : "text-[#6a5a3a] hover:text-[#c8b99a]"}`}>
+                className={`px-2 py-1.5 text-[10px] rounded-sm font-bold tracking-wider transition-all ${mode === m ? "bg-[#d4a017] text-[#0a0804]" : "text-[#b09a6a] hover:text-[#c8b99a]"}`}>
                 {m === "architect" ? "🏗 BUILD" : "✏ TEXT"}
               </button>
             ))}
@@ -635,14 +651,14 @@ export default function App() {
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Info bar */}
           <div className="flex items-center gap-3 px-3 py-1 bg-[#0e0c08] border-b border-[#2e2518] text-[11px] shrink-0">
-            <span className="text-[#4a3a22]">Shape</span>
+            <span className="text-[#9a8858]">Shape</span>
             <span className="text-[#d4a017] font-bold truncate max-w-[180px]">
               {mode === "architect" ? (SHAPE_DEFS[shapeType]?.label || shapeType) : `"${textInput}"`}
             </span>
-            <span className="text-[#4a3a22]">Objects</span>
+            <span className="text-[#9a8858]">Objects</span>
             <span className={`font-bold ${displayPoints.length > 800 ? "text-[#e07a20]" : "text-[#d4a017]"}`}>{displayPoints.length}</span>
             {displayPoints.length > 800 && <span className="text-[#e07a20] text-[10px]">⚠ large!</span>}
-            <span className="ml-auto text-[#3a2e18]">Drag=rotate · Scroll=zoom</span>
+            <span className="ml-auto text-[#8a7840]">Drag=rotate · Scroll=zoom</span>
           </div>
 
           {/* 3D Canvas */}
@@ -657,7 +673,7 @@ export default function App() {
                 className="w-8 h-8 flex items-center justify-center bg-[#1a1408] border border-[#3a2e18] text-[#d4a017] text-xl font-black rounded-sm hover:bg-[#2e2518] hover:border-[#d4a017] transition-all leading-none select-none"
                 title="Zoom out (also: scroll down)">−</button>
               <button onClick={resetZoom}
-                className="w-8 h-8 flex items-center justify-center bg-[#1a1408] border border-[#3a2e18] text-[#5a4a2e] text-[11px] font-bold rounded-sm hover:bg-[#2e2518] hover:text-[#c8b99a] hover:border-[#6a5a3a] transition-all select-none"
+                className="w-8 h-8 flex items-center justify-center bg-[#1a1408] border border-[#3a2e18] text-[#b09a6a] text-[11px] font-bold rounded-sm hover:bg-[#2e2518] hover:text-[#c8b99a] hover:border-[#6a5a3a] transition-all select-none"
                 title="Reset zoom & rotation">⟲</button>
             </div>
           </div>
@@ -667,11 +683,11 @@ export default function App() {
             <div className="flex items-center justify-between px-3 py-1.5 border-b border-[#2e2518] shrink-0">
               <div className="text-[#d4a017] text-[11px] font-bold tracking-wider">
                 {format === "initc" ? "▶ INIT.C" : "▶ JSON SPAWNER"}
-                {currentCode && <span className="ml-2 text-[#6a5a3a] font-normal">({currentCode.split("\n").length} lines)</span>}
+                {currentCode && <span className="ml-2 text-[#b09a6a] font-normal">({currentCode.split("\n").length} lines)</span>}
               </div>
               <div className="flex gap-1.5">
                 <button onClick={() => copyCode(currentCode)}
-                  className="px-3 py-1 text-[11px] border border-[#2e2518] text-[#6a5a3a] hover:border-[#d4a017] hover:text-[#d4a017] rounded-sm transition-all">
+                  className="px-3 py-1 text-[11px] border border-[#2e2518] text-[#b09a6a] hover:border-[#d4a017] hover:text-[#d4a017] rounded-sm transition-all">
                   Copy
                 </button>
                 <button onClick={() => downloadCode(currentCode, currentExt, mode === "architect" ? `shape_${shapeType}` : `text_${textInput}`)}
@@ -703,7 +719,7 @@ function Sec({ children }: { children: React.ReactNode }) {
   return <div className="text-[#d4a017] text-[9px] tracking-widest uppercase border-b border-[#2e2518] pb-1 mb-2 mt-3 px-3">{children}</div>;
 }
 function Lbl({ children }: { children: React.ReactNode }) {
-  return <div className="text-[#5a4a2e] text-[10px] mb-0.5">{children}</div>;
+  return <div className="text-[#b09a6a] text-[10px] mb-0.5">{children}</div>;
 }
 function Inp({ value, onChange, type = "number", ...rest }: { value: string | number; onChange: (v: string) => void; type?: string; [k: string]: any }) {
   return (
@@ -738,7 +754,7 @@ function ArchitectSidebar(p: any) {
       <button onClick={() => toggle(k)}
         className="w-full flex items-center justify-between text-[#d4a017] text-[9px] tracking-widest uppercase border-b border-[#2e2518] pb-1 mb-2 mt-3 px-3 bg-transparent hover:text-[#e8b82a] transition-colors">
         <span>{label}</span>
-        <span className="text-[#4a3a22]">{collapsed[k] ? "▶" : "▼"}</span>
+        <span className="text-[#9a8858]">{collapsed[k] ? "▶" : "▼"}</span>
       </button>
       {!collapsed[k] && children}
     </div>
@@ -757,7 +773,7 @@ function ArchitectSidebar(p: any) {
           <div className="flex flex-wrap gap-1 mb-2">
             {(p.presetCategories || []).map((cat: string) => (
               <button key={cat} onClick={() => p.setPresetCategory(cat)}
-                className={`text-[9px] px-1.5 py-0.5 rounded-sm border transition-all ${p.presetCategory === cat ? "border-[#d4a017] text-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] text-[#5a4a2e] hover:text-[#c8b99a]"}`}>
+                className={`text-[9px] px-1.5 py-0.5 rounded-sm border transition-all ${p.presetCategory === cat ? "border-[#d4a017] text-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] text-[#b09a6a] hover:text-[#c8b99a]"}`}>
                 {cat === "All" ? "All" : cat}
               </button>
             ))}
@@ -765,12 +781,12 @@ function ArchitectSidebar(p: any) {
           <div className="grid grid-cols-2 gap-1 max-h-52 overflow-y-auto pr-0.5">
             {p.filteredPresets.map((preset: any) => (
               <button key={preset.label} onClick={() => p.applyPreset(preset)}
-                className={`text-left text-[10px] px-2 py-1.5 rounded-sm border transition-all truncate ${p.shapeType === preset.shape ? "border-[#d4a017] text-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] text-[#7a6a4a] hover:border-[#6a5a3a] hover:text-[#c8b99a]"}`}>
+                className={`text-left text-[10px] px-2 py-1.5 rounded-sm border transition-all truncate ${p.shapeType === preset.shape ? "border-[#d4a017] text-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] text-[#c0aa70] hover:border-[#6a5a3a] hover:text-[#c8b99a]"}`}>
                 {preset.label}
               </button>
             ))}
             {p.filteredPresets.length === 0 && (
-              <div className="col-span-2 text-center text-[10px] text-[#3a2e18] py-3">No presets match filter</div>
+              <div className="col-span-2 text-center text-[10px] text-[#8a7840] py-3">No presets match filter</div>
             )}
           </div>
         </div>
@@ -781,7 +797,7 @@ function ArchitectSidebar(p: any) {
         <div className="flex gap-1 px-3">
           {(["initc", "json"] as OutputFormat[]).map(f => (
             <button key={f} onClick={() => p.setFormat(f)}
-              className={`flex-1 py-1.5 text-[11px] rounded-sm border transition-all font-bold ${p.format === f ? "bg-[#d4a017] text-[#0a0804] border-[#d4a017]" : "border-[#2e2518] text-[#5a4a2e] hover:border-[#6a5a3a] hover:text-[#c8b99a]"}`}>
+              className={`flex-1 py-1.5 text-[11px] rounded-sm border transition-all font-bold ${p.format === f ? "bg-[#d4a017] text-[#0a0804] border-[#d4a017]" : "border-[#2e2518] text-[#b09a6a] hover:border-[#6a5a3a] hover:text-[#c8b99a]"}`}>
               {f === "initc" ? "init.c" : "JSON"}
             </button>
           ))}
@@ -834,7 +850,7 @@ function ArchitectSidebar(p: any) {
           <div className="flex gap-1 mb-3">
             {(["frame", "fill"] as FillMode[]).map(f => (
               <button key={f} onClick={() => p.setFillMode(f)}
-                className={`flex-1 py-1.5 text-[10px] rounded-sm border font-bold transition-all ${p.fillMode === f ? "bg-[#1e4a2a] text-[#5dcc80] border-[#2e6a3a]" : "border-[#2e2518] text-[#5a4a2e] hover:border-[#6a5a3a]"}`}>
+                className={`flex-1 py-1.5 text-[10px] rounded-sm border font-bold transition-all ${p.fillMode === f ? "bg-[#1e4a2a] text-[#5dcc80] border-[#2e6a3a]" : "border-[#2e2518] text-[#b09a6a] hover:border-[#6a5a3a]"}`}>
                 {f === "frame" ? "🔲 FRAME" : "⬛ FILL"}
               </button>
             ))}
@@ -908,11 +924,11 @@ function ArchitectSidebar(p: any) {
               </select>
             </>
           )}
-          <label className="flex items-center gap-2 text-[10px] text-[#6a5a3a] cursor-pointer">
+          <label className="flex items-center gap-2 text-[10px] text-[#b09a6a] cursor-pointer">
             <input type="checkbox" className="accent-[#d4a017]" checked={p.includeHelper} onChange={e => p.setIncludeHelper(e.target.checked)} />
             Include SpawnObject() helper
           </label>
-          <label className="flex items-center gap-2 text-[10px] text-[#6a5a3a] cursor-pointer">
+          <label className="flex items-center gap-2 text-[10px] text-[#b09a6a] cursor-pointer">
             <input type="checkbox" className="accent-[#d4a017]" checked={p.autoRotate} onChange={e => p.setAutoRotate(e.target.checked)} />
             Auto-spin 3D preview
           </label>
@@ -923,13 +939,13 @@ function ArchitectSidebar(p: any) {
               <span>Auto-orient objects (faces outward/inward)</span>
             </label>
             {p.autoOrient && (
-              <label className="flex items-center gap-2 text-[10px] text-[#6a5a3a] cursor-pointer ml-4">
+              <label className="flex items-center gap-2 text-[10px] text-[#b09a6a] cursor-pointer ml-4">
                 <input type="checkbox" className="accent-[#d4a017]" checked={p.orientInward} onChange={e => p.setOrientInward(e.target.checked)} />
                 Face inward (toward center)
               </label>
             )}
             {p.autoOrient && (
-              <div className="text-[9px] text-[#5a4a2e] mt-1 ml-0 leading-tight">
+              <div className="text-[9px] text-[#b09a6a] mt-1 ml-0 leading-tight">
                 Objects rotate to face outward from the shape centre — perfect for walls, rings, squares &amp; perimeters.
               </div>
             )}
@@ -940,12 +956,12 @@ function ArchitectSidebar(p: any) {
       {/* Stats */}
       <div className="px-3 mx-3 mt-3 rounded-sm border border-[#2e2518] p-2 bg-[#060402] text-[10px]">
         <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-          <div className="text-[#5a4a2e]">Objects</div><div className="text-[#d4a017] font-bold">{p.objCount}</div>
-          <div className="text-[#5a4a2e]">Format</div><div className="text-[#d4a017]">{p.format === "initc" ? "init.c" : "JSON"}</div>
-          <div className="text-[#5a4a2e]">Mode</div><div className="text-[#d4a017]">{p.fillMode}{p.fillMode === "fill" ? ` d${p.fillDensity}` : ""}</div>
-          <div className="text-[#5a4a2e]">Scale</div><div className="text-[#d4a017]">{p.scaleVal.toFixed(2)}×</div>
-          <div className="text-[#5a4a2e]">Y/P/R</div><div className="text-[#d4a017]">{p.yaw}°/{p.pitch}°/{p.roll}°</div>
-          <div className="text-[#5a4a2e]">Orient</div><div className={p.autoOrient ? "text-[#27ae60] font-bold" : "text-[#3a2e18]"}>{p.autoOrient ? (p.orientInward ? "↙ inward" : "↗ outward") : "off"}</div>
+          <div className="text-[#b09a6a]">Objects</div><div className="text-[#d4a017] font-bold">{p.objCount}</div>
+          <div className="text-[#b09a6a]">Format</div><div className="text-[#d4a017]">{p.format === "initc" ? "init.c" : "JSON"}</div>
+          <div className="text-[#b09a6a]">Mode</div><div className="text-[#d4a017]">{p.fillMode}{p.fillMode === "fill" ? ` d${p.fillDensity}` : ""}</div>
+          <div className="text-[#b09a6a]">Scale</div><div className="text-[#d4a017]">{p.scaleVal.toFixed(2)}×</div>
+          <div className="text-[#b09a6a]">Y/P/R</div><div className="text-[#d4a017]">{p.yaw}°/{p.pitch}°/{p.roll}°</div>
+          <div className="text-[#b09a6a]">Orient</div><div className={p.autoOrient ? "text-[#27ae60] font-bold" : "text-[#8a7840]"}>{p.autoOrient ? (p.orientInward ? "↙ inward" : "↗ outward") : "off"}</div>
         </div>
       </div>
 
@@ -956,7 +972,7 @@ function ArchitectSidebar(p: any) {
           ⚙ GENERATE CODE
         </button>
         <button onClick={p.onClear}
-          className="w-full py-1.5 bg-[#1e1608] text-[#5a4a2e] text-[11px] font-bold rounded-sm hover:bg-[#2e2518] hover:text-[#8a7a5a] transition-all">
+          className="w-full py-1.5 bg-[#1e1608] text-[#b09a6a] text-[11px] font-bold rounded-sm hover:bg-[#2e2518] hover:text-[#8a7a5a] transition-all">
           ✕ Clear Output
         </button>
       </div>
@@ -996,12 +1012,12 @@ function TextSidebar(p: any) {
             ["Strobe Light", "StaticObj_Airfield_Light_Strobe_01"],
           ].map(([label, val]) => (
             <button key={val} onClick={() => p.setTextObj(val)}
-              className={`text-left text-[10px] px-2 py-1.5 rounded-sm border truncate transition-all ${p.textObj === val ? "border-[#d4a017] text-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] text-[#6a5a3a] hover:border-[#6a5a3a] hover:text-[#c8b99a]"}`}>
+              className={`text-left text-[10px] px-2 py-1.5 rounded-sm border truncate transition-all ${p.textObj === val ? "border-[#d4a017] text-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] text-[#b09a6a] hover:border-[#6a5a3a] hover:text-[#c8b99a]"}`}>
               {label}
             </button>
           ))}
         </div>
-        <div className="text-[9px] text-[#5a4a2e] mb-1.5 uppercase tracking-wider">All objects</div>
+        <div className="text-[9px] text-[#b09a6a] mb-1.5 uppercase tracking-wider">All objects</div>
         <select className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1.5 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
           value={p.textObj} onChange={(e: any) => p.setTextObj(e.target.value)}>
           {OBJECT_GROUPS.map((group: string) => (
@@ -1032,7 +1048,7 @@ function TextSidebar(p: any) {
       <div className="flex gap-1 px-3 mb-3">
         {(["initc", "json"] as OutputFormat[]).map(f => (
           <button key={f} onClick={() => p.setTextFormat(f)}
-            className={`flex-1 py-1.5 text-[11px] rounded-sm border font-bold transition-all ${p.textFormat === f ? "bg-[#d4a017] text-[#0a0804] border-[#d4a017]" : "border-[#2e2518] text-[#5a4a2e] hover:border-[#6a5a3a]"}`}>
+            className={`flex-1 py-1.5 text-[11px] rounded-sm border font-bold transition-all ${p.textFormat === f ? "bg-[#d4a017] text-[#0a0804] border-[#d4a017]" : "border-[#2e2518] text-[#b09a6a] hover:border-[#6a5a3a]"}`}>
             {f === "initc" ? "init.c" : "JSON"}
           </button>
         ))}
@@ -1040,8 +1056,8 @@ function TextSidebar(p: any) {
 
       {/* Live stats */}
       <div className="px-3 mx-3 rounded-sm border border-[#2e2518] p-2 bg-[#060402] text-[10px]">
-        <div className="flex justify-between mb-1"><span className="text-[#5a4a2e]">Objects</span><span className="text-[#d4a017] font-bold">{p.objCount}</span></div>
-        <div className="flex justify-between"><span className="text-[#5a4a2e]">Scale</span><span className="text-[#d4a017]">{p.textScale.toFixed(2)}×</span></div>
+        <div className="flex justify-between mb-1"><span className="text-[#b09a6a]">Objects</span><span className="text-[#d4a017] font-bold">{p.objCount}</span></div>
+        <div className="flex justify-between"><span className="text-[#b09a6a]">Scale</span><span className="text-[#d4a017]">{p.textScale.toFixed(2)}×</span></div>
       </div>
 
       <div className="px-3 mt-3">
@@ -1052,7 +1068,7 @@ function TextSidebar(p: any) {
       </div>
 
       <Sec>Supported Characters</Sec>
-      <div className="px-3 text-[10px] text-[#5a4a2e] leading-loose">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z<br />0 1 2 3 4 5 6 7 8 9  !  ?  .  ,  (space)</div>
+      <div className="px-3 text-[10px] text-[#b09a6a] leading-loose">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z<br />0 1 2 3 4 5 6 7 8 9  !  ?  .  ,  (space)</div>
     </div>
   );
 }
