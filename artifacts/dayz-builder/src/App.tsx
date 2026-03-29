@@ -913,7 +913,6 @@ export default function App() {
             <span className="text-[#c0392b] font-black text-base tracking-widest">DAYZ</span>
             <span className="text-[10px] border border-[#8b1a1a] text-[#c0392b] px-1 py-0.5 rounded-sm hidden sm:inline">ULTIMATE v3</span>
           </div>
-          <div className="text-[#9a8858] text-[9px] tracking-widest hidden sm:block">REAL-TIME 3D · SHAPES · TUNNELS · MECHS · TEXT · CONSOLE SAFE</div>
         </div>
         <div className="ml-auto flex items-center gap-1.5">
           <div className="flex gap-0.5 border border-[#2e2518] rounded-sm p-0.5">
@@ -1115,12 +1114,22 @@ export default function App() {
             </div>
           ) : (
             <div className="flex flex-col border-t border-[#2e2518] bg-[#0e0c08] flex-1 min-h-0">
-              <div className="flex items-center justify-between px-3 py-1.5 border-b border-[#2e2518] shrink-0">
-                <div className="text-[#d4a017] text-[11px] font-bold tracking-wider">
-                  {format === "initc" ? "▶ INIT.C" : "▶ JSON SPAWNER"}
-                  {currentCode && <span className="ml-2 text-[#b09a6a] font-normal">({currentCode.split("\n").length} lines)</span>}
+              <div className="flex items-center gap-2 px-3 py-1.5 border-b border-[#2e2518] shrink-0">
+                {/* Format toggle */}
+                {mode === "architect" && (
+                  <div className="flex gap-0.5 border border-[#2e2518] rounded-sm p-0.5 shrink-0">
+                    {(["initc", "json"] as OutputFormat[]).map(f => (
+                      <button key={f} onClick={() => setFormat(f)}
+                        className={`px-2 py-0.5 text-[10px] rounded-sm font-bold transition-all ${format === f ? "bg-[#d4a017] text-[#0a0804]" : "text-[#b09a6a] hover:text-[#c8b99a]"}`}>
+                        {f === "initc" ? "init.c" : "JSON"}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                <div className="text-[#6a5a3a] text-[10px] flex-1 truncate">
+                  {currentCode ? `${currentCode.split("\n").length} lines` : "configure & generate →"}
                 </div>
-                <div className="flex gap-1.5">
+                <div className="flex gap-1.5 shrink-0">
                   <button onClick={() => {
                     const code = mode === "architect" ? buildShapeCode() : buildTextCode();
                     if (mode === "architect") setOutput(code); else setTextOutput(code);
@@ -1354,14 +1363,17 @@ function SpacingCalcPanel() {
 // ─── ARCHITECT SIDEBAR ────────────────────────────────────────────────────────
 
 function ArchitectSidebar(p: any) {
-  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({
+    presets: false, arena: true, obj: true, shape: false,
+    pos: true, ypr: true, opts: true, saveload: true, notes: true, spacing: true,
+  });
   const toggle = (k: string) => setCollapsed(prev => ({ ...prev, [k]: !prev[k] }));
   const sec = (k: string, label: string, children: React.ReactNode) => (
     <div>
       <button onClick={() => toggle(k)}
-        className="w-full flex items-center justify-between text-[#d4a017] text-[9px] tracking-widest uppercase border-b border-[#2e2518] pb-1 mb-2 mt-3 px-3 bg-transparent hover:text-[#e8b82a] transition-colors">
+        className="w-full flex items-center justify-between text-[#9a8858] text-[9px] tracking-wider uppercase border-b border-[#1e1c18] pb-1 mb-2 mt-3 px-3 bg-transparent hover:text-[#d4a017] transition-colors">
         <span>{label}</span>
-        <span className="text-[#9a8858]">{collapsed[k] ? "▶" : "▼"}</span>
+        <span className="text-[#5a4820]">{collapsed[k] ? "▶" : "▼"}</span>
       </button>
       {!collapsed[k] && children}
     </div>
@@ -1376,12 +1388,12 @@ function ArchitectSidebar(p: any) {
             onChange={e => p.setPresetFilter(e.target.value)}
             className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
           />
-          {/* Category tabs */}
-          <div className="flex flex-wrap gap-1 mb-2">
+          {/* Category tabs — single scrollable row */}
+          <div className="flex gap-1 mb-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
             {(p.presetCategories || []).map((cat: string) => (
               <button key={cat} onClick={() => p.setPresetCategory(cat)}
-                className={`text-[9px] px-1.5 py-0.5 rounded-sm border transition-all ${p.presetCategory === cat ? "border-[#d4a017] text-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] text-[#b09a6a] hover:text-[#c8b99a]"}`}>
-                {cat === "All" ? "All" : cat}
+                className={`shrink-0 text-[9px] px-1.5 py-0.5 rounded-sm border transition-all ${p.presetCategory === cat ? "border-[#d4a017] text-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] text-[#b09a6a] hover:text-[#c8b99a]"}`}>
+                {cat}
               </button>
             ))}
           </div>
@@ -1411,21 +1423,20 @@ function ArchitectSidebar(p: any) {
             className="w-full py-2.5 mb-2.5 text-[11px] font-black tracking-wider rounded-sm border border-[#d4a017] text-[#0a0804] bg-[#d4a017] hover:bg-[#e8b82a] hover:border-[#e8b82a] transition-all shadow-lg">
             🎲 ROLL RANDOM ARENA
           </button>
-          <div className="text-[9px] text-[#8a7840] mb-2 text-center">Every click generates a fully different layout with randomized parameters</div>
           {/* 6 arena type tiles */}
-          <div className="grid grid-cols-2 gap-1.5 mb-2">
+          <div className="grid grid-cols-3 gap-1 mb-2">
             {[
-              { key: "arena_colosseum", icon: "🏛", label: "Colosseum", desc: "Oval, tiered seating" },
-              { key: "arena_fort",      icon: "🏰", label: "Fortress",  desc: "Square, bastions" },
-              { key: "arena_maze",      icon: "🌀", label: "Maze",      desc: "Labyrinth corridors" },
-              { key: "arena_siege",     icon: "⚔",  label: "Siege",     desc: "Tower vs wall" },
-              { key: "arena_compound",  icon: "🪖", label: "Compound",  desc: "Military grid" },
-              { key: "pvp_arena",       icon: "🔵", label: "Ring",      desc: "Polygon arena" },
-            ].map(({ key, icon, label, desc }) => (
+              { key: "arena_colosseum", icon: "🏛", label: "Colosseum" },
+              { key: "arena_fort",      icon: "🏰", label: "Fortress"  },
+              { key: "arena_maze",      icon: "🌀", label: "Maze"      },
+              { key: "arena_siege",     icon: "⚔",  label: "Siege"     },
+              { key: "arena_compound",  icon: "🪖", label: "Compound"  },
+              { key: "pvp_arena",       icon: "🔵", label: "Ring"      },
+            ].map(({ key, icon, label }) => (
               <button key={key} onClick={() => p.onShapeChange(key)}
-                className={`text-left px-2 py-1.5 rounded-sm border transition-all ${p.shapeType === key ? "border-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] hover:border-[#6a5a3a] bg-[#060402]"}`}>
-                <div className={`text-[11px] font-bold ${p.shapeType === key ? "text-[#d4a017]" : "text-[#c8b99a]"}`}>{icon} {label}</div>
-                <div className="text-[9px] text-[#8a7840]">{desc}</div>
+                className={`text-center px-1 py-1.5 rounded-sm border transition-all ${p.shapeType === key ? "border-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] hover:border-[#6a5a3a] bg-[#060402]"}`}>
+                <div className="text-base leading-none mb-0.5">{icon}</div>
+                <div className={`text-[9px] font-bold ${p.shapeType === key ? "text-[#d4a017]" : "text-[#b09a6a]"}`}>{label}</div>
               </button>
             ))}
           </div>
@@ -1437,17 +1448,6 @@ function ArchitectSidebar(p: any) {
         </div>
       ))}
 
-      {/* Format */}
-      {sec("fmt", "📄 Output Format", (
-        <div className="flex gap-1 px-3">
-          {(["initc", "json"] as OutputFormat[]).map(f => (
-            <button key={f} onClick={() => p.setFormat(f)}
-              className={`flex-1 py-1.5 text-[11px] rounded-sm border transition-all font-bold ${p.format === f ? "bg-[#d4a017] text-[#0a0804] border-[#d4a017]" : "border-[#2e2518] text-[#b09a6a] hover:border-[#6a5a3a] hover:text-[#c8b99a]"}`}>
-              {f === "initc" ? "init.c" : "JSON"}
-            </button>
-          ))}
-        </div>
-      ))}
 
       {/* Object */}
       {sec("obj", "📦 Object Class", (
@@ -1655,17 +1655,13 @@ function ArchitectSidebar(p: any) {
         <SpacingCalcPanel />
       ))}
 
-      {/* Stats */}
-      <div className="px-3 mx-3 mt-3 rounded-sm border border-[#2e2518] p-2 bg-[#060402] text-[10px]">
-        <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-          <div className="text-[#b09a6a]">Objects</div><div className="text-[#d4a017] font-bold">{p.objCount}</div>
-          <div className="text-[#b09a6a]">Format</div><div className="text-[#d4a017]">{p.format === "initc" ? "init.c" : "JSON"}</div>
-          <div className="text-[#b09a6a]">Mode</div><div className="text-[#d4a017]">{p.fillMode}{p.fillMode === "fill" ? ` d${p.fillDensity}` : ""}</div>
-          <div className="text-[#b09a6a]">Scale</div><div className="text-[#d4a017]">{p.scaleVal.toFixed(2)}×</div>
-          {p.dims && <><div className="text-[#b09a6a]">W×D×H</div><div className="text-[#d4a017]">{p.dims.w}×{p.dims.d}×{p.dims.h}m</div></>}
-          <div className="text-[#b09a6a]">Y/P/R</div><div className="text-[#d4a017]">{p.yaw}°/{p.pitch}°/{p.roll}°</div>
-          <div className="text-[#b09a6a]">Orient</div><div className={p.autoOrient ? "text-[#27ae60] font-bold" : "text-[#8a7840]"}>{p.autoOrient ? (p.orientInward ? "↙ inward" : "↗ outward") : "off"}</div>
-        </div>
+      {/* Stats — compact strip */}
+      <div className="mx-3 mt-3 rounded-sm border border-[#1e1c18] px-2 py-1.5 bg-[#060402] flex items-center gap-3 flex-wrap text-[9px]">
+        <span className="text-[#d4a017] font-bold">{p.objCount} obj</span>
+        {p.dims && <span className="text-[#8a7840]">{p.dims.w}×{p.dims.d}×{p.dims.h}m</span>}
+        <span className="text-[#8a7840]">{p.scaleVal.toFixed(2)}×</span>
+        <span className="text-[#8a7840]">{p.fillMode}{p.fillMode === "fill" ? ` d${p.fillDensity}` : ""}</span>
+        {p.autoOrient && <span className="text-[#27ae60]">{p.orientInward ? "↙ inward" : "↗ outward"}</span>}
       </div>
 
       {/* Object count warning */}
