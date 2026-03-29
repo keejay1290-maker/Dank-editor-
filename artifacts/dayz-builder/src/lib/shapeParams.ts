@@ -906,6 +906,109 @@ export const SHAPE_DEFS: Record<string, ShapeDef> = {
       { id: "segs",  label: "Ring Detail (segments)", val: 28, min: 10, max: 72 },
     ]
   },
+
+  // ── NAVAL ──────────────────────────────────────────────────────────────────
+  submarine: {
+    label: "🚢 Submarine", group: "⚓ Naval",
+    params: [
+      { id: "length",   label: "Hull Length (m)",        val: 80, min: 30, max: 200 },
+      { id: "radius",   label: "Hull Radius (m)",         val: 8,  min: 3,  max: 25  },
+      { id: "ctHeight", label: "Conning Tower Height (m)",val: 10, min: 3,  max: 25  },
+      { id: "segs",     label: "Hull Cross-Section Segs", val: 12, min: 6,  max: 24, step: 1 },
+    ]
+  },
+  aircraft_carrier: {
+    label: "✈ Aircraft Carrier", group: "⚓ Naval",
+    params: [
+      { id: "length",   label: "Deck Length (m)",       val: 200, min: 80,  max: 400 },
+      { id: "width",    label: "Deck Width (m)",         val: 36,  min: 15,  max: 70  },
+      { id: "deckH",    label: "Hull Depth (m)",         val: 14,  min: 6,   max: 30  },
+      { id: "islandH",  label: "Island Tower Height (m)",val: 20,  min: 8,   max: 50  },
+    ]
+  },
+  destroyer: {
+    label: "⚔ Destroyer / Warship", group: "⚓ Naval",
+    params: [
+      { id: "length", label: "Ship Length (m)", val: 120, min: 40, max: 250 },
+      { id: "width",  label: "Beam Width (m)",  val: 16,  min: 6,  max: 40  },
+      { id: "deckH",  label: "Hull Depth (m)",  val: 10,  min: 4,  max: 25  },
+    ]
+  },
+  helicarrier: {
+    label: "🛸 Avengers Helicarrier", group: "⚓ Naval",
+    params: [
+      { id: "length", label: "Carrier Length (m)",      val: 280, min: 100, max: 500 },
+      { id: "width",  label: "Carrier Width (m)",        val: 80,  min: 30,  max: 150 },
+      { id: "deckH",  label: "Hull Depth (m)",           val: 20,  min: 8,   max: 50  },
+      { id: "propR",  label: "Propeller Radius (m)",     val: 35,  min: 15,  max: 80  },
+    ]
+  },
+
+  // ── VAULT ──────────────────────────────────────────────────────────────────
+  vault_door: {
+    label: "🔐 Vault Door", group: "🏛️ Monuments",
+    params: [
+      { id: "radius",    label: "Door Radius (m)",        val: 20, min: 5,  max: 60  },
+      { id: "thickness", label: "Door Thickness (m)",     val: 4,  min: 1,  max: 15  },
+      { id: "rings",     label: "Concentric Ring Bands",  val: 5,  min: 2,  max: 12, step: 1 },
+      { id: "spokes",    label: "Spoke Count",            val: 8,  min: 4,  max: 16, step: 1 },
+      { id: "segs",      label: "Circle Segments",        val: 32, min: 16, max: 64, step: 1 },
+    ]
+  },
+
+  // ── SCI-FI MECHS ──────────────────────────────────────────────────────────
+  lab_spider: {
+    label: "🧪 Lab Spider Mech", group: "🤖 Mechs",
+    params: [
+      { id: "height", label: "Body Height (m)", val: 22, min: 10, max: 50 },
+      { id: "width",  label: "Leg Span (m)",    val: 16, min: 8,  max: 40 },
+    ]
+  },
+
+  // ── SEASONAL ───────────────────────────────────────────────────────────────
+  xmas_tree_large: {
+    label: "🎄 Giant Christmas Tree", group: "🎄 Seasonal",
+    params: [
+      { id: "height",     label: "Tree Height (m)",      val: 30, min: 5,  max: 80  },
+      { id: "baseRadius", label: "Base Radius (m)",       val: 18, min: 4,  max: 50  },
+      { id: "topRadius",  label: "Top Tier Radius (m)",  val: 2,  min: 0.5,max: 10  },
+      { id: "tiers",      label: "Tier Count",           val: 5,  min: 2,  max: 10, step: 1 },
+    ]
+  },
+  jack_house: {
+    label: "🎃 Jack's Spiral Hill", group: "🎃 Halloween",
+    params: [
+      { id: "hillRadius",  label: "Hill Base Radius (m)", val: 30, min: 10, max: 80 },
+      { id: "hillHeight",  label: "Hill Height (m)",      val: 20, min: 8,  max: 50 },
+      { id: "houseHeight", label: "House Height (m)",     val: 12, min: 4,  max: 30 },
+      { id: "houseWidth",  label: "House Width (m)",      val: 10, min: 4,  max: 25 },
+    ]
+  },
+  pumpkin_ring: {
+    label: "🎃 Pumpkin Ring", group: "🎃 Halloween",
+    params: [
+      { id: "radius",     label: "Ring Radius (m)",   val: 20, min: 5,  max: 80  },
+      { id: "count",      label: "Pumpkin Count",     val: 8,  min: 3,  max: 20, step: 1 },
+      { id: "pumpHeight", label: "Pumpkin Height (m)",val: 4,  min: 1,  max: 10  },
+    ]
+  },
+  easter_cross: {
+    label: "🐣 Easter Cross", group: "🐣 Easter",
+    params: [
+      { id: "height",    label: "Cross Height (m)",    val: 20, min: 5,  max: 60  },
+      { id: "width",     label: "Crossbar Width (m)",  val: 14, min: 4,  max: 40  },
+      { id: "thickness", label: "Beam Thickness (m)",  val: 2,  min: 0.5,max: 6   },
+      { id: "eggs",      label: "Easter Eggs (ring)",  val: 12, min: 4,  max: 24, step: 1 },
+    ]
+  },
+  ice_wall: {
+    label: "🧊 Ice / Snow Wall", group: "🎄 Seasonal",
+    params: [
+      { id: "length",    label: "Wall Length (m)",     val: 50, min: 10, max: 200 },
+      { id: "height",    label: "Wall Height (m)",     val: 12, min: 4,  max: 40  },
+      { id: "thickness", label: "Wall Thickness (m)",  val: 3,  min: 1,  max: 10  },
+    ]
+  },
 };
 
 export const SHAPE_GROUPS = [...new Set(Object.values(SHAPE_DEFS).map(s => s.group))];

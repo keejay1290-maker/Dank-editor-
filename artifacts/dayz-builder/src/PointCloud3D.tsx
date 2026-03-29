@@ -5,28 +5,27 @@ import * as THREE from "three";
 import type { Point3D } from "@/lib/shapeGenerators";
 import { WebGLErrorBoundary, isWebGLAvailable } from "@/WebGLErrorBoundary";
 
-// ─── Inner scene: plain THREE.Points with vertex colours ─────────────────────
-// Much more compatible than InstancedMesh+setColorAt (iOS WebGL extension issues)
 function Scene({
   points,
   globalPitch,
   globalRoll,
   globalScale,
   autoRotate,
+  textMode,
 }: {
   points: Point3D[];
   globalPitch: number;
   globalRoll: number;
   globalScale: number;
   autoRotate: boolean;
+  textMode?: boolean;
 }) {
   const count = points.length;
   const { camera } = useThree();
   const controlsRef = useRef<any>(null);
 
-  // Build BufferGeometry with positions + vertex colours — no extensions needed
-  const { geo, spread } = useMemo(() => {
-    if (!count) return { geo: new THREE.BufferGeometry(), spread: 20 };
+  const { geo, spread, cx: geoCx, cy: geoCy } = useMemo(() => {
+    if (!count) return { geo: new THREE.BufferGeometry(), spread: 20, cx: 0, cy: 0 };
 
     let minX = Infinity, maxX = -Infinity;
     let minY = Infinity, maxY = -Infinity;
@@ -51,7 +50,6 @@ function Scene({
       pos[i * 3 + 1] = p.y - cy;
       pos[i * 3 + 2] = p.z - cz;
 
-      // Gold → deep amber gradient by Y height
       const t = (p.y - minY) / rangeY;
       col[i * 3]     = (220 * t + 55  * (1 - t)) / 255;
       col[i * 3 + 1] = (155 * t + 75  * (1 - t)) / 255;
@@ -61,31 +59,47 @@ function Scene({
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
     g.setAttribute("color",    new THREE.BufferAttribute(col, 3));
-    return { geo: g, spread: sp };
+    return { geo: g, spread: sp, cx, cy };
   }, [points, count]);
 
-  // Position camera to frame all points — update OrbitControls too
   useEffect(() => {
     if (!count) return;
-    const d = spread * globalScale * 1.8;
-    const px = d * 0.65, py = d * 0.5, pz = d;
-    camera.position.set(px, py, pz);
-    (camera as THREE.PerspectiveCamera).near = Math.max(0.01, d * 0.001);
-    (camera as THREE.PerspectiveCamera).far  = d * 30;
-    camera.lookAt(0, 0, 0);
-    camera.updateProjectionMatrix();
-    // Sync OrbitControls so it doesn't fight the new camera position
-    if (controlsRef.current) {
-      controlsRef.current.target.set(0, 0, 0);
-      controlsRef.current.update();
+    const d = spread * globalScale;
+
+    if (textMode) {
+      // Lock camera in front of text so it's always readable
+      // Text runs along X axis; camera looks from Z+ at a slight elevation
+      camera.position.set(0, d * 0.18, d * 1.4);
+      (camera as THREE.PerspectiveCamera).near = Math.max(0.01, d * 0.001);
+      (camera as THREE.PerspectiveCamera).far  = d * 30;
+      camera.lookAt(0, 0, 0);
+      camera.updateProjectionMatrix();
+      if (controlsRef.current) {
+        controlsRef.current.target.set(0, 0, 0);
+        // Restrict polar angle so you can never look from below/flat
+        controlsRef.current.minPolarAngle = Math.PI * 0.05;
+        controlsRef.current.maxPolarAngle = Math.PI * 0.55;
+        controlsRef.current.update();
+      }
+    } else {
+      const px = d * 0.65, py = d * 0.5, pz = d;
+      camera.position.set(px, py, pz);
+      (camera as THREE.PerspectiveCamera).near = Math.max(0.01, d * 0.001);
+      (camera as THREE.PerspectiveCamera).far  = d * 30;
+      camera.lookAt(0, 0, 0);
+      camera.updateProjectionMatrix();
+      if (controlsRef.current) {
+        controlsRef.current.target.set(0, 0, 0);
+        controlsRef.current.minPolarAngle = 0;
+        controlsRef.current.maxPolarAngle = Math.PI;
+        controlsRef.current.update();
+      }
     }
-  }, [spread, globalScale, camera, count]);
+  }, [spread, globalScale, camera, count, textMode]);
 
   if (!count) return null;
 
-  // Cap point size — iOS GLES has max ~64px; keep it below that
   const ptSize = Math.min(48, Math.max(2, spread * globalScale * 0.02));
-
   const pitchR = globalPitch * Math.PI / 180;
   const rollR  = globalRoll  * Math.PI / 180;
 
@@ -104,7 +118,7 @@ function Scene({
       <OrbitControls
         ref={controlsRef}
         makeDefault
-        autoRotate={autoRotate}
+        autoRotate={textMode ? false : autoRotate}
         autoRotateSpeed={1.5}
         dampingFactor={0.12}
         enableDamping
@@ -114,19 +128,20 @@ function Scene({
   );
 }
 
-// ─── Public component ─────────────────────────────────────────────────────────
 export default function PointCloud3D({
   points,
   globalPitch  = 0,
   globalRoll   = 0,
   globalScale  = 1,
   autoRotate   = false,
+  textMode     = false,
 }: {
   points: Point3D[];
   globalPitch?: number;
   globalRoll?: number;
   globalScale?: number;
   autoRotate?: boolean;
+  textMode?: boolean;
 }) {
   if (!points.length) {
     return (
@@ -165,16 +180,16 @@ export default function PointCloud3D({
             globalRoll={globalRoll}
             globalScale={globalScale}
             autoRotate={autoRotate}
+            textMode={textMode}
           />
         </Canvas>
       </WebGLErrorBoundary>
 
-      {/* HUD */}
       <div className="absolute top-2 left-2 text-[#d4a017] text-[9px] font-mono pointer-events-none select-none">
         {points.length.toLocaleString()} pts
       </div>
       <div className="absolute bottom-2 left-0 right-0 text-center text-[#3a2e18] text-[9px] pointer-events-none select-none">
-        Drag to orbit · Scroll to zoom
+        {textMode ? "Front view locked · Scroll to zoom · Drag to pan" : "Drag to orbit · Scroll to zoom"}
       </div>
     </div>
   );

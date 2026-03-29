@@ -11,7 +11,6 @@ import PointCloud3D from "@/PointCloud3D";
 
 type EditorMode = "architect" | "text" | "builds" | "weapons" | "bunker" | "maze" | "race";
 type OutputFormat = "initc" | "json";
-type FillMode = "frame" | "fill";
 
 // ─── TEXT FONT ───────────────────────────────────────────────────────────────
 const TEXT_FONT: Record<string, number[][]> = {
@@ -542,6 +541,47 @@ const QUICK_PRESETS: Preset[] = [
   { category: "⚔️ Medieval",  label: "Imperial Crown",         shape: "crown",         params: { radius: 28, baseH: 10, spikeH: 18, points: 9 }, suggestedClass: "GreatHelm" },
   { category: "🏟 Structures", label: "Olympic Rings",         shape: "olympic_rings", params: { ringR: 12, tubeR: 2,   segs: 28 }, suggestedClass: "Land_Wall_Concrete_4m_DE" },
   { category: "🏟 Structures", label: "Olympic Rings (giant)", shape: "olympic_rings", params: { ringR: 22, tubeR: 3.5, segs: 40 }, suggestedClass: "Land_Wall_Concrete_8m_DE" },
+
+  // ⚓ Naval
+  { category: "⚓ Naval", label: "Submarine",            shape: "submarine",       params: { length: 80,  radius: 8,  ctHeight: 10, segs: 12 }, suggestedClass: "StaticObj_Container_1D" },
+  { category: "⚓ Naval", label: "Submarine (giant)",    shape: "submarine",       params: { length: 140, radius: 14, ctHeight: 18, segs: 16 }, suggestedClass: "Land_Container_1Bo_DE" },
+  { category: "⚓ Naval", label: "Aircraft Carrier",     shape: "aircraft_carrier",params: { length: 200, width: 36,  deckH: 14, islandH: 20 }, suggestedClass: "Land_Pier_Long_DE" },
+  { category: "⚓ Naval", label: "Carrier (Supercarrier)",shape: "aircraft_carrier",params: { length: 320, width: 50,  deckH: 18, islandH: 28 }, suggestedClass: "Land_Pier_Long_DE" },
+  { category: "⚓ Naval", label: "Avengers Helicarrier", shape: "helicarrier",     params: { length: 280, width: 80,  deckH: 20, propR: 35 }, suggestedClass: "Land_Pier_Long_DE" },
+  { category: "⚓ Naval", label: "Helicarrier (Compact)",shape: "helicarrier",     params: { length: 180, width: 55,  deckH: 14, propR: 24 }, suggestedClass: "StaticObj_Container_1D" },
+  { category: "⚓ Naval", label: "Destroyer",             shape: "destroyer",       params: { length: 120, width: 16,  deckH: 10 }, suggestedClass: "Land_Pier_DE" },
+  { category: "⚓ Naval", label: "Frigate (small)",       shape: "destroyer",       params: { length: 75,  width: 10,  deckH: 7  }, suggestedClass: "Land_Boat_Small1" },
+
+  // 🔐 Monuments
+  { category: "🔐 Vault", label: "Vault Door (standard)",  shape: "vault_door", params: { radius: 20, thickness: 4, rings: 5, spokes: 8, segs: 32 }, suggestedClass: "Land_HBarrier_5m_DE" },
+  { category: "🔐 Vault", label: "Vault Door (massive)",   shape: "vault_door", params: { radius: 40, thickness: 6, rings: 7, spokes: 12, segs: 48 }, suggestedClass: "Land_Wall_Concrete_4m_DE" },
+  { category: "🔐 Vault", label: "Vault Door (bank)",      shape: "vault_door", params: { radius: 14, thickness: 3, rings: 4, spokes: 6,  segs: 28 }, suggestedClass: "Land_HBarrier_5m_DE" },
+
+  // 🤖 Mechs
+  { category: "🤖 Mechs", label: "Lab Spider Mech",        shape: "lab_spider", params: { height: 22, width: 16 }, suggestedClass: "StaticObj_Container_1D" },
+  { category: "🤖 Mechs", label: "Lab Spider (giant)",     shape: "lab_spider", params: { height: 38, width: 28 }, suggestedClass: "Land_HBarrier_5m_DE" },
+  { category: "🤖 Mechs", label: "Lab Spider (compact)",   shape: "lab_spider", params: { height: 14, width: 10 }, suggestedClass: "StaticObj_Container_1D" },
+
+  // 🎄 Christmas / Winter
+  { category: "🎄 Christmas", label: "Giant Christmas Tree",    shape: "xmas_tree_large", params: { height: 30, baseRadius: 18, topRadius: 2, tiers: 5  }, suggestedClass: "ChristmasTree" },
+  { category: "🎄 Christmas", label: "Mega Christmas Tree",     shape: "xmas_tree_large", params: { height: 50, baseRadius: 28, topRadius: 3, tiers: 7  }, suggestedClass: "ChristmasTree" },
+  { category: "🎄 Christmas", label: "Christmas Tree (small)",  shape: "xmas_tree_large", params: { height: 15, baseRadius: 9,  topRadius: 1, tiers: 4  }, suggestedClass: "ChristmasTree" },
+  { category: "🎄 Christmas", label: "Ice Wall (fortress)",     shape: "ice_wall",        params: { length: 50, height: 12, thickness: 3 }, suggestedClass: "UndergroundStashSnow" },
+  { category: "🎄 Christmas", label: "Ice Wall (short)",        shape: "ice_wall",        params: { length: 25, height: 8,  thickness: 2 }, suggestedClass: "UndergroundStashSnow" },
+  { category: "🎄 Christmas", label: "Ice Fortress Ring",       shape: "torus",           params: { majorR: 40, minorR: 6, majorSegs: 20, minorSegs: 6 }, suggestedClass: "UndergroundStashSnow" },
+
+  // 🎃 Halloween
+  { category: "🎃 Halloween", label: "Jack's Spiral Hill",     shape: "jack_house",   params: { hillRadius: 30, hillHeight: 20, houseHeight: 12, houseWidth: 10 }, suggestedClass: "Plant_Pumpkin" },
+  { category: "🎃 Halloween", label: "Jack's Hill (large)",    shape: "jack_house",   params: { hillRadius: 50, hillHeight: 32, houseHeight: 18, houseWidth: 16 }, suggestedClass: "Plant_Pumpkin" },
+  { category: "🎃 Halloween", label: "Pumpkin Ring (8)",       shape: "pumpkin_ring", params: { radius: 20, count: 8,  pumpHeight: 4 }, suggestedClass: "Plant_Pumpkin" },
+  { category: "🎃 Halloween", label: "Pumpkin Ring (12)",      shape: "pumpkin_ring", params: { radius: 32, count: 12, pumpHeight: 5 }, suggestedClass: "Plant_Pumpkin" },
+  { category: "🎃 Halloween", label: "Pumpkin Circle (small)", shape: "pumpkin_ring", params: { radius: 10, count: 5,  pumpHeight: 3 }, suggestedClass: "Plant_Pumpkin" },
+
+  // 🐣 Easter
+  { category: "🐣 Easter", label: "Easter Cross",          shape: "easter_cross", params: { height: 20, width: 14, thickness: 2, eggs: 12 }, suggestedClass: "EasterEgg" },
+  { category: "🐣 Easter", label: "Easter Cross (grand)",  shape: "easter_cross", params: { height: 35, width: 24, thickness: 3, eggs: 20 }, suggestedClass: "EasterEgg" },
+  { category: "🐣 Easter", label: "Easter Egg Ring (12)",  shape: "disc",         params: { radius: 20, rings: 1, points: 12, innerRadius: 18 }, suggestedClass: "EasterEgg" },
+  { category: "🐣 Easter", label: "Easter Egg Spiral",     shape: "helix",        params: { radius: 15, height: 12, turns: 3, pointsPerTurn: 8, strands: 1 }, suggestedClass: "EasterEgg" },
 ];
 
 // Arena shapes available for randomization
@@ -596,8 +636,6 @@ export default function App() {
   const [pitch, setPitch] = useState(0);
   const [roll, setRoll] = useState(0);
   const [scaleVal, setScaleVal] = useState(1.0);
-  const [fillMode, setFillMode] = useState<FillMode>("frame");
-  const [fillDensity, setFillDensity] = useState(2);
   const [format, setFormat] = useState<OutputFormat>("initc");
   const [cePersist, setCePersist] = useState(0);
   const [includeHelper, setIncludeHelper] = useState(true);
@@ -640,10 +678,10 @@ export default function App() {
   // ── SAVE / LOAD STATE ─────────────────────────────────────────────────────
   const captureCurrentState = useCallback(() => ({
     shapeType, params, posX, posY, posZ, yaw, pitch, roll,
-    scaleVal, fillMode, fillDensity, format, objClass, extraObjs,
+    scaleVal, format, objClass, extraObjs,
     stackY, jitter, autoOrient, orientInward, buildNotes,
   }), [shapeType, params, posX, posY, posZ, yaw, pitch, roll,
-    scaleVal, fillMode, fillDensity, format, objClass, extraObjs,
+    scaleVal, format, objClass, extraObjs,
     stackY, jitter, autoOrient, orientInward, buildNotes]);
 
   const restoreState = useCallback((s: any) => {
@@ -652,8 +690,6 @@ export default function App() {
     setPosX(s.posX ?? 12000); setPosY(s.posY ?? 150); setPosZ(s.posZ ?? 12600);
     setYaw(s.yaw ?? 0); setPitch(s.pitch ?? 0); setRoll(s.roll ?? 0);
     setScaleVal(s.scaleVal ?? 1);
-    setFillMode(s.fillMode ?? "frame");
-    setFillDensity(s.fillDensity ?? 2);
     setFormat(s.format ?? "initc");
     setObjClass(s.objClass ?? "StaticObj_Container_1D");
     setExtraObjs(s.extraObjs ?? "");
@@ -677,36 +713,8 @@ export default function App() {
     return getShapePoints(shapeType, params);
   }, [mode, shapeType, params, selectedBuildId, textInput, textLetterH, textSpacing, textDepth, textRings, textArcDeg]);
 
-  // Apply fill mode with density — smart per-Y-level fill
-  const displayPoints = useMemo(() => {
-    if (mode === "text" || fillMode === "frame") return rawPoints;
-    const extras: Point3D[] = [];
-    if (!rawPoints.length) return rawPoints;
-    // Bin points by Y level so each horizontal cross-section fills toward its
-    // own centroid — this preserves silhouette on mechs, buildings, etc.
-    const yMin = rawPoints.reduce((m, p) => Math.min(m, p.y), Infinity);
-    const yMax = rawPoints.reduce((m, p) => Math.max(m, p.y), -Infinity);
-    const binSize = Math.max(0.05, (yMax - yMin) * 0.025); // 2.5% of height per bin
-    const yGroups = new Map<number, Point3D[]>();
-    rawPoints.forEach(p => {
-      const key = Math.round(p.y / binSize) * binSize;
-      if (!yGroups.has(key)) yGroups.set(key, []);
-      yGroups.get(key)!.push(p);
-    });
-    yGroups.forEach(levelPts => {
-      if (levelPts.length < 2) return;
-      const lCx = levelPts.reduce((s, p) => s + p.x, 0) / levelPts.length;
-      const lCz = levelPts.reduce((s, p) => s + p.z, 0) / levelPts.length;
-      const avgY = levelPts.reduce((s, p) => s + p.y, 0) / levelPts.length;
-      levelPts.forEach(p => {
-        for (let i = 1; i <= fillDensity; i++) {
-          const t = i / (fillDensity + 1);
-          extras.push({ x: p.x + (lCx - p.x) * t, y: avgY, z: p.z + (lCz - p.z) * t });
-        }
-      });
-    });
-    return [...rawPoints, ...extras];
-  }, [rawPoints, fillMode, fillDensity, mode]);
+  // All shapes render as hollow frames — displayPoints is always the raw frame points
+  const displayPoints = rawPoints;
 
   // Bounding-box dimensions in metres (scale-adjusted) — shown live in info bar
   const dims = useMemo(() => {
@@ -799,7 +807,7 @@ export default function App() {
       lines.push(`// Shape: ${SHAPE_DEFS[shapeType]?.label || shapeType}`);
       lines.push(`// Asset: ${objClass}   Base: <${posX}, ${posY}, ${posZ}>`);
       lines.push(`// YPR: ${pitch}° / ${yaw}° / ${roll}°   Scale: ${scaleVal}${autoOrient ? "   [Auto-Orient: ON]" : ""}`);
-      lines.push(`// Mode: ${fillMode}${fillMode === "fill" ? " density " + fillDensity : ""}   Objects: ${ptsToUse.length * (1 + extras.length)}`);
+      lines.push(`// Objects: ${ptsToUse.length * (1 + extras.length)}`);
       if (buildNotes.trim()) lines.push(`// Notes: ${buildNotes.trim().replace(/\n+/g, " | ")}`);
       lines.push(``);
     }
@@ -876,53 +884,18 @@ export default function App() {
   };
 
   // ── COMPLETED BUILD DOWNLOAD ──────────────────────────────────────────────
-  const downloadBuild = (build: CompletedBuild, mode: "frame" | "fill", format: "initc" | "json") => {
-    // 1. Get shape points
-    const raw = getShapePoints(build.shape, build.params);
-
-    // 2. Apply fill if needed (per-Y-level fill — mirrors the main fill logic)
-    let pts = raw;
-    if (mode === "fill" && raw.length) {
-      const density = build.fillDensity ?? 2;
-      const extras: Point3D[] = [];
-      const yMin = raw.reduce((m, p) => Math.min(m, p.y), Infinity);
-      const yMax = raw.reduce((m, p) => Math.max(m, p.y), -Infinity);
-      const binSize = Math.max(0.05, (yMax - yMin) * 0.025);
-      const yGroups = new Map<number, Point3D[]>();
-      raw.forEach(p => {
-        const key = Math.round(p.y / binSize) * binSize;
-        if (!yGroups.has(key)) yGroups.set(key, []);
-        yGroups.get(key)!.push(p);
-      });
-      yGroups.forEach(group => {
-        const cx2 = group.reduce((s, p) => s + p.x, 0) / group.length;
-        const cz2 = group.reduce((s, p) => s + p.z, 0) / group.length;
-        const avgY = group[0].y;
-        group.forEach(p => {
-          for (let d = 1; d <= density; d++) {
-            const t = d / (density + 1);
-            extras.push({ x: p.x * (1 - t) + cx2 * t, y: avgY, z: p.z * (1 - t) + cz2 * t });
-          }
-        });
-      });
-      pts = [...raw, ...extras];
-    }
-
-    // 3. Select objects
-    const obj = mode === "frame" ? build.frameObj : build.fillObj;
-    const extrasStr = mode === "frame" ? (build.extraFrame || "") : (build.extraFill || "");
-    const extraList = extrasStr.split(",").map(s => s.trim()).filter(Boolean);
-
-    // 4. Compute centroid for auto-orient
+  const downloadBuild = (build: CompletedBuild, fmt: "initc" | "json") => {
+    const pts = getShapePoints(build.shape, build.params);
+    const obj = build.frameObj;
+    const extraList = (build.extraFrame || "").split(",").map(s => s.trim()).filter(Boolean);
     const cx3 = pts.reduce((s, p) => s + p.x, 0) / Math.max(1, pts.length);
     const cz3 = pts.reduce((s, p) => s + p.z, 0) / Math.max(1, pts.length);
 
-    // 5. Build output
     let code = "";
-    if (format === "initc") {
+    if (fmt === "initc") {
       const lines: string[] = [
         HELPER_FUNC,
-        `// ═══ ${build.name} — ${mode.toUpperCase()} MODE ═══`,
+        `// ═══ ${build.name} ═══`,
         `// ${build.tagline}`,
         `// Object: ${obj}${extraList.length ? " + " + extraList.join(", ") : ""}`,
         `// Location: ${build.posX} ${build.posY} ${build.posZ} (${build.posX < 8000 ? "NWAF" : "Krasnoe"})`,
@@ -931,35 +904,26 @@ export default function App() {
         "",
       ];
       pts.forEach(pt => {
-        const wx = pt.x + build.posX;
-        const wy = pt.y + build.posY;
-        const wz = pt.z + build.posZ;
+        const wx = pt.x + build.posX, wy = pt.y + build.posY, wz = pt.z + build.posZ;
         const ptYaw = build.autoOrient ? Math.atan2(pt.x - cx3, pt.z - cz3) * 180 / Math.PI : 0;
         lines.push(formatInitC(obj, wx, wy, wz, 0, ptYaw, 0, 1.0));
-        extraList.forEach((ex, ei) => {
-          lines.push(formatInitC(ex, wx, wy + ei + 1, wz, 0, ptYaw, 0, 1.0));
-        });
+        extraList.forEach((ex, ei) => lines.push(formatInitC(ex, wx, wy + ei + 1, wz, 0, ptYaw, 0, 1.0)));
       });
       code = lines.join("\n");
     } else {
       const objs: object[] = [];
       pts.forEach(pt => {
-        const wx = pt.x + build.posX;
-        const wy = pt.y + build.posY;
-        const wz = pt.z + build.posZ;
+        const wx = pt.x + build.posX, wy = pt.y + build.posY, wz = pt.z + build.posZ;
         const ptYaw = build.autoOrient ? Math.atan2(pt.x - cx3, pt.z - cz3) * 180 / Math.PI : 0;
         objs.push({ name: obj, pos: [+wx.toFixed(3), +wy.toFixed(3), +wz.toFixed(3)], ypr: [0, +ptYaw.toFixed(4), 0], scale: 1.0, enableCEPersistency: 0, customString: "" });
-        extraList.forEach((ex, ei) => {
-          objs.push({ name: ex, pos: [+wx.toFixed(3), +(wy + ei + 1).toFixed(3), +wz.toFixed(3)], ypr: [0, +ptYaw.toFixed(4), 0], scale: 1.0, enableCEPersistency: 0, customString: "" });
-        });
+        extraList.forEach((ex, ei) => objs.push({ name: ex, pos: [+wx.toFixed(3), +(wy + ei + 1).toFixed(3), +wz.toFixed(3)], ypr: [0, +ptYaw.toFixed(4), 0], scale: 1.0, enableCEPersistency: 0, customString: "" }));
       });
       code = JSON.stringify({ Objects: objs }, null, 2);
     }
 
-    const ext = format === "initc" ? "c" : "json";
-    const filename = `${build.id}_${mode}`;
-    downloadCode(code, ext, filename);
-    showToast(`✓ Downloaded ${build.name} [${mode}] — ${pts.length * (1 + extraList.length)} objects`);
+    const ext = fmt === "initc" ? "c" : "json";
+    downloadCode(code, ext, build.id);
+    showToast(`Downloaded ${build.name} — ${pts.length * (1 + extraList.length)} objects`);
   };
 
   const currentCode = mode === "architect" ? output : textOutput;

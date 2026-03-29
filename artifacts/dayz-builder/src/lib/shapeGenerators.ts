@@ -108,6 +108,17 @@ export function getShapePoints(shapeType: string, params: Record<string, number>
     case 'saturn': return gen_saturn(p);
     case 'crown': return gen_crown(p);
     case 'olympic_rings': return gen_olympic_rings(p);
+    case 'submarine': return gen_submarine(p);
+    case 'aircraft_carrier': return gen_aircraft_carrier(p);
+    case 'helicarrier': return gen_helicarrier(p);
+    case 'vault_door': return gen_vault_door(p);
+    case 'lab_spider': return gen_lab_spider(p);
+    case 'destroyer': return gen_destroyer(p);
+    case 'xmas_tree_large': return gen_xmas_tree_large(p);
+    case 'jack_house': return gen_jack_house(p);
+    case 'pumpkin_ring': return gen_pumpkin_ring(p);
+    case 'easter_cross': return gen_easter_cross(p);
+    case 'ice_wall': return gen_ice_wall(p);
     default: return [];
   }
 }
@@ -4701,4 +4712,740 @@ export function applyTransform(
     const [rx, rz] = rotYapply(sx, sz, rotYDeg);
     return { x: rx + posX, y: sy + posY, z: rz + posZ };
   });
+}
+
+// ─── SUBMARINE ───────────────────────────────────────────────────────────────
+function gen_submarine(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const L = p.length;   // total length
+  const R = p.radius;   // hull radius
+  const ctH = p.ctHeight; // conning tower height
+  const segs = Math.round(p.segs);
+
+  // Hull — cylindrical body along Z axis
+  const hullRings = Math.max(8, Math.round(L / R));
+  for (let ri = 0; ri <= hullRings; ri++) {
+    const z = -L / 2 + L * ri / hullRings;
+    // Taper at bow (front/positive Z) and stern (back/negative Z)
+    const tBow  = Math.max(0, (z - (L / 2 - R * 1.5)) / (R * 1.5));
+    const tStern = Math.max(0, (-z - (L / 2 - R * 1.0)) / (R * 1.0));
+    const taper  = Math.max(0, 1 - tBow * 0.8 - tStern * 0.6);
+    const cr = R * taper;
+    if (cr < 0.5) continue;
+    for (let j = 0; j < segs; j++) {
+      const a = 2 * Math.PI * j / segs;
+      pts.push({ x: cr * Math.cos(a), y: cr * Math.sin(a), z });
+    }
+  }
+
+  // Conning tower (sail) — rectangular block above hull centre
+  const ctW = R * 0.55, ctD = R * 1.8;
+  const ctZ0 = -ctD * 0.6, ctZ1 = ctD * 0.6;
+  const ctY0 = R * 0.8, ctY1 = ctY0 + ctH;
+  const ctStepsZ = 5, ctStepsY = 5;
+  for (let zi = 0; zi <= ctStepsZ; zi++) {
+    const z = ctZ0 + (ctZ1 - ctZ0) * zi / ctStepsZ;
+    for (let yi = 0; yi <= ctStepsY; yi++) {
+      const y = ctY0 + (ctY1 - ctY0) * yi / ctStepsY;
+      pts.push({ x: -ctW, y, z }); pts.push({ x: ctW, y, z });
+    }
+  }
+  // CT top + front/back faces
+  for (let xi = 0; xi <= 4; xi++) {
+    const x = -ctW + ctW * 2 * xi / 4;
+    pts.push({ x, y: ctY1, z: ctZ0 }); pts.push({ x, y: ctY1, z: ctZ1 });
+  }
+
+  // Rudder fins at stern — 4 fins (top, bottom, left, right)
+  const finAngles = [0, Math.PI / 2, Math.PI, -Math.PI / 2];
+  const finZ = -L / 2 + R * 0.8;
+  finAngles.forEach(fa => {
+    const fx = Math.cos(fa), fy = Math.sin(fa);
+    for (let i = 0; i <= 6; i++) {
+      const t = i / 6;
+      pts.push({ x: (R + R * 0.7 * t) * fx, y: (R + R * 0.7 * t) * fy, z: finZ + R * 0.4 * t });
+    }
+  });
+
+  // Propeller hub at stern
+  for (let j = 0; j < 8; j++) {
+    const a = 2 * Math.PI * j / 8;
+    pts.push({ x: R * 0.15 * Math.cos(a), y: R * 0.15 * Math.sin(a), z: -L / 2 });
+  }
+  // 3 propeller blades
+  for (let b = 0; b < 3; b++) {
+    const ba = b * 2 * Math.PI / 3;
+    for (let i = 0; i <= 4; i++) {
+      const t = i / 4;
+      pts.push({ x: Math.cos(ba) * R * 0.5 * t, y: Math.sin(ba) * R * 0.5 * t, z: -L / 2 - R * 0.1 });
+    }
+  }
+
+  return pts;
+}
+
+// ─── AIRCRAFT CARRIER ────────────────────────────────────────────────────────
+function gen_aircraft_carrier(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const L = p.length;   // deck length (along Z)
+  const W = p.width;    // deck width (along X)
+  const DH = p.deckH;  // deck height above waterline
+  const islandH = p.islandH; // island/tower height
+  const stepsZ = Math.round(L / 6), stepsX = Math.round(W / 4);
+
+  // FLIGHT DECK — flat upper surface with perimeter rails
+  const deckY = DH;
+  // Long edges
+  for (let zi = 0; zi <= stepsZ; zi++) {
+    const z = -L / 2 + L * zi / stepsZ;
+    pts.push({ x: -W / 2, y: deckY, z }); pts.push({ x: W / 2, y: deckY, z });
+  }
+  // Short edges (bow & stern)
+  for (let xi = 0; xi <= stepsX; xi++) {
+    const x = -W / 2 + W * xi / stepsX;
+    pts.push({ x, y: deckY, z: -L / 2 }); pts.push({ x, y: deckY, z: L / 2 });
+  }
+  // Deck surface lines (catapult tracks + centre line)
+  for (let zi = 0; zi <= stepsZ; zi++) {
+    const z = -L / 2 + L * zi / stepsZ;
+    pts.push({ x: 0,           y: deckY + 0.1, z });  // centre line
+    pts.push({ x: -W * 0.3,   y: deckY + 0.1, z });  // port cat
+    pts.push({ x:  W * 0.3,   y: deckY + 0.1, z });  // stbd cat
+  }
+
+  // HULL — vertical sides below deck
+  const hullStepsY = 4;
+  for (let yi = 0; yi <= hullStepsY; yi++) {
+    const y = DH * yi / hullStepsY;
+    for (let zi = 0; zi <= stepsZ; zi++) {
+      const z = -L / 2 + L * zi / stepsZ;
+      // Narrow hull (ships are narrower at waterline)
+      const hw = W * 0.5 * (0.6 + 0.4 * (y / DH));
+      pts.push({ x: -hw, y, z }); pts.push({ x: hw, y, z });
+    }
+  }
+  // Hull bow/stern faces
+  for (let yi = 0; yi <= hullStepsY; yi++) {
+    const y = DH * yi / hullStepsY;
+    const hw = W * 0.5 * (0.6 + 0.4 * (y / DH));
+    for (let xi = 0; xi <= stepsX; xi++) {
+      const x = -hw + hw * 2 * xi / stepsX;
+      pts.push({ x, y, z: L / 2 }); pts.push({ x, y, z: -L / 2 });
+    }
+  }
+
+  // ISLAND (superstructure) — starboard side, mid-ship
+  const isX = W * 0.38, isZ0 = -L * 0.05, isZ1 = L * 0.18;
+  const isW = W * 0.14, isD = isZ1 - isZ0;
+  const isStepsZ = 4, isStepsY = 6;
+  for (let zi = 0; zi <= isStepsZ; zi++) {
+    const z = isZ0 + isD * zi / isStepsZ;
+    for (let yi = 0; yi <= isStepsY; yi++) {
+      const y = deckY + islandH * yi / isStepsY;
+      pts.push({ x: isX - isW, y, z }); pts.push({ x: isX + isW, y, z });
+    }
+  }
+  for (let yi = 0; yi <= isStepsY; yi++) {
+    const y = deckY + islandH * yi / isStepsY;
+    for (let zi = 0; zi <= isStepsZ; zi++) {
+      const z = isZ0 + isD * zi / isStepsZ;
+      pts.push({ x: isX, y, z: isZ0 }); pts.push({ x: isX, y, z: isZ1 });
+    }
+  }
+  // Radar mast on island
+  for (let i = 0; i <= 6; i++) {
+    pts.push({ x: isX, y: deckY + islandH + i * 2, z: (isZ0 + isZ1) / 2 });
+  }
+  // Radar dish
+  for (let j = 0; j < 8; j++) {
+    const a = 2 * Math.PI * j / 8;
+    pts.push({ x: isX + 3 * Math.cos(a), y: deckY + islandH + 12, z: (isZ0 + isZ1) / 2 + 3 * Math.sin(a) });
+  }
+
+  // Parked aircraft silhouettes on deck (simple cross shapes)
+  [[-W * 0.15, L * 0.2], [W * 0.1, -L * 0.1], [-W * 0.2, -L * 0.25]].forEach(([ax, az]) => {
+    // Wing span
+    for (let i = -1; i <= 1; i++) pts.push({ x: ax + i * W * 0.08, y: deckY + 0.5, z: az as number });
+    // Fuselage
+    for (let i = -1; i <= 1; i++) pts.push({ x: ax, y: deckY + 0.5, z: (az as number) + i * L * 0.05 });
+  });
+
+  return pts;
+}
+
+// ─── AVENGERS HELICARRIER ────────────────────────────────────────────────────
+// SHIELD Helicarrier: huge flat deck + 4 massive propellers at corners + island buildings
+function gen_helicarrier(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const L = p.length;   // deck length
+  const W = p.width;    // deck width
+  const DH = p.deckH;  // hull depth
+  const propR = p.propR; // propeller radius
+  const stepsZ = Math.round(L / 8), stepsX = Math.round(W / 5);
+
+  // MAIN DECK — flat top surface
+  const deckY = DH;
+  for (let zi = 0; zi <= stepsZ; zi++) {
+    const z = -L / 2 + L * zi / stepsZ;
+    pts.push({ x: -W / 2, y: deckY, z }); pts.push({ x: W / 2, y: deckY, z });
+  }
+  for (let xi = 0; xi <= stepsX; xi++) {
+    const x = -W / 2 + W * xi / stepsX;
+    pts.push({ x, y: deckY, z: -L / 2 }); pts.push({ x, y: deckY, z: L / 2 });
+  }
+
+  // HULL — 3 level sides
+  [0, DH * 0.5, DH].forEach(y => {
+    const hw = W * 0.5 * (y === 0 ? 0.7 : y === DH * 0.5 ? 0.85 : 1.0);
+    for (let zi = 0; zi <= stepsZ; zi++) {
+      const z = -L / 2 + L * zi / stepsZ;
+      pts.push({ x: -hw, y, z }); pts.push({ x: hw, y, z });
+    }
+    for (let xi = 0; xi <= stepsX; xi++) {
+      const x = -hw + hw * 2 * xi / stepsX;
+      pts.push({ x, y, z: -L / 2 }); pts.push({ x, y, z: L / 2 });
+    }
+  });
+
+  // 4 CORNER PROPELLER PODS — the defining feature of the Helicarrier
+  const corners = [
+    { cx:  W * 0.38, cz:  L * 0.38 },
+    { cx: -W * 0.38, cz:  L * 0.38 },
+    { cx:  W * 0.38, cz: -L * 0.38 },
+    { cx: -W * 0.38, cz: -L * 0.38 },
+  ];
+  corners.forEach(({ cx, cz }) => {
+    const podY = deckY - DH * 0.3;
+    const podR = propR * 0.2;
+
+    // Mounting struts from hull down to pod
+    for (let i = 0; i <= 4; i++) {
+      pts.push({ x: cx, y: deckY - DH * i / 4, z: cz });
+    }
+    // Pod nacelle (cylinder)
+    for (let j = 0; j < 12; j++) {
+      const a = 2 * Math.PI * j / 12;
+      pts.push({ x: cx + podR * Math.cos(a), y: podY, z: cz + podR * Math.sin(a) });
+    }
+    // Propeller rotor disc — 4 blades
+    for (let b = 0; b < 4; b++) {
+      const ba = b * Math.PI / 2;
+      for (let i = 0; i <= 8; i++) {
+        const t = i / 8;
+        pts.push({ x: cx + propR * t * Math.cos(ba), y: podY + 0.5, z: cz + propR * t * Math.sin(ba) });
+      }
+    }
+    // Blade tips ring
+    for (let j = 0; j < 20; j++) {
+      const a = 2 * Math.PI * j / 20;
+      pts.push({ x: cx + propR * Math.cos(a), y: podY + 0.5, z: cz + propR * Math.sin(a) });
+    }
+  });
+
+  // DECK BUILDINGS — Novo clocktower stand-in + barracks along deck
+  // Tower (Novo clocktower style — tall, rectangular)
+  const twX = W * 0.05, twZ = L * 0.05;
+  const twW = W * 0.05, twH = DH * 1.8;
+  for (let yi = 0; yi <= 8; yi++) {
+    const y = deckY + twH * yi / 8;
+    for (let xi = -1; xi <= 1; xi++) pts.push({ x: twX + twW * xi, y, z: twZ });
+    for (let zi = -1; zi <= 1; zi++) pts.push({ x: twX, y, z: twZ + twW * zi });
+  }
+  // Military barracks (3 along deck)
+  [[-L * 0.2, W * 0.1], [0, -W * 0.1], [L * 0.25, W * 0.12]].forEach(([bz, bx]) => {
+    const barW = W * 0.09, barD = L * 0.06, barH = DH * 0.6;
+    const by = deckY;
+    [[bx as number - barW, barH, bz as number - barD], [bx as number + barW, barH, bz as number - barD],
+     [bx as number - barW, barH, bz as number + barD], [bx as number + barW, barH, bz as number + barD]].forEach(([x, h, z]) => {
+      for (let yi = 0; yi <= 3; yi++) pts.push({ x: x as number, y: by + (h as number) * yi / 3, z: z as number });
+    });
+  });
+
+  // Landing lights along deck edges
+  for (let zi = 0; zi <= stepsZ; zi += 3) {
+    const z = -L / 2 + L * zi / stepsZ;
+    pts.push({ x: -W / 2 + 1, y: deckY + 0.5, z });
+    pts.push({ x:  W / 2 - 1, y: deckY + 0.5, z });
+  }
+
+  return pts;
+}
+
+// ─── VAULT DOOR ──────────────────────────────────────────────────────────────
+function gen_vault_door(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const R = p.radius;
+  const thickness = p.thickness;
+  const rings = Math.round(p.rings);
+  const spokes = Math.round(p.spokes);
+  const segs = Math.round(p.segs);
+
+  // Multiple concentric rings (like a vault/safe door)
+  for (let ri = 0; ri <= rings; ri++) {
+    const r = R * (ri / rings);
+    if (r < 0.5) continue;
+    for (let j = 0; j < segs; j++) {
+      const a = 2 * Math.PI * j / segs;
+      pts.push({ x: r * Math.cos(a), y: 0, z: r * Math.sin(a) });
+      // Back face (thickness)
+      pts.push({ x: r * Math.cos(a), y: thickness, z: r * Math.sin(a) });
+    }
+  }
+
+  // Radial spokes connecting rings
+  for (let s = 0; s < spokes; s++) {
+    const a = 2 * Math.PI * s / spokes;
+    for (let i = 0; i <= 8; i++) {
+      const r = R * i / 8;
+      pts.push({ x: r * Math.cos(a), y: 0, z: r * Math.sin(a) });
+    }
+  }
+
+  // Rim edge (the outer cylindrical edge of the door)
+  const rimSegs = Math.round(thickness * 4);
+  for (let j = 0; j < segs; j++) {
+    const a = 2 * Math.PI * j / segs;
+    for (let yi = 0; yi <= rimSegs; yi++) {
+      pts.push({ x: R * Math.cos(a), y: thickness * yi / rimSegs, z: R * Math.sin(a) });
+    }
+  }
+
+  // Handle wheel — small circle in the centre
+  const hwR = R * 0.15;
+  for (let j = 0; j < 12; j++) {
+    const a = 2 * Math.PI * j / 12;
+    pts.push({ x: hwR * Math.cos(a), y: thickness + 0.5, z: hwR * Math.sin(a) });
+  }
+  // Handle spokes
+  for (let s = 0; s < 4; s++) {
+    const a = Math.PI / 2 * s;
+    for (let i = 0; i <= 4; i++) {
+      const r = hwR * i / 4;
+      pts.push({ x: r * Math.cos(a), y: thickness + 0.5, z: r * Math.sin(a) });
+    }
+  }
+
+  // Locking bolts around rim
+  const boltCount = 8;
+  for (let b = 0; b < boltCount; b++) {
+    const a = 2 * Math.PI * b / boltCount;
+    const bR = R * 0.85;
+    for (let j = 0; j < 6; j++) {
+      const ba = 2 * Math.PI * j / 6;
+      pts.push({ x: bR * Math.cos(a) + 1.5 * Math.cos(ba), y: 0, z: bR * Math.sin(a) + 1.5 * Math.sin(ba) });
+    }
+  }
+
+  return pts;
+}
+
+// ─── LAB SPIDER MECH ─────────────────────────────────────────────────────────
+// Futuristic biomechanical spider with a laboratory building body and pipe legs
+function gen_lab_spider(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const h = p.height;
+  const w = p.width;
+
+  // BODY: compact octagonal laboratory pod (like a bioresearch dome)
+  const bodyBot = h * 0.50;
+  const bodyTop = h;
+  const bR = w * 0.30;  // body radius (octagonal)
+
+  // Octagonal perimeter at 4 heights
+  const bodyLevels = 5;
+  for (let ri = 0; ri <= bodyLevels; ri++) {
+    const by = bodyBot + (bodyTop - bodyBot) * ri / bodyLevels;
+    const rScale = ri === 0 || ri === bodyLevels ? 0.85 : 1.0; // taper top/bottom
+    for (let j = 0; j < 8; j++) {
+      const a = Math.PI / 4 * j + Math.PI / 8;
+      pts.push({ x: bR * rScale * Math.cos(a), y: by, z: bR * rScale * Math.sin(a) });
+    }
+  }
+  // Dome top
+  for (let i = 0; i <= 4; i++) {
+    const lat = Math.PI / 2 * i / 4;
+    const y = bodyTop + w * 0.12 * Math.sin(lat);
+    const cr = bR * 0.85 * Math.cos(lat);
+    for (let j = 0; j < 8; j++) {
+      const a = 2 * Math.PI * j / 8;
+      pts.push({ x: cr * Math.cos(a), y, z: cr * Math.sin(a) });
+    }
+  }
+
+  // 8 PIPE LEGS — sci-fi articulated, angled sharply like insect legs
+  const legDeg = [35, 65, 115, 145];
+  const legAngles = [...legDeg.map(d => d * Math.PI / 180), ...legDeg.map(d => -d * Math.PI / 180)];
+
+  legAngles.forEach(la => {
+    const ox = Math.sin(la), oz = Math.cos(la);
+
+    // Hip joint (at body edge)
+    const hipX = ox * bR * 0.95, hipZ = oz * bR * 0.95;
+    const hipY = bodyBot + (bodyTop - bodyBot) * 0.1;
+
+    // First joint — angles steeply UP then out (insect style: femur goes up first)
+    const femurLen = w * 0.55;
+    const femX = hipX + ox * femurLen * 0.6;
+    const femZ = hipZ + oz * femurLen * 0.6;
+    const femY = hipY + h * 0.22; // goes UP first
+
+    // Knee joint — then bends sharply DOWN
+    const kneeX = femX + ox * w * 0.35;
+    const kneeZ = femZ + oz * w * 0.35;
+    const kneeY = h * 0.15; // drops to near-ground
+
+    // Foot
+    const footX = ox * w * 1.25, footZ = oz * w * 1.25, footY = 0;
+
+    // Hip → femur (upper, goes outward+upward)
+    for (let i = 0; i <= 8; i++) {
+      const t = i / 8;
+      pts.push({ x: hipX + (femX - hipX) * t, y: hipY + (femY - hipY) * t, z: hipZ + (femZ - hipZ) * t });
+    }
+    // Femur → knee (angles sharply back down)
+    for (let i = 1; i <= 8; i++) {
+      const t = i / 8;
+      pts.push({ x: femX + (kneeX - femX) * t, y: femY + (kneeY - femY) * t, z: femZ + (kneeZ - femZ) * t });
+    }
+    // Knee → foot (shin, steeply downward)
+    for (let i = 1; i <= 8; i++) {
+      const t = i / 8;
+      pts.push({ x: kneeX + (footX - kneeX) * t, y: kneeY + (footY - kneeY) * t, z: kneeZ + (footZ - kneeZ) * t });
+    }
+    // Foot claw — 3 prongs
+    const perpX = oz, perpZ = -ox;
+    for (const off of [-0.08, 0, 0.08]) {
+      pts.push({ x: footX + perpX * off * w + ox * w * 0.06, y: 0, z: footZ + perpZ * off * w + oz * w * 0.06 });
+    }
+    // Hip pipe joint (small ring)
+    for (let j = 0; j < 6; j++) {
+      const a = 2 * Math.PI * j / 6;
+      const perpA = la + Math.PI / 2;
+      pts.push({ x: hipX + Math.cos(perpA) * 0.8, y: hipY + 0.8 * Math.sin(a), z: hipZ + Math.sin(perpA) * 0.8 });
+    }
+  });
+
+  return pts;
+}
+
+// ─── NAVAL DESTROYER ─────────────────────────────────────────────────────────
+function gen_destroyer(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const L = p.length;
+  const W = p.width;
+  const DH = p.deckH;
+  const stepsZ = Math.round(L / 5);
+
+  // Hull cross-sections (V-shaped bottom like a real destroyer)
+  const hullLevels = 5;
+  for (let yi = 0; yi <= hullLevels; yi++) {
+    const y = DH * yi / hullLevels;
+    const keel = W * 0.08; // keel width at bottom
+    const beam = W * 0.5 * (keel / W + (1 - keel / W) * (y / DH)); // widens toward deck
+    for (let zi = 0; zi <= stepsZ; zi++) {
+      const z = -L / 2 + L * zi / stepsZ;
+      // Taper bow sharply
+      const bow = Math.max(0, (z - L * 0.35) / (L * 0.15));
+      const bw = beam * (1 - bow * 0.9);
+      pts.push({ x: -bw, y, z }); pts.push({ x: bw, y, z });
+    }
+  }
+  // Deck perimeter
+  const deckY = DH;
+  for (let zi = 0; zi <= stepsZ; zi++) {
+    const z = -L / 2 + L * zi / stepsZ;
+    pts.push({ x: -W / 2, y: deckY, z }); pts.push({ x: W / 2, y: deckY, z });
+  }
+
+  // Bridge superstructure — mid-ship
+  const brZ0 = -L * 0.05, brZ1 = L * 0.12, brH = DH * 1.2, brW = W * 0.4;
+  for (let yi = 0; yi <= 5; yi++) {
+    const y = deckY + brH * yi / 5;
+    const bw = brW * (1 - yi * 0.08);
+    for (let xi = -1; xi <= 1; xi++) pts.push({ x: bw * xi, y, z: brZ0 });
+    for (let xi = -1; xi <= 1; xi++) pts.push({ x: bw * xi, y, z: brZ1 });
+    pts.push({ x: -bw, y, z: (brZ0 + brZ1) / 2 }); pts.push({ x: bw, y, z: (brZ0 + brZ1) / 2 });
+  }
+
+  // Gun turret (bow)
+  const turY = deckY + 1, turZ = L * 0.28;
+  for (let j = 0; j < 10; j++) {
+    const a = 2 * Math.PI * j / 10;
+    pts.push({ x: W * 0.08 * Math.cos(a), y: turY, z: turZ + W * 0.08 * Math.sin(a) });
+  }
+  // Gun barrel
+  for (let i = 0; i <= 6; i++) pts.push({ x: 0, y: turY + 0.5, z: turZ + W * 0.08 + i * 2 });
+
+  // Missile launcher (rear deck)
+  const mlZ = -L * 0.3;
+  for (let i = 0; i < 4; i++) {
+    const mx = -W * 0.12 + i * W * 0.08;
+    for (let j = 0; j <= 3; j++) pts.push({ x: mx, y: deckY + j * 1.5, z: mlZ });
+  }
+
+  // Radar mast
+  for (let i = 0; i <= 8; i++) pts.push({ x: 0, y: deckY + brH + i * 2, z: (brZ0 + brZ1) / 2 });
+  for (let j = 0; j < 8; j++) {
+    const a = 2 * Math.PI * j / 8;
+    pts.push({ x: 4 * Math.cos(a), y: deckY + brH + 16, z: (brZ0 + brZ1) / 2 + 4 * Math.sin(a) });
+  }
+
+  return pts;
+}
+
+// ─── CHRISTMAS TREE (GIANT) ──────────────────────────────────────────────────
+function gen_xmas_tree_large(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const h = p.height, tiers = Math.round(p.tiers), topR = p.topRadius;
+
+  // Layered cone tiers — each tier slightly overlaps the one above
+  for (let t = 0; t < tiers; t++) {
+    const tierFrac = (t + 1) / tiers;
+    const tierY = h * (1 - tierFrac);         // bottom of this tier
+    const tierTop = h * (1 - t / tiers);      // top of this tier
+    const tierR = topR + (p.baseRadius - topR) * tierFrac;
+    const tierMidR = tierR * 0.65; // each tier's peak is narrower
+    // Base ring of this tier
+    const pts2 = Math.max(8, Math.round(24 * tierFrac));
+    for (let j = 0; j < pts2; j++) {
+      const a = 2 * Math.PI * j / pts2;
+      pts.push({ x: tierR * Math.cos(a), y: tierY, z: tierR * Math.sin(a) });
+    }
+    // Mid ring (halfway up tier)
+    const midPts = Math.max(6, Math.round(16 * tierFrac));
+    for (let j = 0; j < midPts; j++) {
+      const a = 2 * Math.PI * j / midPts;
+      pts.push({ x: tierMidR * Math.cos(a), y: (tierY + tierTop) / 2, z: tierMidR * Math.sin(a) });
+    }
+  }
+  // Star/tip at top
+  for (let j = 0; j < 5; j++) {
+    const a = 2 * Math.PI * j / 5;
+    pts.push({ x: topR * 0.3 * Math.cos(a), y: h, z: topR * 0.3 * Math.sin(a) });
+    pts.push({ x: topR * 0.6 * Math.cos(a + Math.PI / 5), y: h + topR * 0.2, z: topR * 0.6 * Math.sin(a + Math.PI / 5) });
+  }
+  // Trunk
+  for (let i = 0; i <= 3; i++) {
+    const ry = -h * 0.12 * i / 3;
+    for (let j = 0; j < 6; j++) {
+      const a = 2 * Math.PI * j / 6;
+      pts.push({ x: topR * 0.18 * Math.cos(a), y: ry, z: topR * 0.18 * Math.sin(a) });
+    }
+  }
+  // Decorative baubles at random-ish tier levels
+  const baubleAngles = [0, 0.8, 1.8, 2.6, 3.5, 4.3, 5.1, 0.3, 1.1, 2.2, 3.0, 4.0];
+  baubleAngles.forEach((ba, bi) => {
+    const tierFrac = (bi % tiers + 0.5) / tiers;
+    const bR = (topR + (p.baseRadius - topR) * tierFrac) * 0.7;
+    const bY = h * (1 - tierFrac) + h * 0.08;
+    pts.push({ x: bR * Math.cos(ba), y: bY, z: bR * Math.sin(ba) });
+  });
+
+  return pts;
+}
+
+// ─── JACK SKELLINGTON'S HOUSE (Spiral Hill) ──────────────────────────────────
+// Halloween: spiral hill with a spooky house on top, graveyard fence around base
+function gen_jack_house(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const hillR = p.hillRadius, hillH = p.hillHeight;
+  const houseH = p.houseHeight, houseW = p.houseWidth;
+
+  // SPIRAL HILL — helix-like mound that tapers to a point
+  const spiralTurns = 2.5;
+  const spiralSteps = 80;
+  for (let i = 0; i <= spiralSteps; i++) {
+    const t = i / spiralSteps;
+    const angle = spiralTurns * 2 * Math.PI * t;
+    const r = hillR * (1 - t * 0.85);  // spiral inward
+    const y = hillH * t;               // rises as it spirals
+    pts.push({ x: r * Math.cos(angle), y, z: r * Math.sin(angle) });
+    // Path width (2 tracks)
+    const perpX = Math.sin(angle) * 1.5, perpZ = -Math.cos(angle) * 1.5;
+    pts.push({ x: r * Math.cos(angle) + perpX, y, z: r * Math.sin(angle) + perpZ });
+    pts.push({ x: r * Math.cos(angle) - perpX, y, z: r * Math.sin(angle) - perpZ });
+  }
+
+  // SPOOKY HOUSE at the top of the hill
+  const hx = 0, hz = 0, hy = hillH;
+  const hw = houseW / 2, hd = houseW * 0.65;
+  // Walls — 4 sides
+  const wallSteps = 5;
+  for (let yi = 0; yi <= wallSteps; yi++) {
+    const y = hy + houseH * yi / wallSteps;
+    pts.push({ x: hx - hw, y, z: hz - hd }); pts.push({ x: hx + hw, y, z: hz - hd });
+    pts.push({ x: hx - hw, y, z: hz + hd }); pts.push({ x: hx + hw, y, z: hz + hd });
+    pts.push({ x: hx - hw, y, z: hz });     pts.push({ x: hx + hw, y, z: hz });
+  }
+  // Tall pointed roof (Gothic)
+  for (let i = 0; i <= 8; i++) {
+    const t = i / 8;
+    pts.push({ x: hx - hw * (1 - t), y: hy + houseH + houseH * 0.7 * t, z: hz - hd + hd * 2 * t * 0 });
+    pts.push({ x: hx + hw * (1 - t), y: hy + houseH + houseH * 0.7 * t, z: hz - hd });
+    pts.push({ x: hx + hw * (1 - t), y: hy + houseH + houseH * 0.7 * t, z: hz + hd });
+  }
+  pts.push({ x: hx, y: hy + houseH * 1.7, z: hz }); // roof peak
+
+  // Graveyard fence around base of hill
+  const fenceCount = 20;
+  for (let i = 0; i < fenceCount; i++) {
+    const a = 2 * Math.PI * i / fenceCount;
+    const fr = hillR * 1.05;
+    pts.push({ x: fr * Math.cos(a), y: 0, z: fr * Math.sin(a) });
+    pts.push({ x: fr * Math.cos(a), y: 2.5, z: fr * Math.sin(a) });
+    pts.push({ x: fr * Math.cos(a), y: 4, z: fr * Math.sin(a) }); // pointed top
+  }
+
+  // Gravestones scattered at base
+  for (let g = 0; g < 6; g++) {
+    const ga = g * Math.PI / 3 + 0.2;
+    const gr = hillR * 0.7;
+    pts.push({ x: gr * Math.cos(ga), y: 0, z: gr * Math.sin(ga) });
+    pts.push({ x: gr * Math.cos(ga), y: 2, z: gr * Math.sin(ga) });
+    pts.push({ x: gr * Math.cos(ga), y: 3, z: gr * Math.sin(ga) }); // top arch
+  }
+
+  // Moon behind house (large circle above)
+  const moonR = houseW * 0.55;
+  for (let j = 0; j < 16; j++) {
+    const a = 2 * Math.PI * j / 16;
+    pts.push({ x: hx + moonR * Math.cos(a), y: hy + houseH * 1.5, z: hz - houseW * 1.8 + moonR * Math.sin(a) });
+  }
+
+  return pts;
+}
+
+// ─── PUMPKIN RING ────────────────────────────────────────────────────────────
+function gen_pumpkin_ring(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const radius = p.radius, count = Math.round(p.count), pumpH = p.pumpHeight;
+
+  // Ring of pumpkin-shaped objects (round body + stem)
+  for (let i = 0; i < count; i++) {
+    const a = 2 * Math.PI * i / count;
+    const px = radius * Math.cos(a), pz = radius * Math.sin(a);
+
+    // Pumpkin body (spheroid with vertical ribs)
+    const ribs = 6;
+    for (let r = 0; r < ribs; r++) {
+      const ra = r * 2 * Math.PI / ribs;
+      for (let j = 0; j < 8; j++) {
+        const ja = Math.PI / 2 - Math.PI * j / 7;
+        const pr = pumpH * 0.45 * Math.cos(ja);
+        const py = pumpH * 0.5 * Math.sin(ja) + pumpH * 0.5;
+        pts.push({ x: px + pr * Math.cos(ra), y: py, z: pz + pr * Math.sin(ra) });
+      }
+    }
+    // Stem
+    for (let j = 0; j <= 3; j++) {
+      pts.push({ x: px, y: pumpH + j * 0.8, z: pz });
+    }
+    // Face (eyes/mouth suggested by 3 dots)
+    pts.push({ x: px + pumpH * 0.2, y: pumpH * 0.6, z: pz - pumpH * 0.45 });
+    pts.push({ x: px - pumpH * 0.2, y: pumpH * 0.6, z: pz - pumpH * 0.45 });
+    pts.push({ x: px,               y: pumpH * 0.35, z: pz - pumpH * 0.45 });
+  }
+
+  // Outer ring of tombstones
+  const tmbCount = count * 2;
+  for (let i = 0; i < tmbCount; i++) {
+    const a = 2 * Math.PI * i / tmbCount;
+    const tr = radius * 1.45;
+    pts.push({ x: tr * Math.cos(a), y: 0,   z: tr * Math.sin(a) });
+    pts.push({ x: tr * Math.cos(a), y: 1.8, z: tr * Math.sin(a) });
+    pts.push({ x: tr * Math.cos(a), y: 2.8, z: tr * Math.sin(a) });
+  }
+
+  return pts;
+}
+
+// ─── EASTER CROSS ────────────────────────────────────────────────────────────
+function gen_easter_cross(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const h = p.height, w = p.width, thick = p.thickness;
+
+  // Vertical beam
+  for (let i = 0; i <= Math.round(h / thick); i++) {
+    const y = i * thick;
+    for (let j = 0; j < 8; j++) {
+      const a = 2 * Math.PI * j / 8;
+      pts.push({ x: thick * 0.4 * Math.cos(a), y, z: thick * 0.4 * Math.sin(a) });
+    }
+  }
+  // Horizontal crossbar (at 65% up the cross)
+  const crossY = h * 0.65;
+  for (let i = 0; i <= Math.round(w / thick); i++) {
+    const x = -w / 2 + i * thick;
+    for (let j = 0; j < 8; j++) {
+      const a = 2 * Math.PI * j / 8;
+      pts.push({ x, y: crossY + thick * 0.4 * Math.cos(a), z: thick * 0.4 * Math.sin(a) });
+    }
+  }
+
+  // Easter eggs scattered around the base in a ring
+  const eggCount = Math.round(p.eggs);
+  for (let i = 0; i < eggCount; i++) {
+    const a = 2 * Math.PI * i / eggCount;
+    const er = w * 0.6;
+    pts.push({ x: er * Math.cos(a), y: 0, z: er * Math.sin(a) });
+    pts.push({ x: er * Math.cos(a), y: 0.8, z: er * Math.sin(a) });
+    pts.push({ x: er * Math.cos(a), y: 1.3, z: er * Math.sin(a) });
+  }
+
+  // Spring flower ring
+  const flwCount = eggCount;
+  for (let i = 0; i < flwCount; i++) {
+    const a = 2 * Math.PI * i / flwCount + Math.PI / flwCount;
+    const fr = w * 0.8;
+    for (let j = 0; j < 5; j++) {
+      const fa = 2 * Math.PI * j / 5;
+      pts.push({ x: fr * Math.cos(a) + 0.8 * Math.cos(fa), y: 0, z: fr * Math.sin(a) + 0.8 * Math.sin(fa) });
+    }
+  }
+
+  return pts;
+}
+
+// ─── ICE WALL / SNOW WALL ─────────────────────────────────────────────────────
+function gen_ice_wall(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const len = p.length, h = p.height, thick = p.thickness;
+  const stepsL = Math.round(len / 2), stepsH = Math.round(h / 2);
+
+  // Front face of wall
+  for (let li = 0; li <= stepsL; li++) {
+    const z = -len / 2 + len * li / stepsL;
+    for (let hi2 = 0; hi2 <= stepsH; hi2++) {
+      const y = h * hi2 / stepsH;
+      pts.push({ x: 0, y, z });
+    }
+  }
+  // Back face
+  for (let li = 0; li <= stepsL; li++) {
+    const z = -len / 2 + len * li / stepsL;
+    for (let hi2 = 0; hi2 <= stepsH; hi2++) {
+      const y = h * hi2 / stepsH;
+      pts.push({ x: thick, y, z });
+    }
+  }
+  // Top with icicle spikes
+  const icicleCount = Math.round(len / 3);
+  for (let i = 0; i < icicleCount; i++) {
+    const z = -len / 2 + (len * i / icicleCount) + len / (2 * icicleCount);
+    const iH = h * (0.1 + Math.random() * 0.15);
+    for (let j = 0; j <= 4; j++) {
+      pts.push({ x: thick / 2, y: h + iH * (1 - j / 4), z });
+    }
+  }
+  // Crenellations (battlements) at top for ice castle wall feel
+  const battCount = Math.round(len / 5);
+  for (let b = 0; b < battCount; b++) {
+    const z = -len / 2 + (b + 0.5) * (len / battCount);
+    pts.push({ x: 0,     y: h,       z }); pts.push({ x: thick, y: h,       z });
+    pts.push({ x: 0,     y: h + 2.5, z }); pts.push({ x: thick, y: h + 2.5, z });
+    pts.push({ x: 0,     y: h + 2.5, z: z - 1 }); pts.push({ x: thick, y: h + 2.5, z: z - 1 });
+    pts.push({ x: 0,     y: h + 2.5, z: z + 1 }); pts.push({ x: thick, y: h + 2.5, z: z + 1 });
+  }
+
+  return pts;
 }
