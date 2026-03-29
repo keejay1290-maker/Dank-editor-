@@ -3,8 +3,9 @@ import { getShapePoints, Point3D } from "@/lib/shapeGenerators";
 import { SHAPE_DEFS, SHAPE_GROUPS, ParamDef } from "@/lib/shapeParams";
 import { DAYZ_OBJECTS, OBJECT_GROUPS, formatInitC, HELPER_FUNC } from "@/lib/dayzObjects";
 import { COMPLETED_BUILDS, CompletedBuild } from "@/lib/completedBuilds";
+import WeaponBuilder from "@/WeaponBuilder";
 
-type EditorMode = "architect" | "text" | "builds";
+type EditorMode = "architect" | "text" | "builds" | "weapons";
 type OutputFormat = "initc" | "json";
 type FillMode = "frame" | "fill";
 
@@ -884,18 +885,25 @@ export default function App() {
               className={`px-2 py-1.5 text-[10px] rounded-sm font-bold tracking-wider transition-all ${mode === "builds" ? "bg-[#27ae60] text-[#0a0804]" : "text-[#7ec060] hover:text-[#a0d890]"}`}>
               🏆 BUILDS
             </button>
+            <button onClick={() => setMode("weapons")}
+              className={`px-2 py-1.5 text-[10px] rounded-sm font-bold tracking-wider transition-all ${mode === "weapons" ? "bg-[#e67e22] text-[#0a0804]" : "text-[#e67e22] opacity-70 hover:opacity-100"}`}>
+              🔫 WEAPONS
+            </button>
           </div>
           <div className="w-2 h-2 rounded-full bg-[#27ae60] animate-pulse shrink-0" title="Live preview active" />
         </div>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
+        {/* ── WEAPON BUILDER MODE (full-panel takeover) ── */}
+        {mode === "weapons" && <WeaponBuilder />}
+
         {/* ── SIDEBAR ── */}
         {/* Mobile backdrop */}
-        {sidebarOpen && (
+        {mode !== "weapons" && sidebarOpen && (
           <div className="fixed inset-0 bg-black/50 z-20 md:hidden" onClick={() => setSidebarOpen(false)} />
         )}
-        <div className={`${sidebarOpen ? "w-72" : "w-0"} shrink-0 bg-[#0e0c08] border-r border-[#2e2518] overflow-y-auto flex flex-col transition-all duration-200 z-30 md:relative md:z-auto ${sidebarOpen ? "absolute inset-y-0 left-0 md:relative" : "overflow-hidden"}`}>
+        <div className={`${mode === "weapons" ? "hidden" : ""} ${sidebarOpen ? "w-72" : "w-0"} shrink-0 bg-[#0e0c08] border-r border-[#2e2518] overflow-y-auto flex flex-col transition-all duration-200 z-30 md:relative md:z-auto ${sidebarOpen ? "absolute inset-y-0 left-0 md:relative" : "overflow-hidden"}`}>
           {mode === "architect" ? (
             <ArchitectSidebar
               shapeType={shapeType} params={params} paramDefs={currentParamDefs}
@@ -953,7 +961,7 @@ export default function App() {
         </div>
 
         {/* ── MAIN PANEL ── */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className={`${mode === "weapons" ? "hidden" : ""} flex-1 flex flex-col overflow-hidden`}>
           {/* Info bar */}
           <div className="flex items-center gap-3 px-3 py-1 bg-[#0e0c08] border-b border-[#2e2518] text-[11px] shrink-0">
             <span className="text-[#9a8858]">Shape</span>
