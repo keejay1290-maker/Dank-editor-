@@ -149,20 +149,38 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
     projected.sort((a, b) => b.depth - a.depth);
     const maxD = spread * 1.5, minD = -spread * 1.5;
 
-    // Dot radius in physical pixels — minimum 1 physical pixel for single-pixel crispness
-    const baseDotPhys = Math.max(1, Math.min(5 * dpr, (400 / Math.sqrt(pts.length + 1)) * zoom * dpr));
+    // ── Zoom-aware dot size: cap scales WITH zoom so dots shrink at low zoom
+    //    preventing them from overlapping into a solid blob when zoomed out
+    const zoomCap  = Math.max(1.5, 4.0 * dpr * Math.min(1, zoom * 0.75));
+    const baseDotPhys = Math.max(1, Math.min(zoomCap, (380 / Math.sqrt(pts.length + 1)) * zoom * dpr));
+
+    // ── Occlusion culling at low zoom: skip dots that land on an already-drawn cell
+    //    This breaks up the blob by showing only one dot per occupied pixel region
+    const cullCell  = zoom < 1.2 ? Math.max(1, Math.round(baseDotPhys * 1.4)) : 0;
+    const occupied  = cullCell > 0 ? new Set<number>() : null;
 
     projected.forEach(({ px, py, depth }) => {
+      // Occlusion check — keyed by grid cell so nearby dots are skipped
+      if (occupied) {
+        const cx2 = Math.round(px / cullCell);
+        const cy2 = Math.round(py / cullCell);
+        const key = cx2 * 100003 + cy2; // prime-multiplied hash to avoid collisions
+        if (occupied.has(key)) return;
+        occupied.add(key);
+      }
+
       const t = Math.max(0, Math.min(1, (depth - minD) / (maxD - minD)));
-      const r = Math.round(210 * t + 55 * (1 - t));
-      const g = Math.round(155 * t + 80 * (1 - t));
-      const b = Math.round(20  * t + 8  * (1 - t));
-      const alpha = 0.6 + 0.4 * t;
+      // ── Wider depth range: front bright gold, back very dim brown (better separation)
+      const r = Math.round(220 * t + 50 * (1 - t));
+      const g = Math.round(160 * t + 70 * (1 - t));
+      const b = Math.round(20  * t + 6  * (1 - t));
+      const alpha = 0.28 + 0.72 * t;    // was 0.6+0.4 — now much wider range
       ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
-      // ── Crisp rendering strategy:
-      //    radius ≤ 2px → fillRect (pixel-perfect square, zero blur)
-      //    radius  > 2px → arc at integer physical-pixel centre
-      const rad = baseDotPhys;
+
+      // Front dots slightly larger than back dots for natural depth cue
+      const rad = baseDotPhys * (0.7 + 0.3 * t);
+
+      // ── Crisp rendering: small → fillRect (zero blur), larger → arc at integer centre
       if (rad <= 2) {
         const s = Math.max(1, Math.round(rad * 2));
         ctx.fillRect(px - (s >> 1), py - (s >> 1), s, s);
@@ -184,7 +202,7 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
   }, [canvasRef]);
 
   const zoomStep = useCallback((factor: number) => {
-    zoomRef.current = Math.max(0.1, Math.min(8, zoomRef.current * factor));
+    zoomRef.current = Math.max(0.5, Math.min(8, zoomRef.current * factor));
     if (!autoRef.current) draw();
   }, [draw]);
 
@@ -230,27 +248,52 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
       if (!autoRef.current) draw();
     };
     const onUp = () => { dragRef.current.dragging = false; };
+    const clampZoom = (z: number) => Math.max(0.5, Math.min(8, z));
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
-      zoomRef.current = Math.max(0.1, Math.min(8, zoomRef.current * (e.deltaY > 0 ? 0.88 : 1.12)));
+      zoomRef.current = clampZoom(zoomRef.current * (e.deltaY > 0 ? 0.88 : 1.12));
       if (!autoRef.current) draw();
     };
+    // Pinch-to-zoom — track distance between two fingers
+    let lastPinchDist = 0;
     const onTouch = (e: TouchEvent) => {
-      if (e.touches.length === 1) dragRef.current = { dragging: true, lx: e.touches[0].clientX, ly: e.touches[0].clientY };
+      if (e.touches.length === 1) {
+        dragRef.current = { dragging: true, lx: e.touches[0].clientX, ly: e.touches[0].clientY };
+      } else if (e.touches.length === 2) {
+        dragRef.current.dragging = false;
+        lastPinchDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+      }
     };
     const onTouchMove = (e: TouchEvent) => {
-      if (!dragRef.current.dragging || e.touches.length !== 1) return;
-      rotRef.current.y += (e.touches[0].clientX - dragRef.current.lx) * 0.012;
-      rotRef.current.x += (e.touches[0].clientY - dragRef.current.ly) * 0.012;
-      dragRef.current.lx = e.touches[0].clientX; dragRef.current.ly = e.touches[0].clientY;
-      if (!autoRef.current) draw();
+      if (e.touches.length === 2) {
+        // Pinch zoom
+        const dist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        if (lastPinchDist > 0) {
+          zoomRef.current = clampZoom(zoomRef.current * (dist / lastPinchDist));
+        }
+        lastPinchDist = dist;
+        if (!autoRef.current) draw();
+      } else if (e.touches.length === 1 && dragRef.current.dragging) {
+        // Single-finger rotate
+        rotRef.current.y += (e.touches[0].clientX - dragRef.current.lx) * 0.012;
+        rotRef.current.x += (e.touches[0].clientY - dragRef.current.ly) * 0.012;
+        dragRef.current.lx = e.touches[0].clientX;
+        dragRef.current.ly = e.touches[0].clientY;
+        if (!autoRef.current) draw();
+      }
     };
     canvas.addEventListener("mousedown", onDown);
     window.addEventListener("mousemove", onMove);
     window.addEventListener("mouseup", onUp);
     canvas.addEventListener("wheel", onWheel, { passive: false });
     canvas.addEventListener("touchstart", onTouch, { passive: true });
-    canvas.addEventListener("touchmove", onTouchMove, { passive: true });
+    canvas.addEventListener("touchmove", onTouchMove, { passive: false });
     canvas.addEventListener("touchend", onUp);
     return () => {
       canvas.removeEventListener("mousedown", onDown);
