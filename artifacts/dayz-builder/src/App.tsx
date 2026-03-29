@@ -60,7 +60,7 @@ function getTextPoints(text: string, letterH: number, letterSpacing: number, dep
 function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
   const rotRef = useRef({ x: -0.4, y: 0.5 });
   const dragRef = useRef({ dragging: false, lx: 0, ly: 0 });
-  const zoomRef = useRef(1.0);
+  const zoomRef = useRef(2.0);
   const animRef = useRef<number | null>(null);
   const autoRef = useRef(false);
   const ptsRef = useRef<Point3D[]>([]);
@@ -189,7 +189,7 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
   }, [draw]);
 
   const resetZoom = useCallback(() => {
-    zoomRef.current = 1.0;
+    zoomRef.current = 2.0;
     rotRef.current = { x: -0.4, y: 0.5 };
     if (!autoRef.current) draw();
   }, [draw]);
