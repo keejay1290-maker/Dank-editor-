@@ -66,29 +66,37 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
   const scaleRef = useRef(1.0);
   const pitchRef = useRef(0);
   const rollRef = useRef(0);
+  // CSS logical dimensions (used for drawing math, canvas.width = W * dpr)
+  const cssDimsRef = useRef({ w: 0, h: 0 });
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
-    const W = canvas.width, H = canvas.height;
+
+    const dpr = window.devicePixelRatio || 1;
+    const W = cssDimsRef.current.w || canvas.width / dpr;
+    const H = cssDimsRef.current.h || canvas.height / dpr;
+    if (W <= 0 || H <= 0) return;
+
     const pts = ptsRef.current;
     const userScale = scaleRef.current;
-    ctx.clearRect(0, 0, W, H);
 
-    if (!pts.length) {
-      ctx.fillStyle = "#060402";
-      ctx.fillRect(0, 0, W, H);
-      ctx.fillStyle = "#3a2e18";
-      ctx.font = "bold 13px 'Courier New'";
-      ctx.textAlign = "center";
-      ctx.fillText("← Configure shape & it renders here in real time", W / 2, H / 2);
-      return;
-    }
-
+    // Scale all drawing to physical pixels for crisp rendering
+    ctx.save();
+    ctx.scale(dpr, dpr);
     ctx.fillStyle = "#060402";
     ctx.fillRect(0, 0, W, H);
+
+    if (!pts.length) {
+      ctx.fillStyle = "#2e2518";
+      ctx.font = "bold 12px 'Courier New'";
+      ctx.textAlign = "center";
+      ctx.fillText("← Configure shape  ·  real-time 3D updates instantly", W / 2, H / 2);
+      ctx.restore();
+      return;
+    }
 
     const rx = rotRef.current.x, ry = rotRef.current.y;
     const cosX = Math.cos(rx), sinX = Math.sin(rx);
@@ -106,52 +114,66 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
       if (p.y < minY) minY = p.y; if (p.y > maxY) maxY = p.y;
       if (p.z < minZ) minZ = p.z; if (p.z > maxZ) maxZ = p.z;
     });
-    if (!isFinite(minX) || !isFinite(maxX)) return; // all points were NaN/Inf
+    if (!isFinite(minX) || !isFinite(maxX)) { ctx.restore(); return; }
+
     const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2, cz = (minZ + maxZ) / 2;
     const spread = Math.max(maxX - minX, maxY - minY, maxZ - minZ, 1);
-    const baseZoom = Math.min(W, H) * 0.38 / spread * zoom;
+    const baseZoom = Math.min(W, H) * 0.4 / spread * zoom;
 
-    const projected: { sx: number; sy: number; depth: number }[] = pts.map(p => {
+    const projected = pts.map(p => {
+      if (!isFinite(p.x) || !isFinite(p.y) || !isFinite(p.z)) return null;
       let lx = (p.x - cx) * userScale, ly = (p.y - cy) * userScale, lz = (p.z - cz) * userScale;
-      // apply pitch (X rotation for YPR effect)
       const ly2 = ly * cosPitch - lz * sinPitch;
       const lz2 = ly * sinPitch + lz * cosPitch;
-      // apply roll (Z rotation)
       const lx3 = lx * cosRoll + ly2 * sinRoll;
       const ly3 = -lx * sinRoll + ly2 * cosRoll;
       const lz3 = lz2;
-      // camera rotation (drag)
       const rx1 = lx3 * cosY + lz3 * sinY;
       const rz1 = -lx3 * sinY + lz3 * cosY;
       const ry2 = ly3 * cosX - rz1 * sinX;
       const rz2 = ly3 * sinX + rz1 * cosX;
-      const fov = 600;
+      const fov = 700;
       const sc = fov / (fov + rz2 + spread * 1.5);
       return { sx: W / 2 + rx1 * baseZoom * sc, sy: H / 2 - ry2 * baseZoom * sc, depth: rz2 };
-    });
+    }).filter(Boolean) as { sx: number; sy: number; depth: number }[];
 
-    const sorted = projected.map((p, i) => ({ ...p, i })).sort((a, b) => b.depth - a.depth);
+    projected.sort((a, b) => b.depth - a.depth);
     const maxD = spread * 1.5, minD = -spread * 1.5;
+    // Adaptive dot size — smaller when many points, slightly bigger when few
+    const baseDot = Math.max(1.2, Math.min(2.8, 400 / Math.sqrt(pts.length + 1))) * zoom;
 
-    sorted.forEach(({ sx, sy, depth }) => {
+    projected.forEach(({ sx, sy, depth }) => {
       const t = Math.max(0, Math.min(1, (depth - minD) / (maxD - minD)));
-      const r = Math.round(200 * t + 60 * (1 - t));
-      const g = Math.round(160 * t + 90 * (1 - t));
-      const b = Math.round(30 * t + 15 * (1 - t));
-      const alpha = 0.55 + 0.45 * t;
-      const dotR = Math.max(1, 1.6 * zoom);
+      // Front points brighter gold/amber, back points darker brown
+      const r = Math.round(210 * t + 55 * (1 - t));
+      const g = Math.round(155 * t + 80 * (1 - t));
+      const b = Math.round(20 * t + 8 * (1 - t));
+      const alpha = 0.6 + 0.4 * t;
       ctx.beginPath();
-      ctx.arc(sx, sy, dotR, 0, Math.PI * 2);
+      ctx.arc(sx, sy, baseDot, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
       ctx.fill();
     });
 
-    // LIVE badge
-    ctx.fillStyle = "rgba(212,160,23,0.8)";
-    ctx.font = "bold 10px 'Courier New'";
+    // HUD overlay
+    ctx.fillStyle = "rgba(212,160,23,0.85)";
+    ctx.font = `bold 11px 'Courier New'`;
     ctx.textAlign = "left";
-    ctx.fillText(`● LIVE  ${pts.length} pts`, 8, 16);
+    ctx.fillText(`● LIVE  ${pts.length.toLocaleString()} pts  ×${zoom.toFixed(2)}`, 9, 17);
+
+    ctx.restore();
   }, [canvasRef]);
+
+  const zoomStep = useCallback((factor: number) => {
+    zoomRef.current = Math.max(0.1, Math.min(8, zoomRef.current * factor));
+    if (!autoRef.current) draw();
+  }, [draw]);
+
+  const resetZoom = useCallback(() => {
+    zoomRef.current = 1.0;
+    rotRef.current = { x: -0.4, y: 0.5 };
+    if (!autoRef.current) draw();
+  }, [draw]);
 
   const startAutoRotate = useCallback(() => {
     autoRef.current = true;
@@ -191,7 +213,7 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
     const onUp = () => { dragRef.current.dragging = false; };
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
-      zoomRef.current = Math.max(0.15, zoomRef.current * (e.deltaY > 0 ? 0.88 : 1.12));
+      zoomRef.current = Math.max(0.1, Math.min(8, zoomRef.current * (e.deltaY > 0 ? 0.88 : 1.12)));
       if (!autoRef.current) draw();
     };
     const onTouch = (e: TouchEvent) => {
@@ -222,39 +244,36 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
     };
   }, [draw]);
 
-  // Resize observer — wrap in rAF to avoid "ResizeObserver loop limit exceeded"
+  // Resize observer — DPR-aware sizing prevents blurriness on HiDPI screens
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !canvas.parentElement) return;
     let rafId: number | null = null;
+    const resizeCanvas = (parent: Element) => {
+      const rect = parent.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return;
+      const dpr = window.devicePixelRatio || 1;
+      cssDimsRef.current = { w: rect.width, h: rect.height };
+      canvas.width = Math.round(rect.width * dpr);
+      canvas.height = Math.round(rect.height * dpr);
+      draw();
+    };
     const obs = new ResizeObserver(() => {
       if (rafId !== null) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
-        const parent = canvas.parentElement;
-        if (!parent) return;
-        const rect = parent.getBoundingClientRect();
-        if (rect.width > 0 && rect.height > 0) {
-          canvas.width = rect.width;
-          canvas.height = rect.height;
-          draw();
-        }
+        if (canvas.parentElement) resizeCanvas(canvas.parentElement);
         rafId = null;
       });
     });
     obs.observe(canvas.parentElement);
-    const rect = canvas.parentElement.getBoundingClientRect();
-    if (rect.width > 0 && rect.height > 0) {
-      canvas.width = rect.width;
-      canvas.height = rect.height;
-    }
-    draw();
+    resizeCanvas(canvas.parentElement);
     return () => {
       obs.disconnect();
       if (rafId !== null) cancelAnimationFrame(rafId);
     };
   }, [draw]);
 
-  return { updatePoints, startAutoRotate, stopAutoRotate, draw };
+  return { updatePoints, startAutoRotate, stopAutoRotate, draw, zoomStep, resetZoom };
 }
 
 // ─── QUICK PRESETS ────────────────────────────────────────────────────────────
@@ -331,7 +350,7 @@ export default function App() {
   const [textOutput, setTextOutput] = useState("");
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { updatePoints, startAutoRotate, stopAutoRotate } = use3DCanvas(canvasRef);
+  const { updatePoints, startAutoRotate, stopAutoRotate, zoomStep, resetZoom } = use3DCanvas(canvasRef);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ── COMPUTE SHAPE POINTS ──────────────────────────────────────────────────
@@ -555,7 +574,19 @@ export default function App() {
 
           {/* 3D Canvas */}
           <div className="relative bg-[#060402]" style={{ flex: "0 0 55%", minHeight: 200 }}>
-            <canvas ref={canvasRef} className="w-full h-full block" />
+            <canvas ref={canvasRef} className="w-full h-full block" style={{ imageRendering: "crisp-edges" }} />
+            {/* Zoom controls */}
+            <div className="absolute bottom-2 right-2 flex flex-col gap-1">
+              <button onClick={() => zoomStep(1.25)}
+                className="w-8 h-8 flex items-center justify-center bg-[#1a1408] border border-[#3a2e18] text-[#d4a017] text-xl font-black rounded-sm hover:bg-[#2e2518] hover:border-[#d4a017] transition-all leading-none select-none"
+                title="Zoom in (also: scroll up)">+</button>
+              <button onClick={() => zoomStep(0.8)}
+                className="w-8 h-8 flex items-center justify-center bg-[#1a1408] border border-[#3a2e18] text-[#d4a017] text-xl font-black rounded-sm hover:bg-[#2e2518] hover:border-[#d4a017] transition-all leading-none select-none"
+                title="Zoom out (also: scroll down)">−</button>
+              <button onClick={resetZoom}
+                className="w-8 h-8 flex items-center justify-center bg-[#1a1408] border border-[#3a2e18] text-[#5a4a2e] text-[11px] font-bold rounded-sm hover:bg-[#2e2518] hover:text-[#c8b99a] hover:border-[#6a5a3a] transition-all select-none"
+                title="Reset zoom & rotation">⟲</button>
+            </div>
           </div>
 
           {/* Output */}
@@ -847,8 +878,26 @@ function TextSidebar(p: any) {
         <Slider label="Scale" value={p.textScale} min={0.1} max={10} step={0.1} onChange={p.setTextScale} />
       </div>
 
-      <Sec>📦 Object</Sec>
+      <Sec>📦 Object — Quick Picks ⚡</Sec>
       <div className="px-3">
+        {/* Airstrip light quick-selects — best for spelling visible from above */}
+        <div className="text-[9px] text-[#8a6a0f] mb-1.5 uppercase tracking-wider">✈ Airstrip Lights (best for spelling)</div>
+        <div className="grid grid-cols-1 gap-1 mb-3">
+          {[
+            ["PAPI Light ⭐", "StaticObj_Airfield_Light_PAPI1"],
+            ["Centreline Light", "StaticObj_Airfield_Light_Centreline_01"],
+            ["Edge Light", "StaticObj_Airfield_Light_Edge_01"],
+            ["Threshold Light", "StaticObj_Airfield_Light_Threshold_01"],
+            ["Taxiway Light", "StaticObj_Airfield_Light_Taxiway_01"],
+            ["Strobe Light", "StaticObj_Airfield_Light_Strobe_01"],
+          ].map(([label, val]) => (
+            <button key={val} onClick={() => p.setTextObj(val)}
+              className={`text-left text-[10px] px-2 py-1.5 rounded-sm border truncate transition-all ${p.textObj === val ? "border-[#d4a017] text-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] text-[#6a5a3a] hover:border-[#6a5a3a] hover:text-[#c8b99a]"}`}>
+              {label}
+            </button>
+          ))}
+        </div>
+        <div className="text-[9px] text-[#5a4a2e] mb-1.5 uppercase tracking-wider">All objects</div>
         <select className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1.5 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
           value={p.textObj} onChange={(e: any) => p.setTextObj(e.target.value)}>
           {OBJECT_GROUPS.map((group: string) => (
@@ -859,7 +908,7 @@ function TextSidebar(p: any) {
             </optgroup>
           ))}
         </select>
-        <Lbl>Custom Classname</Lbl>
+        <Lbl>Custom Classname (type any valid DayZ class)</Lbl>
         <input type="text" value={p.textObj} onChange={(e: any) => p.setTextObj(e.target.value)}
           className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1.5 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
         />

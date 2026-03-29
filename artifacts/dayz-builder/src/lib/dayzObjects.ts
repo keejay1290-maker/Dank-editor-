@@ -102,6 +102,40 @@ export const DAYZ_OBJECTS: DayzObject[] = [
   { value: "Land_RadioTower_1_DE", label: "Radio Tower", group: "Props" },
   { value: "Land_WaterTower_01_DE", label: "Water Tower", group: "Props" },
   { value: "Land_WaterTower_02_DE", label: "Water Tower 2", group: "Props" },
+
+  // ✈ Airstrip / Runway Lights  (from TaxiRank JSON — console-safe)
+  { value: "StaticObj_Airfield_Light_PAPI1", label: "✈ PAPI Light (bright, spelling!)", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Threshold_01", label: "✈ Threshold Light 1", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Threshold_02", label: "✈ Threshold Light 2", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Centreline_01", label: "✈ Centreline Light 1", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Centreline_02", label: "✈ Centreline Light 2", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Edge_01", label: "✈ Edge Light 1", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Edge_02", label: "✈ Edge Light 2", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Taxiway_01", label: "✈ Taxiway Light 1", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Taxiway_02", label: "✈ Taxiway Light 2", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Approach_01", label: "✈ Approach Light 1", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Approach_02", label: "✈ Approach Light 2", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Strobe_01", label: "✈ Strobe Light", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_End_01", label: "✈ Runway End Light 1", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_End_02", label: "✈ Runway End Light 2", group: "Airstrip Lights" },
+
+  // 🔲 Flat / Ground-Level Objects (great for floors, pads, spelling)
+  { value: "Land_ConcretePath_F_DE", label: "Flat Concrete Path", group: "Flat Objects" },
+  { value: "Land_ConcretePath_Corner_DE", label: "Flat Concrete Corner", group: "Flat Objects" },
+  { value: "Land_Asphalt_F_DE", label: "Flat Asphalt Tile", group: "Flat Objects" },
+  { value: "Land_Asphalt_Corner_DE", label: "Flat Asphalt Corner", group: "Flat Objects" },
+  { value: "Land_Asphalt_Cross_DE", label: "Flat Asphalt Cross", group: "Flat Objects" },
+  { value: "Land_Asphalt_T_DE", label: "Flat Asphalt T-Junction", group: "Flat Objects" },
+  { value: "Land_Runway_F_DE", label: "Flat Runway Strip", group: "Flat Objects" },
+  { value: "Land_Runway_Marking_DE", label: "Flat Runway Marking", group: "Flat Objects" },
+  { value: "Land_Pavement_DE", label: "Flat Pavement Tile", group: "Flat Objects" },
+  { value: "Land_Pavement_Corner_DE", label: "Flat Pavement Corner", group: "Flat Objects" },
+  { value: "Pallet_EP1", label: "Flat Pallet", group: "Flat Objects" },
+  { value: "Land_Pier_DE", label: "Flat Pier Section", group: "Flat Objects" },
+  { value: "Land_GarageFloor_DE", label: "Flat Garage Floor", group: "Flat Objects" },
+  { value: "Land_TarmacFloor_DE", label: "Flat Tarmac Floor", group: "Flat Objects" },
+  { value: "Land_ConcreteSlab_DE", label: "Flat Concrete Slab", group: "Flat Objects" },
+  { value: "Land_Puddle_DE", label: "Flat Puddle/Water", group: "Flat Objects" },
 ];
 
 export const OBJECT_GROUPS = [...new Set(DAYZ_OBJECTS.map(o => o.group))];
