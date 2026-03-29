@@ -509,6 +509,34 @@ const QUICK_PRESETS: Preset[] = [
   { category: "🛣 Freeway", label: "Gentle Curve (90°)",   shape: "freeway_curve", params: { segments: 12, segLen: 10, roadW: 10, arcDeg: 7.5, pillars: 1, pillarH: 8 } },
   { category: "🛣 Freeway", label: "Sharp Curve (180°)",   shape: "freeway_curve", params: { segments: 12, segLen: 8, roadW: 10, arcDeg: 15, pillars: 1, pillarH: 8 } },
   { category: "🛣 Freeway", label: "On-Ramp Spiral",       shape: "freeway_curve", params: { segments: 16, segLen: 8, roadW: 8, arcDeg: 20, pillars: 1, pillarH: 10 } },
+
+  // ─── DayZ Survival Scenarios ────────────────────────────────────────────────
+  { category: "🏕 DayZ Survival", label: "Survivor Camp",            shape: "survivor_camp",   params: { radius: 6 } },
+  { category: "🏕 DayZ Survival", label: "Survivor Camp (large)",    shape: "survivor_camp",   params: { radius: 12 } },
+  { category: "🏕 DayZ Survival", label: "Military Checkpoint",      shape: "checkpoint",      params: { width: 12, depth: 8 } },
+  { category: "🏕 DayZ Survival", label: "Checkpoint (wide road)",   shape: "checkpoint",      params: { width: 22, depth: 10 } },
+  { category: "🏕 DayZ Survival", label: "Watchtower Triangle",      shape: "watchtower_post", params: { radius: 12 } },
+  { category: "🏕 DayZ Survival", label: "Watchtower (spread)",      shape: "watchtower_post", params: { radius: 25 } },
+  { category: "🏕 DayZ Survival", label: "Fuel Depot",               shape: "fuel_depot",      params: { size: 10 } },
+  { category: "🏕 DayZ Survival", label: "Fuel Depot (large)",       shape: "fuel_depot",      params: { size: 22 } },
+  { category: "🏕 DayZ Survival", label: "Sniper Rock Nest",         shape: "sniper_nest",     params: { radius: 4, height: 3 } },
+  { category: "🏕 DayZ Survival", label: "Sniper Nest (elevated)",   shape: "sniper_nest",     params: { radius: 5, height: 7 } },
+  { category: "🏕 DayZ Survival", label: "Rural Farmstead",          shape: "farmstead",       params: { size: 14 } },
+  { category: "🏕 DayZ Survival", label: "Bunker Defence Line",      shape: "bunker_line",     params: { length: 20, width: 6 } },
+  { category: "🏕 DayZ Survival", label: "Bunker Line (long)",       shape: "bunker_line",     params: { length: 40, width: 8 } },
+  { category: "🏕 DayZ Survival", label: "Power Relay Station",      shape: "power_relay",     params: { spacing: 12 } },
+  { category: "🏕 DayZ Survival", label: "Radio Outpost",            shape: "radio_outpost",   params: { radius: 8 } },
+  { category: "🏕 DayZ Survival", label: "Treehouse Platform",       shape: "treehouse",       params: { size: 8, platformH: 6, wallH: 3 } },
+  { category: "🏕 DayZ Survival", label: "Treehouse (high perch)",   shape: "treehouse",       params: { size: 10, platformH: 14, wallH: 4 } },
+
+  // ─── New Shapes ──────────────────────────────────────────────────────────────
+  { category: "🚀 Sci-Fi", label: "Saturn Planet",          shape: "saturn",        params: { bodyRadius: 25, ringInner: 38, ringOuter: 60, tilt: 25, latSegs: 8, lonSegs: 16, ringSegs: 36 } },
+  { category: "🚀 Sci-Fi", label: "Saturn (mini)",          shape: "saturn",        params: { bodyRadius: 14, ringInner: 22, ringOuter: 36, tilt: 20, latSegs: 6, lonSegs: 12, ringSegs: 28 } },
+  { category: "⚔️ Medieval", label: "Crown (5-point)",      shape: "crown",         params: { radius: 12, baseH: 6, spikeH: 8, points: 5 } },
+  { category: "⚔️ Medieval", label: "Crown (7-point)",      shape: "crown",         params: { radius: 18, baseH: 7, spikeH: 11, points: 7 } },
+  { category: "⚔️ Medieval", label: "Imperial Crown",       shape: "crown",         params: { radius: 28, baseH: 10, spikeH: 18, points: 9 } },
+  { category: "🏟 Structures", label: "Olympic Rings",      shape: "olympic_rings", params: { ringR: 12, tubeR: 2, segs: 28 } },
+  { category: "🏟 Structures", label: "Olympic Rings (giant)", shape: "olympic_rings", params: { ringR: 22, tubeR: 3.5, segs: 40 } },
 ];
 
 // Arena shapes available for randomization
@@ -977,7 +1005,7 @@ export default function App() {
               <button
                 key={t.key}
                 onClick={() => setMode(t.key as EditorMode)}
-                className={`relative flex flex-col items-center justify-center gap-0.5 px-3.5 py-2 shrink-0 font-bold transition-all ${isActive ? t.active : t.inactive}`}
+                className={`relative flex flex-col items-center justify-center gap-0.5 px-3.5 py-2 shrink-0 font-bold transition-all duration-150 ${isActive ? t.active : `${t.inactive} hover:bg-[#1a1408]`}`}
               >
                 <span className="text-[13px] leading-none">{t.emoji}</span>
                 <span className="text-[8px] tracking-widest leading-none">{t.label}</span>
@@ -1074,19 +1102,20 @@ export default function App() {
         {/* ── MAIN PANEL ── */}
         <div className={`${(mode === "weapons" || mode === "bunker" || mode === "maze" || mode === "race") ? "hidden" : ""} flex-1 flex flex-col overflow-hidden`}>
           {/* Info bar */}
-          <div className="flex items-center gap-3 px-3 py-1 bg-[#0e0c08] border-b border-[#2e2518] text-[11px] shrink-0">
-            <span className="text-[#9a8858]">Shape</span>
-            <span className="text-[#d4a017] font-bold truncate max-w-[180px]">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-[#0c0a06] border-b border-[#2e2518] text-[11px] shrink-0">
+            <span className="text-[#5a4a2a] text-[10px]">Shape</span>
+            <span className="text-[#d4a017] font-bold truncate max-w-[160px]">
               {mode === "architect" ? (SHAPE_DEFS[shapeType]?.label || shapeType)
                : mode === "builds" ? (COMPLETED_BUILDS.find(b => b.id === selectedBuildId)?.name || "—")
                : `"${textInput}"`}
             </span>
-            <span className="text-[#9a8858]">Objects</span>
-            <span className={`font-bold ${displayPoints.length > 800 ? "text-[#e07a20]" : "text-[#d4a017]"}`}>{displayPoints.length}</span>
-            {displayPoints.length > 800 && <span className="text-[#e07a20] text-[10px]">⚠ large!</span>}
-            {dims && <span className="text-[#8a7840] text-[10px]">{dims.w}×{dims.d}×{dims.h}m</span>}
-            {mode === "builds" && <span className="text-[#27ae60] text-[10px] font-bold">● LIVE PREVIEW</span>}
-            <span className="ml-auto text-[#8a7840]">Drag to orbit · Scroll to zoom</span>
+            <span className={`font-mono font-bold text-[10px] px-1.5 py-0.5 rounded ${displayPoints.length > 800 ? "text-[#e07a20] bg-[#2a1206]" : "text-[#d4a017] bg-[#1a1208]"}`}>
+              {displayPoints.length} obj{displayPoints.length !== 1 ? "s" : ""}
+            </span>
+            {displayPoints.length > 800 && <span className="text-[#e07a20] text-[9px] font-bold">⚠ LARGE</span>}
+            {dims && <span className="text-[#6a5830] text-[9px] bg-[#111008] px-1.5 py-0.5 rounded border border-[#2a2010]">{dims.w}×{dims.d}×{dims.h}m</span>}
+            {mode === "builds" && <span className="text-[#27ae60] text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#0a1a0e] border border-[#1a4020]">● LIVE</span>}
+            <span className="ml-auto text-[#4a3c20] text-[9px] hidden md:block">Drag · Orbit · Scroll zoom</span>
           </div>
 
           {/* 3D Canvas */}
@@ -1444,32 +1473,48 @@ function ArchitectSidebar(p: any) {
       {/* Quick Presets */}
       {sec("presets", "⚡ Quick Presets", (
         <div className="px-3">
-          <input type="text" placeholder="Search presets..." value={p.presetFilter}
-            onChange={e => p.setPresetFilter(e.target.value)}
-            className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
-          />
-          {/* Category tabs — single scrollable row */}
+          <div className="relative mb-2">
+            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[#6a5830] text-[11px] pointer-events-none">⌕</span>
+            <input type="text" placeholder="Search presets..." value={p.presetFilter}
+              onChange={e => p.setPresetFilter(e.target.value)}
+              className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] pl-6 pr-2 py-1 rounded-sm focus:outline-none focus:border-[#8a6a0f] transition-colors"
+            />
+          </div>
+          {/* Category tabs — scrollable pill row */}
           <div className="flex gap-1 mb-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
             {(p.presetCategories || []).map((cat: string) => (
               <button key={cat} onClick={() => p.setPresetCategory(cat)}
-                className={`shrink-0 text-[9px] px-1.5 py-0.5 rounded-sm border transition-all ${p.presetCategory === cat ? "border-[#d4a017] text-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] text-[#b09a6a] hover:text-[#c8b99a]"}`}>
+                className={`shrink-0 text-[9px] px-2 py-0.5 rounded-full border transition-all duration-150 ${p.presetCategory === cat ? "border-[#d4a017] text-[#0a0804] bg-[#d4a017] font-bold" : "border-[#3a2e18] text-[#9a8050] hover:border-[#d4a017]/60 hover:text-[#c8b99a]"}`}>
                 {cat}
               </button>
             ))}
           </div>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[9px] text-[#5a4a2a]">
+              {p.filteredPresets.length} preset{p.filteredPresets.length !== 1 ? "s" : ""}
+              {p.presetCategory !== "All" && ` · ${p.presetCategory}`}
+            </span>
+            {p.presetFilter && (
+              <button onClick={() => p.setPresetFilter("")} className="text-[9px] text-[#8a6a30] hover:text-[#d4a017] transition-colors">✕ clear</button>
+            )}
+          </div>
           <div className="grid grid-cols-2 gap-1 max-h-52 overflow-y-auto pr-0.5">
-            {p.filteredPresets.map((preset: any) => (
-              <button key={preset.label} onClick={() => p.applyPreset(preset)}
-                className={`text-left text-[10px] px-2 py-1.5 rounded-sm border transition-all truncate ${p.selectedPresetLabel === preset.label ? "border-[#d4a017] text-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] text-[#c0aa70] hover:border-[#6a5a3a] hover:text-[#c8b99a]"}`}>
-                {preset.label}
-              </button>
-            ))}
+            {p.filteredPresets.map((preset: any) => {
+              const isActive = p.selectedPresetLabel === preset.label;
+              return (
+                <button key={preset.label} onClick={() => p.applyPreset(preset)}
+                  className={`text-left text-[10px] px-2 py-1.5 rounded border transition-all duration-150 flex items-center gap-1 min-w-0 ${isActive ? "border-[#d4a017] text-[#d4a017] bg-[#1a1408] shadow-[0_0_8px_rgba(212,160,23,0.2)]" : "border-[#2e2518] text-[#c0aa70] hover:border-[#d4a017]/50 hover:text-[#e8c878] hover:bg-[#120e06]"}`}>
+                  {isActive && <span className="shrink-0 text-[#d4a017] text-[9px]">✓</span>}
+                  <span className="truncate">{preset.label}</span>
+                </button>
+              );
+            })}
             {p.filteredPresets.length === 0 && (
               <div className="col-span-2 text-center text-[10px] text-[#8a7840] py-3">No presets match filter</div>
             )}
           </div>
           <button onClick={p.onSurpriseMe}
-            className="mt-2 w-full py-1.5 text-[10px] font-bold rounded-sm border border-[#3a2e18] text-[#d4a017] bg-[#1a1408] hover:bg-[#221a08] hover:border-[#d4a017] transition-all">
+            className="mt-2 w-full py-1.5 text-[10px] font-bold rounded border border-[#d4a017]/40 text-[#d4a017] bg-[#14100a] hover:bg-[#d4a017] hover:text-[#0a0804] hover:border-[#d4a017] transition-all duration-150 active:scale-95">
             🎲 Surprise Me — Random Preset
           </button>
         </div>

@@ -105,6 +105,9 @@ export function getShapePoints(shapeType: string, params: Record<string, number>
     case 'pitched_roof': return gen_pitched_roof(p);
     case 'log_cabin': return gen_log_cabin(p);
     case 'freeway_curve': return gen_freeway_curve(p);
+    case 'saturn': return gen_saturn(p);
+    case 'crown': return gen_crown(p);
+    case 'olympic_rings': return gen_olympic_rings(p);
     default: return [];
   }
 }
@@ -4541,6 +4544,90 @@ function gen_freeway_curve(p: Record<string, number>): Point3D[] {
     headingDeg += arcDegPerSeg;
   }
 
+  return pts;
+}
+
+// ─── gen_saturn ─────────────────────────────────────────────────────────────
+function gen_saturn(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const R = p.bodyRadius, ri = p.ringInner, ro = p.ringOuter;
+  const lat = Math.round(p.latSegs), lon = Math.round(p.lonSegs), rsegs = Math.round(p.ringSegs);
+  const tiltRad = (p.tilt ?? 25) * Math.PI / 180;
+  // Sphere body
+  for (let i = 0; i <= lat; i++) {
+    const φ = Math.PI / 2 - Math.PI * i / lat;
+    const y = R * Math.sin(φ), r = R * Math.cos(φ);
+    for (let j = 0; j < lon; j++) {
+      const a = 2 * Math.PI * j / lon;
+      pts.push({ x: r * Math.cos(a), y, z: r * Math.sin(a) });
+    }
+  }
+  // Flat ring (4 concentric circles, tilted)
+  for (let k = 0; k <= 3; k++) {
+    const ringR = ri + (ro - ri) * k / 3;
+    for (let j = 0; j < rsegs; j++) {
+      const a = 2 * Math.PI * j / rsegs;
+      const px = ringR * Math.cos(a);
+      const pzFlat = ringR * Math.sin(a);
+      pts.push({ x: px, y: pzFlat * Math.sin(tiltRad), z: pzFlat * Math.cos(tiltRad) });
+    }
+  }
+  return pts;
+}
+
+// ─── gen_crown ──────────────────────────────────────────────────────────────
+function gen_crown(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const { radius, baseH, spikeH, points } = p;
+  const numPts = Math.round(points);
+  const baseSegs = 32;
+  // Bottom and top-of-base rim rings
+  for (let h = 0; h <= 1; h++) {
+    const y = h === 0 ? 0 : baseH * 0.55;
+    for (let j = 0; j < baseSegs; j++) {
+      const a = 2 * Math.PI * j / baseSegs;
+      pts.push({ x: radius * Math.cos(a), y, z: radius * Math.sin(a) });
+    }
+  }
+  // Spike / valley zigzag
+  const totalPts = numPts * 2;
+  for (let i = 0; i < totalPts; i++) {
+    const a = 2 * Math.PI * i / totalPts;
+    const px = radius * Math.cos(a), pz = radius * Math.sin(a);
+    const isSpike = i % 2 === 0;
+    const topY = isSpike ? baseH + spikeH : baseH * 0.55;
+    for (let k = 0; k <= 6; k++) {
+      const t = k / 6;
+      pts.push({ x: px, y: baseH * 0.2 + (topY - baseH * 0.2) * t, z: pz });
+    }
+  }
+  return pts;
+}
+
+// ─── gen_olympic_rings ──────────────────────────────────────────────────────
+function gen_olympic_rings(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const { ringR, tubeR } = p;
+  const n = Math.round(p.segs);
+  const gap = ringR * 1.72;
+  // 5 ring centres: 3 on top row, 2 on bottom row (classic Olympic layout in XZ)
+  const centres: [number, number][] = [
+    [-2 * gap, 0],
+    [-gap,    -ringR * 0.9],
+    [0,        0],
+    [gap,     -ringR * 0.9],
+    [2 * gap,  0],
+  ];
+  for (const [cx, cz] of centres) {
+    for (let j = 0; j < n; j++) {
+      const a = 2 * Math.PI * j / n;
+      for (let k = 0; k < 8; k++) {
+        const b = 2 * Math.PI * k / 8;
+        const r = ringR + tubeR * Math.cos(b);
+        pts.push({ x: cx + r * Math.cos(a), y: tubeR * Math.sin(b), z: cz + r * Math.sin(a) });
+      }
+    }
+  }
   return pts;
 }
 

@@ -877,6 +877,35 @@ export const SHAPE_DEFS: Record<string, ShapeDef> = {
       { id: "pillarH",  label: "Pillar Depth Below (m)",    val: 8,  min: 2,  max: 30,  step: 0.5 },
     ]
   },
+  saturn: {
+    label: "🪐 Saturn Planet", group: "🚀 Sci-Fi",
+    params: [
+      { id: "bodyRadius", label: "Planet Radius (m)", val: 25, min: 10, max: 80 },
+      { id: "ringInner",  label: "Ring Inner Radius (m)", val: 38, min: 15, max: 120 },
+      { id: "ringOuter",  label: "Ring Outer Radius (m)", val: 60, min: 25, max: 180 },
+      { id: "tilt",       label: "Ring Tilt Angle (°)", val: 25, min: 0, max: 45 },
+      { id: "latSegs",    label: "Planet Latitude Rings", val: 8, min: 4, max: 16 },
+      { id: "lonSegs",    label: "Planet Longitude Points", val: 16, min: 8, max: 32 },
+      { id: "ringSegs",   label: "Ring Detail (points)", val: 36, min: 16, max: 72 },
+    ]
+  },
+  crown: {
+    label: "👑 Crown", group: "⚔️ Medieval",
+    params: [
+      { id: "radius", label: "Crown Radius (m)", val: 12, min: 4, max: 50 },
+      { id: "baseH",  label: "Base Band Height (m)", val: 6, min: 2, max: 20 },
+      { id: "spikeH", label: "Spike Height (m)", val: 8, min: 2, max: 40 },
+      { id: "points", label: "Number of Points", val: 5, min: 3, max: 12 },
+    ]
+  },
+  olympic_rings: {
+    label: "🏅 Olympic Rings", group: "🏟 Structures",
+    params: [
+      { id: "ringR", label: "Ring Radius (m)", val: 12, min: 4, max: 50 },
+      { id: "tubeR", label: "Tube Thickness (m)", val: 2, min: 0.5, max: 8, step: 0.5 },
+      { id: "segs",  label: "Ring Detail (segments)", val: 28, min: 10, max: 72 },
+    ]
+  },
 };
 
 export const SHAPE_GROUPS = [...new Set(Object.values(SHAPE_DEFS).map(s => s.group))];
