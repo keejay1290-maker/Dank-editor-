@@ -564,6 +564,73 @@ export const SHAPE_DEFS: Record<string, ShapeDef> = {
       { id: "archCount", label: "Outer Arch Gates", val: 6, min: 3, max: 12, step: 1 },
     ]
   },
+
+  // ── ⚡ LIGHTWEIGHT BUILDINGS ───────────────────────────────────────────────
+  treehouse: {
+    label: "⚡ Treehouse", group: "⚡ Lightweight",
+    params: [
+      { id: "size", label: "Platform Width (m)", val: 8, min: 4, max: 20 },
+      { id: "platformH", label: "Platform Height (m)", val: 6, min: 2, max: 16 },
+      { id: "wallH", label: "Wall Height (m)", val: 3, min: 1, max: 8 },
+    ]
+  },
+  checkpoint: {
+    label: "⚡ Military Checkpoint", group: "⚡ Lightweight",
+    params: [
+      { id: "width", label: "Road Width (m)", val: 12, min: 6, max: 30 },
+      { id: "depth", label: "Checkpoint Depth (m)", val: 8, min: 4, max: 20 },
+    ]
+  },
+  watchtower_post: {
+    label: "⚡ Watchtower Triangle", group: "⚡ Lightweight",
+    params: [
+      { id: "radius", label: "Triangle Radius (m)", val: 12, min: 6, max: 40 },
+    ]
+  },
+  fuel_depot: {
+    label: "⚡ Fuel Depot", group: "⚡ Lightweight",
+    params: [
+      { id: "size", label: "Depot Size (m)", val: 10, min: 6, max: 30 },
+    ]
+  },
+  sniper_nest: {
+    label: "⚡ Sniper Rock Nest", group: "⚡ Lightweight",
+    params: [
+      { id: "radius", label: "Rock Spread (m)", val: 4, min: 2, max: 12 },
+      { id: "height", label: "Perch Height (m)", val: 3, min: 1, max: 10 },
+    ]
+  },
+  farmstead: {
+    label: "⚡ Rural Farmstead", group: "⚡ Lightweight",
+    params: [
+      { id: "size", label: "Compound Size (m)", val: 14, min: 8, max: 40 },
+    ]
+  },
+  survivor_camp: {
+    label: "⚡ Survivor Camp", group: "⚡ Lightweight",
+    params: [
+      { id: "radius", label: "Camp Radius (m)", val: 6, min: 3, max: 20 },
+    ]
+  },
+  bunker_line: {
+    label: "⚡ Bunker Defence Line", group: "⚡ Lightweight",
+    params: [
+      { id: "length", label: "Line Length (m)", val: 20, min: 8, max: 60 },
+      { id: "width", label: "Channel Width (m)", val: 6, min: 3, max: 16 },
+    ]
+  },
+  power_relay: {
+    label: "⚡ Power Relay Station", group: "⚡ Lightweight",
+    params: [
+      { id: "spacing", label: "Tower Spacing (m)", val: 12, min: 6, max: 30 },
+    ]
+  },
+  radio_outpost: {
+    label: "⚡ Radio Outpost", group: "⚡ Lightweight",
+    params: [
+      { id: "radius", label: "Guy-Wire Radius (m)", val: 8, min: 4, max: 20 },
+    ]
+  },
 };
 
 export const SHAPE_GROUPS = [...new Set(Object.values(SHAPE_DEFS).map(s => s.group))];

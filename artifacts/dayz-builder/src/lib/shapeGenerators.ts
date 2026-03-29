@@ -66,6 +66,16 @@ export function getShapePoints(shapeType: string, params: Record<string, number>
     case 'volcano': return gen_volcano(p);
     case 'colosseum': return gen_colosseum(p);
     case 'stonehenge': return gen_stonehenge(p);
+    case 'treehouse': return gen_treehouse(p);
+    case 'checkpoint': return gen_checkpoint(p);
+    case 'watchtower_post': return gen_watchtower_post(p);
+    case 'fuel_depot': return gen_fuel_depot(p);
+    case 'sniper_nest': return gen_sniper_nest(p);
+    case 'farmstead': return gen_farmstead(p);
+    case 'survivor_camp': return gen_survivor_camp(p);
+    case 'bunker_line': return gen_bunker_line(p);
+    case 'power_relay': return gen_power_relay(p);
+    case 'radio_outpost': return gen_radio_outpost(p);
     case 'mushroom_cloud': return gen_mushroom_cloud(p);
     case 'black_hole': return gen_black_hole(p);
     case 'alien_mothership': return gen_alien_mothership(p);
@@ -1840,6 +1850,185 @@ function gen_celtic_ring(p: Record<string, number>): Point3D[] {
     for (let j = 0; j < 8; j++) { const a = 2 * Math.PI * j / 8 + t * 0.5; pts.push({ x: cr * Math.cos(a), y, z: cr * Math.sin(a) }); }
   }
   return pts;
+}
+
+// ─── ⚡ LIGHTWEIGHT BUILDINGS ────────────────────────────────────────────────
+
+// TREEHOUSE — 4 corner pillar columns + elevated platform + A-frame roof  [22 pts]
+function gen_treehouse(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const s = p.size * 0.5;
+  const ph = p.platformH;
+  const wh = p.wallH;
+  // Corner pillars: ground → mid → platform level (3 pts × 4 corners = 12)
+  ([[-s,-s],[s,-s],[s,s],[-s,s]] as [number,number][]).forEach(([x,z]) => {
+    pts.push({x, y:0, z});
+    pts.push({x, y:ph*0.55, z});
+    pts.push({x, y:ph, z});
+  });
+  // Platform mid-edge markers (4 pts)
+  pts.push({x:-s, y:ph, z:0}); pts.push({x:s, y:ph, z:0});
+  pts.push({x:0, y:ph, z:-s}); pts.push({x:0, y:ph, z:s});
+  // Wall corners above platform (4 pts)
+  ([[-s,-s],[s,-s],[s,s],[-s,s]] as [number,number][]).forEach(([x,z]) =>
+    pts.push({x, y:ph+wh, z})
+  );
+  // A-frame roof ridge (2 pts)
+  pts.push({x:-s*0.8, y:ph+wh+wh*0.65, z:0});
+  pts.push({x:s*0.8,  y:ph+wh+wh*0.65, z:0});
+  return pts; // 22 pts
+}
+
+// MILITARY CHECKPOINT — zigzag barriers + guard nests + towers + approach  [9 pts]
+function gen_checkpoint(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const w = p.width, d = p.depth;
+  // Staggered barrier zigzag
+  pts.push({x:-w*0.33, y:0, z:-d*0.2});
+  pts.push({x:0,       y:0, z: d*0.1});
+  pts.push({x: w*0.33, y:0, z:-d*0.2});
+  // Guard sandbag nests (flanking)
+  pts.push({x:-w*0.55, y:0, z:-d*0.45});
+  pts.push({x: w*0.55, y:0, z:-d*0.45});
+  // Watchtowers (rear)
+  pts.push({x:-w*0.45, y:0, z:-d*0.9});
+  pts.push({x: w*0.45, y:0, z:-d*0.9});
+  // Approach channel markers
+  pts.push({x:-w*0.2, y:0, z:d*0.5});
+  pts.push({x: w*0.2, y:0, z:d*0.5});
+  return pts; // 9 pts
+}
+
+// WATCHTOWER TRIANGLE — equilateral triangle of towers + wall midpoints + centre  [7 pts]
+function gen_watchtower_post(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const r = p.radius;
+  const towers: [number,number][] = [
+    [0, -r],
+    [r*Math.sin(Math.PI*2/3), r*Math.cos(Math.PI*2/3)],
+    [r*Math.sin(Math.PI*4/3), r*Math.cos(Math.PI*4/3)],
+  ];
+  towers.forEach(([x,z]) => pts.push({x, y:0, z}));
+  for (let i=0;i<3;i++) {
+    const [ax,az]=towers[i], [bx,bz]=towers[(i+1)%3];
+    pts.push({x:(ax+bx)/2, y:0, z:(az+bz)/2});
+  }
+  pts.push({x:0, y:0, z:0});
+  return pts; // 7 pts
+}
+
+// FUEL DEPOT — canopy + storage tanks + cylindrical pumps + barrier + guards  [10 pts]
+function gen_fuel_depot(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const s = p.size;
+  pts.push({x:0,        y:0, z:-s*0.25}); // canopy
+  pts.push({x:-s*0.3,   y:0, z: s*0.3});  // big tank L
+  pts.push({x: s*0.3,   y:0, z: s*0.3});  // big tank R
+  pts.push({x:-s*0.18,  y:0, z: s*0.55}); // cylinder L
+  pts.push({x: s*0.18,  y:0, z: s*0.55}); // cylinder R
+  pts.push({x:-s*0.4,   y:0, z:-s*0.55}); // barrier L
+  pts.push({x:0,        y:0, z:-s*0.45}); // barrier C
+  pts.push({x: s*0.4,   y:0, z:-s*0.55}); // barrier R
+  pts.push({x:-s*0.65,  y:0, z:-s*0.3});  // guard L
+  pts.push({x: s*0.65,  y:0, z:-s*0.3});  // guard R
+  return pts; // 10 pts
+}
+
+// SNIPER NEST — irregular rock pentagon base + elevated shooting perch  [8 pts]
+function gen_sniper_nest(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const r = p.radius, h = p.height;
+  const varR = [1.0, 0.85, 1.1, 0.9, 1.05];
+  for (let i=0;i<5;i++) {
+    const a = Math.PI*2*i/5 - Math.PI/2;
+    pts.push({x: r*varR[i]*Math.cos(a), y:0, z: r*varR[i]*Math.sin(a)});
+  }
+  pts.push({x:-r*0.4, y:h, z:-r*0.35}); // elevated firing L
+  pts.push({x: r*0.4, y:h, z:-r*0.35}); // elevated firing R
+  pts.push({x:0,      y:0, z: r*1.4});   // concealed approach rock
+  return pts; // 8 pts
+}
+
+// RURAL FARMSTEAD — house corners + barn corners + silo + well + fence posts  [16 pts]
+function gen_farmstead(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const s = p.size;
+  // Main house (small rectangle, left side)
+  const hx=-s*0.35,hz=-s*0.2,hw=s*0.25,hd=s*0.2;
+  ([[-hw,-hd],[hw,-hd],[hw,hd],[-hw,hd]] as [number,number][]).forEach(([dx,dz]) =>
+    pts.push({x:hx+dx, y:0, z:hz+dz})
+  );
+  // Barn (larger, right side)
+  const bx=s*0.2,bz=s*0.1,bw=s*0.3,bd=s*0.28;
+  ([[-bw,-bd],[bw,-bd],[bw,bd],[-bw,bd]] as [number,number][]).forEach(([dx,dz]) =>
+    pts.push({x:bx+dx, y:0, z:bz+dz})
+  );
+  pts.push({x: s*0.55, y:0, z:-s*0.25}); // silo
+  pts.push({x:-s*0.05, y:0, z:-s*0.02}); // well
+  // Perimeter fence posts (6)
+  for (let i=0;i<6;i++) {
+    const a = Math.PI*2*i/6;
+    pts.push({x:s*0.72*Math.cos(a), y:0, z:s*0.6*Math.sin(a)});
+  }
+  return pts; // 16 pts
+}
+
+// SURVIVOR CAMP — fire centre + tent ring + supply cluster + lookouts  [10 pts]
+function gen_survivor_camp(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const r = p.radius;
+  pts.push({x:0, y:0, z:0});           // central fireplace
+  pts.push({x:0,  y:0, z:-r});         // N tent
+  pts.push({x:r,  y:0, z:0});          // E tent
+  pts.push({x:0,  y:0, z:r});          // S tent
+  pts.push({x:-r, y:0, z:0});          // W tent
+  pts.push({x:r*1.3,  y:0, z:-r*0.8}); // supply A
+  pts.push({x:r*1.6,  y:0, z:-r*1.0}); // supply B
+  pts.push({x:r*1.4,  y:0, z:-r*1.25});// supply C
+  pts.push({x:-r*1.5, y:0, z:-r*1.0}); // lookout W
+  pts.push({x: r*1.5, y:0, z: r*0.8}); // lookout E
+  return pts; // 10 pts
+}
+
+// BUNKER DEFENCE LINE — parallel sandbag walls + command bunker + flankers  [11 pts]
+function gen_bunker_line(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const l = p.length, w = p.width;
+  const zPos = [-0.5,-0.17,0.17,0.5] as const;
+  zPos.forEach(t => pts.push({x:-w*0.5, y:0, z:l*t})); // left wall
+  zPos.forEach(t => pts.push({x: w*0.5, y:0, z:l*t})); // right wall
+  pts.push({x:0,      y:0, z:l*0.65});  // command bunker
+  pts.push({x:-w*1.3, y:0, z:l*0.55}); // flank bunker L
+  pts.push({x: w*1.3, y:0, z:l*0.55}); // flank bunker R
+  return pts; // 11 pts
+}
+
+// POWER RELAY STATION — 3 towers in row + storage tanks + substations  [8 pts]
+function gen_power_relay(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const sp = p.spacing;
+  pts.push({x:-sp, y:0, z:0});   // tower L
+  pts.push({x:0,   y:0, z:0});   // tower C
+  pts.push({x:sp,  y:0, z:0});   // tower R
+  pts.push({x:-sp*0.4, y:0, z:sp*0.6}); // tank L
+  pts.push({x: sp*0.4, y:0, z:sp*0.6}); // tank R
+  pts.push({x:-sp*0.7, y:0, z:-sp*0.35}); // substation L
+  pts.push({x:0,       y:0, z:-sp*0.35}); // substation C
+  pts.push({x: sp*0.7, y:0, z:-sp*0.35}); // substation R
+  return pts; // 8 pts
+}
+
+// RADIO OUTPOST — central mast + 3 guy-wire anchors + 2 instrument sheds  [6 pts]
+function gen_radio_outpost(p: Record<string, number>): Point3D[] {
+  const pts: Point3D[] = [];
+  const r = p.radius;
+  pts.push({x:0, y:0, z:0}); // central mast
+  [0,2,4].map(i => Math.PI*2*i/3 - Math.PI/2).forEach(a =>
+    pts.push({x:r*Math.cos(a), y:0, z:r*Math.sin(a)})
+  );
+  pts.push({x:-r*0.5, y:0, z:-r*0.35}); // instrument shed L
+  pts.push({x: r*0.5, y:0, z:-r*0.35}); // instrument shed R
+  return pts; // 6 pts
 }
 
 export function applyTransform(

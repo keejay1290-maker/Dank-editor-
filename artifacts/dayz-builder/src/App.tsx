@@ -841,12 +841,24 @@ export default function App() {
                       </div>
                       <div className="text-[#9a8858] text-[10px] leading-relaxed mt-1">{b.objectNotes}</div>
                     </div>
+                    {b.frameCount !== undefined && (
+                      <div className="flex items-center gap-2 p-2 rounded-sm bg-[#0f1f0f] border border-[#27ae60]">
+                        <span className="text-[#27ae60] text-[18px] font-black">{b.frameCount}</span>
+                        <div>
+                          <div className="text-[#27ae60] text-[10px] font-bold">OBJECTS TOTAL</div>
+                          <div className="text-[#5a8a5a] text-[9px]">⚡ Server-friendly · stays loaded long-term</div>
+                        </div>
+                      </div>
+                    )}
                     <div className="border border-[#2e2518] rounded-sm p-3">
                       <div className="text-[#9a8858] text-[10px] uppercase tracking-wider mb-2">Location</div>
                       <div className="text-[#c8b99a] text-[11px] font-mono">
-                        <span className="text-[#d4a017] font-bold">{b.posX < 8000 ? "NWAF" : "Krasnoe"}</span>
+                        <span className="text-[#d4a017] font-bold">{b.posX < 8000 ? "NWAF" : b.category === "⚡ Lightweight" ? "Krasnoe Airfield" : "Krasnoe"}</span>
                         {" "}X={b.posX} Y={b.posY} Z={b.posZ}
                       </div>
+                      {b.category === "⚡ Lightweight" && (
+                        <div className="mt-1 text-[9px] text-[#6a5a3a]">Pre-positioned at Krasnoe Airfield flat apron — ready to paste into init.c</div>
+                      )}
                     </div>
                     <div className="grid grid-cols-2 gap-2 mt-1">
                       <button onClick={() => downloadBuild(b, "frame", "initc")}
@@ -1344,11 +1356,15 @@ function BuildsSidebar(p: {
               {/* Tagline */}
               <div className="px-3 pb-1 text-[9px] text-[#8a7840] leading-relaxed line-clamp-2">{b.tagline}</div>
 
-              {/* Object summary */}
-              <div className="px-3 pb-1 text-[9px]">
-                <span className="text-[#27ae60]">▫ </span>
-                <span className="text-[#7a9a7a] truncate block">{b.frameObj.split("\\").pop()}</span>
-              </div>
+              {/* Object count badge */}
+              {b.frameCount !== undefined && (
+                <div className="px-3 pb-1 flex items-center gap-1.5">
+                  <span className="px-1.5 py-0.5 rounded-sm text-[8px] font-bold bg-[#1a2e1a] border border-[#27ae60] text-[#27ae60]">
+                    ⚡ {b.frameCount} objects
+                  </span>
+                  <span className="text-[#6a5a3a] text-[8px]">server-friendly</span>
+                </div>
+              )}
 
               {/* Download buttons */}
               <div className="px-3 pb-2 grid grid-cols-2 gap-1">
