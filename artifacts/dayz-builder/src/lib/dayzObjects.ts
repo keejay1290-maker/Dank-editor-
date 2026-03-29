@@ -5,7 +5,7 @@ export interface DayzObject {
 }
 
 export const DAYZ_OBJECTS: DayzObject[] = [
-  // Containers / Industrial (console-safe)
+  // ─── Containers / Industrial ───────────────────────────────────────────────
   { value: "StaticObj_Container_1D", label: "Shipping Container 1D", group: "Containers" },
   { value: "StaticObj_Container_1C", label: "Shipping Container 1C", group: "Containers" },
   { value: "Land_Container_1Bo_DE", label: "Container 1Bo (dark)", group: "Containers" },
@@ -16,9 +16,9 @@ export const DAYZ_OBJECTS: DayzObject[] = [
   { value: "Barrel_Green", label: "Barrel Green", group: "Containers" },
   { value: "Barrel_Yellow", label: "Barrel Yellow", group: "Containers" },
   { value: "Barrel_Red", label: "Barrel Red", group: "Containers" },
-  { value: "Pallet_EP1", label: "Pallet", group: "Containers" },
+  { value: "Pallet_EP1", label: "Pallet (wooden)", group: "Containers" },
 
-  // Vehicles / Wrecks (console-safe)
+  // ─── Wrecks / Vehicles ─────────────────────────────────────────────────────
   { value: "Land_Wreck_V3S_DE", label: "Wreck V3S Truck", group: "Wrecks" },
   { value: "Land_Wreck_Ikarus_DE", label: "Wreck Ikarus Bus", group: "Wrecks" },
   { value: "Land_Train_Wagon_Box_DE", label: "Train Wagon Box", group: "Wrecks" },
@@ -32,7 +32,7 @@ export const DAYZ_OBJECTS: DayzObject[] = [
   { value: "Land_Wreck_BTR_DE", label: "Wreck BTR APC", group: "Wrecks" },
   { value: "Land_Wreck_heli_MI8_DE", label: "Wreck MI-8 Helicopter", group: "Wrecks" },
 
-  // Rocks / Natural
+  // ─── Rocks / Natural ───────────────────────────────────────────────────────
   { value: "DZ\\rocks_bliss\\stone10_moss.p3d", label: "Stone Moss (med)", group: "Rocks" },
   { value: "DZ\\rocks_bliss\\stone9_moss.p3d", label: "Stone Moss (large)", group: "Rocks" },
   { value: "DZ\\rocks_bliss\\rock_monolith1.p3d", label: "Rock Monolith 1", group: "Rocks" },
@@ -40,7 +40,7 @@ export const DAYZ_OBJECTS: DayzObject[] = [
   { value: "DZ\\rocks_bliss\\rock_monolith2.p3d", label: "Rock Monolith 2", group: "Rocks" },
   { value: "DZ\\rocks_bliss\\clutter_01.p3d", label: "Rock Clutter Small", group: "Rocks" },
 
-  // Static Props / Buildings
+  // ─── Props / Buildings ─────────────────────────────────────────────────────
   { value: "Land_PetrolStation_Canopy", label: "Petrol Station Canopy", group: "Props" },
   { value: "StaticObj_Rail_Platform_Segment", label: "Rail Platform Segment", group: "Props" },
   { value: "StaticObj_Monument_Wall", label: "Monument Wall", group: "Props" },
@@ -51,6 +51,14 @@ export const DAYZ_OBJECTS: DayzObject[] = [
   { value: "Land_Fence_Barbed", label: "Barbed Fence", group: "Props" },
   { value: "Land_Fence_Barbed_Wire", label: "Barbed Wire Coil", group: "Props" },
   { value: "Land_Tank_SmallConcrete_Round", label: "Concrete Tank Round", group: "Props" },
+  { value: "Land_BusStop_DE", label: "Bus Stop", group: "Props" },
+  { value: "Land_PowerLine_Tower_DE", label: "Power Line Tower", group: "Props" },
+  { value: "Land_RadioTower_1_DE", label: "Radio Tower", group: "Props" },
+  { value: "Land_WaterTower_01_DE", label: "Water Tower", group: "Props" },
+  { value: "Land_WaterTower_02_DE", label: "Water Tower 2", group: "Props" },
+  { value: "Land_CraneGrond_DE", label: "Ground Crane", group: "Props" },
+
+  // ─── Buildings ─────────────────────────────────────────────────────────────
   { value: "Land_Mil_Barracks_HQ_DE", label: "Military Barracks HQ", group: "Buildings" },
   { value: "Land_Mil_Barracks_DE", label: "Military Barracks", group: "Buildings" },
   { value: "Land_Mil_Guardhouse_DE", label: "Military Guardhouse", group: "Buildings" },
@@ -60,17 +68,13 @@ export const DAYZ_OBJECTS: DayzObject[] = [
   { value: "Land_SiloFarm_DE", label: "Farm Silo", group: "Buildings" },
   { value: "Land_Shed_W4_DE", label: "Shed W4", group: "Buildings" },
   { value: "Land_Shed_Ind_DE", label: "Industrial Shed", group: "Buildings" },
-  { value: "Land_ConcretePath_F_DE", label: "Concrete Path", group: "Buildings" },
-  { value: "Land_ConcretePath_Corner_DE", label: "Concrete Path Corner", group: "Buildings" },
   { value: "Land_Wall_Brick_4m_DE", label: "Brick Wall 4m", group: "Buildings" },
   { value: "Land_Wall_Brick_8m_DE", label: "Brick Wall 8m", group: "Buildings" },
   { value: "Land_Wall_Concrete_4m_DE", label: "Concrete Wall 4m", group: "Buildings" },
   { value: "Land_Wall_Concrete_8m_DE", label: "Concrete Wall 8m", group: "Buildings" },
-  { value: "Land_Pier_DE", label: "Pier Section", group: "Buildings" },
   { value: "Land_PierLadder_DE", label: "Pier Ladder", group: "Buildings" },
-  { value: "Land_CraneGrond_DE", label: "Ground Crane", group: "Buildings" },
 
-  // Military Props
+  // ─── Military Props ────────────────────────────────────────────────────────
   { value: "Land_Mil_Tent_Big_DE", label: "Military Tent Big", group: "Military" },
   { value: "Land_Mil_Tent_Small_DE", label: "Military Tent Small", group: "Military" },
   { value: "Land_Bunker_DE", label: "Concrete Bunker", group: "Military" },
@@ -87,55 +91,91 @@ export const DAYZ_OBJECTS: DayzObject[] = [
   { value: "Land_BarbedWire_01_DE", label: "Barbed Wire Line", group: "Military" },
   { value: "Land_TankTrap_DE", label: "Tank Trap Czech Hedgehog", group: "Military" },
 
-  // Plants / Trees
+  // ─── ⚔️ Weapons & Melee (great for thrones, circles, dramatic builds) ──────
+  { value: "BaseballBat", label: "Baseball Bat", group: "Weapons" },
+  { value: "BaseballBat_Nails", label: "Baseball Bat (Nails)", group: "Weapons" },
+  { value: "Sledgehammer", label: "Sledgehammer", group: "Weapons" },
+  { value: "Axe_Splitting", label: "Splitting Axe", group: "Weapons" },
+  { value: "FirefighterAxe", label: "Firefighter Axe (red)", group: "Weapons" },
+  { value: "Pitchfork", label: "Pitchfork", group: "Weapons" },
+  { value: "Shovel", label: "Shovel", group: "Weapons" },
+  { value: "Pickaxe", label: "Pickaxe", group: "Weapons" },
+  { value: "Crowbar", label: "Crowbar", group: "Weapons" },
+  { value: "HuntingKnife", label: "Hunting Knife", group: "Weapons" },
+  { value: "CombatKnife", label: "Combat Knife", group: "Weapons" },
+  { value: "MeleeMachete", label: "Machete", group: "Weapons" },
+  { value: "MeleeSpear", label: "Improvised Spear", group: "Weapons" },
+  { value: "ImprovKnife", label: "Improvised Knife", group: "Weapons" },
+  { value: "BarbedWireItem", label: "Barbed Wire (item)", group: "Weapons" },
+
+  // ─── 💛 Armbands (very compact, great for text spelling) ──────────────────
+  { value: "ArmBandBlack", label: "Armband Black ★ text fave", group: "Armbands" },
+  { value: "ArmBandBlue", label: "Armband Blue", group: "Armbands" },
+  { value: "ArmBandGreen", label: "Armband Green", group: "Armbands" },
+  { value: "ArmBandRed", label: "Armband Red", group: "Armbands" },
+  { value: "ArmBandWhite", label: "Armband White", group: "Armbands" },
+  { value: "ArmBandYellow", label: "Armband Yellow", group: "Armbands" },
+  { value: "ArmBandOrange", label: "Armband Orange", group: "Armbands" },
+
+  // ─── Plants / Trees ────────────────────────────────────────────────────────
   { value: "DZ\\plants_bliss\\tree\\t_fagussylvatica_3f_summer.p3d", label: "Beech Tree", group: "Plants" },
   { value: "DZ\\plants_bliss\\tree\\t_pinussylvestris_2f_summer.p3d", label: "Pine Tree", group: "Plants" },
   { value: "DZ\\plants_bliss\\bush\\b_prunusspinosa_1s_summer.p3d", label: "Blackthorn Bush", group: "Plants" },
   { value: "DZ\\plants_bliss\\tree\\t_quercusrobur_2f_summer.p3d", label: "Oak Tree", group: "Plants" },
   { value: "DZ\\plants_bliss\\tree\\t_betulapendula_2f_summer.p3d", label: "Birch Tree", group: "Plants" },
 
-  // Wheels / Vehicles Parts
+  // ─── Parts ─────────────────────────────────────────────────────────────────
   { value: "HatchbackWheel", label: "Hatchback Wheel", group: "Parts" },
   { value: "OffroadWheel", label: "Offroad Wheel", group: "Parts" },
-  { value: "Land_BusStop_DE", label: "Bus Stop", group: "Props" },
-  { value: "Land_PowerLine_Tower_DE", label: "Power Line Tower", group: "Props" },
-  { value: "Land_RadioTower_1_DE", label: "Radio Tower", group: "Props" },
-  { value: "Land_WaterTower_01_DE", label: "Water Tower", group: "Props" },
-  { value: "Land_WaterTower_02_DE", label: "Water Tower 2", group: "Props" },
+  { value: "TruckWheel", label: "Truck Wheel", group: "Parts" },
 
-  // ✈ Airstrip / Runway Lights  (from TaxiRank JSON — console-safe)
-  { value: "StaticObj_Airfield_Light_PAPI1", label: "✈ PAPI Light (bright, spelling!)", group: "Airstrip Lights" },
-  { value: "StaticObj_Airfield_Light_Threshold_01", label: "✈ Threshold Light 1", group: "Airstrip Lights" },
-  { value: "StaticObj_Airfield_Light_Threshold_02", label: "✈ Threshold Light 2", group: "Airstrip Lights" },
-  { value: "StaticObj_Airfield_Light_Centreline_01", label: "✈ Centreline Light 1", group: "Airstrip Lights" },
-  { value: "StaticObj_Airfield_Light_Centreline_02", label: "✈ Centreline Light 2", group: "Airstrip Lights" },
-  { value: "StaticObj_Airfield_Light_Edge_01", label: "✈ Edge Light 1", group: "Airstrip Lights" },
-  { value: "StaticObj_Airfield_Light_Edge_02", label: "✈ Edge Light 2", group: "Airstrip Lights" },
-  { value: "StaticObj_Airfield_Light_Taxiway_01", label: "✈ Taxiway Light 1", group: "Airstrip Lights" },
-  { value: "StaticObj_Airfield_Light_Taxiway_02", label: "✈ Taxiway Light 2", group: "Airstrip Lights" },
-  { value: "StaticObj_Airfield_Light_Approach_01", label: "✈ Approach Light 1", group: "Airstrip Lights" },
-  { value: "StaticObj_Airfield_Light_Approach_02", label: "✈ Approach Light 2", group: "Airstrip Lights" },
-  { value: "StaticObj_Airfield_Light_Strobe_01", label: "✈ Strobe Light", group: "Airstrip Lights" },
-  { value: "StaticObj_Airfield_Light_End_01", label: "✈ Runway End Light 1", group: "Airstrip Lights" },
-  { value: "StaticObj_Airfield_Light_End_02", label: "✈ Runway End Light 2", group: "Airstrip Lights" },
+  // ─── ✈ Airstrip Lights (console-safe, highly visible from above) ───────────
+  { value: "StaticObj_Airfield_Light_PAPI1", label: "PAPI Light ★ best for spelling", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Threshold_01", label: "Threshold Light 1", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Threshold_02", label: "Threshold Light 2", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Centreline_01", label: "Centreline Light 1", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Centreline_02", label: "Centreline Light 2", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Edge_01", label: "Edge Light 1", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Edge_02", label: "Edge Light 2", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Taxiway_01", label: "Taxiway Light 1", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Taxiway_02", label: "Taxiway Light 2", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Approach_01", label: "Approach Light 1", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_Strobe_01", label: "Strobe Light", group: "Airstrip Lights" },
+  { value: "StaticObj_Airfield_Light_End_01", label: "Runway End Light", group: "Airstrip Lights" },
 
-  // 🔲 Flat / Ground-Level Objects (great for floors, pads, spelling)
-  { value: "Land_ConcretePath_F_DE", label: "Flat Concrete Path", group: "Flat Objects" },
-  { value: "Land_ConcretePath_Corner_DE", label: "Flat Concrete Corner", group: "Flat Objects" },
-  { value: "Land_Asphalt_F_DE", label: "Flat Asphalt Tile", group: "Flat Objects" },
-  { value: "Land_Asphalt_Corner_DE", label: "Flat Asphalt Corner", group: "Flat Objects" },
-  { value: "Land_Asphalt_Cross_DE", label: "Flat Asphalt Cross", group: "Flat Objects" },
-  { value: "Land_Asphalt_T_DE", label: "Flat Asphalt T-Junction", group: "Flat Objects" },
-  { value: "Land_Runway_F_DE", label: "Flat Runway Strip", group: "Flat Objects" },
-  { value: "Land_Runway_Marking_DE", label: "Flat Runway Marking", group: "Flat Objects" },
-  { value: "Land_Pavement_DE", label: "Flat Pavement Tile", group: "Flat Objects" },
-  { value: "Land_Pavement_Corner_DE", label: "Flat Pavement Corner", group: "Flat Objects" },
-  { value: "Pallet_EP1", label: "Flat Pallet", group: "Flat Objects" },
-  { value: "Land_Pier_DE", label: "Flat Pier Section", group: "Flat Objects" },
-  { value: "Land_GarageFloor_DE", label: "Flat Garage Floor", group: "Flat Objects" },
-  { value: "Land_TarmacFloor_DE", label: "Flat Tarmac Floor", group: "Flat Objects" },
-  { value: "Land_ConcreteSlab_DE", label: "Flat Concrete Slab", group: "Flat Objects" },
-  { value: "Land_Puddle_DE", label: "Flat Puddle/Water", group: "Flat Objects" },
+  // ─── 🔲 Flat Objects (floors, pads, runways, spelling bases) ───────────────
+  { value: "Land_Asphalt_01_F_10x10_DE", label: "Asphalt 10×10", group: "Flat Objects" },
+  { value: "Land_Asphalt_01_F_20x20_DE", label: "Asphalt 20×20", group: "Flat Objects" },
+  { value: "Land_Asphalt_01_F_5x5_DE", label: "Asphalt 5×5", group: "Flat Objects" },
+  { value: "Land_Asphalt_01_Cor_DE", label: "Asphalt Corner", group: "Flat Objects" },
+  { value: "Land_Asphalt_01_T_DE", label: "Asphalt T-Junction", group: "Flat Objects" },
+  { value: "Land_Asphalt_01_Cross_DE", label: "Asphalt Cross", group: "Flat Objects" },
+  { value: "Land_Concrete_01_F_10x10_DE", label: "Concrete 10×10", group: "Flat Objects" },
+  { value: "Land_Concrete_01_F_20x20_DE", label: "Concrete 20×20", group: "Flat Objects" },
+  { value: "Land_Concrete_01_F_5x5_DE", label: "Concrete 5×5", group: "Flat Objects" },
+  { value: "Land_Concrete_01_Cor_DE", label: "Concrete Corner", group: "Flat Objects" },
+  { value: "Land_Concrete_01_T_DE", label: "Concrete T-Junction", group: "Flat Objects" },
+  { value: "Land_Pier_DE", label: "Pier Section (flat)", group: "Flat Objects" },
+  { value: "Land_Pier_Long_DE", label: "Pier Section Long", group: "Flat Objects" },
+  { value: "Land_Pier_Corner_DE", label: "Pier Corner", group: "Flat Objects" },
+  { value: "Land_Pier_T_DE", label: "Pier T-Junction", group: "Flat Objects" },
+  { value: "Land_Pier_Cross_DE", label: "Pier Cross", group: "Flat Objects" },
+  { value: "Land_Runway_01_F_DE", label: "Runway Strip (flat)", group: "Flat Objects" },
+  { value: "Land_Runway_01_Line_DE", label: "Runway Centre Line", group: "Flat Objects" },
+  { value: "Land_Runway_01_TH_DE", label: "Runway Threshold Mark", group: "Flat Objects" },
+  { value: "Land_Runway_01_Cor_DE", label: "Runway Corner", group: "Flat Objects" },
+  { value: "Land_Pavement_01_F_10x10_DE", label: "Pavement 10×10", group: "Flat Objects" },
+  { value: "Land_Pavement_01_F_5x5_DE", label: "Pavement 5×5", group: "Flat Objects" },
+  { value: "Land_Pavement_01_Cor_DE", label: "Pavement Corner", group: "Flat Objects" },
+  { value: "Land_ConcreteSlab_01_DE", label: "Concrete Slab 1", group: "Flat Objects" },
+  { value: "Land_ConcreteSlab_02_DE", label: "Concrete Slab 2", group: "Flat Objects" },
+  { value: "Land_ConcreteSlab_03_DE", label: "Concrete Slab 3 (large)", group: "Flat Objects" },
+  { value: "Land_GarageFloor_01_DE", label: "Garage Floor", group: "Flat Objects" },
+  { value: "Land_TarmacFloor_01_DE", label: "Tarmac Floor", group: "Flat Objects" },
+  { value: "Land_Puddle_01_DE", label: "Puddle / Water Pool", group: "Flat Objects" },
+  { value: "Land_SandFloor_01_DE", label: "Sand Floor Pad", group: "Flat Objects" },
+  { value: "Land_GrassFloor_01_DE", label: "Grass Floor Pad", group: "Flat Objects" },
+  { value: "Land_MudFloor_01_DE", label: "Mud Floor Pad", group: "Flat Objects" },
 ];
 
 export const OBJECT_GROUPS = [...new Set(DAYZ_OBJECTS.map(o => o.group))];

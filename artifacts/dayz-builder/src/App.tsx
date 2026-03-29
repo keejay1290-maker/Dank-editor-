@@ -75,7 +75,7 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
     const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const W = cssDimsRef.current.w || canvas.width / dpr;
     const H = cssDimsRef.current.h || canvas.height / dpr;
     if (W <= 0 || H <= 0) return;
@@ -252,10 +252,13 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
     const resizeCanvas = (parent: Element) => {
       const rect = parent.getBoundingClientRect();
       if (rect.width <= 0 || rect.height <= 0) return;
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2); // cap at 2× to avoid over-blur on 3×
       cssDimsRef.current = { w: rect.width, h: rect.height };
       canvas.width = Math.round(rect.width * dpr);
       canvas.height = Math.round(rect.height * dpr);
+      // Explicit CSS dimensions prevent CSS from stretching/distorting the buffer
+      canvas.style.width = rect.width + "px";
+      canvas.style.height = rect.height + "px";
       draw();
     };
     const obs = new ResizeObserver(() => {
@@ -277,31 +280,70 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
 }
 
 // ─── QUICK PRESETS ────────────────────────────────────────────────────────────
-const QUICK_PRESETS = [
-  { label: "Death Star", shape: "deathstar", params: { radius:40,latSegs:10,lonSegs:16,dishRadius:12,dishDepth:8,dishLat:30 } },
-  { label: "Mech Warrior", shape: "mech_bipedal", params: { height:25,width:14 } },
-  { label: "Azkaban", shape: "azkaban_tower", params: { baseRadius:20,height:60,towerCount:5 } },
-  { label: "Orbital Ring", shape: "orbital_station", params: { radius:40 } },
-  { label: "Minigun", shape: "mech_minigun", params: { baseRadius:10,height:20,barrelCount:6 } },
-  { label: "DNA Helix", shape: "dna_double", params: { radius:12,height:40,turns:5,pointsPerTurn:12 } },
-  { label: "Falcon", shape: "millennium_falcon", params: { radius:30 } },
-  { label: "Star Fort", shape: "star_fort", params: { outerR:50,innerR:30,points:5,height:12,rings:2 } },
-  { label: "Skull Giant", shape: "body_skull", params: { radius:18,eyeSocket:5,jawDrop:8 } },
-  { label: "Reactor Core", shape: "reactor_core", params: { radius:25,height:30,rings:5 } },
-  { label: "Skyscraper", shape: "skyscraper", params: { width:20,height:100,floors:20 } },
-  { label: "Spider Walker", shape: "mech_walker", params: { height:20,width:18 } },
-  { label: "Torus Gate", shape: "torus", params: { majorR:30,minorR:8,majorSegs:20,minorSegs:10 } },
-  { label: "Pyramid Aztec", shape: "pyramid_stepped", params: { baseSize:80,height:40,steps:6,shrink:0.18,spacing:6 } },
-  { label: "Hex Tunnel", shape: "tunnel_hex", params: { radius:8,length:50,spacing:4,segments:10 } },
-  { label: "Sci-Fi Gate", shape: "sci_fi_gate", params: { width:40,height:30 } },
-  { label: "Crashed UFO", shape: "crashed_ufo", params: { radius:25,tiltDeg:25,debris:10 } },
-  { label: "Volcano", shape: "volcano", params: { baseRadius:50,height:60,craterRadius:12,rimHeight:5,rings:8,spacing:8 } },
-  { label: "Colosseum", shape: "colosseum", params: { radius:60,height:30,tiers:3,arches:20 } },
-  { label: "Stonehenge", shape: "stonehenge", params: { outerRadius:30,innerRadius:16,stoneHeight:8,stoneWidth:2,outerCount:30,trilithonCount:5,archCount:6 } },
-  { label: "Mushroom Cloud", shape: "mushroom_cloud", params: { radius:40,height:80 } },
-  { label: "Black Hole", shape: "black_hole", params: { radius:30,arcs:4 } },
-  { label: "Mothership", shape: "alien_mothership", params: { radius:50,emitterCount:8 } },
-  { label: "Celtic Ring", shape: "celtic_ring", params: { radius:30,height:8,stoneCount:24,archCount:6 } },
+type Preset = { label: string; shape: string; params: Record<string, number>; category: string };
+const QUICK_PRESETS: Preset[] = [
+  // 🚀 Sci-Fi & Space
+  { category: "🚀 Sci-Fi", label: "Death Star", shape: "deathstar", params: { radius:40,latSegs:10,lonSegs:16,dishRadius:12,dishDepth:8,dishLat:30 } },
+  { category: "🚀 Sci-Fi", label: "Orbital Ring", shape: "orbital_station", params: { radius:40 } },
+  { category: "🚀 Sci-Fi", label: "DNA Helix", shape: "dna_double", params: { radius:12,height:40,turns:5,pointsPerTurn:12 } },
+  { category: "🚀 Sci-Fi", label: "Millennium Falcon", shape: "millennium_falcon", params: { radius:30 } },
+  { category: "🚀 Sci-Fi", label: "Sci-Fi Gate", shape: "sci_fi_gate", params: { width:40,height:30 } },
+  { category: "🚀 Sci-Fi", label: "Reactor Core", shape: "reactor_core", params: { radius:25,height:30,rings:5 } },
+  { category: "🚀 Sci-Fi", label: "Crashed UFO", shape: "crashed_ufo", params: { radius:25,tiltDeg:25,debris:10 } },
+  { category: "🚀 Sci-Fi", label: "Alien Mothership", shape: "alien_mothership", params: { radius:50,emitterCount:8 } },
+  { category: "🚀 Sci-Fi", label: "Black Hole", shape: "black_hole", params: { radius:30,arcs:4 } },
+  { category: "🚀 Sci-Fi", label: "Torus Gate", shape: "torus", params: { majorR:30,minorR:8,majorSegs:20,minorSegs:10 } },
+  { category: "🚀 Sci-Fi", label: "Ring Platform", shape: "disc", params: { radius:30,rings:2,points:24,innerRadius:15 } },
+  { category: "🚀 Sci-Fi", label: "Hex Tunnel", shape: "tunnel_hex", params: { radius:8,length:50,spacing:4,segments:10 } },
+
+  // 🤖 Mechs & Robots
+  { category: "🤖 Mechs", label: "Mech Warrior", shape: "mech_bipedal", params: { height:25,width:14 } },
+  { category: "🤖 Mechs", label: "Spider Walker", shape: "mech_walker", params: { height:20,width:18 } },
+  { category: "🤖 Mechs", label: "Minigun Turret", shape: "mech_minigun", params: { baseRadius:10,height:20,barrelCount:6 } },
+  { category: "🤖 Mechs", label: "Cannon Turret", shape: "cannon_turret", params: { baseRadius:8,height:12 } },
+
+  // 🏛️ Monuments & Structures
+  { category: "🏛️ Monuments", label: "Colosseum", shape: "colosseum", params: { radius:60,height:30,tiers:3,arches:20 } },
+  { category: "🏛️ Monuments", label: "Stonehenge", shape: "stonehenge", params: { outerRadius:30,innerRadius:16,stoneHeight:8,stoneWidth:2,outerCount:30,trilithonCount:5,archCount:6 } },
+  { category: "🏛️ Monuments", label: "Celtic Ring", shape: "celtic_ring", params: { radius:30,height:8,stoneCount:24,archCount:6 } },
+  { category: "🏛️ Monuments", label: "Azkaban", shape: "azkaban_tower", params: { baseRadius:20,height:60,towerCount:5 } },
+  { category: "🏛️ Monuments", label: "Skyscraper", shape: "skyscraper", params: { width:20,height:100,floors:20 } },
+  { category: "🏛️ Monuments", label: "Pyramid Aztec", shape: "pyramid_stepped", params: { baseSize:80,height:40,steps:6,shrink:0.18,spacing:6 } },
+  { category: "🏛️ Monuments", label: "Prison Tower", shape: "prison_tower", params: { baseRadius:15,height:40,tiers:4 } },
+  { category: "🏛️ Monuments", label: "Star Fort", shape: "star_fort", params: { outerR:50,innerR:30,points:5,height:12,rings:2 } },
+  { category: "🏛️ Monuments", label: "Bastion Round", shape: "bastion_round", params: { radius:30,height:10,towerRadius:6,towerCount:4 } },
+  { category: "🏛️ Monuments", label: "Bastion Square", shape: "bastion_square", params: { size:40,height:8,towerRadius:5 } },
+
+  // 🪑 Furniture & Thrones (pair with weapons/barrels!)
+  { category: "🪑 Furniture", label: "Weapon Throne", shape: "disc", params: { radius:4,rings:1,points:16,innerRadius:0 } },
+  { category: "🪑 Furniture", label: "Campfire Ring", shape: "disc", params: { radius:5,rings:1,points:12,innerRadius:3 } },
+  { category: "🪑 Furniture", label: "Round Table", shape: "disc", params: { radius:6,rings:2,points:18,innerRadius:0 } },
+  { category: "🪑 Furniture", label: "Bench (long)", shape: "wall_line", params: { length:8,height:1,rings:1,spacing:1 } },
+  { category: "🪑 Furniture", label: "Bench (short)", shape: "wall_line", params: { length:4,height:1,rings:1,spacing:1 } },
+  { category: "🪑 Furniture", label: "Chair Circle", shape: "disc", params: { radius:3,rings:1,points:8,innerRadius:2 } },
+  { category: "🪑 Furniture", label: "Trophy Wall", shape: "wall_line", params: { length:20,height:4,rings:4,spacing:2 } },
+  { category: "🪑 Furniture", label: "Barrel Ring", shape: "disc", params: { radius:6,rings:1,points:8,innerRadius:5 } },
+
+  // ⚔️ Medieval & Fantasy
+  { category: "⚔️ Medieval", label: "Sword Circle", shape: "disc", params: { radius:8,rings:1,points:16,innerRadius:6 } },
+  { category: "⚔️ Medieval", label: "Weapon Wall", shape: "wall_line", params: { length:30,height:8,rings:8,spacing:2 } },
+  { category: "⚔️ Medieval", label: "Castle Wall", shape: "bastion_square", params: { size:80,height:12,towerRadius:8 } },
+  { category: "⚔️ Medieval", label: "Guard Tower", shape: "tower", params: { radius:5,height:20,rings:6,points:12 } },
+  { category: "⚔️ Medieval", label: "Arena Floor", shape: "disc", params: { radius:25,rings:4,points:32,innerRadius:0 } },
+
+  // 💀 Dark & Horror
+  { category: "💀 Dark", label: "Skull Giant", shape: "body_skull", params: { radius:18,eyeSocket:5,jawDrop:8 } },
+  { category: "💀 Dark", label: "Mushroom Cloud", shape: "mushroom_cloud", params: { radius:40,height:80 } },
+  { category: "💀 Dark", label: "Volcano", shape: "volcano", params: { baseRadius:50,height:60,craterRadius:12,rimHeight:5,rings:8,spacing:8 } },
+  { category: "💀 Dark", label: "Rib Cage", shape: "body_ribcage", params: { width:8,height:14,ribs:8 } },
+  { category: "💀 Dark", label: "Humanoid", shape: "body_humanoid", params: { height:20,width:8 } },
+
+  // 🌿 Nature & Terrain
+  { category: "🌿 Nature", label: "Grid Platform", shape: "grid_flat", params: { width:40,depth:40,spacingX:4,spacingZ:4 } },
+  { category: "🌿 Nature", label: "Staircase Up", shape: "staircase", params: { steps:12,stepH:1,stepD:2,width:6 } },
+  { category: "🌿 Nature", label: "Landing Pad", shape: "disc", params: { radius:20,rings:3,points:24,innerRadius:0 } },
+  { category: "🌿 Nature", label: "Sphere", shape: "sphere", params: { radius:25,latSegs:8,lonSegs:12 } },
+  { category: "🌿 Nature", label: "Helix Spiral", shape: "helix", params: { radius:15,height:30,turns:4,pointsPerTurn:12,strands:1 } },
 ];
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
@@ -332,8 +374,12 @@ export default function App() {
   const [stackY, setStackY] = useState(0);
   const [output, setOutput] = useState("");
   const [autoRotate, setAutoRotate] = useState(true);
+  const [autoOrient, setAutoOrient] = useState(false);
+  const [orientInward, setOrientInward] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(() => typeof window !== "undefined" && window.innerWidth >= 768);
   const [toast, setToast] = useState("");
   const [presetFilter, setPresetFilter] = useState("");
+  const [presetCategory, setPresetCategory] = useState("All");
 
   // Text maker
   const [textInput, setTextInput] = useState("DAYZ");
@@ -431,12 +477,16 @@ export default function App() {
       if (includeHelper) lines.push(HELPER_FUNC);
       lines.push(`// Shape: ${SHAPE_DEFS[shapeType]?.label || shapeType}`);
       lines.push(`// Asset: ${objClass}   Base: <${posX}, ${posY}, ${posZ}>`);
-      lines.push(`// YPR: ${pitch}° / ${yaw}° / ${roll}°   Scale: ${scaleVal}`);
+      lines.push(`// YPR: ${pitch}° / ${yaw}° / ${roll}°   Scale: ${scaleVal}${autoOrient ? "   [Auto-Orient: ON]" : ""}`);
       lines.push(`// Mode: ${fillMode}${fillMode === "fill" ? " density " + fillDensity : ""}   Objects: ${ptsToUse.length * (1 + extras.length)}`);
       lines.push(``);
     }
 
     const yawRad = yaw * Math.PI / 180;
+
+    // Compute centroid for auto-orient
+    const cx = ptsToUse.reduce((s, p) => s + p.x, 0) / Math.max(1, ptsToUse.length);
+    const cz = ptsToUse.reduce((s, p) => s + p.z, 0) / Math.max(1, ptsToUse.length);
 
     ptsToUse.forEach(pt => {
       const sx = pt.x * scaleVal, sy = pt.y * scaleVal, sz = pt.z * scaleVal;
@@ -444,18 +494,23 @@ export default function App() {
       const wy = sy + posY;
       const wz = sx * Math.sin(yawRad) + sz * Math.cos(yawRad) + posZ;
 
+      // Per-point yaw: auto-orient faces outward (or inward) from shape centroid
+      const ptYaw = autoOrient
+        ? Math.atan2(pt.x - cx, pt.z - cz) * 180 / Math.PI + (orientInward ? 180 : 0)
+        : yaw;
+
       if (format === "initc") {
-        lines.push(formatInitC(objClass, wx, wy, wz, pitch, yaw, roll, scaleVal));
+        lines.push(formatInitC(objClass, wx, wy, wz, pitch, ptYaw, roll, scaleVal));
         objCount++;
         extras.forEach((ex, ei) => {
-          lines.push(formatInitC(ex, wx, wy + stackY * (ei + 1), wz, pitch, yaw, roll, scaleVal));
+          lines.push(formatInitC(ex, wx, wy + stackY * (ei + 1), wz, pitch, ptYaw, roll, scaleVal));
           objCount++;
         });
       } else {
-        jsonObjects.push({ name: objClass, pos: [+wx.toFixed(6), +wy.toFixed(6), +wz.toFixed(6)], ypr: [+pitch.toFixed(4), +yaw.toFixed(4), +roll.toFixed(4)], scale: +scaleVal.toFixed(4), enableCEPersistency: cePersist, customString: "" });
+        jsonObjects.push({ name: objClass, pos: [+wx.toFixed(6), +wy.toFixed(6), +wz.toFixed(6)], ypr: [+pitch.toFixed(4), +ptYaw.toFixed(4), +roll.toFixed(4)], scale: +scaleVal.toFixed(4), enableCEPersistency: cePersist, customString: "" });
         objCount++;
         extras.forEach((ex, ei) => {
-          jsonObjects.push({ name: ex, pos: [+wx.toFixed(6), +(wy + stackY * (ei + 1)).toFixed(6), +wz.toFixed(6)], ypr: [+pitch.toFixed(4), +yaw.toFixed(4), +roll.toFixed(4)], scale: +scaleVal.toFixed(4), enableCEPersistency: cePersist, customString: "" });
+          jsonObjects.push({ name: ex, pos: [+wx.toFixed(6), +(wy + stackY * (ei + 1)).toFixed(6), +wz.toFixed(6)], ypr: [+pitch.toFixed(4), +ptYaw.toFixed(4), +roll.toFixed(4)], scale: +scaleVal.toFixed(4), enableCEPersistency: cePersist, customString: "" });
           objCount++;
         });
       }
@@ -489,36 +544,52 @@ export default function App() {
   const currentCode = mode === "architect" ? output : textOutput;
   const currentExt = (mode === "architect" ? format : textFormat) === "initc" ? "c" : "json";
   const currentParamDefs: ParamDef[] = SHAPE_DEFS[shapeType]?.params || [];
-  const filteredPresets = QUICK_PRESETS.filter(p => !presetFilter || p.label.toLowerCase().includes(presetFilter.toLowerCase()) || p.shape.includes(presetFilter.toLowerCase()));
+  const PRESET_CATEGORIES = ["All", ...Array.from(new Set(QUICK_PRESETS.map(p => p.category)))];
+  const filteredPresets = QUICK_PRESETS.filter(p => {
+    const catOk = presetCategory === "All" || p.category === presetCategory;
+    const searchOk = !presetFilter || p.label.toLowerCase().includes(presetFilter.toLowerCase()) || p.shape.includes(presetFilter.toLowerCase());
+    return catOk && searchOk;
+  });
 
   return (
     <div className="flex flex-col h-screen bg-[#0a0804] text-[#c8b99a] font-mono overflow-hidden select-none">
       {/* ── HEADER ── */}
-      <header className="flex items-center gap-3 px-4 py-2.5 border-b border-[#2e2518] bg-[#12100a] shrink-0">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[#d4a017] font-black text-lg tracking-widest">DANK</span>
-            <span className="text-[#c0392b] font-black text-lg tracking-widest">DAYZ</span>
-            <span className="text-[10px] border border-[#8b1a1a] text-[#c0392b] px-1.5 py-0.5 rounded-sm">ULTIMATE v3</span>
+      <header className="flex items-center gap-2 px-3 py-2 border-b border-[#2e2518] bg-[#12100a] shrink-0">
+        <button onClick={() => setSidebarOpen(v => !v)}
+          className="flex flex-col gap-1 p-1.5 rounded-sm border border-[#2e2518] hover:border-[#6a5a3a] transition-colors"
+          title={sidebarOpen ? "Hide sidebar" : "Show sidebar"}>
+          <span className="block w-4 h-0.5 bg-[#6a5a3a]" />
+          <span className="block w-4 h-0.5 bg-[#6a5a3a]" />
+          <span className="block w-4 h-0.5 bg-[#6a5a3a]" />
+        </button>
+        <div className="min-w-0">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-[#d4a017] font-black text-base tracking-widest">DANK</span>
+            <span className="text-[#c0392b] font-black text-base tracking-widest">DAYZ</span>
+            <span className="text-[10px] border border-[#8b1a1a] text-[#c0392b] px-1 py-0.5 rounded-sm hidden sm:inline">ULTIMATE v3</span>
           </div>
-          <div className="text-[#4a3a22] text-[9px] tracking-widest">REAL-TIME 3D · SHAPES · TUNNELS · MECHS · TEXT · CONSOLE SAFE</div>
+          <div className="text-[#4a3a22] text-[9px] tracking-widest hidden sm:block">REAL-TIME 3D · SHAPES · TUNNELS · MECHS · TEXT · CONSOLE SAFE</div>
         </div>
-        <div className="ml-auto flex items-center gap-2">
-          <div className="flex gap-1 border border-[#2e2518] rounded-sm p-0.5">
+        <div className="ml-auto flex items-center gap-1.5">
+          <div className="flex gap-0.5 border border-[#2e2518] rounded-sm p-0.5">
             {(["architect", "text"] as EditorMode[]).map(m => (
               <button key={m} onClick={() => setMode(m)}
-                className={`px-3 py-1.5 text-[11px] rounded-sm font-bold tracking-wider transition-all ${mode === m ? "bg-[#d4a017] text-[#0a0804]" : "text-[#6a5a3a] hover:text-[#c8b99a]"}`}>
-                {m === "architect" ? "🏗 ARCHITECT" : "✏ TEXT MAKER"}
+                className={`px-2 py-1.5 text-[10px] rounded-sm font-bold tracking-wider transition-all ${mode === m ? "bg-[#d4a017] text-[#0a0804]" : "text-[#6a5a3a] hover:text-[#c8b99a]"}`}>
+                {m === "architect" ? "🏗 BUILD" : "✏ TEXT"}
               </button>
             ))}
           </div>
-          <div className="w-2 h-2 rounded-full bg-[#27ae60] animate-pulse" title="Live preview active" />
+          <div className="w-2 h-2 rounded-full bg-[#27ae60] animate-pulse shrink-0" title="Live preview active" />
         </div>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
         {/* ── SIDEBAR ── */}
-        <div className="w-72 shrink-0 bg-[#0e0c08] border-r border-[#2e2518] overflow-y-auto flex flex-col">
+        {/* Mobile backdrop */}
+        {sidebarOpen && (
+          <div className="fixed inset-0 bg-black/50 z-20 md:hidden" onClick={() => setSidebarOpen(false)} />
+        )}
+        <div className={`${sidebarOpen ? "w-72" : "w-0"} shrink-0 bg-[#0e0c08] border-r border-[#2e2518] overflow-y-auto flex flex-col transition-all duration-200 z-30 md:relative md:z-auto ${sidebarOpen ? "absolute inset-y-0 left-0 md:relative" : "overflow-hidden"}`}>
           {mode === "architect" ? (
             <ArchitectSidebar
               shapeType={shapeType} params={params} paramDefs={currentParamDefs}
@@ -528,8 +599,9 @@ export default function App() {
               format={format} cePersist={cePersist} includeHelper={includeHelper}
               extraObjs={extraObjs} stackY={stackY}
               objCount={displayPoints.length}
-              autoRotate={autoRotate}
+              autoRotate={autoRotate} autoOrient={autoOrient} orientInward={orientInward}
               presetFilter={presetFilter} filteredPresets={filteredPresets}
+              presetCategory={presetCategory} presetCategories={PRESET_CATEGORIES}
               onShapeChange={onShapeChange} setObjClass={setObjClass}
               setPosX={setPosX} setPosY={setPosY} setPosZ={setPosZ}
               setYaw={setYaw} setPitch={setPitch} setRoll={setRoll}
@@ -537,7 +609,8 @@ export default function App() {
               setFormat={setFormat} setCePersist={setCePersist} setIncludeHelper={setIncludeHelper}
               setExtraObjs={setExtraObjs} setStackY={setStackY}
               setParam={setParam} setAutoRotate={setAutoRotate}
-              setPresetFilter={setPresetFilter}
+              setAutoOrient={setAutoOrient} setOrientInward={setOrientInward}
+              setPresetFilter={setPresetFilter} setPresetCategory={setPresetCategory}
               onGenerate={generate}
               onClear={() => setOutput("")}
               applyPreset={applyPreset}
@@ -574,7 +647,7 @@ export default function App() {
 
           {/* 3D Canvas */}
           <div className="relative bg-[#060402]" style={{ flex: "0 0 55%", minHeight: 200 }}>
-            <canvas ref={canvasRef} className="w-full h-full block" style={{ imageRendering: "crisp-edges" }} />
+            <canvas ref={canvasRef} className="block" />
             {/* Zoom controls */}
             <div className="absolute bottom-2 right-2 flex flex-col gap-1">
               <button onClick={() => zoomStep(1.25)}
@@ -676,17 +749,29 @@ function ArchitectSidebar(p: any) {
       {/* Quick Presets */}
       {sec("presets", "⚡ Quick Presets", (
         <div className="px-3">
-          <input type="text" placeholder="Filter presets..." value={p.presetFilter}
+          <input type="text" placeholder="Search presets..." value={p.presetFilter}
             onChange={e => p.setPresetFilter(e.target.value)}
             className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
           />
-          <div className="grid grid-cols-2 gap-1 max-h-48 overflow-y-auto">
+          {/* Category tabs */}
+          <div className="flex flex-wrap gap-1 mb-2">
+            {(p.presetCategories || []).map((cat: string) => (
+              <button key={cat} onClick={() => p.setPresetCategory(cat)}
+                className={`text-[9px] px-1.5 py-0.5 rounded-sm border transition-all ${p.presetCategory === cat ? "border-[#d4a017] text-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] text-[#5a4a2e] hover:text-[#c8b99a]"}`}>
+                {cat === "All" ? "All" : cat}
+              </button>
+            ))}
+          </div>
+          <div className="grid grid-cols-2 gap-1 max-h-52 overflow-y-auto pr-0.5">
             {p.filteredPresets.map((preset: any) => (
               <button key={preset.label} onClick={() => p.applyPreset(preset)}
                 className={`text-left text-[10px] px-2 py-1.5 rounded-sm border transition-all truncate ${p.shapeType === preset.shape ? "border-[#d4a017] text-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] text-[#7a6a4a] hover:border-[#6a5a3a] hover:text-[#c8b99a]"}`}>
                 {preset.label}
               </button>
             ))}
+            {p.filteredPresets.length === 0 && (
+              <div className="col-span-2 text-center text-[10px] text-[#3a2e18] py-3">No presets match filter</div>
+            )}
           </div>
         </div>
       ))}
@@ -831,6 +916,24 @@ function ArchitectSidebar(p: any) {
             <input type="checkbox" className="accent-[#d4a017]" checked={p.autoRotate} onChange={e => p.setAutoRotate(e.target.checked)} />
             Auto-spin 3D preview
           </label>
+          <div className="border-t border-[#2e2518] pt-2 mt-1">
+            <div className="text-[9px] text-[#8a6a0f] mb-1 uppercase tracking-wider">🔄 Auto-Orient YPR</div>
+            <label className="flex items-center gap-2 text-[10px] text-[#c8b99a] cursor-pointer mb-1">
+              <input type="checkbox" className="accent-[#d4a017]" checked={p.autoOrient} onChange={e => p.setAutoOrient(e.target.checked)} />
+              <span>Auto-orient objects (faces outward/inward)</span>
+            </label>
+            {p.autoOrient && (
+              <label className="flex items-center gap-2 text-[10px] text-[#6a5a3a] cursor-pointer ml-4">
+                <input type="checkbox" className="accent-[#d4a017]" checked={p.orientInward} onChange={e => p.setOrientInward(e.target.checked)} />
+                Face inward (toward center)
+              </label>
+            )}
+            {p.autoOrient && (
+              <div className="text-[9px] text-[#5a4a2e] mt-1 ml-0 leading-tight">
+                Objects rotate to face outward from the shape centre — perfect for walls, rings, squares &amp; perimeters.
+              </div>
+            )}
+          </div>
         </div>
       ))}
 
@@ -842,6 +945,7 @@ function ArchitectSidebar(p: any) {
           <div className="text-[#5a4a2e]">Mode</div><div className="text-[#d4a017]">{p.fillMode}{p.fillMode === "fill" ? ` d${p.fillDensity}` : ""}</div>
           <div className="text-[#5a4a2e]">Scale</div><div className="text-[#d4a017]">{p.scaleVal.toFixed(2)}×</div>
           <div className="text-[#5a4a2e]">Y/P/R</div><div className="text-[#d4a017]">{p.yaw}°/{p.pitch}°/{p.roll}°</div>
+          <div className="text-[#5a4a2e]">Orient</div><div className={p.autoOrient ? "text-[#27ae60] font-bold" : "text-[#3a2e18]"}>{p.autoOrient ? (p.orientInward ? "↙ inward" : "↗ outward") : "off"}</div>
         </div>
       </div>
 
