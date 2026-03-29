@@ -2,8 +2,9 @@ import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { getShapePoints, Point3D } from "@/lib/shapeGenerators";
 import { SHAPE_DEFS, SHAPE_GROUPS, ParamDef } from "@/lib/shapeParams";
 import { DAYZ_OBJECTS, OBJECT_GROUPS, formatInitC, HELPER_FUNC } from "@/lib/dayzObjects";
+import { COMPLETED_BUILDS, CompletedBuild } from "@/lib/completedBuilds";
 
-type EditorMode = "architect" | "text";
+type EditorMode = "architect" | "text" | "builds";
 type OutputFormat = "initc" | "json";
 type FillMode = "frame" | "fill";
 
@@ -400,6 +401,11 @@ export default function App() {
   const [presetFilter, setPresetFilter] = useState("");
   const [presetCategory, setPresetCategory] = useState("All");
 
+  // Completed Builds mode
+  const [selectedBuildId, setSelectedBuildId] = useState<string>(COMPLETED_BUILDS[0]?.id || "");
+  const [buildFilter, setBuildFilter] = useState("");
+  const [buildCategory, setBuildCategory] = useState("All");
+
   // Text maker
   const [textInput, setTextInput] = useState("DAYZ");
   const [textObj, setTextObj] = useState("StaticObj_Container_1D");
@@ -423,8 +429,12 @@ export default function App() {
     if (mode === "text") {
       return getTextPoints(textInput, textLetterH, textSpacing, textDepth, textRings);
     }
+    if (mode === "builds" && selectedBuildId) {
+      const b = COMPLETED_BUILDS.find(b => b.id === selectedBuildId);
+      if (b) return getShapePoints(b.shape, b.params);
+    }
     return getShapePoints(shapeType, params);
-  }, [mode, shapeType, params, textInput, textLetterH, textSpacing, textDepth, textRings]);
+  }, [mode, shapeType, params, selectedBuildId, textInput, textLetterH, textSpacing, textDepth, textRings]);
 
   // Apply fill mode with density — smart per-Y-level fill
   const displayPoints = useMemo(() => {
@@ -576,6 +586,93 @@ export default function App() {
     a.click(); URL.revokeObjectURL(a.href);
   };
 
+  // ── COMPLETED BUILD DOWNLOAD ──────────────────────────────────────────────
+  const downloadBuild = (build: CompletedBuild, mode: "frame" | "fill", format: "initc" | "json") => {
+    // 1. Get shape points
+    const raw = getShapePoints(build.shape, build.params);
+
+    // 2. Apply fill if needed (per-Y-level fill — mirrors the main fill logic)
+    let pts = raw;
+    if (mode === "fill" && raw.length) {
+      const density = build.fillDensity ?? 2;
+      const extras: Point3D[] = [];
+      const yMin = raw.reduce((m, p) => Math.min(m, p.y), Infinity);
+      const yMax = raw.reduce((m, p) => Math.max(m, p.y), -Infinity);
+      const binSize = Math.max(0.05, (yMax - yMin) * 0.025);
+      const yGroups = new Map<number, Point3D[]>();
+      raw.forEach(p => {
+        const key = Math.round(p.y / binSize) * binSize;
+        if (!yGroups.has(key)) yGroups.set(key, []);
+        yGroups.get(key)!.push(p);
+      });
+      yGroups.forEach(group => {
+        const cx2 = group.reduce((s, p) => s + p.x, 0) / group.length;
+        const cz2 = group.reduce((s, p) => s + p.z, 0) / group.length;
+        const avgY = group[0].y;
+        group.forEach(p => {
+          for (let d = 1; d <= density; d++) {
+            const t = d / (density + 1);
+            extras.push({ x: p.x * (1 - t) + cx2 * t, y: avgY, z: p.z * (1 - t) + cz2 * t });
+          }
+        });
+      });
+      pts = [...raw, ...extras];
+    }
+
+    // 3. Select objects
+    const obj = mode === "frame" ? build.frameObj : build.fillObj;
+    const extrasStr = mode === "frame" ? (build.extraFrame || "") : (build.extraFill || "");
+    const extraList = extrasStr.split(",").map(s => s.trim()).filter(Boolean);
+
+    // 4. Compute centroid for auto-orient
+    const cx3 = pts.reduce((s, p) => s + p.x, 0) / Math.max(1, pts.length);
+    const cz3 = pts.reduce((s, p) => s + p.z, 0) / Math.max(1, pts.length);
+
+    // 5. Build output
+    let code = "";
+    if (format === "initc") {
+      const lines: string[] = [
+        HELPER_FUNC,
+        `// ═══ ${build.name} — ${mode.toUpperCase()} MODE ═══`,
+        `// ${build.tagline}`,
+        `// Object: ${obj}${extraList.length ? " + " + extraList.join(", ") : ""}`,
+        `// Location: ${build.posX} ${build.posY} ${build.posZ} (${build.posX < 8000 ? "NWAF" : "Krasnoe"})`,
+        `// Objects: ${pts.length * (1 + extraList.length)}`,
+        `// ${build.objectNotes}`,
+        "",
+      ];
+      pts.forEach(pt => {
+        const wx = pt.x + build.posX;
+        const wy = pt.y + build.posY;
+        const wz = pt.z + build.posZ;
+        const ptYaw = build.autoOrient ? Math.atan2(pt.x - cx3, pt.z - cz3) * 180 / Math.PI : 0;
+        lines.push(formatInitC(obj, wx, wy, wz, 0, ptYaw, 0, 1.0));
+        extraList.forEach((ex, ei) => {
+          lines.push(formatInitC(ex, wx, wy + ei + 1, wz, 0, ptYaw, 0, 1.0));
+        });
+      });
+      code = lines.join("\n");
+    } else {
+      const objs: object[] = [];
+      pts.forEach(pt => {
+        const wx = pt.x + build.posX;
+        const wy = pt.y + build.posY;
+        const wz = pt.z + build.posZ;
+        const ptYaw = build.autoOrient ? Math.atan2(pt.x - cx3, pt.z - cz3) * 180 / Math.PI : 0;
+        objs.push({ name: obj, pos: [+wx.toFixed(3), +wy.toFixed(3), +wz.toFixed(3)], ypr: [0, +ptYaw.toFixed(4), 0], scale: 1.0, enableCEPersistency: 0, customString: "" });
+        extraList.forEach((ex, ei) => {
+          objs.push({ name: ex, pos: [+wx.toFixed(3), +(wy + ei + 1).toFixed(3), +wz.toFixed(3)], ypr: [0, +ptYaw.toFixed(4), 0], scale: 1.0, enableCEPersistency: 0, customString: "" });
+        });
+      });
+      code = JSON.stringify({ Objects: objs }, null, 2);
+    }
+
+    const ext = format === "initc" ? "c" : "json";
+    const filename = `${build.id}_${mode}`;
+    downloadCode(code, ext, filename);
+    showToast(`✓ Downloaded ${build.name} [${mode}] — ${pts.length * (1 + extraList.length)} objects`);
+  };
+
   const currentCode = mode === "architect" ? output : textOutput;
   const currentExt = (mode === "architect" ? format : textFormat) === "initc" ? "c" : "json";
   const currentParamDefs: ParamDef[] = SHAPE_DEFS[shapeType]?.params || [];
@@ -607,12 +704,18 @@ export default function App() {
         </div>
         <div className="ml-auto flex items-center gap-1.5">
           <div className="flex gap-0.5 border border-[#2e2518] rounded-sm p-0.5">
-            {(["architect", "text"] as EditorMode[]).map(m => (
-              <button key={m} onClick={() => setMode(m)}
-                className={`px-2 py-1.5 text-[10px] rounded-sm font-bold tracking-wider transition-all ${mode === m ? "bg-[#d4a017] text-[#0a0804]" : "text-[#b09a6a] hover:text-[#c8b99a]"}`}>
-                {m === "architect" ? "🏗 BUILD" : "✏ TEXT"}
-              </button>
-            ))}
+            <button onClick={() => setMode("architect")}
+              className={`px-2 py-1.5 text-[10px] rounded-sm font-bold tracking-wider transition-all ${mode === "architect" ? "bg-[#d4a017] text-[#0a0804]" : "text-[#b09a6a] hover:text-[#c8b99a]"}`}>
+              🏗 BUILD
+            </button>
+            <button onClick={() => setMode("text")}
+              className={`px-2 py-1.5 text-[10px] rounded-sm font-bold tracking-wider transition-all ${mode === "text" ? "bg-[#d4a017] text-[#0a0804]" : "text-[#b09a6a] hover:text-[#c8b99a]"}`}>
+              ✏ TEXT
+            </button>
+            <button onClick={() => setMode("builds")}
+              className={`px-2 py-1.5 text-[10px] rounded-sm font-bold tracking-wider transition-all ${mode === "builds" ? "bg-[#27ae60] text-[#0a0804]" : "text-[#7ec060] hover:text-[#a0d890]"}`}>
+              🏆 BUILDS
+            </button>
           </div>
           <div className="w-2 h-2 rounded-full bg-[#27ae60] animate-pulse shrink-0" title="Live preview active" />
         </div>
@@ -650,6 +753,17 @@ export default function App() {
               onClear={() => setOutput("")}
               applyPreset={applyPreset}
             />
+          ) : mode === "builds" ? (
+            <BuildsSidebar
+              builds={COMPLETED_BUILDS}
+              selectedId={selectedBuildId}
+              filter={buildFilter}
+              category={buildCategory}
+              onSelect={setSelectedBuildId}
+              onFilterChange={setBuildFilter}
+              onCategoryChange={setBuildCategory}
+              onDownload={downloadBuild}
+            />
           ) : (
             <TextSidebar
               textInput={textInput} textObj={textObj} textScale={textScale}
@@ -672,11 +786,14 @@ export default function App() {
           <div className="flex items-center gap-3 px-3 py-1 bg-[#0e0c08] border-b border-[#2e2518] text-[11px] shrink-0">
             <span className="text-[#9a8858]">Shape</span>
             <span className="text-[#d4a017] font-bold truncate max-w-[180px]">
-              {mode === "architect" ? (SHAPE_DEFS[shapeType]?.label || shapeType) : `"${textInput}"`}
+              {mode === "architect" ? (SHAPE_DEFS[shapeType]?.label || shapeType)
+               : mode === "builds" ? (COMPLETED_BUILDS.find(b => b.id === selectedBuildId)?.name || "—")
+               : `"${textInput}"`}
             </span>
             <span className="text-[#9a8858]">Objects</span>
             <span className={`font-bold ${displayPoints.length > 800 ? "text-[#e07a20]" : "text-[#d4a017]"}`}>{displayPoints.length}</span>
             {displayPoints.length > 800 && <span className="text-[#e07a20] text-[10px]">⚠ large!</span>}
+            {mode === "builds" && <span className="text-[#27ae60] text-[10px] font-bold">● LIVE PREVIEW</span>}
             <span className="ml-auto text-[#8a7840]">Drag=rotate · Scroll=zoom</span>
           </div>
 
@@ -698,28 +815,89 @@ export default function App() {
           </div>
 
           {/* Output */}
-          <div className="flex flex-col border-t border-[#2e2518] bg-[#0e0c08] flex-1 min-h-0">
-            <div className="flex items-center justify-between px-3 py-1.5 border-b border-[#2e2518] shrink-0">
-              <div className="text-[#d4a017] text-[11px] font-bold tracking-wider">
-                {format === "initc" ? "▶ INIT.C" : "▶ JSON SPAWNER"}
-                {currentCode && <span className="ml-2 text-[#b09a6a] font-normal">({currentCode.split("\n").length} lines)</span>}
+          {mode === "builds" ? (
+            <div className="flex flex-col border-t border-[#2e2518] bg-[#0e0c08] flex-1 min-h-0">
+              <div className="flex items-center gap-2 px-3 py-1.5 border-b border-[#2e2518] shrink-0">
+                <span className="text-[#27ae60] text-[11px] font-bold tracking-wider">🏆 COMPLETED BUILDS</span>
+                <span className="text-[#9a8858] text-[10px]">{COMPLETED_BUILDS.length} ready-to-download builds</span>
               </div>
-              <div className="flex gap-1.5">
-                <button onClick={() => copyCode(currentCode)}
-                  className="px-3 py-1 text-[11px] border border-[#2e2518] text-[#b09a6a] hover:border-[#d4a017] hover:text-[#d4a017] rounded-sm transition-all">
-                  Copy
-                </button>
-                <button onClick={() => downloadCode(currentCode, currentExt, mode === "architect" ? `shape_${shapeType}` : `text_${textInput}`)}
-                  className="px-3 py-1 text-[11px] bg-[#d4a017] text-[#0a0804] font-bold rounded-sm hover:bg-[#e8b82a] transition-all">
-                  Download
-                </button>
-              </div>
+              {(() => {
+                const b = COMPLETED_BUILDS.find(x => x.id === selectedBuildId);
+                return b ? (
+                  <div className="flex-1 p-4 overflow-auto flex flex-col gap-3">
+                    <div className="text-[#d4a017] text-lg font-black">{b.icon} {b.name}</div>
+                    <div className="text-[#c8b99a] text-[11px] leading-relaxed">{b.tagline}</div>
+                    <div className="border border-[#2e2518] rounded-sm p-3 flex flex-col gap-2">
+                      <div className="text-[#9a8858] text-[10px] uppercase tracking-wider mb-1">Objects Used</div>
+                      <div className="text-[11px]">
+                        <span className="text-[#27ae60] font-bold">FRAME: </span>
+                        <span className="text-[#c8b99a]">{b.frameObj}</span>
+                        {b.extraFrame && <span className="text-[#9a8858]"> + {b.extraFrame}</span>}
+                      </div>
+                      <div className="text-[11px]">
+                        <span className="text-[#d4a017] font-bold">FILL: </span>
+                        <span className="text-[#c8b99a]">{b.fillObj}</span>
+                        {b.extraFill && <span className="text-[#9a8858]"> + {b.extraFill}</span>}
+                      </div>
+                      <div className="text-[#9a8858] text-[10px] leading-relaxed mt-1">{b.objectNotes}</div>
+                    </div>
+                    <div className="border border-[#2e2518] rounded-sm p-3">
+                      <div className="text-[#9a8858] text-[10px] uppercase tracking-wider mb-2">Location</div>
+                      <div className="text-[#c8b99a] text-[11px] font-mono">
+                        <span className="text-[#d4a017] font-bold">{b.posX < 8000 ? "NWAF" : "Krasnoe"}</span>
+                        {" "}X={b.posX} Y={b.posY} Z={b.posZ}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 mt-1">
+                      <button onClick={() => downloadBuild(b, "frame", "initc")}
+                        className="py-2 text-[11px] font-bold bg-[#1a2e1a] border border-[#27ae60] text-[#27ae60] rounded-sm hover:bg-[#27ae60] hover:text-[#0a0804] transition-all">
+                        ⬇ FRAME .c
+                      </button>
+                      <button onClick={() => downloadBuild(b, "fill", "initc")}
+                        className="py-2 text-[11px] font-bold bg-[#2e2010] border border-[#d4a017] text-[#d4a017] rounded-sm hover:bg-[#d4a017] hover:text-[#0a0804] transition-all">
+                        ⬇ FILL .c
+                      </button>
+                      <button onClick={() => downloadBuild(b, "frame", "json")}
+                        className="py-2 text-[10px] font-bold bg-[#1a1a2e] border border-[#6a7abf] text-[#6a7abf] rounded-sm hover:bg-[#6a7abf] hover:text-[#0a0804] transition-all">
+                        ⬇ FRAME .json
+                      </button>
+                      <button onClick={() => downloadBuild(b, "fill", "json")}
+                        className="py-2 text-[10px] font-bold bg-[#1a1a2e] border border-[#6a7abf] text-[#6a7abf] rounded-sm hover:bg-[#6a7abf] hover:text-[#0a0804] transition-all">
+                        ⬇ FILL .json
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex-1 flex items-center justify-center text-[#9a8858] text-[11px]">
+                    Select a build on the left to preview and download
+                  </div>
+                );
+              })()}
             </div>
-            <textarea readOnly value={currentCode}
-              placeholder={"// ← Configure your shape on the left, then click GENERATE\n// The 3D preview updates in real time as you adjust settings\n// Drag the preview to rotate • Scroll to zoom"}
-              className="flex-1 resize-none p-3 text-[11px] text-[#7ec060] bg-transparent border-0 outline-none leading-relaxed font-mono overflow-auto"
-            />
-          </div>
+          ) : (
+            <div className="flex flex-col border-t border-[#2e2518] bg-[#0e0c08] flex-1 min-h-0">
+              <div className="flex items-center justify-between px-3 py-1.5 border-b border-[#2e2518] shrink-0">
+                <div className="text-[#d4a017] text-[11px] font-bold tracking-wider">
+                  {format === "initc" ? "▶ INIT.C" : "▶ JSON SPAWNER"}
+                  {currentCode && <span className="ml-2 text-[#b09a6a] font-normal">({currentCode.split("\n").length} lines)</span>}
+                </div>
+                <div className="flex gap-1.5">
+                  <button onClick={() => copyCode(currentCode)}
+                    className="px-3 py-1 text-[11px] border border-[#2e2518] text-[#b09a6a] hover:border-[#d4a017] hover:text-[#d4a017] rounded-sm transition-all">
+                    Copy
+                  </button>
+                  <button onClick={() => downloadCode(currentCode, currentExt, mode === "architect" ? `shape_${shapeType}` : `text_${textInput}`)}
+                    className="px-3 py-1 text-[11px] bg-[#d4a017] text-[#0a0804] font-bold rounded-sm hover:bg-[#e8b82a] transition-all">
+                    Download
+                  </button>
+                </div>
+              </div>
+              <textarea readOnly value={currentCode}
+                placeholder={"// ← Configure your shape on the left, then click GENERATE\n// The 3D preview updates in real time as you adjust settings\n// Drag the preview to rotate • Scroll to zoom"}
+                className="flex-1 resize-none p-3 text-[11px] text-[#7ec060] bg-transparent border-0 outline-none leading-relaxed font-mono overflow-auto"
+              />
+            </div>
+          )}
         </div>
       </div>
 
@@ -1088,6 +1266,112 @@ function TextSidebar(p: any) {
 
       <Sec>Supported Characters</Sec>
       <div className="px-3 text-[10px] text-[#b09a6a] leading-loose">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z<br />0 1 2 3 4 5 6 7 8 9  !  ?  .  ,  (space)</div>
+    </div>
+  );
+}
+
+// ─── BUILDS SIDEBAR ────────────────────────────────────────────────────────────
+function BuildsSidebar(p: {
+  builds: CompletedBuild[];
+  selectedId: string;
+  filter: string;
+  category: string;
+  onSelect: (id: string) => void;
+  onFilterChange: (v: string) => void;
+  onCategoryChange: (v: string) => void;
+  onDownload: (b: CompletedBuild, mode: "frame" | "fill", fmt: "initc" | "json") => void;
+}) {
+  const CATS = ["All", ...Array.from(new Set(p.builds.map(b => b.category)))];
+  const filtered = p.builds.filter(b => {
+    const catOk = p.category === "All" || b.category === p.category;
+    const q = p.filter.toLowerCase();
+    const textOk = !q || b.name.toLowerCase().includes(q) || b.tagline.toLowerCase().includes(q);
+    return catOk && textOk;
+  });
+
+  return (
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className="px-3 pt-3 pb-2 border-b border-[#2e2518] shrink-0">
+        <div className="text-[#27ae60] text-[9px] font-bold tracking-widest uppercase mb-2">
+          🏆 Completed Builds — {p.builds.length} Builds Ready
+        </div>
+        <input
+          type="text"
+          value={p.filter}
+          onChange={e => p.onFilterChange(e.target.value)}
+          placeholder="Search builds..."
+          className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1.5 rounded-sm focus:outline-none focus:border-[#27ae60] transition-colors mb-2"
+        />
+        {/* Category tabs */}
+        <div className="flex flex-wrap gap-1">
+          {CATS.map(cat => (
+            <button key={cat} onClick={() => p.onCategoryChange(cat)}
+              className={`px-1.5 py-0.5 text-[9px] rounded-sm font-bold transition-all border ${p.category === cat
+                ? "bg-[#27ae60] text-[#0a0804] border-[#27ae60]"
+                : "border-[#2e2518] text-[#9a8858] hover:border-[#27ae60] hover:text-[#7ec060]"
+              }`}>
+              {cat === "All" ? "All" : cat.split(" ")[0]}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Build list */}
+      <div className="flex-1 overflow-y-auto">
+        {filtered.length === 0 && (
+          <div className="px-3 py-6 text-center text-[#9a8858] text-[11px]">No builds match your search</div>
+        )}
+        {filtered.map(b => {
+          const isSelected = b.id === p.selectedId;
+          const loc = b.posX < 8000 ? "NWAF" : "Krasnoe";
+          return (
+            <div key={b.id}
+              onClick={() => p.onSelect(b.id)}
+              className={`border-b border-[#1e1c18] cursor-pointer transition-all ${isSelected ? "bg-[#0f1f0f] border-l-2 border-l-[#27ae60]" : "hover:bg-[#0f0d09]"}`}>
+              {/* Build title row */}
+              <div className="flex items-center gap-1.5 px-3 pt-2 pb-1">
+                <span className="text-base shrink-0">{b.icon}</span>
+                <div className="min-w-0 flex-1">
+                  <div className={`text-[11px] font-bold truncate ${isSelected ? "text-[#27ae60]" : "text-[#c8b99a]"}`}>{b.name}</div>
+                  <div className="text-[9px] text-[#9a8858] truncate">{b.category}</div>
+                </div>
+                <span className={`text-[8px] px-1 py-0.5 rounded-sm border font-bold shrink-0 ${loc === "NWAF" ? "border-[#1a4a6a] text-[#4a9abf]" : "border-[#4a1a1a] text-[#bf4a4a]"}`}>
+                  {loc}
+                </span>
+              </div>
+
+              {/* Tagline */}
+              <div className="px-3 pb-1 text-[9px] text-[#8a7840] leading-relaxed line-clamp-2">{b.tagline}</div>
+
+              {/* Object summary */}
+              <div className="px-3 pb-1 text-[9px]">
+                <span className="text-[#27ae60]">▫ </span>
+                <span className="text-[#7a9a7a] truncate block">{b.frameObj.split("\\").pop()}</span>
+              </div>
+
+              {/* Download buttons */}
+              <div className="px-3 pb-2 grid grid-cols-2 gap-1">
+                <button
+                  onClick={e => { e.stopPropagation(); p.onDownload(b, "frame", "initc"); }}
+                  className="py-1.5 text-[9px] font-bold border border-[#27ae60] text-[#27ae60] rounded-sm hover:bg-[#27ae60] hover:text-[#0a0804] transition-all">
+                  ⬇ FRAME .c
+                </button>
+                <button
+                  onClick={e => { e.stopPropagation(); p.onDownload(b, "fill", "initc"); }}
+                  className="py-1.5 text-[9px] font-bold border border-[#d4a017] text-[#d4a017] rounded-sm hover:bg-[#d4a017] hover:text-[#0a0804] transition-all">
+                  ⬇ FILL .c
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Footer */}
+      <div className="px-3 py-2 border-t border-[#2e2518] text-[9px] text-[#9a8858] shrink-0">
+        All builds pre-positioned at NWAF or Krasnoe · Console safe
+      </div>
     </div>
   );
 }
