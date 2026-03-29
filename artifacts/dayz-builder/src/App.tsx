@@ -958,53 +958,55 @@ export default function App() {
   return (
     <div className="flex flex-col h-screen bg-[#0a0804] text-[#c8b99a] font-mono overflow-hidden select-none">
       {/* ── HEADER ── */}
-      <header className="flex items-center gap-2 px-3 py-2 border-b border-[#2e2518] bg-[#12100a] shrink-0">
-        <button onClick={() => setSidebarOpen(v => !v)}
-          className="flex flex-col gap-1 p-1.5 rounded-sm border border-[#2e2518] hover:border-[#6a5a3a] transition-colors"
-          title={sidebarOpen ? "Hide sidebar" : "Show sidebar"}>
-          <span className="block w-4 h-0.5 bg-[#6a5a3a]" />
-          <span className="block w-4 h-0.5 bg-[#6a5a3a]" />
-          <span className="block w-4 h-0.5 bg-[#6a5a3a]" />
-        </button>
-        <div className="min-w-0">
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-[#d4a017] font-black text-base tracking-widest">DANK</span>
-            <span className="text-[#c0392b] font-black text-base tracking-widest">DAYZ</span>
-            <span className="text-[10px] border border-[#8b1a1a] text-[#c0392b] px-1 py-0.5 rounded-sm hidden sm:inline">ULTIMATE v3</span>
+      <header className="shrink-0 bg-[#12100a] border-b border-[#2e2518]">
+        {/* Row 1 — logo + controls */}
+        <div className="flex items-center gap-2 px-3 py-2">
+          <button onClick={() => setSidebarOpen(v => !v)}
+            className="flex flex-col gap-[5px] p-1.5 rounded-sm border border-[#2e2518] hover:border-[#6a5a3a] transition-colors shrink-0"
+            title={sidebarOpen ? "Hide sidebar" : "Show sidebar"}>
+            <span className="block w-4 h-0.5 bg-[#6a5a3a]" />
+            <span className="block w-4 h-0.5 bg-[#6a5a3a]" />
+            <span className="block w-4 h-0.5 bg-[#6a5a3a]" />
+          </button>
+          <div className="flex items-baseline gap-1.5 min-w-0">
+            <span className="text-[#d4a017] font-black text-[15px] tracking-widest shrink-0">DANK</span>
+            <span className="text-[#c0392b] font-black text-[15px] tracking-widest shrink-0">DAYZ</span>
+            <span className="text-[9px] border border-[#8b1a1a] text-[#c0392b] px-1 py-0.5 rounded-sm shrink-0">ULTIMATE v3</span>
+          </div>
+          <div className="ml-auto flex items-center gap-2 shrink-0">
+            <span className="text-[9px] text-[#4a3820] hidden md:block">
+              {({architect:"BUILD",text:"TEXT",builds:"BUILDS",weapons:"WEAPONS",bunker:"BUNKER",maze:"MAZE",race:"RACE"} as Record<string,string>)[mode]}
+            </span>
+            <div className="w-2 h-2 rounded-full bg-[#27ae60] animate-pulse" title="Live preview active" />
           </div>
         </div>
-        <div className="ml-auto flex items-center gap-1.5">
-          <div className="flex gap-0.5 border border-[#2e2518] rounded-sm p-0.5">
-            <button onClick={() => setMode("architect")}
-              className={`px-2 py-1.5 text-[10px] rounded-sm font-bold tracking-wider transition-all ${mode === "architect" ? "bg-[#d4a017] text-[#0a0804]" : "text-[#b09a6a] hover:text-[#c8b99a]"}`}>
-              🏗 BUILD
-            </button>
-            <button onClick={() => setMode("text")}
-              className={`px-2 py-1.5 text-[10px] rounded-sm font-bold tracking-wider transition-all ${mode === "text" ? "bg-[#d4a017] text-[#0a0804]" : "text-[#b09a6a] hover:text-[#c8b99a]"}`}>
-              ✏ TEXT
-            </button>
-            <button onClick={() => setMode("builds")}
-              className={`px-2 py-1.5 text-[10px] rounded-sm font-bold tracking-wider transition-all ${mode === "builds" ? "bg-[#27ae60] text-[#0a0804]" : "text-[#7ec060] hover:text-[#a0d890]"}`}>
-              🏆 BUILDS
-            </button>
-            <button onClick={() => setMode("weapons")}
-              className={`px-2 py-1.5 text-[10px] rounded-sm font-bold tracking-wider transition-all ${mode === "weapons" ? "bg-[#e67e22] text-[#0a0804]" : "text-[#e67e22] opacity-70 hover:opacity-100"}`}>
-              🔫 WEAPONS
-            </button>
-            <button onClick={() => setMode("bunker")}
-              className={`px-2 py-1.5 text-[10px] rounded-sm font-bold tracking-wider transition-all ${mode === "bunker" ? "bg-[#5dade2] text-[#0a0804]" : "text-[#5dade2] opacity-70 hover:opacity-100"}`}>
-              🏗 BUNKER
-            </button>
-            <button onClick={() => setMode("maze")}
-              className={`px-2 py-1.5 text-[10px] rounded-sm font-bold tracking-wider transition-all ${mode === "maze" ? "bg-[#9b59b6] text-white" : "text-[#9b59b6] opacity-70 hover:opacity-100"}`}>
-              🌀 MAZE
-            </button>
-            <button onClick={() => setMode("race")}
-              className={`px-2 py-1.5 text-[10px] rounded-sm font-bold tracking-wider transition-all ${mode === "race" ? "bg-[#e74c3c] text-white" : "text-[#e74c3c] opacity-70 hover:opacity-100"}`}>
-              🏁 RACE
-            </button>
-          </div>
-          <div className="w-2 h-2 rounded-full bg-[#27ae60] animate-pulse shrink-0" title="Live preview active" />
+
+        {/* Row 2 — scrollable tab strip */}
+        <div className="flex overflow-x-auto scrollbar-none border-t border-[#1e1a10]" style={{scrollbarWidth:'none'}}>
+          {([
+            { key: "architect", emoji: "🏗", label: "BUILD",   active: "bg-[#d4a017] text-[#0a0804]",   inactive: "text-[#9a7a40] hover:text-[#d4a017]",   dot: "bg-[#d4a017]" },
+            { key: "text",      emoji: "✏",  label: "TEXT",    active: "bg-[#d4a017] text-[#0a0804]",   inactive: "text-[#9a7a40] hover:text-[#d4a017]",   dot: "bg-[#d4a017]" },
+            { key: "builds",    emoji: "🏆", label: "BUILDS",  active: "bg-[#27ae60] text-[#0a0804]",   inactive: "text-[#3a8a50] hover:text-[#27ae60]",   dot: "bg-[#27ae60]" },
+            { key: "weapons",   emoji: "🔫", label: "WEAPONS", active: "bg-[#e67e22] text-[#0a0804]",   inactive: "text-[#a05010] hover:text-[#e67e22]",   dot: "bg-[#e67e22]" },
+            { key: "bunker",    emoji: "🏗", label: "BUNKER",  active: "bg-[#5dade2] text-[#0a0804]",   inactive: "text-[#2a6a9a] hover:text-[#5dade2]",   dot: "bg-[#5dade2]" },
+            { key: "maze",      emoji: "🌀", label: "MAZE",    active: "bg-[#9b59b6] text-white",        inactive: "text-[#6a3a8a] hover:text-[#9b59b6]",   dot: "bg-[#9b59b6]" },
+            { key: "race",      emoji: "🏁", label: "RACE",    active: "bg-[#e74c3c] text-white",        inactive: "text-[#8a2a20] hover:text-[#e74c3c]",   dot: "bg-[#e74c3c]" },
+          ] as const).map(t => {
+            const isActive = mode === t.key;
+            return (
+              <button
+                key={t.key}
+                onClick={() => setMode(t.key as EditorMode)}
+                className={`relative flex flex-col items-center justify-center gap-0.5 px-3.5 py-2 shrink-0 font-bold transition-all ${isActive ? t.active : t.inactive}`}
+              >
+                <span className="text-[13px] leading-none">{t.emoji}</span>
+                <span className="text-[8px] tracking-widest leading-none">{t.label}</span>
+                {isActive && (
+                  <span className={`absolute bottom-0 left-0 right-0 h-[2px] ${t.dot}`} />
+                )}
+              </button>
+            );
+          })}
         </div>
       </header>
 
