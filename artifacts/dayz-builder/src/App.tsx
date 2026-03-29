@@ -711,13 +711,12 @@ export default function App() {
 
   const setParam = (id: string, v: number) => setParams(prev => ({ ...prev, [id]: v }));
 
-  // ── GENERATE CODE ──────────────────────────────────────────────────────────
-  const generate = () => {
+  // ── BUILD CODE STRING (pure — returns without setting state) ──────────────
+  const buildShapeCode = (): string => {
     const ptsToUse = displayPoints;
     const extras = extraObjs.split(",").map(s => s.trim()).filter(Boolean);
     const lines: string[] = [];
     const jsonObjects: object[] = [];
-    let objCount = 0;
 
     if (format === "initc") {
       if (includeHelper) lines.push(HELPER_FUNC);
@@ -730,8 +729,6 @@ export default function App() {
     }
 
     const yawRad = yaw * Math.PI / 180;
-
-    // Compute centroid for auto-orient
     const cx = ptsToUse.reduce((s, p) => s + p.x, 0) / Math.max(1, ptsToUse.length);
     const cz = ptsToUse.reduce((s, p) => s + p.z, 0) / Math.max(1, ptsToUse.length);
 
@@ -742,35 +739,27 @@ export default function App() {
       const wx = sx * Math.cos(yawRad) - sz * Math.sin(yawRad) + posX + jx;
       const wy = sy + posY;
       const wz = sx * Math.sin(yawRad) + sz * Math.cos(yawRad) + posZ + jz;
-
-      // Per-point yaw: auto-orient faces outward (or inward) from shape centroid
       const ptYaw = autoOrient
         ? Math.atan2(pt.x - cx, pt.z - cz) * 180 / Math.PI + (orientInward ? 180 : 0)
         : yaw;
 
       if (format === "initc") {
         lines.push(formatInitC(objClass, wx, wy, wz, pitch, ptYaw, roll, scaleVal));
-        objCount++;
         extras.forEach((ex, ei) => {
           lines.push(formatInitC(ex, wx, wy + stackY * (ei + 1), wz, pitch, ptYaw, roll, scaleVal));
-          objCount++;
         });
       } else {
         jsonObjects.push({ name: objClass, pos: [+wx.toFixed(6), +wy.toFixed(6), +wz.toFixed(6)], ypr: [+pitch.toFixed(4), +ptYaw.toFixed(4), +roll.toFixed(4)], scale: +scaleVal.toFixed(4), enableCEPersistency: cePersist, customString: "" });
-        objCount++;
         extras.forEach((ex, ei) => {
           jsonObjects.push({ name: ex, pos: [+wx.toFixed(6), +(wy + stackY * (ei + 1)).toFixed(6), +wz.toFixed(6)], ypr: [+pitch.toFixed(4), +ptYaw.toFixed(4), +roll.toFixed(4)], scale: +scaleVal.toFixed(4), enableCEPersistency: cePersist, customString: "" });
-          objCount++;
         });
       }
     });
 
-    const result = format === "initc" ? lines.join("\n") : JSON.stringify({ Objects: jsonObjects }, null, 2);
-    setOutput(result);
-    showToast(`✓ Generated ${objCount} object${objCount !== 1 ? "s" : ""}`);
+    return format === "initc" ? lines.join("\n") : JSON.stringify({ Objects: jsonObjects }, null, 2);
   };
 
-  const generateText = () => {
+  const buildTextCode = (): string => {
     const pts = displayPoints;
     const lines: string[] = [];
     const jsonObjects: object[] = [];
@@ -780,14 +769,34 @@ export default function App() {
       if (textFormat === "initc") lines.push(formatInitC(textObj, wx, wy, wz, 0, 0, 0, textScale));
       else jsonObjects.push({ name: textObj, pos: [+wx.toFixed(6), +wy.toFixed(6), +wz.toFixed(6)], ypr: [0, 0, 0], scale: +textScale.toFixed(4), enableCEPersistency: 0, customString: "" });
     });
-    setTextOutput(textFormat === "initc" ? lines.join("\n") : JSON.stringify({ Objects: jsonObjects }, null, 2));
-    showToast(`✓ Text: ${pts.length} objects`);
+    return textFormat === "initc" ? lines.join("\n") : JSON.stringify({ Objects: jsonObjects }, null, 2);
+  };
+
+  // ── GENERATE CODE (builds + updates display textarea) ─────────────────────
+  const generate = () => {
+    const result = buildShapeCode();
+    setOutput(result);
+    const objCount = displayPoints.length * (1 + extraObjs.split(",").map(s => s.trim()).filter(Boolean).length);
+    showToast(`✓ Generated ${objCount} object${objCount !== 1 ? "s" : ""}`);
+  };
+
+  const generateText = () => {
+    const result = buildTextCode();
+    setTextOutput(result);
+    showToast(`✓ Text: ${displayPoints.length} objects`);
   };
 
   const copyCode = (code: string) => navigator.clipboard.writeText(code).then(() => showToast("✓ Copied!"));
+
+  // Download always regenerates fresh — never relies on textarea state
   const downloadCode = (code: string, ext: string, name: string) => {
-    const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(new Blob([code], { type: "text/plain" })), download: `${name}.${ext}` });
-    a.click(); URL.revokeObjectURL(a.href);
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([code], { type: "text/plain" }));
+    a.download = `${name}.${ext}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
   };
 
   // ── COMPLETED BUILD DOWNLOAD ──────────────────────────────────────────────
@@ -1112,11 +1121,19 @@ export default function App() {
                   {currentCode && <span className="ml-2 text-[#b09a6a] font-normal">({currentCode.split("\n").length} lines)</span>}
                 </div>
                 <div className="flex gap-1.5">
-                  <button onClick={() => copyCode(currentCode)}
+                  <button onClick={() => {
+                    const code = mode === "architect" ? buildShapeCode() : buildTextCode();
+                    if (mode === "architect") setOutput(code); else setTextOutput(code);
+                    copyCode(code);
+                  }}
                     className="px-3 py-1 text-[11px] border border-[#2e2518] text-[#b09a6a] hover:border-[#d4a017] hover:text-[#d4a017] rounded-sm transition-all">
                     Copy
                   </button>
-                  <button onClick={() => downloadCode(currentCode, currentExt, mode === "architect" ? `shape_${shapeType}` : `text_${textInput}`)}
+                  <button onClick={() => {
+                    const code = mode === "architect" ? buildShapeCode() : buildTextCode();
+                    if (mode === "architect") setOutput(code); else setTextOutput(code);
+                    downloadCode(code, currentExt, mode === "architect" ? `shape_${shapeType}` : `text_${textInput || "text"}`);
+                  }}
                     className="px-3 py-1 text-[11px] bg-[#d4a017] text-[#0a0804] font-bold rounded-sm hover:bg-[#e8b82a] transition-all">
                     Download
                   </button>
