@@ -87,6 +87,11 @@ export function getShapePoints(shapeType: string, params: Record<string, number>
     case 'pirate_ship': return gen_pirate_ship(p);
     case 'pvp_arena': return gen_pvp_arena(p);
     case 'helipad': return gen_helipad(p);
+    case 'arena_colosseum': return gen_arena_colosseum(p);
+    case 'arena_fort': return gen_arena_fort(p);
+    case 'arena_maze': return gen_arena_maze(p);
+    case 'arena_siege': return gen_arena_siege(p);
+    case 'arena_compound': return gen_arena_compound(p);
     case 'mushroom_cloud': return gen_mushroom_cloud(p);
     case 'black_hole': return gen_black_hole(p);
     case 'alien_mothership': return gen_alien_mothership(p);
@@ -2883,6 +2888,504 @@ function gen_helipad(p: Record<string, number>): Point3D[] {
       pts.push({ x: side * (R * 1.1 + s * 2.8), y: platH + 0.02, z: dy * s * 0.5 });
     });
   });
+  return pts;
+}
+
+// ─── ARENA COLOSSEUM ──────────────────────────────────────────────────────────
+function gen_arena_colosseum(p: Record<string, number>): Point3D[] {
+  const s = p.scale ?? 1;
+  const rX = (p.radiusX ?? 22) * s;
+  const rZ = (p.radiusZ ?? 15) * s;
+  const H = (p.height ?? 7) * s;
+  const tiers = Math.max(1, Math.round(p.tiers ?? 3));
+  const pts: Point3D[] = [];
+  const segs = 72;
+
+  // Outer facade — each tier steps inward slightly, arched openings every 8th seg
+  for (let tier = 0; tier < tiers; tier++) {
+    const taper = 1 - tier * 0.055;
+    const tierBaseY = tier * H / tiers;
+    const tierH = H / tiers;
+    for (let i = 0; i < segs; i++) {
+      const isArch = i % 8 === 0; // skip every 8th = arch opening
+      if (isArch) continue;
+      const ang = (i / segs) * Math.PI * 2;
+      const ox = Math.cos(ang) * rX * taper, oz = Math.sin(ang) * rZ * taper;
+      for (let y = 0; y <= 4; y++) {
+        pts.push({ x: ox, y: tierBaseY + (y / 4) * tierH, z: oz });
+      }
+    }
+    // Arch crown points
+    for (let i = 0; i < segs; i += 8) {
+      const ang = (i / segs) * Math.PI * 2;
+      pts.push({ x: Math.cos(ang) * rX * taper, y: tierBaseY + tierH * 0.85, z: Math.sin(ang) * rZ * taper });
+    }
+  }
+  // Top parapet with crenellations
+  for (let i = 0; i < segs; i++) {
+    const ang = (i / segs) * Math.PI * 2;
+    const taper = 1 - (tiers - 1) * 0.055;
+    if (i % 3 !== 0) pts.push({ x: Math.cos(ang) * rX * taper, y: H, z: Math.sin(ang) * rZ * taper });
+    else pts.push({ x: Math.cos(ang) * rX * taper, y: H * 1.1, z: Math.sin(ang) * rZ * taper }); // merlon
+  }
+
+  // Tiered seating rings (step inward + upward per tier)
+  for (let tier = 0; tier < tiers; tier++) {
+    const seatR = 0.74 - tier * 0.14;
+    const seatY = tier * H * 0.2;
+    const seatSegs = 48;
+    for (let i = 0; i < seatSegs; i++) {
+      const ang = (i / seatSegs) * Math.PI * 2;
+      pts.push({ x: Math.cos(ang) * rX * seatR, y: seatY, z: Math.sin(ang) * rZ * seatR });
+      pts.push({ x: Math.cos(ang) * rX * seatR, y: seatY + H * 0.025, z: Math.sin(ang) * rZ * seatR });
+    }
+  }
+
+  // Arena floor — elliptical grid (sand)
+  const flX = rX * 0.5, flZ = rZ * 0.5;
+  for (let i = -8; i <= 8; i++) {
+    for (let j = -8; j <= 8; j++) {
+      const fx = i * flX / 8, fz = j * flZ / 8;
+      if ((fx * fx) / (flX * flX) + (fz * fz) / (flZ * flZ) <= 1) {
+        if (i % 3 === 0 || j % 3 === 0) pts.push({ x: fx, y: 0, z: fz });
+      }
+    }
+  }
+  // Podium / sponsor box (long side, both sides)
+  [-1, 1].forEach(side => {
+    for (let i = -3; i <= 3; i++) {
+      pts.push({ x: i * rX * 0.07, y: H * 0.22 * 2, z: side * rZ * 0.68 });
+      pts.push({ x: i * rX * 0.07, y: H * 0.22 * 2 + H * 0.08, z: side * rZ * 0.68 });
+    }
+  });
+  // N/S/E/W gates — pillars flanking each entrance
+  [0, Math.PI / 2, Math.PI, Math.PI * 1.5].forEach(ang => {
+    [-1, 1].forEach(side => {
+      const ga = ang + side * 0.07;
+      const taper = 1 - (tiers - 1) * 0.055;
+      const gx = Math.cos(ga) * rX * taper, gz = Math.sin(ga) * rZ * taper;
+      for (let y = 0; y <= 6; y++) pts.push({ x: gx, y: y * H / 6, z: gz });
+    });
+  });
+  // Underground hypogeum — corridor grid beneath the floor
+  const hypRows = 4, hypCols = 7;
+  for (let r = 0; r <= hypRows; r++) {
+    for (let c = 0; c <= hypCols; c++) {
+      const hx = (c / hypCols * 2 - 1) * flX * 0.88;
+      const hz = (r / hypRows * 2 - 1) * flZ * 0.88;
+      if ((hx * hx) / (flX * flX) + (hz * hz) / (flZ * flZ) < 1) {
+        if (r === 0 || r === hypRows || c === 0 || c === hypCols) {
+          for (let y = 0; y <= 3; y++) pts.push({ x: hx, y: -H * 0.25 + y * H * 0.07, z: hz });
+        } else {
+          pts.push({ x: hx, y: -H * 0.25, z: hz });
+        }
+      }
+    }
+  }
+  return pts;
+}
+
+// ─── ARENA FORT ───────────────────────────────────────────────────────────────
+function gen_arena_fort(p: Record<string, number>): Point3D[] {
+  const s = p.scale ?? 1;
+  const W = (p.width ?? 28) * s;
+  const D = (p.depth ?? 28) * s;
+  const H = (p.height ?? 6) * s;
+  const bastions = (p.bastions ?? 1) > 0;
+  const pts: Point3D[] = [];
+  const hw = W / 2, hd = D / 2;
+
+  // Main perimeter walls — 4 sides with crenellations
+  const wallSegW = Math.ceil(W / (s * 1.5));
+  const wallSegD = Math.ceil(D / (s * 1.5));
+  for (let i = 0; i <= wallSegW; i++) {
+    const t = i / wallSegW;
+    const wx = -hw + t * W;
+    [-hd, hd].forEach(wz => {
+      for (let y = 0; y <= 5; y++) pts.push({ x: wx, y: y * H / 5, z: wz });
+      if (i % 3 === 0) pts.push({ x: wx, y: H * 1.1, z: wz }); // merlon
+    });
+  }
+  for (let i = 0; i <= wallSegD; i++) {
+    const t = i / wallSegD;
+    const wz = -hd + t * D;
+    [-hw, hw].forEach(wx => {
+      for (let y = 0; y <= 5; y++) pts.push({ x: wx, y: y * H / 5, z: wz });
+      if (i % 3 === 0) pts.push({ x: wx, y: H * 1.1, z: wz });
+    });
+  }
+
+  // Corner bastions — pentagonal projections
+  if (bastions) {
+    [[-hw, -hd], [hw, -hd], [hw, hd], [-hw, hd]].forEach(([bx, bz]) => {
+      const sx = Math.sign(bx), sz = Math.sign(bz);
+      // 3 faces of the bastion
+      const bW = s * 5.5, bProj = s * 4.0;
+      [
+        [bx + sx * bProj, bz, bx + sx * bProj, bz + sz * bW * 0.5],
+        [bx + sx * bProj, bz + sz * bW * 0.5, bx, bz + sz * bW * 0.5],
+        [bx, bz + sz * bW * 0.5, bx, bz],
+      ].forEach(([x1, z1, x2, z2]) => {
+        const len = Math.sqrt((x2 - x1) ** 2 + (z2 - z1) ** 2);
+        const steps = Math.ceil(len / (s * 1.2));
+        for (let i = 0; i <= steps; i++) {
+          const t = i / steps;
+          const fx = x1 + (x2 - x1) * t, fz = z1 + (z2 - z1) * t;
+          for (let y = 0; y <= 5; y++) pts.push({ x: fx, y: y * H / 5, z: fz });
+          if (i % 3 === 0) pts.push({ x: fx, y: H * 1.15, z: fz });
+        }
+      });
+      // Bastion interior — flagpole / cannon platform
+      pts.push({ x: bx + sx * bProj * 0.5, y: H, z: bz + sz * bW * 0.25 });
+      for (let y = 0; y <= 4; y++) pts.push({ x: bx + sx * bProj * 0.5, y: H + y * s * 0.6, z: bz + sz * bW * 0.25 });
+    });
+  }
+
+  // Midpoint wall towers — one on each of the 4 walls
+  [[0, -hd], [0, hd], [-hw, 0], [hw, 0]].forEach(([tx, tz]) => {
+    const tR = s * 2.5;
+    for (let a = 0; a < 8; a++) {
+      const ang = (a / 8) * Math.PI * 2;
+      for (let y = 0; y <= 7; y++) pts.push({ x: tx + Math.cos(ang) * tR, y: y * H * 1.25 / 7, z: tz + Math.sin(ang) * tR });
+    }
+    pts.push({ x: tx, y: H * 1.35, z: tz });
+  });
+
+  // Gate openings — N/S with portcullis frames
+  [[0, -hd, 0, 1], [0, hd, 0, -1]].forEach(([gx, gz, , gsz]) => {
+    // Gate arch
+    for (let a = 0; a <= 6; a++) {
+      const ang = (a / 6) * Math.PI;
+      pts.push({ x: gx + Math.cos(ang) * s * 2, y: Math.sin(ang) * H * 0.55 + H * 0.05, z: gz });
+    }
+    // Portcullis bars
+    for (let b = -2; b <= 2; b++) {
+      for (let y = 0; y <= 4; y++) pts.push({ x: gx + b * s * 0.5, y: y * H * 0.12, z: gz });
+    }
+  });
+
+  // Interior divider wall (creates 2 halves — attacker/defender)
+  for (let i = 0; i <= wallSegW; i++) {
+    const t = i / wallSegW;
+    const wx = -hw + t * W;
+    // Only draw if not near gates (skip center gap)
+    if (Math.abs(wx) > W * 0.12) {
+      for (let y = 0; y <= 3; y++) pts.push({ x: wx, y: y * H * 0.55 / 3, z: 0 });
+    }
+  }
+
+  // Interior cover — barricades at 4 quadrant positions
+  [[-hw * 0.45, -hd * 0.45], [hw * 0.45, -hd * 0.45], [-hw * 0.45, hd * 0.45], [hw * 0.45, hd * 0.45]].forEach(([cx, cz]) => {
+    for (let i = -2; i <= 2; i++) {
+      pts.push({ x: cx + i * s * 0.8, y: 0, z: cz });
+      pts.push({ x: cx + i * s * 0.8, y: s * 1.2, z: cz });
+      pts.push({ x: cx, y: 0, z: cz + i * s * 0.8 });
+      pts.push({ x: cx, y: s * 1.2, z: cz + i * s * 0.8 });
+    }
+  });
+
+  // Loot crates — center of each half
+  [[0, -hd * 0.5], [0, hd * 0.5]].forEach(([lx, lz]) => {
+    for (let y = 0; y <= 2; y++) {
+      for (let a = 0; a < 6; a++) {
+        const ang = (a / 6) * Math.PI * 2;
+        pts.push({ x: lx + Math.cos(ang) * s * 1.5, y: y * s * 0.5, z: lz + Math.sin(ang) * s * 1.5 });
+      }
+    }
+  });
+
+  return pts;
+}
+
+// ─── ARENA MAZE ───────────────────────────────────────────────────────────────
+function gen_arena_maze(p: Record<string, number>): Point3D[] {
+  const s = p.scale ?? 1;
+  const size = Math.max(6, Math.round((p.size ?? 10)));
+  const H = (p.wallH ?? 3) * s;
+  const pts: Point3D[] = [];
+
+  // Recursive-backtracker–style maze encoded as wall segments
+  // We deterministically generate a maze from the size parameter as seed
+  const cellW = size, cellH = size;
+  // Wall grid: hWalls[row][col] = horizontal wall present, vWalls[row][col] = vertical wall
+  const hWalls: boolean[][] = Array.from({ length: cellH + 1 }, () => Array(cellW).fill(true));
+  const vWalls: boolean[][] = Array.from({ length: cellH }, () => Array(cellW + 1).fill(true));
+  const visited = Array.from({ length: cellH }, () => Array(cellW).fill(false));
+
+  // Deterministic maze carve using a seeded stack-based DFS
+  const seed = size * 17 + 3;
+  let rng = seed;
+  const rand = () => { rng = (rng * 1664525 + 1013904223) & 0xffffffff; return (rng >>> 0) / 0xffffffff; };
+
+  const stack: [number, number][] = [[Math.floor(cellH / 2), Math.floor(cellW / 2)]];
+  visited[Math.floor(cellH / 2)][Math.floor(cellW / 2)] = true;
+  while (stack.length) {
+    const [r, c] = stack[stack.length - 1];
+    const neighbors: [number, number, string][] = [];
+    if (r > 0 && !visited[r - 1][c]) neighbors.push([r - 1, c, 'N']);
+    if (r < cellH - 1 && !visited[r + 1][c]) neighbors.push([r + 1, c, 'S']);
+    if (c > 0 && !visited[r][c - 1]) neighbors.push([r, c - 1, 'W']);
+    if (c < cellW - 1 && !visited[r][c + 1]) neighbors.push([r, c + 1, 'E']);
+    if (!neighbors.length) { stack.pop(); continue; }
+    const [nr, nc, dir] = neighbors[Math.floor(rand() * neighbors.length)];
+    visited[nr][nc] = true;
+    if (dir === 'N') hWalls[r][c] = false;
+    else if (dir === 'S') hWalls[r + 1][c] = false;
+    else if (dir === 'W') vWalls[r][c] = false;
+    else if (dir === 'E') vWalls[r][c + 1] = false;
+    stack.push([nr, nc]);
+  }
+
+  // Render walls as point chains
+  const cellSz = s * 2.5;
+  const offX = -(cellW * cellSz) / 2, offZ = -(cellH * cellSz) / 2;
+  const wallH = H;
+  const wallSteps = 3;
+  // Horizontal walls
+  for (let r = 0; r <= cellH; r++) {
+    for (let c = 0; c < cellW; c++) {
+      if (!hWalls[r][c]) continue;
+      const x1 = offX + c * cellSz, z = offZ + r * cellSz;
+      const x2 = x1 + cellSz;
+      for (let i = 0; i <= wallSteps; i++) {
+        const wx = x1 + (x2 - x1) * (i / wallSteps);
+        for (let y = 0; y <= 3; y++) pts.push({ x: wx, y: y * wallH / 3, z });
+      }
+    }
+  }
+  // Vertical walls
+  for (let r = 0; r < cellH; r++) {
+    for (let c = 0; c <= cellW; c++) {
+      if (!vWalls[r][c]) continue;
+      const x = offX + c * cellSz, z1 = offZ + r * cellSz;
+      const z2 = z1 + cellSz;
+      for (let i = 0; i <= wallSteps; i++) {
+        const wz = z1 + (z2 - z1) * (i / wallSteps);
+        for (let y = 0; y <= 3; y++) pts.push({ x, y: y * wallH / 3, z: wz });
+      }
+    }
+  }
+  // Entry/exit gates — N center & S center (remove a wall segment)
+  // already carved by the DFS; just add gate pillars
+  [[offX + cellW * cellSz * 0.5, offZ - cellSz * 0.5], [offX + cellW * cellSz * 0.5, offZ + cellH * cellSz + cellSz * 0.5]].forEach(([gx, gz]) => {
+    [-1, 1].forEach(side => {
+      for (let y = 0; y <= 4; y++) pts.push({ x: gx + side * cellSz * 0.35, y: y * wallH / 4, z: gz });
+    });
+  });
+  // Center room (clear + podium)
+  const cxc = 0, czc = 0;
+  for (let a = 0; a < 8; a++) {
+    const ang = (a / 8) * Math.PI * 2;
+    for (let y = 0; y <= 3; y++) pts.push({ x: cxc + Math.cos(ang) * s * 2, y: y * s * 0.5, z: czc + Math.sin(ang) * s * 2 });
+  }
+  // Loot drops scattered through corridors
+  for (let r = 0; r < cellH; r += 2) {
+    for (let c = 0; c < cellW; c += 2) {
+      const lx = offX + c * cellSz + cellSz * 0.5, lz = offZ + r * cellSz + cellSz * 0.5;
+      pts.push({ x: lx, y: 0, z: lz });
+    }
+  }
+  return pts;
+}
+
+// ─── ARENA SIEGE ──────────────────────────────────────────────────────────────
+function gen_arena_siege(p: Record<string, number>): Point3D[] {
+  const s = p.scale ?? 1;
+  const W = (p.width ?? 35) * s;
+  const wallH = (p.wallH ?? 6) * s;
+  const towerH = (p.towerH ?? 14) * s;
+  const pts: Point3D[] = [];
+  const hw = W / 2;
+
+  // ─ DEFENDER SIDE (z < 0): Curtain wall with 3 towers ─
+  const wallLen = W * 0.88, wallZ = -W * 0.3;
+  const wallSegs = Math.ceil(wallLen / (s * 1.5));
+  // Curtain wall
+  for (let i = 0; i <= wallSegs; i++) {
+    const wx = -wallLen / 2 + (i / wallSegs) * wallLen;
+    for (let y = 0; y <= 5; y++) pts.push({ x: wx, y: y * wallH / 5, z: wallZ });
+    if (i % 3 === 0) pts.push({ x: wx, y: wallH * 1.08, z: wallZ }); // merlon
+  }
+  // 3 wall towers (left, center, right)
+  [-wallLen * 0.42, 0, wallLen * 0.42].forEach(tx => {
+    const tR = s * 2.8;
+    for (let a = 0; a < 10; a++) {
+      const ang = (a / 10) * Math.PI * 2;
+      for (let y = 0; y <= 8; y++) pts.push({ x: tx + Math.cos(ang) * tR, y: y * wallH * 1.4 / 8, z: wallZ + Math.sin(ang) * tR });
+    }
+    // Tower battlements
+    for (let a = 0; a < 12; a++) {
+      const ang = (a / 12) * Math.PI * 2;
+      if (a % 2 === 0) pts.push({ x: tx + Math.cos(ang) * tR, y: wallH * 1.5, z: wallZ + Math.sin(ang) * tR });
+    }
+  });
+  // Gate — center gap in wall with portcullis arch
+  for (let a = 0; a <= 8; a++) {
+    const ang = (a / 8) * Math.PI;
+    pts.push({ x: Math.cos(ang) * s * 2.5, y: Math.sin(ang) * wallH * 0.55 + wallH * 0.05, z: wallZ });
+  }
+  // Defender side walls (return walls)
+  [-1, 1].forEach(side => {
+    const rx = side * wallLen * 0.44;
+    const rLen = W * 0.22;
+    for (let i = 0; i <= 5; i++) {
+      const rz = wallZ + (i / 5) * rLen;
+      for (let y = 0; y <= 4; y++) pts.push({ x: rx, y: y * wallH / 4, z: rz });
+    }
+  });
+
+  // ─ CENTRAL KEEP / OBJECTIVE TOWER ─ (z = +W*0.18)
+  const keepZ = W * 0.18, keepR = s * 4.5;
+  for (let y = 0; y <= 16; y++) {
+    const yr = y / 16;
+    const r = keepR * (1 - yr * 0.12); // slight taper
+    const segs = 10;
+    for (let a = 0; a < segs; a++) {
+      const ang = (a / segs) * Math.PI * 2;
+      pts.push({ x: Math.cos(ang) * r, y: yr * towerH, z: keepZ + Math.sin(ang) * r });
+    }
+  }
+  // Keep battlements
+  for (let a = 0; a < 16; a++) {
+    const ang = (a / 16) * Math.PI * 2;
+    const cr = keepR * 0.88;
+    if (a % 2 === 0) pts.push({ x: Math.cos(ang) * cr, y: towerH * 1.07, z: keepZ + Math.sin(ang) * cr });
+    pts.push({ x: Math.cos(ang) * cr, y: towerH, z: keepZ + Math.sin(ang) * cr });
+  }
+  // Keep entrance ramp
+  for (let i = 0; i <= 6; i++) {
+    const t = i / 6;
+    pts.push({ x: 0, y: t * towerH * 0.12, z: keepZ - keepR - t * s * 3 });
+    [-1, 1].forEach(side => pts.push({ x: side * s * 1.2, y: t * towerH * 0.12, z: keepZ - keepR - t * s * 3 }));
+  }
+  // Keep balcony at mid-height
+  for (let a = 0; a < 12; a++) {
+    const ang = (a / 12) * Math.PI * 2;
+    pts.push({ x: Math.cos(ang) * (keepR + s * 0.8), y: towerH * 0.5, z: keepZ + Math.sin(ang) * (keepR + s * 0.8) });
+  }
+
+  // ─ ATTACKER SIDE (z > 0): Spawn trenches + ladder ─
+  const attackerZ = W * 0.38;
+  [-1, 1].forEach(side => {
+    const trX = side * hw * 0.45;
+    for (let i = 0; i <= 8; i++) {
+      const tz = attackerZ + i * s * 0.9;
+      pts.push({ x: trX, y: -s * 0.8, z: tz });
+      pts.push({ x: trX + side * s * 1.5, y: -s * 0.8, z: tz });
+      pts.push({ x: trX, y: 0, z: tz });
+    }
+  });
+  // Approach ladders / sandbag cover toward the keep
+  [-hw * 0.3, hw * 0.3].forEach(lx => {
+    for (let i = 0; i <= 5; i++) {
+      const lz = attackerZ - i * (attackerZ - keepZ - keepR * 1.5) / 5;
+      pts.push({ x: lx, y: 0, z: lz });
+      pts.push({ x: lx, y: s * 1.1, z: lz });
+    }
+  });
+
+  // ─ ARENA BOUNDARY WALL (outer ring) ─
+  const boundR = hw * 1.05;
+  for (let a = 0; a < 48; a++) {
+    const ang = (a / 48) * Math.PI * 2;
+    for (let y = 0; y <= 2; y++) pts.push({ x: Math.cos(ang) * boundR, y: y * s, z: Math.sin(ang) * boundR });
+  }
+
+  return pts;
+}
+
+// ─── ARENA COMPOUND ───────────────────────────────────────────────────────────
+function gen_arena_compound(p: Record<string, number>): Point3D[] {
+  const s = p.scale ?? 1;
+  const W = (p.width ?? 32) * s;
+  const D = (p.depth ?? 24) * s;
+  const H = (p.height ?? 4) * s;
+  const rows = Math.max(1, Math.round(p.rows ?? 3)); // interior cover rows
+  const pts: Point3D[] = [];
+  const hw = W / 2, hd = D / 2;
+
+  // Perimeter fence wall
+  const segW = Math.ceil(W / (s * 1.2)), segD = Math.ceil(D / (s * 1.2));
+  for (let i = 0; i <= segW; i++) {
+    const wx = -hw + (i / segW) * W;
+    [-hd, hd].forEach(wz => {
+      for (let y = 0; y <= 3; y++) pts.push({ x: wx, y: y * H / 3, z: wz });
+    });
+  }
+  for (let i = 0; i <= segD; i++) {
+    const wz = -hd + (i / segD) * D;
+    [-hw, hw].forEach(wx => {
+      for (let y = 0; y <= 3; y++) pts.push({ x: wx, y: y * H / 3, z: wz });
+    });
+  }
+
+  // Corner watchtowers
+  [[-hw, -hd], [hw, -hd], [hw, hd], [-hw, hd]].forEach(([tx, tz]) => {
+    const tR = s * 2.0;
+    for (let a = 0; a < 8; a++) {
+      const ang = (a / 8) * Math.PI * 2;
+      for (let y = 0; y <= 8; y++) pts.push({ x: tx + Math.cos(ang) * tR, y: y * H * 1.8 / 8, z: tz + Math.sin(ang) * tR });
+    }
+    // Ladder rungs
+    for (let y = 0; y <= 6; y++) pts.push({ x: tx, y: y * H * 1.8 / 8, z: tz + tR });
+  });
+
+  // Entry gates N/S
+  [[0, -hd], [0, hd]].forEach(([gx, gz]) => {
+    for (let y = 0; y <= 4; y++) {
+      [-s * 1.8, s * 1.8].forEach(ox => pts.push({ x: gx + ox, y: y * H / 4, z: gz }));
+    }
+    // Gate arch
+    for (let a = 0; a <= 6; a++) {
+      const ang = (a / 6) * Math.PI;
+      pts.push({ x: gx + Math.cos(ang) * s * 1.8, y: Math.sin(ang) * H * 0.5 + H * 0.05, z: gz });
+    }
+  });
+
+  // Interior cover rows (horizontal barricade lines)
+  for (let r = 0; r < rows; r++) {
+    const rz = -hd * 0.65 + (r / Math.max(rows - 1, 1)) * D * 0.65;
+    const gaps = [hw * 0.3 * ((r % 2 === 0) ? -1 : 1)]; // stagger gaps left/right
+    for (let i = 0; i <= Math.ceil(W / (s * 1.5)); i++) {
+      const wx = -hw * 0.85 + (i / Math.ceil(W / (s * 1.5))) * W * 0.85 * 2;
+      const nearGap = gaps.some(g => Math.abs(wx - g) < s * 2.5);
+      if (!nearGap) {
+        pts.push({ x: wx, y: 0, z: rz });
+        pts.push({ x: wx, y: s * 1.5, z: rz });
+      }
+    }
+    // Flanking sandbag pillars
+    [-hw * 0.85, hw * 0.85].forEach(flx => {
+      for (let y = 0; y <= 2; y++) pts.push({ x: flx, y: y * s * 0.6, z: rz });
+    });
+  }
+
+  // Central loot area — crate cluster
+  for (let a = 0; a < 8; a++) {
+    const ang = (a / 8) * Math.PI * 2;
+    pts.push({ x: Math.cos(ang) * s * 3, y: 0, z: Math.sin(ang) * s * 3 });
+    pts.push({ x: Math.cos(ang) * s * 3, y: s * 1.0, z: Math.sin(ang) * s * 3 });
+  }
+  // Center podium / flag stand
+  for (let y = 0; y <= 5; y++) pts.push({ x: 0, y: y * s * 0.4, z: 0 });
+
+  // Objective markers — 4 cardinal capture points inside
+  [[0, -hd * 0.55], [0, hd * 0.55], [-hw * 0.55, 0], [hw * 0.55, 0]].forEach(([ox, oz]) => {
+    for (let a = 0; a < 6; a++) {
+      const ang = (a / 6) * Math.PI * 2;
+      pts.push({ x: ox + Math.cos(ang) * s * 1.2, y: 0, z: oz + Math.sin(ang) * s * 1.2 });
+      pts.push({ x: ox + Math.cos(ang) * s * 1.2, y: s * 0.8, z: oz + Math.sin(ang) * s * 1.2 });
+    }
+  });
+
+  // Vehicle blocker X-positions
+  for (let i = -2; i <= 2; i++) {
+    if (i === 0) continue;
+    pts.push({ x: i * hw * 0.35, y: 0, z: -hd });
+    pts.push({ x: i * hw * 0.35, y: s, z: -hd });
+    pts.push({ x: i * hw * 0.35, y: 0, z: hd });
+    pts.push({ x: i * hw * 0.35, y: s, z: hd });
+  }
   return pts;
 }
 

@@ -436,7 +436,24 @@ const QUICK_PRESETS: Preset[] = [
   { category: "🏟 Structures",       label: "PVP Arena",  shape: "pvp_arena",  params: { scale: 1, radius: 15, height: 5, walls: 8 } },
   { category: "🏟 Structures",       label: "Helipad",    shape: "helipad",    params: { scale: 1, radius: 8,  elevated: 0, lights: 1 } },
   { category: "🏟 Structures",       label: "Elevated Helipad", shape: "helipad", params: { scale: 1, radius: 8, elevated: 1, height: 5, lights: 1 } },
+  // ── Arena types
+  { category: "⚔ Arenas", label: "Colosseum (Standard)", shape: "arena_colosseum", params: { scale: 1, radiusX: 22, radiusZ: 15, height: 7, tiers: 3 } },
+  { category: "⚔ Arenas", label: "Colosseum (Grand)",    shape: "arena_colosseum", params: { scale: 1.4, radiusX: 28, radiusZ: 20, height: 9, tiers: 4 } },
+  { category: "⚔ Arenas", label: "Colosseum (Intimate)", shape: "arena_colosseum", params: { scale: 0.7, radiusX: 14, radiusZ: 10, height: 5, tiers: 2 } },
+  { category: "⚔ Arenas", label: "Fortress Arena",       shape: "arena_fort",      params: { scale: 1, width: 28, depth: 28, height: 6, bastions: 1 } },
+  { category: "⚔ Arenas", label: "Fortress (No Bastions)",shape: "arena_fort",     params: { scale: 1, width: 32, depth: 22, height: 5, bastions: 0 } },
+  { category: "⚔ Arenas", label: "Fortress (Massive)",   shape: "arena_fort",      params: { scale: 1.5, width: 40, depth: 40, height: 8, bastions: 1 } },
+  { category: "⚔ Arenas", label: "Maze 10×10",           shape: "arena_maze",      params: { scale: 1, size: 10, wallH: 3 } },
+  { category: "⚔ Arenas", label: "Maze 14×14 (Large)",   shape: "arena_maze",      params: { scale: 1, size: 14, wallH: 3.5 } },
+  { category: "⚔ Arenas", label: "Maze 6×6 (Quick)",     shape: "arena_maze",      params: { scale: 1.2, size: 6, wallH: 2.5 } },
+  { category: "⚔ Arenas", label: "Siege Arena",          shape: "arena_siege",     params: { scale: 1, width: 35, wallH: 6, towerH: 14 } },
+  { category: "⚔ Arenas", label: "Siege (Massive Keep)",  shape: "arena_siege",    params: { scale: 1, width: 50, wallH: 8, towerH: 22 } },
+  { category: "⚔ Arenas", label: "Military Compound",    shape: "arena_compound",  params: { scale: 1, width: 32, depth: 24, height: 4, rows: 3 } },
+  { category: "⚔ Arenas", label: "Compound (Big Grid)",  shape: "arena_compound",  params: { scale: 1.2, width: 48, depth: 36, height: 4, rows: 5 } },
 ];
+
+// Arena shapes available for randomization
+const ARENA_SHAPES = ['arena_colosseum', 'arena_fort', 'arena_maze', 'arena_siege', 'arena_compound', 'pvp_arena'] as const;
 
 // ─── FAMOUS CHERNARUS LOCATIONS ────────────────────────────────────────────────
 const FAMOUS_LOCATIONS = [
@@ -620,6 +637,34 @@ export default function App() {
     const pick = QUICK_PRESETS[Math.floor(Math.random() * QUICK_PRESETS.length)];
     applyPreset(pick);
     showToast(`🎲 Surprise: ${pick.label}`);
+  };
+
+  const randomizeArenaParams = (shapeKey: string) => {
+    const def = SHAPE_DEFS[shapeKey];
+    if (!def) return;
+    const newParams: Record<string, number> = {};
+    def.params.forEach(pd => {
+      const lo = pd.min + (pd.max - pd.min) * 0.2;
+      const hi = pd.max - (pd.max - pd.min) * 0.1;
+      let v = lo + Math.random() * (hi - lo);
+      if (pd.step >= 1) v = Math.round(v);
+      else v = Math.round(v / pd.step) * pd.step;
+      newParams[pd.id] = v;
+    });
+    setShapeType(shapeKey);
+    setParams(newParams);
+    setMode("architect");
+    showToast(`🎲 ${def.label} — new layout!`);
+  };
+
+  const rollRandomArena = () => randomizeArenaParams(
+    ARENA_SHAPES[Math.floor(Math.random() * ARENA_SHAPES.length)]
+  );
+
+  const rollSameArena = () => {
+    const isArena = (ARENA_SHAPES as readonly string[]).includes(shapeType);
+    if (isArena) randomizeArenaParams(shapeType);
+    else rollRandomArena();
   };
 
   const onShapeChange = (st: string) => {
@@ -864,6 +909,7 @@ export default function App() {
               presetFilter={presetFilter} filteredPresets={filteredPresets}
               presetCategory={presetCategory} presetCategories={PRESET_CATEGORIES}
               jitter={jitter} dims={dims} famousLocations={FAMOUS_LOCATIONS}
+              arenaShapes={ARENA_SHAPES} onRollArena={rollRandomArena} onRollSameArena={rollSameArena}
               onShapeChange={onShapeChange} setObjClass={setObjClass}
               setPosX={setPosX} setPosY={setPosY} setPosZ={setPosZ}
               setYaw={setYaw} setPitch={setPitch} setRoll={setRoll}
@@ -1128,6 +1174,40 @@ function ArchitectSidebar(p: any) {
           <button onClick={p.onSurpriseMe}
             className="mt-2 w-full py-1.5 text-[10px] font-bold rounded-sm border border-[#3a2e18] text-[#d4a017] bg-[#1a1408] hover:bg-[#221a08] hover:border-[#d4a017] transition-all">
             🎲 Surprise Me — Random Preset
+          </button>
+        </div>
+      ))}
+
+      {/* ⚔ Arena Maker */}
+      {sec("arena", "⚔ Arena Maker", (
+        <div className="px-3">
+          {/* Big roll button */}
+          <button onClick={p.onRollArena}
+            className="w-full py-2.5 mb-2.5 text-[11px] font-black tracking-wider rounded-sm border border-[#d4a017] text-[#0a0804] bg-[#d4a017] hover:bg-[#e8b82a] hover:border-[#e8b82a] transition-all shadow-lg">
+            🎲 ROLL RANDOM ARENA
+          </button>
+          <div className="text-[9px] text-[#8a7840] mb-2 text-center">Every click generates a fully different layout with randomized parameters</div>
+          {/* 6 arena type tiles */}
+          <div className="grid grid-cols-2 gap-1.5 mb-2">
+            {[
+              { key: "arena_colosseum", icon: "🏛", label: "Colosseum", desc: "Oval, tiered seating" },
+              { key: "arena_fort",      icon: "🏰", label: "Fortress",  desc: "Square, bastions" },
+              { key: "arena_maze",      icon: "🌀", label: "Maze",      desc: "Labyrinth corridors" },
+              { key: "arena_siege",     icon: "⚔",  label: "Siege",     desc: "Tower vs wall" },
+              { key: "arena_compound",  icon: "🪖", label: "Compound",  desc: "Military grid" },
+              { key: "pvp_arena",       icon: "🔵", label: "Ring",      desc: "Polygon arena" },
+            ].map(({ key, icon, label, desc }) => (
+              <button key={key} onClick={() => p.onShapeChange(key)}
+                className={`text-left px-2 py-1.5 rounded-sm border transition-all ${p.shapeType === key ? "border-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] hover:border-[#6a5a3a] bg-[#060402]"}`}>
+                <div className={`text-[11px] font-bold ${p.shapeType === key ? "text-[#d4a017]" : "text-[#c8b99a]"}`}>{icon} {label}</div>
+                <div className="text-[9px] text-[#8a7840]">{desc}</div>
+              </button>
+            ))}
+          </div>
+          {/* Randomize current arena type */}
+          <button onClick={p.onRollSameArena}
+            className="w-full py-1 text-[10px] font-bold rounded-sm border border-[#3a2e18] text-[#b09a6a] hover:border-[#d4a017] hover:text-[#d4a017] transition-all">
+            🔀 Randomize This Type Again
           </button>
         </div>
       ))}
