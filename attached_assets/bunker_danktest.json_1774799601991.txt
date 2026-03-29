@@ -1,0 +1,6626 @@
+[
+  {
+    "classname": "Land_Bunker_DE",
+    "pos": [
+      7419,
+      383.5,
+      5688.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "🚪 Main Entrance",
+    "_level": 0,
+    "_section": "entrance"
+  },
+  {
+    "classname": "Land_UGComplex_Console_01",
+    "pos": [
+      7423.5,
+      384,
+      5689.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "🔲 Entry Keypad Panel (Sakhal)",
+    "_level": 0,
+    "_section": "panel"
+  },
+  {
+    "classname": "Land_Mil_Guardhouse_DE",
+    "pos": [
+      7424,
+      383.5,
+      5688.5
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "🪖 Surface Guard Post",
+    "_level": 0,
+    "_section": "entrance"
+  },
+  {
+    "classname": "Land_Bunker_Small_DE",
+    "pos": [
+      7419,
+      383.5,
+      5760
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "🚪 Emergency Exit",
+    "_level": 0,
+    "_section": "exit"
+  },
+  {
+    "classname": "Land_UGComplex_Console_02",
+    "pos": [
+      7423,
+      379,
+      5753.5
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "🔲 Interior Exit Panel",
+    "_level": 1,
+    "_section": "panel"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      378.5,
+      5695.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Spine Corridor Seg1A",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      378.5,
+      5695.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Spine Corridor Seg1B",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Concrete_01_F_5x5_DE",
+    "pos": [
+      7419,
+      378.35,
+      5695.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Floor Slab",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      378.5,
+      5702
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Spine Corridor Seg2A",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      378.5,
+      5702
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Spine Corridor Seg2B",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      378.5,
+      5708.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Spine Corridor Seg3A",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      378.5,
+      5708.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Spine Corridor Seg3B",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Concrete_01_F_5x5_DE",
+    "pos": [
+      7419,
+      378.35,
+      5708.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Floor Slab",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      378.5,
+      5715
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Spine Corridor Seg4A",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      378.5,
+      5715
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Spine Corridor Seg4B",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      378.5,
+      5721.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Spine Corridor Seg5A",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      378.5,
+      5721.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Spine Corridor Seg5B",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Concrete_01_F_5x5_DE",
+    "pos": [
+      7419,
+      378.35,
+      5721.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Floor Slab",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      378.5,
+      5728
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Spine Corridor Seg6A",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      378.5,
+      5728
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Spine Corridor Seg6B",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      378.5,
+      5734.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Spine Corridor Seg7A",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      378.5,
+      5734.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Spine Corridor Seg7B",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Concrete_01_F_5x5_DE",
+    "pos": [
+      7419,
+      378.35,
+      5734.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Floor Slab",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      378.5,
+      5741
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Spine Corridor Seg8A",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      378.5,
+      5741
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Spine Corridor Seg8B",
+    "_level": 1,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Stairs_Concrete_DE",
+    "pos": [
+      7409,
+      378.5,
+      5727.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1→L2 Stair Flight 1",
+    "_level": 1,
+    "_section": "stair"
+  },
+  {
+    "classname": "Land_Stairs_Concrete_DE",
+    "pos": [
+      7409,
+      376.5,
+      5729.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1→L2 Stair Flight 2",
+    "_level": 1,
+    "_section": "stair"
+  },
+  {
+    "classname": "Land_Stairs_Concrete_DE",
+    "pos": [
+      7409,
+      374.5,
+      5731.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1→L2 Stair Flight 3",
+    "_level": 1,
+    "_section": "stair"
+  },
+  {
+    "classname": "Land_PierLadder_DE",
+    "pos": [
+      7407.5,
+      378.5,
+      5727.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1→L2 Descent Ladder",
+    "_level": 1,
+    "_section": "stair"
+  },
+  {
+    "classname": "Land_Platform_Mil_DE",
+    "pos": [
+      7409,
+      373,
+      5727.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1→L2 Landing Platform",
+    "_level": 2,
+    "_section": "stair"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7415,
+      372.5,
+      5727.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Stair Access Corr A",
+    "_level": 2,
+    "_section": "stair"
+  },
+  {
+    "classname": "Land_Stairs_Concrete_DE",
+    "pos": [
+      7419,
+      378.5,
+      5753.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exit Stair Flight 1",
+    "_level": 1,
+    "_section": "stair"
+  },
+  {
+    "classname": "Land_Stairs_Concrete_DE",
+    "pos": [
+      7419,
+      380.5,
+      5755.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exit Stair Flight 2",
+    "_level": 1,
+    "_section": "stair"
+  },
+  {
+    "classname": "Land_Stairs_Concrete_DE",
+    "pos": [
+      7419,
+      382.5,
+      5757.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exit Stair Flight 3",
+    "_level": 1,
+    "_section": "stair"
+  },
+  {
+    "classname": "Land_PierLadder_DE",
+    "pos": [
+      7421,
+      378.5,
+      5753.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exit Ladder",
+    "_level": 1,
+    "_section": "stair"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7423,
+      378.5,
+      5703.45
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1 Branch1 Seg1A",
+    "_level": 1,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7423,
+      378.5,
+      5706.05
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1 Branch1 Seg1B",
+    "_level": 1,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7429.5,
+      378.5,
+      5703.45
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1 Branch1 Seg2A",
+    "_level": 1,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7429.5,
+      378.5,
+      5706.05
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1 Branch1 Seg2B",
+    "_level": 1,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Mil_Barracks_HQ_DE",
+    "pos": [
+      7443,
+      378.5,
+      5704.75
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Room 1 (HQ Barracks (Command Room))",
+    "_level": 1,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_Concrete_01_F_10x10_DE",
+    "pos": [
+      7443,
+      378.35,
+      5704.75
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Room 1 Floor",
+    "_level": 1,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7444.12,
+      378.5,
+      5705.414
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7445.024,
+      378.5,
+      5702.057
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7441.602,
+      378.5,
+      5702.121
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7443.182,
+      378.5,
+      5701.913
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7442.926,
+      379.3,
+      5706.604
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7440.225,
+      379.3,
+      5702.058
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7415,
+      378.5,
+      5729.45
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1 Branch2 Seg1A",
+    "_level": 1,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7415,
+      378.5,
+      5732.05
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1 Branch2 Seg1B",
+    "_level": 1,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Mil_Barracks_DE",
+    "pos": [
+      7401.5,
+      378.5,
+      5730.75
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1 Room 2 (Military Barracks (Underground Room))",
+    "_level": 1,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_Concrete_01_F_10x10_DE",
+    "pos": [
+      7401.5,
+      378.35,
+      5730.75
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1 Room 2 Floor",
+    "_level": 1,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7399.725,
+      378.5,
+      5729.455
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7402.459,
+      378.5,
+      5731.835
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7399.028,
+      378.5,
+      5733.412
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7399.324,
+      378.5,
+      5728.416
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Corner_DE",
+    "pos": [
+      7401.39,
+      378.5,
+      5731.422
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Corner",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7402.818,
+      378.5,
+      5733.359
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_TankTrap_DE",
+    "pos": [
+      7399.578,
+      378.5,
+      5730.872
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Tank Trap",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7404.474,
+      378.5,
+      5731.127
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7401.971,
+      378.5,
+      5729.772
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Corner_DE",
+    "pos": [
+      7402.876,
+      379.3,
+      5729.521
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Corner",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7402.67,
+      379.3,
+      5733.714
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Barrel_Blue",
+    "pos": [
+      7400.702,
+      378.5,
+      5728.143
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Barrel_Blue",
+    "pos": [
+      7402.31,
+      378.5,
+      5726.937
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Barrel_Blue",
+    "pos": [
+      7400.76,
+      378.5,
+      5728.695
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Barrel_Blue",
+    "pos": [
+      7401.899,
+      378.5,
+      5727.196
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7423,
+      378.5,
+      5709.95
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1 Branch3 Seg1A",
+    "_level": 1,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7423,
+      378.5,
+      5712.55
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1 Branch3 Seg1B",
+    "_level": 1,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Mil_Barracks_HQ_DE",
+    "pos": [
+      7436.5,
+      378.5,
+      5711.25
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1 Room 3 (HQ Barracks (Command Room))",
+    "_level": 1,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_Concrete_01_F_10x10_DE",
+    "pos": [
+      7436.5,
+      378.35,
+      5711.25
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1 Room 3 Floor",
+    "_level": 1,
+    "_section": "room"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7435.858,
+      378.5,
+      5709.038
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Corner_DE",
+    "pos": [
+      7433.557,
+      378.5,
+      5712.675
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Corner",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7438.949,
+      378.5,
+      5709.504
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7434.604,
+      378.5,
+      5708.535
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7435.249,
+      378.5,
+      5709.903
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7434.825,
+      379.3,
+      5714.211
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7434.483,
+      379.3,
+      5709.275
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7436.337,
+      378.5,
+      5716.622
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7437.291,
+      378.5,
+      5715.905
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7436.593,
+      378.5,
+      5716.429
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7415,
+      378.5,
+      5696.95
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1 Branch4 Seg1A",
+    "_level": 1,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7415,
+      378.5,
+      5699.55
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1 Branch4 Seg1B",
+    "_level": 1,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Mil_Barracks_DE",
+    "pos": [
+      7401.5,
+      378.5,
+      5698.25
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1 Room 4 (Military Barracks (Underground Room))",
+    "_level": 1,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_Concrete_01_F_10x10_DE",
+    "pos": [
+      7401.5,
+      378.35,
+      5698.25
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1 Room 4 Floor",
+    "_level": 1,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7400.78,
+      378.5,
+      5699.522
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7401.136,
+      378.5,
+      5696.175
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7403.542,
+      378.5,
+      5700.617
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7402.212,
+      378.5,
+      5700.096
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Corner_DE",
+    "pos": [
+      7401.774,
+      379.3,
+      5701.157
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Corner",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7403.559,
+      379.3,
+      5699.712
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7401.853,
+      378.5,
+      5695.772
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7401.763,
+      378.5,
+      5695.924
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7401.202,
+      378.5,
+      5695.144
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7401.198,
+      378.5,
+      5696.125
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7423,
+      378.5,
+      5735.95
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1 Branch5 Seg1A",
+    "_level": 1,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7423,
+      378.5,
+      5738.55
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L1 Branch5 Seg1B",
+    "_level": 1,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Mil_Barracks_DE",
+    "pos": [
+      7436.5,
+      378.5,
+      5737.25
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Room 5 (Military Barracks (Underground Room))",
+    "_level": 1,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_Concrete_01_F_10x10_DE",
+    "pos": [
+      7436.5,
+      378.35,
+      5737.25
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L1 Room 5 Floor",
+    "_level": 1,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_TankTrap_DE",
+    "pos": [
+      7437.858,
+      378.5,
+      5739.986
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Tank Trap",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7437.745,
+      378.5,
+      5735.121
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7433.786,
+      378.5,
+      5735.996
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_01_DE",
+    "pos": [
+      7437.798,
+      379.3,
+      5739.011
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Jersey Barrier",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Round_DE",
+    "pos": [
+      7437.498,
+      379.3,
+      5737.357
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Round",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7436.164,
+      378.5,
+      5741.865
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7436.035,
+      378.5,
+      5742.311
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7436.374,
+      378.5,
+      5741.52
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Wreck_BTR_DE",
+    "pos": [
+      7419.257,
+      378.5,
+      5696
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Convoy: BTR APC Wreck",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Wreck_Trailer_Closed_DE",
+    "pos": [
+      7418.896,
+      378.5,
+      5704.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Convoy: Trailer Wreck",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Wreck_BTR_DE",
+    "pos": [
+      7419.162,
+      378.5,
+      5712
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Convoy: BTR APC Wreck",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7416.319,
+      378.5,
+      5742.938
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Sandbag Wall",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7421.638,
+      378.5,
+      5721.575
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Garbage Bin Y",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Round_DE",
+    "pos": [
+      7416.391,
+      378.5,
+      5729.672
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Sandbag Round",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Corner_DE",
+    "pos": [
+      7416.215,
+      378.5,
+      5708.923
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Sandbag Corner",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7416.344,
+      378.5,
+      5741.365
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Garbage Bin G",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_TankTrap_DE",
+    "pos": [
+      7421.798,
+      378.5,
+      5723.632
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Tank Trap",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_01_DE",
+    "pos": [
+      7416.387,
+      378.5,
+      5729.301
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Jersey Barrier",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7416.346,
+      378.5,
+      5710.053
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Garbage Bin Y",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7421.736,
+      378.5,
+      5710.86
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Garbage Bin G",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7416.06,
+      378.5,
+      5723.82
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Garbage Bin Y",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7416.308,
+      378.5,
+      5715.393
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Garbage Bin G",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7416.218,
+      378.5,
+      5704.252
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Garbage Bin Y",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7416.168,
+      378.5,
+      5717.403
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Sandbag Wall",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_01_DE",
+    "pos": [
+      7421.667,
+      378.5,
+      5729.183
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Jersey Barrier",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7416.273,
+      378.5,
+      5717.192
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Sandbag Wall",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7421.942,
+      378.5,
+      5710.275
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Sandbag Wall",
+    "_level": 1,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      372.5,
+      5695.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Spine Corridor Seg1A",
+    "_level": 2,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      372.5,
+      5695.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Spine Corridor Seg1B",
+    "_level": 2,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Concrete_01_F_5x5_DE",
+    "pos": [
+      7419,
+      372.35,
+      5695.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Floor Slab",
+    "_level": 2,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      372.5,
+      5702
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Spine Corridor Seg2A",
+    "_level": 2,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      372.5,
+      5702
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Spine Corridor Seg2B",
+    "_level": 2,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      372.5,
+      5708.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Spine Corridor Seg3A",
+    "_level": 2,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      372.5,
+      5708.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Spine Corridor Seg3B",
+    "_level": 2,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Concrete_01_F_5x5_DE",
+    "pos": [
+      7419,
+      372.35,
+      5708.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Floor Slab",
+    "_level": 2,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      372.5,
+      5715
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Spine Corridor Seg4A",
+    "_level": 2,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      372.5,
+      5715
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Spine Corridor Seg4B",
+    "_level": 2,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      372.5,
+      5721.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Spine Corridor Seg5A",
+    "_level": 2,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      372.5,
+      5721.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Spine Corridor Seg5B",
+    "_level": 2,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Concrete_01_F_5x5_DE",
+    "pos": [
+      7419,
+      372.35,
+      5721.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Floor Slab",
+    "_level": 2,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      372.5,
+      5728
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Spine Corridor Seg6A",
+    "_level": 2,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      372.5,
+      5728
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Spine Corridor Seg6B",
+    "_level": 2,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      372.5,
+      5734.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Spine Corridor Seg7A",
+    "_level": 2,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      372.5,
+      5734.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Spine Corridor Seg7B",
+    "_level": 2,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Concrete_01_F_5x5_DE",
+    "pos": [
+      7419,
+      372.35,
+      5734.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Floor Slab",
+    "_level": 2,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Stairs_Concrete_DE",
+    "pos": [
+      7409,
+      372.5,
+      5708
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2→L3 Stair Flight 1",
+    "_level": 2,
+    "_section": "stair"
+  },
+  {
+    "classname": "Land_Stairs_Concrete_DE",
+    "pos": [
+      7409,
+      370.5,
+      5710
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2→L3 Stair Flight 2",
+    "_level": 2,
+    "_section": "stair"
+  },
+  {
+    "classname": "Land_Stairs_Concrete_DE",
+    "pos": [
+      7409,
+      368.5,
+      5712
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2→L3 Stair Flight 3",
+    "_level": 2,
+    "_section": "stair"
+  },
+  {
+    "classname": "Land_Stairs_Concrete_DE",
+    "pos": [
+      7409,
+      366.5,
+      5714
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2→L3 Stair Flight 4",
+    "_level": 2,
+    "_section": "stair"
+  },
+  {
+    "classname": "Land_PierLadder_DE",
+    "pos": [
+      7407.5,
+      372.5,
+      5708
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2→L3 Descent Ladder",
+    "_level": 2,
+    "_section": "stair"
+  },
+  {
+    "classname": "Land_Platform_Mil_DE",
+    "pos": [
+      7409,
+      366,
+      5708
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2→L3 Landing Platform",
+    "_level": 3,
+    "_section": "stair"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7415,
+      365.5,
+      5708
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Stair Access Corr A",
+    "_level": 3,
+    "_section": "stair"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7423,
+      372.5,
+      5709.95
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Branch1 Seg1A",
+    "_level": 2,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7423,
+      372.5,
+      5712.55
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Branch1 Seg1B",
+    "_level": 2,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Mil_Barracks_HQ_DE",
+    "pos": [
+      7436.5,
+      372.5,
+      5711.25
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Room 1 (HQ Barracks (Command Room))",
+    "_level": 2,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_Concrete_01_F_10x10_DE",
+    "pos": [
+      7436.5,
+      372.35,
+      5711.25
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Room 1 Floor",
+    "_level": 2,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_Sandbag_Round_DE",
+    "pos": [
+      7435.061,
+      372.5,
+      5712.573
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Round",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7437.052,
+      372.5,
+      5708.904
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_TankTrap_DE",
+    "pos": [
+      7439.012,
+      372.5,
+      5708.95
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Tank Trap",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7435.543,
+      372.5,
+      5709.691
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7436.987,
+      372.5,
+      5713.29
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_TankTrap_DE",
+    "pos": [
+      7433.692,
+      372.5,
+      5712.658
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Tank Trap",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Corner_DE",
+    "pos": [
+      7434.727,
+      373.3,
+      5712.963
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Corner",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7433.995,
+      373.3,
+      5712.885
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7415,
+      372.5,
+      5729.45
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Branch2 Seg1A",
+    "_level": 2,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7415,
+      372.5,
+      5732.05
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Branch2 Seg1B",
+    "_level": 2,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Mil_Barracks_HQ_DE",
+    "pos": [
+      7401.5,
+      372.5,
+      5730.75
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Room 2 (HQ Barracks (Command Room))",
+    "_level": 2,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_Concrete_01_F_10x10_DE",
+    "pos": [
+      7401.5,
+      372.35,
+      5730.75
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Room 2 Floor",
+    "_level": 2,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_BarrierConcrete_01_DE",
+    "pos": [
+      7402.548,
+      372.5,
+      5728.989
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Jersey Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Round_DE",
+    "pos": [
+      7399.31,
+      372.5,
+      5731.709
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Round",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_01_DE",
+    "pos": [
+      7399.732,
+      372.5,
+      5733.282
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Jersey Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7398.799,
+      372.5,
+      5733.495
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Round_DE",
+    "pos": [
+      7398.782,
+      373.3,
+      5729.708
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Round",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7400.006,
+      373.3,
+      5732.927
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Barrel_Blue",
+    "pos": [
+      7400.877,
+      372.5,
+      5728.455
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Barrel_Blue",
+    "pos": [
+      7402.49,
+      372.5,
+      5727.173
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Barrel_Blue",
+    "pos": [
+      7401.739,
+      372.5,
+      5727.719
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7423,
+      372.5,
+      5735.95
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Branch3 Seg1A",
+    "_level": 2,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7423,
+      372.5,
+      5738.55
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Branch3 Seg1B",
+    "_level": 2,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7429.5,
+      372.5,
+      5735.95
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Branch3 Seg2A",
+    "_level": 2,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7429.5,
+      372.5,
+      5738.55
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Branch3 Seg2B",
+    "_level": 2,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Mil_Barracks_DE",
+    "pos": [
+      7443,
+      372.5,
+      5737.25
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Room 3 (Military Barracks (Underground Room))",
+    "_level": 2,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_Concrete_01_F_10x10_DE",
+    "pos": [
+      7443,
+      372.35,
+      5737.25
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Room 3 Floor",
+    "_level": 2,
+    "_section": "room"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7442.676,
+      372.5,
+      5737.161
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7440.209,
+      372.5,
+      5739.42
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7441.509,
+      372.5,
+      5737.274
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_TankTrap_DE",
+    "pos": [
+      7440.389,
+      372.5,
+      5739.657
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Tank Trap",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_TankTrap_DE",
+    "pos": [
+      7444.86,
+      372.5,
+      5734.573
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Tank Trap",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_01_DE",
+    "pos": [
+      7442.89,
+      372.5,
+      5737.325
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Jersey Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7443.463,
+      372.5,
+      5734.348
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7444.147,
+      373.3,
+      5735.349
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7445.587,
+      373.3,
+      5735.924
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7415,
+      372.5,
+      5716.45
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Branch4 Seg1A",
+    "_level": 2,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7415,
+      372.5,
+      5719.05
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Branch4 Seg1B",
+    "_level": 2,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Mil_Barracks_HQ_DE",
+    "pos": [
+      7401.5,
+      372.5,
+      5717.75
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Room 4 (HQ Barracks (Command Room))",
+    "_level": 2,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_Concrete_01_F_10x10_DE",
+    "pos": [
+      7401.5,
+      372.35,
+      5717.75
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Room 4 Floor",
+    "_level": 2,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7403.023,
+      372.5,
+      5715.478
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_01_DE",
+    "pos": [
+      7404.173,
+      372.5,
+      5719.749
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Jersey Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7403.963,
+      372.5,
+      5715.123
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7402.591,
+      372.5,
+      5718.081
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7402.486,
+      372.5,
+      5720.655
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7403.37,
+      372.5,
+      5720.495
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7399.035,
+      373.3,
+      5720.708
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7403.746,
+      373.3,
+      5718.825
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Barrel_Blue",
+    "pos": [
+      7402.346,
+      372.5,
+      5715.061
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Barrel_Blue",
+    "pos": [
+      7401.249,
+      372.5,
+      5715.199
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7423,
+      372.5,
+      5703.45
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Branch5 Seg1A",
+    "_level": 2,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7423,
+      372.5,
+      5706.05
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Branch5 Seg1B",
+    "_level": 2,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7429.5,
+      372.5,
+      5703.45
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Branch5 Seg2A",
+    "_level": 2,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7429.5,
+      372.5,
+      5706.05
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Branch5 Seg2B",
+    "_level": 2,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Mil_Barracks_DE",
+    "pos": [
+      7443,
+      372.5,
+      5704.75
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Room 5 (Military Barracks (Underground Room))",
+    "_level": 2,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_Concrete_01_F_10x10_DE",
+    "pos": [
+      7443,
+      372.35,
+      5704.75
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Room 5 Floor",
+    "_level": 2,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_Sandbag_Corner_DE",
+    "pos": [
+      7444.755,
+      372.5,
+      5706.187
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Corner",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_TankTrap_DE",
+    "pos": [
+      7445.252,
+      372.5,
+      5703.276
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Tank Trap",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7442.801,
+      372.5,
+      5704.038
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_01_DE",
+    "pos": [
+      7441.891,
+      372.5,
+      5704.538
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Jersey Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7441.036,
+      372.5,
+      5705.317
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_TankTrap_DE",
+    "pos": [
+      7444.773,
+      372.5,
+      5704.353
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Tank Trap",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7442.351,
+      372.5,
+      5705.283
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7441.088,
+      372.5,
+      5705.826
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_01_DE",
+    "pos": [
+      7443.28,
+      372.5,
+      5705.531
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Jersey Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7440.001,
+      372.5,
+      5702.112
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7440,
+      373.3,
+      5701.958
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7444.471,
+      373.3,
+      5705.554
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Barrel_Blue",
+    "pos": [
+      7442.397,
+      372.5,
+      5710.235
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Barrel_Blue",
+    "pos": [
+      7443.252,
+      372.5,
+      5709.929
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Barrel_Blue",
+    "pos": [
+      7442.83,
+      372.5,
+      5709.926
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7415,
+      372.5,
+      5696.95
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Branch6 Seg1A",
+    "_level": 2,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7415,
+      372.5,
+      5699.55
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Branch6 Seg1B",
+    "_level": 2,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7408.5,
+      372.5,
+      5696.95
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Branch6 Seg2A",
+    "_level": 2,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7408.5,
+      372.5,
+      5699.55
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L2 Branch6 Seg2B",
+    "_level": 2,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Mil_Barracks_HQ_DE",
+    "pos": [
+      7395,
+      372.5,
+      5698.25
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Room 6 (HQ Barracks (Command Room))",
+    "_level": 2,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_Concrete_01_F_10x10_DE",
+    "pos": [
+      7395,
+      372.35,
+      5698.25
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L2 Room 6 Floor",
+    "_level": 2,
+    "_section": "room"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7394.586,
+      372.5,
+      5698.828
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_TankTrap_DE",
+    "pos": [
+      7397.873,
+      372.5,
+      5700.597
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Tank Trap",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Corner_DE",
+    "pos": [
+      7397.455,
+      372.5,
+      5698.301
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Corner",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Round_DE",
+    "pos": [
+      7392.905,
+      372.5,
+      5697.169
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Round",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7397.856,
+      372.5,
+      5695.377
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_01_DE",
+    "pos": [
+      7397.932,
+      372.5,
+      5696.754
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Jersey Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Round_DE",
+    "pos": [
+      7397.674,
+      372.5,
+      5697.088
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Round",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Corner_DE",
+    "pos": [
+      7393.301,
+      372.5,
+      5696.977
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Corner",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_01_DE",
+    "pos": [
+      7393.895,
+      372.5,
+      5698.313
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Jersey Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7393.057,
+      372.5,
+      5698.672
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_TankTrap_DE",
+    "pos": [
+      7395.243,
+      373.3,
+      5700.581
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Tank Trap",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7394.663,
+      373.3,
+      5699.035
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_01_DE",
+    "pos": [
+      7421.884,
+      372.5,
+      5708.562
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Jersey Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Corner_DE",
+    "pos": [
+      7416.112,
+      372.5,
+      5695.407
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Sandbag Corner",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7416.086,
+      372.5,
+      5721.444
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Small Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_01_DE",
+    "pos": [
+      7416.187,
+      372.5,
+      5709.137
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Jersey Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7416.343,
+      372.5,
+      5702.624
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Sandbag Wall",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7416.301,
+      372.5,
+      5703.649
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Small Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Corner_DE",
+    "pos": [
+      7416.229,
+      372.5,
+      5708.528
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Sandbag Corner",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7416.209,
+      372.5,
+      5734.309
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Sandbag Wall",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7416.36,
+      372.5,
+      5716.694
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Garbage Bin G",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7421.881,
+      372.5,
+      5704.49
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Sandbag Wall",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7421.858,
+      372.5,
+      5709.208
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Small Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7421.807,
+      372.5,
+      5703.417
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Garbage Bin G",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_01_DE",
+    "pos": [
+      7421.772,
+      372.5,
+      5711.241
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Jersey Barrier",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7421.906,
+      372.5,
+      5695.394
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Sandbag Wall",
+    "_level": 2,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      365.5,
+      5695.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Spine Corridor Seg1A",
+    "_level": 3,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      365.5,
+      5695.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Spine Corridor Seg1B",
+    "_level": 3,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Concrete_01_F_5x5_DE",
+    "pos": [
+      7419,
+      365.35,
+      5695.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Floor Slab",
+    "_level": 3,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      365.5,
+      5702
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Spine Corridor Seg2A",
+    "_level": 3,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      365.5,
+      5702
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Spine Corridor Seg2B",
+    "_level": 3,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      365.5,
+      5708.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Spine Corridor Seg3A",
+    "_level": 3,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      365.5,
+      5708.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Spine Corridor Seg3B",
+    "_level": 3,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Concrete_01_F_5x5_DE",
+    "pos": [
+      7419,
+      365.35,
+      5708.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Floor Slab",
+    "_level": 3,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      365.5,
+      5715
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Spine Corridor Seg4A",
+    "_level": 3,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      365.5,
+      5715
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Spine Corridor Seg4B",
+    "_level": 3,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      365.5,
+      5721.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Spine Corridor Seg5A",
+    "_level": 3,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      365.5,
+      5721.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Spine Corridor Seg5B",
+    "_level": 3,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Concrete_01_F_5x5_DE",
+    "pos": [
+      7419,
+      365.35,
+      5721.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Floor Slab",
+    "_level": 3,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      365.5,
+      5728
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Spine Corridor Seg6A",
+    "_level": 3,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      365.5,
+      5728
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Spine Corridor Seg6B",
+    "_level": 3,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7417.7,
+      365.5,
+      5734.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Spine Corridor Seg7A",
+    "_level": 3,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7420.3,
+      365.5,
+      5734.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Spine Corridor Seg7B",
+    "_level": 3,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Concrete_01_F_5x5_DE",
+    "pos": [
+      7419,
+      365.35,
+      5734.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Floor Slab",
+    "_level": 3,
+    "_section": "spine"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7423,
+      365.5,
+      5709.95
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Branch1 Seg1A",
+    "_level": 3,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7423,
+      365.5,
+      5712.55
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Branch1 Seg1B",
+    "_level": 3,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7429.5,
+      365.5,
+      5709.95
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Branch1 Seg2A",
+    "_level": 3,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7429.5,
+      365.5,
+      5712.55
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Branch1 Seg2B",
+    "_level": 3,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Mil_Barracks_HQ_DE",
+    "pos": [
+      7443,
+      365.5,
+      5711.25
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Room 1 (HQ Barracks (Command Room))",
+    "_level": 3,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_Concrete_01_F_10x10_DE",
+    "pos": [
+      7443,
+      365.35,
+      5711.25
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Room 1 Floor",
+    "_level": 3,
+    "_section": "room"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7441.749,
+      365.5,
+      5711.755
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7445.067,
+      365.5,
+      5710.517
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7440.262,
+      365.5,
+      5712.764
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7443.718,
+      365.5,
+      5713.506
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7441.317,
+      365.5,
+      5714.082
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7440.126,
+      366.3,
+      5710.619
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Corner_DE",
+    "pos": [
+      7442.892,
+      366.3,
+      5710.653
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Corner",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7415,
+      365.5,
+      5729.45
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Branch2 Seg1A",
+    "_level": 3,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7415,
+      365.5,
+      5732.05
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Branch2 Seg1B",
+    "_level": 3,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Mil_Barracks_DE",
+    "pos": [
+      7401.5,
+      365.5,
+      5730.75
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Room 2 (Military Barracks (Underground Room))",
+    "_level": 3,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_Concrete_01_F_10x10_DE",
+    "pos": [
+      7401.5,
+      365.35,
+      5730.75
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Room 2 Floor",
+    "_level": 3,
+    "_section": "room"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7404.355,
+      365.5,
+      5732.862
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Round_DE",
+    "pos": [
+      7402.739,
+      365.5,
+      5730.804
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Round",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Round_DE",
+    "pos": [
+      7398.51,
+      365.5,
+      5732.799
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Round",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7399.859,
+      365.5,
+      5728.563
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7402.529,
+      365.5,
+      5731.548
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_TankTrap_DE",
+    "pos": [
+      7402.628,
+      365.5,
+      5732.512
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Tank Trap",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7399.858,
+      365.5,
+      5730.903
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7400.146,
+      365.5,
+      5733.151
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_01_DE",
+    "pos": [
+      7399.733,
+      366.3,
+      5727.952
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Jersey Barrier",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7404.057,
+      366.3,
+      5729.773
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7423,
+      365.5,
+      5703.45
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Branch3 Seg1A",
+    "_level": 3,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7423,
+      365.5,
+      5706.05
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Branch3 Seg1B",
+    "_level": 3,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Mil_Barracks_DE",
+    "pos": [
+      7436.5,
+      365.5,
+      5704.75
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Room 3 (Military Barracks (Underground Room))",
+    "_level": 3,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_Concrete_01_F_10x10_DE",
+    "pos": [
+      7436.5,
+      365.35,
+      5704.75
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "L3 Room 3 Floor",
+    "_level": 3,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_BarrierConcrete_01_DE",
+    "pos": [
+      7437.102,
+      365.5,
+      5705.698
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Jersey Barrier",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7438.795,
+      365.5,
+      5705.858
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7438.349,
+      365.5,
+      5703.096
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7439.132,
+      365.5,
+      5702.945
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_01_DE",
+    "pos": [
+      7437.153,
+      365.5,
+      5705.101
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Jersey Barrier",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Corner_DE",
+    "pos": [
+      7435.612,
+      365.5,
+      5704.324
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Corner",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7437.235,
+      365.5,
+      5705.647
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7438.628,
+      365.5,
+      5704.664
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7436.254,
+      366.3,
+      5705.669
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7439.373,
+      366.3,
+      5707.282
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7415,
+      365.5,
+      5735.95
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Branch4 Seg1A",
+    "_level": 3,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7415,
+      365.5,
+      5738.55
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Branch4 Seg1B",
+    "_level": 3,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Mil_Barracks_HQ_DE",
+    "pos": [
+      7401.5,
+      365.5,
+      5737.25
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Room 4 (HQ Barracks (Command Room))",
+    "_level": 3,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_Concrete_01_F_10x10_DE",
+    "pos": [
+      7401.5,
+      365.35,
+      5737.25
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Room 4 Floor",
+    "_level": 3,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7403.29,
+      365.5,
+      5736.313
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Corner_DE",
+    "pos": [
+      7404.244,
+      365.5,
+      5734.621
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Corner",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7401.26,
+      365.5,
+      5736.031
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Corner_DE",
+    "pos": [
+      7400.119,
+      365.5,
+      5735.493
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Corner",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7399.433,
+      365.5,
+      5735.794
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7399.037,
+      366.3,
+      5738.65
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin Y",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7400.512,
+      366.3,
+      5738.107
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Barrel_Blue",
+    "pos": [
+      7401.979,
+      365.5,
+      5734.582
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Barrel_Blue",
+    "pos": [
+      7401.697,
+      365.5,
+      5735.214
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Barrel_Blue",
+    "pos": [
+      7401.322,
+      365.5,
+      5733.834
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Pile of debris",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7423,
+      365.5,
+      5722.95
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Branch5 Seg1A",
+    "_level": 3,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7423,
+      365.5,
+      5725.55
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Branch5 Seg1B",
+    "_level": 3,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7429.5,
+      365.5,
+      5722.95
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Branch5 Seg2A",
+    "_level": 3,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Container_1Bo_DE",
+    "pos": [
+      7429.5,
+      365.5,
+      5725.55
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Branch5 Seg2B",
+    "_level": 3,
+    "_section": "branch"
+  },
+  {
+    "classname": "Land_Mil_Barracks_HQ_DE",
+    "pos": [
+      7443,
+      365.5,
+      5724.25
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Room 5 (HQ Barracks (Command Room))",
+    "_level": 3,
+    "_section": "room"
+  },
+  {
+    "classname": "Land_Concrete_01_F_10x10_DE",
+    "pos": [
+      7443,
+      365.35,
+      5724.25
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "L3 Room 5 Floor",
+    "_level": 3,
+    "_section": "room"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7443.569,
+      365.5,
+      5724.3
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7441.512,
+      365.5,
+      5721.613
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7440.778,
+      365.5,
+      5725.612
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Round_DE",
+    "pos": [
+      7441.036,
+      365.5,
+      5723.549
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Round",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7444.301,
+      365.5,
+      5726.399
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Round_DE",
+    "pos": [
+      7444.948,
+      365.5,
+      5723.44
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Round",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7444.337,
+      365.5,
+      5725.764
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Wall",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7441.515,
+      365.5,
+      5724.948
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Small Barrier",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Round_DE",
+    "pos": [
+      7445.356,
+      365.5,
+      5726.029
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Decor: Sandbag Round",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_01_DE",
+    "pos": [
+      7443.075,
+      366.3,
+      5726.727
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Decor: Jersey Barrier",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7444.915,
+      366.3,
+      5721.767
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Decor: Garbage Bin G",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Round_DE",
+    "pos": [
+      7421.827,
+      365.5,
+      5697.727
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Sandbag Round",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Corner_DE",
+    "pos": [
+      7421.715,
+      365.5,
+      5709.738
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Sandbag Corner",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7421.634,
+      365.5,
+      5716.227
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Garbage Bin G",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Round_DE",
+    "pos": [
+      7416.099,
+      365.5,
+      5711.238
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Sandbag Round",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Round_DE",
+    "pos": [
+      7416.257,
+      365.5,
+      5704.41
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Sandbag Round",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7421.837,
+      365.5,
+      5703.375
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Garbage Bin Y",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7416.087,
+      365.5,
+      5716.092
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Small Barrier",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7421.67,
+      365.5,
+      5721.444
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Garbage Bin Y",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7421.612,
+      365.5,
+      5716.957
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Sandbag Wall",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7421.848,
+      365.5,
+      5729.048
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Sandbag Wall",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7421.601,
+      365.5,
+      5730.682
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Small Barrier",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7421.695,
+      365.5,
+      5714.763
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Garbage Bin Y",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_BarrierConcrete_02_DE",
+    "pos": [
+      7416.292,
+      365.5,
+      5695.93
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Small Barrier",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Green_DE",
+    "pos": [
+      7416.281,
+      365.5,
+      5717.289
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Corridor Decor: Garbage Bin G",
+    "_level": 3,
+    "_section": "decor"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7408.5,
+      384,
+      5766.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall N",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7413.5,
+      384,
+      5766.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall N",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7418.5,
+      384,
+      5766.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall N",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7423.5,
+      384,
+      5766.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall N",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7428.5,
+      384,
+      5766.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall N",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7433.5,
+      384,
+      5766.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall N",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7438.5,
+      384,
+      5766.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall N",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7443.5,
+      384,
+      5766.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall N",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7448.5,
+      384,
+      5766.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall N",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7453.5,
+      384,
+      5766.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall N",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7458.5,
+      384,
+      5766.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall N",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7463.5,
+      384,
+      5766.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall N",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7468.5,
+      384,
+      5766.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall N",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7473.5,
+      384,
+      5766.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall N",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7478.5,
+      384,
+      5766.5
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall N",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7408.5,
+      384,
+      5682
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall S",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7413.5,
+      384,
+      5682
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall S",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7418.5,
+      384,
+      5682
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall S",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7423.5,
+      384,
+      5682
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall S",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7428.5,
+      384,
+      5682
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall S",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7433.5,
+      384,
+      5682
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall S",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7438.5,
+      384,
+      5682
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall S",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7443.5,
+      384,
+      5682
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall S",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7448.5,
+      384,
+      5682
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall S",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7453.5,
+      384,
+      5682
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall S",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7458.5,
+      384,
+      5682
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall S",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7463.5,
+      384,
+      5682
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall S",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7468.5,
+      384,
+      5682
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall S",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7473.5,
+      384,
+      5682
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall S",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7478.5,
+      384,
+      5682
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall S",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7432,
+      384,
+      5684.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall E",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7432,
+      384,
+      5689.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall E",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7432,
+      384,
+      5694.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall E",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7432,
+      384,
+      5699.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall E",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7432,
+      384,
+      5704.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall E",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7432,
+      384,
+      5709.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall E",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7406,
+      384,
+      5684.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall W",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7406,
+      384,
+      5689.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall W",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7406,
+      384,
+      5694.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall W",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7406,
+      384,
+      5699.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall W",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7406,
+      384,
+      5704.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall W",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_5m_DE",
+    "pos": [
+      7406,
+      384,
+      5709.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exterior Wall W",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_Corner_DE",
+    "pos": [
+      7432,
+      384,
+      5766.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exterior Corner",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_Corner_DE",
+    "pos": [
+      7406,
+      384,
+      5766.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exterior Corner",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_Corner_DE",
+    "pos": [
+      7432,
+      384,
+      5682
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exterior Corner",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_HBarrier_Corner_DE",
+    "pos": [
+      7406,
+      384,
+      5682
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Exterior Corner",
+    "_level": 0,
+    "_section": "exterior"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7415,
+      383.5,
+      5690.5
+    ],
+    "ypr": [
+      0,
+      0,
+      0
+    ],
+    "_note": "Entrance Sandbags",
+    "_level": 0,
+    "_section": "entrance"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7423,
+      383.5,
+      5690.5
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Entrance Sandbags",
+    "_level": 0,
+    "_section": "entrance"
+  },
+  {
+    "classname": "Land_Sandbag_Wall_DE",
+    "pos": [
+      7414,
+      383.5,
+      5695
+    ],
+    "ypr": [
+      90,
+      0,
+      0
+    ],
+    "_note": "Entrance Sandbags",
+    "_level": 0,
+    "_section": "entrance"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7426.644,
+      383.5,
+      5694.941
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Surface Debris: Garbage Bin Y",
+    "_level": 0,
+    "_section": "decor"
+  },
+  {
+    "classname": "Barrel_Green",
+    "pos": [
+      7419.258,
+      383.5,
+      5698.08
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Surface Debris: Green Barrel",
+    "_level": 0,
+    "_section": "decor"
+  },
+  {
+    "classname": "GarbageContainer_Yellow_DE",
+    "pos": [
+      7423.991,
+      383.5,
+      5700.952
+    ],
+    "ypr": [
+      270,
+      0,
+      0
+    ],
+    "_note": "Surface Debris: Garbage Bin Y",
+    "_level": 0,
+    "_section": "decor"
+  },
+  {
+    "classname": "Barrel_Yellow",
+    "pos": [
+      7425.478,
+      383.5,
+      5695.997
+    ],
+    "ypr": [
+      180,
+      0,
+      0
+    ],
+    "_note": "Surface Debris: Yellow Barrel",
+    "_level": 0,
+    "_section": "decor"
+  }
+]

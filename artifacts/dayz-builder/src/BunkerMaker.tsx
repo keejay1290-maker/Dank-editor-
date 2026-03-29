@@ -11,7 +11,7 @@ const SECTION_COLORS: Record<PlacedObject['section'], string> = {
   panel:    '#9b59b6',
   exterior: '#7f8c8d',
   stair:    '#f39c12',
-  spine:    '#3498db',
+  tunnel:   '#3498db',
   branch:   '#2980b9',
   room:     '#d4a017',
   decor:    '#5a4820',
@@ -74,7 +74,7 @@ function FloorPlanSVG({ layout, showLevel }: { layout: BunkerLayout; showLevel: 
         const cx = toSvgX(obj.dx);
         const cy = toSvgY(obj.dz);
         const color = SECTION_COLORS[obj.section] ?? '#5a4820';
-        const r = obj.section === 'room' ? 8 : obj.section === 'spine' || obj.section === 'branch' ? 4 : 5;
+        const r = obj.section === 'room' ? 8 : obj.section === 'tunnel' || obj.section === 'branch' ? 4 : 5;
         const isLarge = obj.section === 'room';
         return (
           <g key={i}>
@@ -95,7 +95,7 @@ function FloorPlanSVG({ layout, showLevel }: { layout: BunkerLayout; showLevel: 
         transform={`rotate(-90, 14, ${H / 2})`}>W←</text>
 
       {/* Legend */}
-      {(['entrance','room','spine','stair','decor'] as PlacedObject['section'][]).map((sec, i) => (
+      {(['entrance','room','tunnel','stair','decor'] as PlacedObject['section'][]).map((sec, i) => (
         <g key={sec}>
           <circle cx={MARGIN + i * 100} cy={H - 12} r={4} fill={SECTION_COLORS[sec]} />
           <text x={MARGIN + i * 100 + 7} y={H - 9} fontSize="7.5" fill="#8a7840" dominantBaseline="middle">
@@ -401,15 +401,15 @@ export default function BunkerMaker() {
                 <div className="text-[7.5px] text-[#6a5a3a]">Rooms</div>
               </div>
               <div className="text-center">
-                <div className="text-[10px] font-bold text-[#3498db]">{layout.stats.corridorSegments}</div>
-                <div className="text-[7.5px] text-[#6a5a3a]">Corridor Segs</div>
+                <div className="text-[10px] font-bold text-[#3498db]">{layout.stats.tunnelSegments}</div>
+                <div className="text-[7.5px] text-[#6a5a3a]">Tunnel Segs</div>
               </div>
             </div>
 
             {/* Legend */}
             <div className="flex flex-wrap gap-1.5 mt-2">
               {(Object.entries(SECTION_COLORS) as [PlacedObject['section'], string][])
-                .filter(([s]) => ['entrance','exit','room','spine','stair','decor','exterior','panel'].includes(s))
+                .filter(([s]) => ['entrance','exit','room','tunnel','stair','decor','exterior','panel'].includes(s))
                 .map(([sec, col]) => (
                 <div key={sec} className="flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full" style={{ background: col }} />
@@ -457,7 +457,7 @@ export default function BunkerMaker() {
             {(Object.entries({
               '🚪 Entrance': layout.objects.filter(o => o.section === 'entrance').length,
               '🏠 Rooms':    layout.objects.filter(o => o.section === 'room').length,
-              '🚇 Corridors':layout.objects.filter(o => o.section === 'spine' || o.section === 'branch').length,
+              '🚇 Corridors':layout.objects.filter(o => o.section === 'tunnel' || o.section === 'branch').length,
               '🪜 Stairs':   layout.objects.filter(o => o.section === 'stair').length,
               '🎨 Decor':    layout.objects.filter(o => o.section === 'decor').length,
               '🧱 Exterior': layout.objects.filter(o => o.section === 'exterior').length,

@@ -4,14 +4,20 @@
 import {
   PlacedObject, BunkerStyle, BunkerSize,
   STYLES, SIZES, DECOR_PROPS, WRECK_PROPS,
-  PIECE_ENTRANCE_MAIN, PIECE_ENTRANCE_SMALL, PIECE_GUARDHOUSE,
-  PIECE_STAIRS_CONCRETE, PIECE_LADDER, PIECE_PLATFORM,
-  PIECE_FLOOR_10, PIECE_FLOOR_5,
-  PIECE_WALL_CONCRETE_4, PIECE_WALL_CONCRETE_8,
-  PIECE_HBARRIER_5, PIECE_HBARRIER_10, PIECE_HBARRIER_CORNER, PIECE_SANDBAG_WALL,
+  PIECE_ENTRANCE_MAIN, PIECE_ENTRANCE_SMALL,
+  PIECE_TUNNEL_SINGLE, PIECE_TUNNEL_LEFT, PIECE_TUNNEL_RIGHT,
+  PIECE_CORRIDOR_BOTH, PIECE_CORRIDOR_LEFT, PIECE_CORRIDOR_RIGHT,
+  PIECE_CONNECTOR,
+  PIECE_STAIRS_START, PIECE_STAIRS_BLOCK, PIECE_STAIRS_TERMINATOR, PIECE_STAIRS_EXIT,
+  PIECE_STAIRS_COLLAPSED,
+  PIECE_FLOOR_CREW, PIECE_FLOOR_COMMS,
+  PIECE_PANEL, PIECE_PANEL_EXTERIOR, PIECE_PANEL_INTERIOR, PIECE_PANEL_FALLBACK,
+  PIECE_GATE_L, PIECE_GATE_R,
+  PIECE_HBARRIER_5, PIECE_HBARRIER_10, PIECE_HBARRIER_CORNER,
   PIECE_WALL_CASTLE_3, PIECE_WALL_CASTLE_6,
-  PIECE_PANEL_EXTERIOR, PIECE_PANEL_INTERIOR, PIECE_PANEL_FALLBACK,
-  PIECE_CONCRETE_STEP, DecorProp,
+  PIECE_WALL_CONCRETE_4, PIECE_WALL_CONCRETE_8,
+  PIECE_SANDBAG_WALL,
+  DecorProp,
 } from './bunkerData';
 
 // ─── Seeded RNG (Mulberry32) ─────────────────────────────────────────────────
@@ -49,22 +55,23 @@ function mkRng(seed: number) {
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-// Each spine segment is CELL_LEN metres along the Z axis.
-const CELL_LEN   = 6.5;   // container length + small gap
-const CELL_W     = 5.0;   // corridor width (two containers side-by-side)
-const BRANCH_OFF = 8.0;   // lateral offset of branch corridor from spine axis
-const ROOM_OFF   = 16.0;  // total lateral offset of room centre from spine axis
+// Spacing between tunnel segment centres (~9m based on in-game measurements)
+const CELL_LEN   = 9.0;
+// Lateral offset from spine axis to branch tunnel centre
+const BRANCH_OFF = 11.0;
+// Total lateral offset from spine to room centre
+const ROOM_OFF   = 22.0;
 
-// Depth (Y offset) per level, metres below surface
+// Y depth per underground level (metres below surface)
 const LEVEL_DEPTH: Record<number, number> = {
-  0: 0,     // surface
-  1: -5,    // Level 1
-  2: -11,   // Level 2
-  3: -18,   // Level 3
+  0: 0,
+  1: -5,
+  2: -11,
+  3: -18,
 };
 
-// Stairwell Y heights relative to upper level
-const STAIR_Y_OFFSETS = [0.0, 2.0, 4.0];
+// Stair block height (~4m per block, stacked from top down)
+const STAIR_BLOCK_H = 4.0;
 
 // ─── Generator Options ───────────────────────────────────────────────────────
 
@@ -73,18 +80,17 @@ export interface BunkerOptions {
   levels: 1 | 2 | 3;
   size: BunkerSize;
   style: BunkerStyle;
-  spineAxis: 'NS' | 'EW';     // spine runs N-S (Z) or E-W (X)
-  encaseExterior: boolean;     // wrap surface footprint in walls
-  includeConvoy: boolean;      // vehicle wrecks in main corridor
-  includeDecor: boolean;       // scatter decorative props
+  spineAxis: 'NS' | 'EW';
+  encaseExterior: boolean;
+  includeConvoy: boolean;
+  includeDecor: boolean;
   decorDensity: 'sparse' | 'normal' | 'heavy';
-  includeFloors: boolean;      // concrete floor slabs under rooms
-  useSakhalPanels: boolean;    // use Sakhal-specific keypad objects
+  includeFloors: boolean;
+  useSakhalPanels: boolean;
 }
 
 // ─── Internal Helpers ────────────────────────────────────────────────────────
 
-// Rotate an (dx, dz) vector around Y by yaw degrees
 function rotateXZ(dx: number, dz: number, yawDeg: number): [number, number] {
   const r = (yawDeg * Math.PI) / 180;
   return [
@@ -93,7 +99,7 @@ function rotateXZ(dx: number, dz: number, yawDeg: number): [number, number] {
   ];
 }
 
-// ─── Main Generator ──────────────────────────────────────────────────────────
+// ─── Output Types ─────────────────────────────────────────────────────────────
 
 export interface BunkerLayout {
   objects: PlacedObject[];
@@ -101,12 +107,14 @@ export interface BunkerLayout {
     totalObjects: number;
     levels: number;
     rooms: number;
-    corridorSegments: number;
+    tunnelSegments: number;
     decorObjects: number;
-    footprintRadius: number; // approximate half-width of layout
+    footprintRadius: number;
   };
   seed: number;
 }
+
+// ─── Main Generator ──────────────────────────────────────────────────────────
 
 export function generateBunker(opts: BunkerOptions): BunkerLayout {
   const rng = mkRng(opts.seed);
@@ -115,13 +123,12 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
   const size  = SIZES[opts.size];
 
   let rooms = 0;
-  let corridorCount = 0;
+  let tunnelCount = 0;
   let decorCount = 0;
 
-  // Yaw of entire bunker layout (spineAxis determines base orientation)
   const baseYaw = opts.spineAxis === 'NS' ? 0 : 90;
 
-  // Helper: add a placed object (rotates dx/dz by baseYaw automatically)
+  // Helper: place an object with auto yaw rotation based on spine axis
   function place(
     classname: string,
     note: string,
@@ -138,7 +145,7 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
     objects.push({ classname, note, dx, dy, dz, yaw: (yaw + baseYaw) % 360, pitch, roll, level, section });
   }
 
-  // ── Spine length per level ──────────────────────────────────────────────────
+  // ── Per-level spine lengths ─────────────────────────────────────────────────
   const spineLengths: number[] = [];
   for (let lv = 0; lv < opts.levels; lv++) {
     const base = lv === 0 ? size.spineMin : Math.max(2, size.spineMin - lv);
@@ -146,40 +153,44 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
     spineLengths.push(rng.int(base, max));
   }
 
-  // ── Stairwell spine positions (where level transitions happen) ──────────────
-  // Stairwell for level N→N+1 is placed at a random segment of level N's spine
+  // ── Stairwell spine positions ───────────────────────────────────────────────
   const stairPositions: number[] = [];
   for (let lv = 0; lv < opts.levels - 1; lv++) {
     stairPositions.push(rng.int(1, spineLengths[lv] - 1));
   }
 
-  // ── EXIT position — always far end of level 1 spine ────────────────────────
+  // EXIT position — far end of level 1 spine
   const exitSpinePos = spineLengths[0] + 1;
 
   // ─────────────────────────────────────────────────────────────────────────────
   // SURFACE LEVEL — Entrance & Exit
   // ─────────────────────────────────────────────────────────────────────────────
 
-  // Main entrance — at spine position -1 (just before spine start), surface
-  place(PIECE_ENTRANCE_MAIN.classname, '🚪 Main Entrance', 0, 0, -CELL_LEN, 0, 0, 'entrance');
+  // Main entrance
+  place(PIECE_ENTRANCE_MAIN.classname, 'Main Entrance', 0, 0, -CELL_LEN, 0, 0, 'entrance');
 
-  // Exterior punchcard panel — beside entrance
-  const panelExtClass = opts.useSakhalPanels ? PIECE_PANEL_EXTERIOR.classname : PIECE_PANEL_FALLBACK.classname;
-  const panelExtNote  = opts.useSakhalPanels ? '🔲 Entry Keypad Panel (Sakhal)' : '🔲 Entry Panel (Fallback shelf)';
-  place(panelExtClass, panelExtNote, 4.5, 0.5, -CELL_LEN + 1, 90, 0, 'panel');
-
-  // Guard house beside entrance (random placement: left or right)
-  if (rng.bool(0.6)) {
-    const side = rng.bool() ? 5 : -5;
-    place(PIECE_GUARDHOUSE.classname, '🪖 Surface Guard Post', side, 0, -CELL_LEN, rng.bool() ? 90 : 270, 0, 'entrance');
+  // Entry panel beside entrance
+  if (opts.useSakhalPanels) {
+    place(PIECE_PANEL_EXTERIOR.classname, 'Entry Keypad Panel (Sakhal)', 4.5, 0.5, -CELL_LEN + 1, 90, 0, 'panel');
+  } else {
+    place(PIECE_PANEL_FALLBACK.classname, 'Entry Panel', 4.5, 0.5, -CELL_LEN + 1, 90, 0, 'panel');
   }
 
-  // Emergency exit — at far end of surface spine
-  place(PIECE_ENTRANCE_SMALL.classname, '🚪 Emergency Exit', 0, 0, exitSpinePos * CELL_LEN + CELL_LEN, 180, 0, 'exit');
+  // Gate pieces at entrance
+  if (rng.bool(0.7)) {
+    place(PIECE_GATE_L.classname, 'Entrance Gate Left', -2, 0, -CELL_LEN + 5.5, 0, 0, 'entrance');
+    place(PIECE_GATE_R.classname, 'Entrance Gate Right', 2, 0, -CELL_LEN + 5.5, 0, 0, 'entrance');
+  }
 
-  // Interior exit panel (at base of exit stairwell, underground)
-  const panelIntClass = opts.useSakhalPanels ? PIECE_PANEL_INTERIOR.classname : PIECE_PANEL_FALLBACK.classname;
-  place(panelIntClass, '🔲 Interior Exit Panel', 4, LEVEL_DEPTH[1] + 0.5, exitSpinePos * CELL_LEN, 270, 1, 'panel');
+  // Emergency exit at far end of spine
+  place(PIECE_ENTRANCE_SMALL.classname, 'Emergency Exit', 0, 0, exitSpinePos * CELL_LEN + CELL_LEN, 180, 0, 'exit');
+
+  // Interior exit panel (underground, near exit stairwell)
+  if (opts.useSakhalPanels) {
+    place(PIECE_PANEL_INTERIOR.classname, 'Interior Exit Panel (Sakhal)', 4, LEVEL_DEPTH[1] + 0.5, exitSpinePos * CELL_LEN, 270, 1, 'panel');
+  } else {
+    place(PIECE_PANEL.classname, 'Interior Exit Panel', 4, LEVEL_DEPTH[1] + 0.5, exitSpinePos * CELL_LEN, 270, 1, 'panel');
+  }
 
   // ─────────────────────────────────────────────────────────────────────────────
   // UNDERGROUND LEVELS
@@ -188,92 +199,101 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
   for (let lv = 1; lv <= opts.levels; lv++) {
     const spineLen = spineLengths[lv - 1];
     const dy       = LEVEL_DEPTH[lv];
-    const stairPos = stairPositions[lv - 1]; // stairwell toward next level (undefined if last level)
+    const stairPos = stairPositions[lv - 1];
 
-    // ── Spine corridor ──────────────────────────────────────────────────────
-    for (let seg = 0; seg < spineLen; seg++) {
-      const dz = seg * CELL_LEN + 0.5;
-
-      // Two containers side-by-side form the corridor
-      const contA = seg % 2 === 0 ? style.corridorA : style.corridorB;
-      const contB = seg % 2 === 0 ? style.corridorB : style.corridorA;
-      place(contA.classname, `L${lv} Spine Corridor Seg${seg+1}A`, -1.3, dy, dz, 0, lv, 'spine');
-      place(contB.classname, `L${lv} Spine Corridor Seg${seg+1}B`, +1.3, dy, dz, 0, lv, 'spine');
-      corridorCount += 2;
-
-      // Floor slabs under corridor
-      if (opts.includeFloors && seg % 2 === 0) {
-        place(PIECE_FLOOR_5.classname, `L${lv} Floor Slab`, 0, dy - 0.15, dz, 0, lv, 'spine');
-      }
-    }
-
-    // ── Stairwell going DOWN to next level ──────────────────────────────────
-    if (lv < opts.levels && stairPos !== undefined) {
-      const sdz = stairPos * CELL_LEN;
-      const sdx = rng.bool() ? BRANCH_OFF + 2 : -(BRANCH_OFF + 2);
-      const nextDy = LEVEL_DEPTH[lv + 1];
-      const depthDiff = Math.abs(nextDy - dy);
-      const numFlights = Math.ceil(depthDiff / 2);
-
-      for (let f = 0; f < numFlights; f++) {
-        const stairY = dy - f * 2;
-        place(PIECE_STAIRS_CONCRETE.classname, `L${lv}→L${lv+1} Stair Flight ${f+1}`, sdx, stairY, sdz + f * 2, sdx > 0 ? 270 : 90, lv, 'stair');
-      }
-      // Ladder for the full drop
-      place(PIECE_LADDER.classname, `L${lv}→L${lv+1} Descent Ladder`, sdx + (sdx > 0 ? 1.5 : -1.5), dy, sdz, 0, lv, 'stair');
-      place(PIECE_PLATFORM.classname, `L${lv}→L${lv+1} Landing Platform`, sdx, nextDy + 0.5, sdz, 0, lv + 1, 'stair');
-
-      // Corridor connecting stairwell base to next level spine
-      place(style.corridorA.classname, `L${lv+1} Stair Access Corr A`, sdx > 0 ? BRANCH_OFF * 0.5 : -BRANCH_OFF * 0.5, nextDy, sdz, sdx > 0 ? 270 : 90, lv + 1, 'stair');
-    }
-
-    // ── Exit stairwell (from level 1 to surface exit bunker) ────────────────
-    if (lv === 1) {
-      const ez = exitSpinePos * CELL_LEN;
-      const numFlights = Math.ceil(Math.abs(dy) / 2);
-      for (let f = 0; f < numFlights; f++) {
-        place(PIECE_STAIRS_CONCRETE.classname, `Exit Stair Flight ${f+1}`, 0, dy + f * 2, ez + f * 2, 0, lv, 'stair');
-      }
-      place(PIECE_LADDER.classname, 'Exit Ladder', 2, dy, ez, 0, lv, 'stair');
-    }
-
-    // ── Branch rooms off the spine ──────────────────────────────────────────
+    // ── Spine tunnel corridor ─────────────────────────────────────────────────
+    // Determine which segments are branch points
+    const branchSegs = new Set<number>();
     const numBranches = rng.int(size.branchMin, size.branchMax);
     const usedSegs = new Set<number>();
-
     for (let b = 0; b < numBranches; b++) {
-      // Pick a spine segment that hasn't had a branch yet
       let branchSeg: number;
       let attempts = 0;
       do {
-        branchSeg = rng.int(0, spineLen - 1);
+        branchSeg = rng.int(1, spineLen - 2);
         attempts++;
       } while (usedSegs.has(branchSeg) && attempts < 20);
       usedSegs.add(branchSeg);
+      branchSegs.add(branchSeg);
+    }
 
+    for (let seg = 0; seg < spineLen; seg++) {
+      const dz = seg * CELL_LEN + CELL_LEN * 0.5;
+      if (branchSegs.has(seg)) {
+        // Use a junction piece at branch points
+        const side = [...branchSegs].indexOf(seg) % 2;
+        const junctionPiece = side === 0 ? style.tunnelBranch : PIECE_CORRIDOR_RIGHT;
+        place(junctionPiece.classname, `L${lv} Junction Seg${seg + 1}`, 0, dy, dz, 0, lv, 'tunnel');
+      } else {
+        place(style.tunnelStraight.classname, `L${lv} Tunnel Seg${seg + 1}`, 0, dy, dz, 0, lv, 'tunnel');
+      }
+      tunnelCount++;
+
+      // Floor slabs
+      if (opts.includeFloors && seg % 2 === 0) {
+        const floorPiece = rng.bool(0.5) ? PIECE_FLOOR_CREW : PIECE_FLOOR_COMMS;
+        place(floorPiece.classname, `L${lv} Floor`, 0, dy - 0.15, dz, 0, lv, 'tunnel');
+      }
+    }
+
+    // Connector at entrance to tunnel level
+    place(PIECE_CONNECTOR.classname, `L${lv} Entry Connector`, 0, dy, 0, 0, lv, 'tunnel');
+
+    // ── Stairwell down to next level ──────────────────────────────────────────
+    if (lv < opts.levels && stairPos !== undefined) {
+      const sdz = stairPos * CELL_LEN + CELL_LEN * 0.5;
+      const sdx = rng.bool() ? BRANCH_OFF * 0.6 : -(BRANCH_OFF * 0.6);
+      const nextDy = LEVEL_DEPTH[lv + 1];
+      const depthDiff = Math.abs(nextDy - dy);
+      const numBlocks = Math.ceil(depthDiff / STAIR_BLOCK_H);
+
+      // Top stair
+      place(PIECE_STAIRS_START.classname, `L${lv} to L${lv + 1} Stairs Top`, sdx, dy, sdz, sdx > 0 ? 270 : 90, lv, 'stair');
+      // Mid blocks
+      for (let f = 1; f < numBlocks; f++) {
+        const stairY = dy - f * STAIR_BLOCK_H;
+        place(PIECE_STAIRS_BLOCK.classname, `L${lv} to L${lv + 1} Stairs Block ${f}`, sdx, stairY, sdz, sdx > 0 ? 270 : 90, lv, 'stair');
+      }
+      // Bottom terminator
+      place(PIECE_STAIRS_TERMINATOR.classname, `L${lv} to L${lv + 1} Stairs Bottom`, sdx, nextDy + STAIR_BLOCK_H * 0.5, sdz, sdx > 0 ? 270 : 90, lv + 1, 'stair');
+
+      // Connector linking stairwell base to next level spine
+      place(PIECE_CONNECTOR.classname, `L${lv + 1} Stair Connector`, sdx > 0 ? BRANCH_OFF * 0.3 : -BRANCH_OFF * 0.3, nextDy, sdz, sdx > 0 ? 270 : 90, lv + 1, 'stair');
+    }
+
+    // ── Exit stairwell (Level 1 to surface exit) ──────────────────────────────
+    if (lv === 1) {
+      const ez = exitSpinePos * CELL_LEN + CELL_LEN * 0.5;
+      const numBlocks = Math.ceil(Math.abs(dy) / STAIR_BLOCK_H);
+      for (let f = 0; f < numBlocks; f++) {
+        const stairY = dy + f * STAIR_BLOCK_H;
+        const pc = f === 0 ? PIECE_STAIRS_BLOCK.classname : PIECE_STAIRS_BLOCK.classname;
+        place(pc, `Exit Stair Block ${f + 1}`, 0, stairY, ez, 0, lv, 'stair');
+      }
+      place(PIECE_STAIRS_EXIT.classname, 'Exit Stair Top', 0, 0, ez, 0, 0, 'exit');
+    }
+
+    // ── Branch rooms off the spine ────────────────────────────────────────────
+    let branchIdx = 0;
+    for (const branchSeg of branchSegs) {
       const branchZ = branchSeg * CELL_LEN + CELL_LEN * 0.5;
-      const side = b % 2 === 0 ? 1 : -1; // alternate sides for balance
-      const branchLen = rng.int(1, 2); // 1-2 corridor segments before room
+      const side = branchIdx % 2 === 0 ? 1 : -1;
+      branchIdx++;
 
-      // Branch corridor segments (run in X direction)
+      // Tunnel leading to room (perpendicular to spine)
+      const branchLen = rng.int(1, 2);
       for (let bc = 0; bc < branchLen; bc++) {
-        const bx = side * (BRANCH_OFF * 0.5 + bc * CELL_LEN);
-        place(style.corridorA.classname, `L${lv} Branch${b+1} Seg${bc+1}A`, bx, dy, branchZ - 1.3, 90, lv, 'branch');
-        place(style.corridorB.classname, `L${lv} Branch${b+1} Seg${bc+1}B`, bx, dy, branchZ + 1.3, 90, lv, 'branch');
-        corridorCount += 2;
+        const bx = side * (BRANCH_OFF * 0.5 + bc * CELL_LEN * 0.7);
+        place(PIECE_TUNNEL_SINGLE.classname, `L${lv} Branch${branchIdx} Seg${bc + 1}`, bx, dy, branchZ, side > 0 ? 90 : 270, lv, 'branch');
+        tunnelCount++;
       }
 
-      // Room at the end of the branch
-      const roomX = side * (BRANCH_OFF + branchLen * CELL_LEN + 3);
+      // Room at branch end
+      const roomX = side * (BRANCH_OFF + branchLen * CELL_LEN * 0.7 + 2);
       const roomDef = rng.bool(0.4) ? style.primaryRoom : style.altRoom;
-      const roomYaw = rng.bool(0.5) ? 0 : 90; // random orientation
-      place(roomDef.classname, `L${lv} Room ${b+1} (${roomDef.label})`, roomX, dy, branchZ, roomYaw, lv, 'room');
+      const roomYaw = rng.bool(0.5) ? 0 : 90;
+      place(roomDef.classname, `L${lv} Room ${branchIdx} (${roomDef.label})`, roomX, dy, branchZ, roomYaw, lv, 'room');
       rooms++;
-
-      // Floor under room
-      if (opts.includeFloors) {
-        place(PIECE_FLOOR_10.classname, `L${lv} Room ${b+1} Floor`, roomX, dy - 0.15, branchZ, roomYaw, lv, 'room');
-      }
 
       // Decorate inside room
       if (opts.includeDecor) {
@@ -288,25 +308,24 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
           const prop = rng.weightedPick(decorPool);
           const ox = roomX + rng.next() * 6 - 3;
           const oz = branchZ + rng.next() * 6 - 3;
-          const oy = opts.decorDensity === 'heavy' && i >= numDecor - 2
-            ? dy + 0.8 // stacked on top
-            : dy;
+          const oy = opts.decorDensity === 'heavy' && i >= numDecor - 2 ? dy + 0.8 : dy;
           place(prop.classname, `Decor: ${prop.label}`, ox, oy, oz, rng.int(0, 3) * 90, lv, 'decor');
           decorCount++;
         }
 
-        // Pile of garbage/barrels near room entrance
         if (rng.bool(0.5)) {
-          const garbagePile = rng.bool() ? DECOR_PROPS.find(d => d.classname === 'GarbageContainer_Yellow_DE')! : DECOR_PROPS.find(d => d.classname === 'Barrel_Blue')!;
+          const pile = rng.bool()
+            ? DECOR_PROPS.find(d => d.classname === 'GarbageContainer_Yellow_DE')!
+            : DECOR_PROPS.find(d => d.classname === 'Barrel_Blue')!;
           for (let g = 0; g < rng.int(2, 4); g++) {
-            place(garbagePile.classname, 'Pile of debris', roomX + rng.next() * 2 - 1, dy, branchZ + side * 4 + rng.next() * 2, rng.int(0, 3) * 90, lv, 'decor');
+            place(pile.classname, 'Debris pile', roomX + rng.next() * 2 - 1, dy, branchZ + side * 4 + rng.next() * 2, rng.int(0, 3) * 90, lv, 'decor');
             decorCount++;
           }
         }
       }
     }
 
-    // ── Extra rooms along spine (for large/mega) ─────────────────────────────
+    // ── Extra rooms along spine (large/mega) ──────────────────────────────────
     if (size.extraRooms > 0 && rng.bool(0.6)) {
       const extraZ = rng.int(1, spineLen - 1) * CELL_LEN;
       const extraSide = rng.bool() ? 1 : -1;
@@ -314,7 +333,6 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
       place(extraRoom.classname, `L${lv} Extra Room`, extraSide * ROOM_OFF, dy, extraZ, 90, lv, 'room');
       rooms++;
 
-      // Sandbag guard positions at extra room entrance
       if (opts.includeDecor) {
         for (let sg = 0; sg < 3; sg++) {
           place(PIECE_SANDBAG_WALL.classname, 'Guard Sandbags', extraSide * (BRANCH_OFF + sg * 0.8), dy, extraZ + (sg - 1) * 0.5, extraSide > 0 ? 0 : 180, lv, 'decor');
@@ -323,12 +341,18 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
       }
     }
 
-    // ── Vehicle convoy in spine corridor ────────────────────────────────────
+    // ── Collapsed passage atmospheric prop (abandoned/horror) ─────────────────
+    if ((opts.style === 'abandoned' || opts.style === 'horror') && rng.bool(0.35)) {
+      const colSeg = rng.int(0, spineLen - 1);
+      place(PIECE_STAIRS_COLLAPSED.classname, `L${lv} Collapsed Passage`, rng.next() * 4 - 2, dy, colSeg * CELL_LEN + 2, rng.int(0, 3) * 90, lv, 'decor');
+    }
+
+    // ── Vehicle convoy ────────────────────────────────────────────────────────
     if (lv === 1 && opts.includeConvoy) {
       const convoyStart = rng.int(0, Math.max(0, spineLen - 3));
-      const convoyLen = rng.int(1, Math.min(3, spineLen - convoyStart));
-      const mainWreck = rng.pick(WRECK_PROPS);
-      const trailWreck = WRECK_PROPS.find(w => w.classname === 'Land_Wreck_Trailer_Closed_DE') ?? WRECK_PROPS[1];
+      const convoyLen   = rng.int(1, Math.min(3, spineLen - convoyStart));
+      const mainWreck   = rng.pick(WRECK_PROPS);
+      const trailWreck  = WRECK_PROPS.find(w => w.classname === 'Land_Wreck_Trailer_Closed_DE') ?? WRECK_PROPS[1];
       const wrecksInConvoy: DecorProp[] = [mainWreck];
       for (let c = 1; c < convoyLen; c++) {
         wrecksInConvoy.push(rng.bool(0.5) ? mainWreck : trailWreck);
@@ -341,7 +365,7 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
       }
     }
 
-    // ── Scattered corridor decor ─────────────────────────────────────────────
+    // ── Scattered corridor decor ──────────────────────────────────────────────
     if (opts.includeDecor) {
       const corridorDecorCount = opts.decorDensity === 'sparse' ? 2
         : opts.decorDensity === 'normal' ? Math.floor(spineLen * 1.5)
@@ -350,9 +374,9 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
       const pool = biasPool.length >= 2 ? biasPool : DECOR_PROPS;
       for (let i = 0; i < corridorDecorCount; i++) {
         const prop = rng.weightedPick(pool);
-        const seg = rng.int(0, spineLen - 1);
-        const sdz = seg * CELL_LEN + rng.next() * CELL_LEN * 0.5;
-        const sdx = (rng.bool() ? 2.8 : -2.8) + rng.next() * 0.4 - 0.2;
+        const seg  = rng.int(0, spineLen - 1);
+        const sdz  = seg * CELL_LEN + rng.next() * CELL_LEN * 0.5;
+        const sdx  = (rng.bool() ? 2.0 : -2.0) + rng.next() * 0.4 - 0.2;
         place(prop.classname, `Corridor Decor: ${prop.label}`, sdx, dy, sdz, rng.int(0, 3) * 90, lv, 'decor');
         decorCount++;
       }
@@ -365,32 +389,23 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
 
   if (opts.encaseExterior) {
     const maxSpine = Math.max(...spineLengths);
-    const footprintL = (maxSpine + 3) * CELL_LEN; // total length of spine + buffers
-    const footprintW = ROOM_OFF + 10;              // total width (rooms + buffer)
-    const wallObj = style.exteriorWall;
-    const wallLen = wallObj.d; // wall segment length
+    const footprintL = (maxSpine + 3) * CELL_LEN;
+    const footprintW = ROOM_OFF + 10;
+    const wallObj    = STYLES[opts.style].exteriorWall;
+    const wallLen    = wallObj.d;
     const numWallsLong = Math.ceil(footprintL / wallLen);
     const numWallsWide = Math.ceil(footprintW / wallLen);
     const wallY = 0.5;
 
-    // North wall (dz = footprintL)
     for (let i = 0; i < numWallsLong; i++) {
       place(wallObj.classname, 'Exterior Wall N', (-footprintW / 2) + i * wallLen + wallLen * 0.5, wallY, footprintL, 90, 0, 'exterior');
-    }
-    // South wall (dz = -CELL_LEN * 2)
-    for (let i = 0; i < numWallsLong; i++) {
       place(wallObj.classname, 'Exterior Wall S', (-footprintW / 2) + i * wallLen + wallLen * 0.5, wallY, -CELL_LEN * 2, 90, 0, 'exterior');
     }
-    // East wall (dx = footprintW/2)
     for (let i = 0; i < numWallsWide; i++) {
       place(wallObj.classname, 'Exterior Wall E', footprintW / 2, wallY, (-CELL_LEN * 2) + i * wallLen + wallLen * 0.5, 0, 0, 'exterior');
-    }
-    // West wall (dx = -footprintW/2)
-    for (let i = 0; i < numWallsWide; i++) {
       place(wallObj.classname, 'Exterior Wall W', -footprintW / 2, wallY, (-CELL_LEN * 2) + i * wallLen + wallLen * 0.5, 0, 0, 'exterior');
     }
 
-    // HESCO corner reinforcements
     const corners: [number, number, number][] = [
       [footprintW / 2, wallY, footprintL],
       [-footprintW / 2, wallY, footprintL],
@@ -405,19 +420,16 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
   }
 
   // ─────────────────────────────────────────────────────────────────────────────
-  // SURFACE PERIMETER PROPS (outside bunker)
+  // SURFACE PERIMETER PROPS
   // ─────────────────────────────────────────────────────────────────────────────
 
   if (opts.includeDecor) {
-    // Sandbag guard positions around entrance
-    const sbPositions = [[-4, 0, -CELL_LEN + 2], [4, 0, -CELL_LEN + 2], [-5, 0, 0], [5, 0, 0]] as [number, number, number][];
+    const sbPositions: [number, number, number][] = [[-4, 0, -CELL_LEN + 2], [4, 0, -CELL_LEN + 2], [-5, 0, 0], [5, 0, 0]];
     for (const [sx, sy, sz] of sbPositions) {
       if (rng.bool(0.65)) {
         place(PIECE_SANDBAG_WALL.classname, 'Entrance Sandbags', sx, sy, sz, rng.int(0, 3) * 90, 0, 'entrance');
       }
     }
-
-    // Surface garbage / debris
     for (let i = 0; i < rng.int(3, 7); i++) {
       const prop = rng.weightedPick(DECOR_PROPS.filter(d => d.category === 'garbage' || d.category === 'barrel'));
       place(prop.classname, `Surface Debris: ${prop.label}`, rng.next() * 16 - 8, 0, rng.next() * 8 - 2, rng.int(0, 3) * 90, 0, 'decor');
@@ -425,9 +437,6 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
     }
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  // Stats
-  // ─────────────────────────────────────────────────────────────────────────────
   const footprintRadius = (Math.max(...spineLengths) * CELL_LEN) / 2 + ROOM_OFF + 5;
 
   return {
@@ -436,7 +445,7 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
       totalObjects: objects.length,
       levels: opts.levels,
       rooms,
-      corridorSegments: corridorCount,
+      tunnelSegments: tunnelCount,
       decorObjects: decorCount,
       footprintRadius: Math.round(footprintRadius),
     },
@@ -446,7 +455,7 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
 
 // ─── Code Export Helpers ─────────────────────────────────────────────────────
 
-const SPAWN_HELPER = `// SpawnObject helper — paste ONCE into your init.c (skip if already present)
+const SPAWN_HELPER = `// SpawnObject helper -- paste ONCE into your init.c (skip if already present)
 ref Object SpawnObject(string type, string pos, string ori, float scale) {
     vector vPos = pos.ToVector();
     vector vOri = ori.ToVector();
@@ -457,23 +466,28 @@ ref Object SpawnObject(string type, string pos, string ori, float scale) {
 
 `;
 
+// Strip any emoji or non-ASCII characters from comment strings
+function sanitizeComment(s: string): string {
+  return s.replace(/[^\x00-\x7F]/g, '').replace(/\s+/g, ' ').trim();
+}
+
 export function exportBunkerInitC(
   layout: BunkerLayout,
   worldX: number,
   worldY: number,
   worldZ: number,
 ): string {
-  const sections: PlacedObject['section'][] = ['entrance', 'exit', 'panel', 'exterior', 'stair', 'spine', 'branch', 'room', 'decor'];
+  const sections: PlacedObject['section'][] = ['entrance', 'exit', 'panel', 'exterior', 'stair', 'tunnel', 'branch', 'room', 'decor'];
   const sectionHeaders: Partial<Record<PlacedObject['section'], string>> = {
-    entrance: `// ── SURFACE STRUCTURES ─────────────────────────────────────────────────────`,
-    exit:     `// ── EXIT STRUCTURES ────────────────────────────────────────────────────────`,
-    panel:    `// ── KEYPAD / ACCESS PANELS ────────────────────────────────────────────────`,
-    exterior: `// ── EXTERIOR ENCLOSURE WALLS ──────────────────────────────────────────────`,
-    stair:    `// ── STAIRWELLS & LEVEL TRANSITIONS ───────────────────────────────────────`,
-    spine:    `// ── UNDERGROUND CORRIDOR (SPINE) ──────────────────────────────────────────`,
-    branch:   `// ── BRANCH CORRIDORS ────────────────────────────────────────────────────`,
-    room:     `// ── UNDERGROUND ROOMS ──────────────────────────────────────────────────────`,
-    decor:    `// ── DECORATIVE PROPS & ATMOSPHERE ─────────────────────────────────────────`,
+    entrance: `// -- SURFACE STRUCTURES -------------------------------------------------------`,
+    exit:     `// -- EXIT STRUCTURES ----------------------------------------------------------`,
+    panel:    `// -- ACCESS PANELS ------------------------------------------------------------`,
+    exterior: `// -- EXTERIOR ENCLOSURE WALLS -------------------------------------------------`,
+    stair:    `// -- STAIRWELLS & LEVEL TRANSITIONS -------------------------------------------`,
+    tunnel:   `// -- UNDERGROUND TUNNEL CORRIDORS ---------------------------------------------`,
+    branch:   `// -- BRANCH CORRIDORS ---------------------------------------------------------`,
+    room:     `// -- UNDERGROUND ROOMS --------------------------------------------------------`,
+    decor:    `// -- DECORATIVE PROPS ---------------------------------------------------------`,
   };
 
   let currentSection = '' as PlacedObject['section'] | '';
@@ -487,20 +501,19 @@ export function exportBunkerInitC(
   const lines: string[] = [];
   lines.push(
     SPAWN_HELPER,
-    `// ════════════════════════════════════════════════════════`,
-    `// DankDayZ Ultimate Builder — BUNKER MAKER`,
+    `// ============================================================`,
+    `// DankDayZ Ultimate Builder -- BUNKER MAKER`,
     `// Seed: ${layout.seed} | Levels: ${layout.stats.levels} | Rooms: ${layout.stats.rooms}`,
     `// Objects: ${layout.stats.totalObjects} | Footprint: ~${layout.stats.footprintRadius * 2}m wide`,
     `// Origin: X=${worldX.toFixed(1)} Y=${worldY.toFixed(1)} Z=${worldZ.toFixed(1)}`,
     `//`,
     `// HOW TO USE:`,
-    `// 1. Set World Y to your terrain height at the bunker location.`,
-    `// 2. Underground levels auto-sink below Y (L1 = -5m, L2 = -11m, L3 = -18m).`,
-    `// 3. If terrain slopes, adjust individual Y values after spawning.`,
+    `// 1. Set World Y to your terrain height at the bunker centre.`,
+    `// 2. Underground levels auto-sink below Y (L1=-5m, L2=-11m, L3=-18m).`,
+    `// 3. If terrain slopes, adjust individual object Y values after spawning.`,
     `// 4. Sakhal panels (Land_UGComplex_*) require DayZ 1.25+.`,
-    `//    Toggle off "Sakhal Panels" in the tool if they don't appear.`,
-    `// 5. Re-roll the seed for a completely different bunker layout.`,
-    `// ════════════════════════════════════════════════════════`,
+    `// 5. Re-roll the seed for a completely different layout.`,
+    `// ============================================================`,
     ``,
   );
 
@@ -512,11 +525,12 @@ export function exportBunkerInitC(
         lines.push(sectionHeaders[currentSection]!);
       }
     }
-    const x = (worldX + obj.dx).toFixed(3);
-    const y = (worldY + obj.dy).toFixed(3);
-    const z = (worldZ + obj.dz).toFixed(3);
+    const x  = (worldX + obj.dx).toFixed(3);
+    const y  = (worldY + obj.dy).toFixed(3);
+    const z  = (worldZ + obj.dz).toFixed(3);
     const lv = obj.level > 0 ? ` [L${obj.level}]` : ' [Surface]';
-    lines.push(`SpawnObject("${obj.classname}", "${x} ${y} ${z}", "${obj.pitch.toFixed(3)} ${obj.yaw.toFixed(3)} ${obj.roll.toFixed(3)}", 1.00); // ${obj.note}${lv}`);
+    const comment = sanitizeComment(obj.note);
+    lines.push(`SpawnObject("${obj.classname}", "${x} ${y} ${z}", "${obj.pitch.toFixed(3)} ${obj.yaw.toFixed(3)} ${obj.roll.toFixed(3)}", 1.00); // ${comment}${lv}`);
   }
 
   return lines.join('\n');
@@ -528,17 +542,21 @@ export function exportBunkerJSON(
   worldY: number,
   worldZ: number,
 ): string {
-  const arr = layout.objects.map(obj => ({
-    classname: obj.classname,
+  const objects = layout.objects.map(obj => ({
+    name: obj.classname,
     pos: [
       parseFloat((worldX + obj.dx).toFixed(3)),
       parseFloat((worldY + obj.dy).toFixed(3)),
       parseFloat((worldZ + obj.dz).toFixed(3)),
     ],
-    ypr: [obj.yaw, obj.pitch, obj.roll],
-    _note: obj.note,
-    _level: obj.level,
-    _section: obj.section,
+    ypr: [
+      parseFloat(obj.pitch.toFixed(4)),
+      parseFloat(obj.yaw.toFixed(4)),
+      parseFloat(obj.roll.toFixed(4)),
+    ],
+    scale: 1.0,
+    enableCEPersistency: 0,
+    customString: "",
   }));
-  return JSON.stringify(arr, null, 2);
+  return JSON.stringify({ Objects: objects }, null, 2);
 }

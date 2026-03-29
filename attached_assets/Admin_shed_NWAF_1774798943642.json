@@ -1,0 +1,4740 @@
+{
+    "Objects": [
+        {
+            "name": "RemoteDetonator",
+            "pos": [
+                4642.768555,
+                9928.114471,
+                340.664062
+            ],
+            "ypr": [
+                151.455932,
+                0,
+                0
+            ],
+            "scale": 0.999985,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RemoteDetonator",
+            "pos": [
+                4642.686523,
+                9928.125793,
+                340.615234
+            ],
+            "ypr": [
+                151.455932,
+                0,
+                0
+            ],
+            "scale": 0.999985,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ClaymoreMine",
+            "pos": [
+                4642.397949,
+                9928.057404,
+                340.792969
+            ],
+            "ypr": [
+                150.356704,
+                0,
+                0
+            ],
+            "scale": 0.99998,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ClaymoreMine",
+            "pos": [
+                4642.397949,
+                9928.116211,
+                340.792969
+            ],
+            "ypr": [
+                150.356689,
+                0,
+                0
+            ],
+            "scale": 0.999979,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ClaymoreMine",
+            "pos": [
+                4642.397949,
+                9928.177582,
+                340.792969
+            ],
+            "ypr": [
+                150.356674,
+                0,
+                0
+            ],
+            "scale": 0.999979,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ClaymoreMine",
+            "pos": [
+                4642.397949,
+                9928.24173,
+                340.792969
+            ],
+            "ypr": [
+                150.356659,
+                0,
+                0
+            ],
+            "scale": 0.999979,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ClaymoreMine",
+            "pos": [
+                4642.397949,
+                9928.306366,
+                340.792969
+            ],
+            "ypr": [
+                150.356643,
+                0,
+                0
+            ],
+            "scale": 0.999979,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ClaymoreMine",
+            "pos": [
+                4642.470703,
+                9928.057404,
+                340.663086
+            ],
+            "ypr": [
+                150.356689,
+                0,
+                0
+            ],
+            "scale": 0.999979,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ClaymoreMine",
+            "pos": [
+                4642.470703,
+                9928.116211,
+                340.663086
+            ],
+            "ypr": [
+                150.356674,
+                0,
+                0
+            ],
+            "scale": 0.999979,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ClaymoreMine",
+            "pos": [
+                4642.470703,
+                9928.177582,
+                340.663086
+            ],
+            "ypr": [
+                150.356659,
+                0,
+                0
+            ],
+            "scale": 0.999979,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ClaymoreMine",
+            "pos": [
+                4642.470703,
+                9928.24173,
+                340.663086
+            ],
+            "ypr": [
+                150.356643,
+                0,
+                0
+            ],
+            "scale": 0.999979,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ClaymoreMine",
+            "pos": [
+                4642.470703,
+                9928.306366,
+                340.663086
+            ],
+            "ypr": [
+                150.356628,
+                0,
+                0
+            ],
+            "scale": 0.999979,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AKM",
+            "pos": [
+                4644.833496,
+                9929.267792,
+                340.623047
+            ],
+            "ypr": [
+                62.020633,
+                0,
+                0
+            ],
+            "scale": 0.99998,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AKM",
+            "pos": [
+                4644.833496,
+                9929.006226,
+                340.623047
+            ],
+            "ypr": [
+                62.020633,
+                0,
+                0
+            ],
+            "scale": 0.99998,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AKM",
+            "pos": [
+                4644.814453,
+                9928.759735,
+                340.611328
+            ],
+            "ypr": [
+                62.020633,
+                0,
+                0
+            ],
+            "scale": 0.99998,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AKM",
+            "pos": [
+                4644.814453,
+                9928.52652,
+                340.611328
+            ],
+            "ypr": [
+                62.020633,
+                0,
+                0
+            ],
+            "scale": 0.99998,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Mag_AKM_Drum_TEST",
+            "pos": [
+                4644.349121,
+                9928.21405,
+                340.99707
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Mag_AKM_Drum_TEST",
+            "pos": [
+                4644.430664,
+                9928.213043,
+                340.833984
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Mag_AKM_Drum_TEST",
+            "pos": [
+                4644.515137,
+                9928.20639,
+                340.670898
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Mag_AKM_Drum_TEST",
+            "pos": [
+                4644.590332,
+                9928.212952,
+                340.503906
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Mag_AKM_Drum_TEST",
+            "pos": [
+                4644.241211,
+                9928.21405,
+                340.958008
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Mag_AKM_Drum_TEST",
+            "pos": [
+                4644.322754,
+                9928.213043,
+                340.794922
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Mag_AKM_Drum_TEST",
+            "pos": [
+                4644.407227,
+                9928.20639,
+                340.631836
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Mag_AKM_Drum_TEST",
+            "pos": [
+                4644.482422,
+                9928.212952,
+                340.464844
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Mag_AKM_Drum_TEST",
+            "pos": [
+                4644.141602,
+                9928.21405,
+                340.907227
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Mag_AKM_Drum_TEST",
+            "pos": [
+                4644.223145,
+                9928.213043,
+                340.744141
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Mag_AKM_Drum_TEST",
+            "pos": [
+                4644.307617,
+                9928.20639,
+                340.581055
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Mag_AKM_Drum_TEST",
+            "pos": [
+                4644.382812,
+                9928.212952,
+                340.414063
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AK_WoodBttstck_Camo",
+            "pos": [
+                4644.729004,
+                9928.177948,
+                340.353516
+            ],
+            "ypr": [
+                -121.159302,
+                0,
+                0
+            ],
+            "scale": 0.999981,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AK_WoodBttstck_Camo",
+            "pos": [
+                4644.664062,
+                9928.176239,
+                340.313477
+            ],
+            "ypr": [
+                -121.15931,
+                0,
+                0
+            ],
+            "scale": 0.999981,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AK_WoodBttstck_Camo",
+            "pos": [
+                4644.613281,
+                9928.177948,
+                340.288086
+            ],
+            "ypr": [
+                -121.15931,
+                0,
+                0
+            ],
+            "scale": 0.999981,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AK_WoodBttstck_Camo",
+            "pos": [
+                4644.54834,
+                9928.176239,
+                340.248047
+            ],
+            "ypr": [
+                -121.15931,
+                0,
+                0
+            ],
+            "scale": 0.999981,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AK_RailHndgrd_Green",
+            "pos": [
+                4644.806641,
+                9928.148499,
+                340.229492
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AK_RailHndgrd_Green",
+            "pos": [
+                4644.731445,
+                9928.148499,
+                340.180664
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AK_RailHndgrd_Green",
+            "pos": [
+                4644.644043,
+                9928.148499,
+                340.138672
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AK_RailHndgrd_Green",
+            "pos": [
+                4644.568848,
+                9928.148499,
+                340.089844
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Armband_Orange",
+            "pos": [
+                4643.303223,
+                9929.322876,
+                341.518555
+            ],
+            "ypr": [
+                -30.479998,
+                85.000008,
+                -180
+            ],
+            "scale": 0.999963,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Armband_Orange",
+            "pos": [
+                4643.303223,
+                9929.199493,
+                341.518555
+            ],
+            "ypr": [
+                -30.479998,
+                84.999969,
+                179.999985
+            ],
+            "scale": 0.999963,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Armband_Orange",
+            "pos": [
+                4643.303223,
+                9929.081573,
+                341.518555
+            ],
+            "ypr": [
+                -30.479994,
+                84.999969,
+                179.999969
+            ],
+            "scale": 0.999963,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Armband_Orange",
+            "pos": [
+                4643.303223,
+                9928.952972,
+                341.518555
+            ],
+            "ypr": [
+                -30.47999,
+                84.999969,
+                179.999954
+            ],
+            "scale": 0.999963,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Armband_Orange",
+            "pos": [
+                4642.164062,
+                9929.322876,
+                340.819336
+            ],
+            "ypr": [
+                -30.479998,
+                84.999969,
+                179.999985
+            ],
+            "scale": 0.999963,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Armband_Orange",
+            "pos": [
+                4642.164062,
+                9929.199493,
+                340.819336
+            ],
+            "ypr": [
+                -30.479994,
+                84.999969,
+                179.999969
+            ],
+            "scale": 0.999963,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Armband_Orange",
+            "pos": [
+                4642.164062,
+                9929.081573,
+                340.819336
+            ],
+            "ypr": [
+                -30.47999,
+                84.999969,
+                179.999954
+            ],
+            "scale": 0.999963,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Armband_Orange",
+            "pos": [
+                4642.164062,
+                9928.952972,
+                340.819336
+            ],
+            "ypr": [
+                -30.47999,
+                84.999931,
+                179.999939
+            ],
+            "scale": 0.999963,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "WoodenCrate",
+            "pos": [
+                4642.358887,
+                9927.736023,
+                340.646484
+            ],
+            "ypr": [
+                60.034797,
+                0,
+                0
+            ],
+            "scale": 0.999968,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "WoodenCrate",
+            "pos": [
+                4643.344238,
+                9927.730408,
+                341.19043
+            ],
+            "ypr": [
+                60.034797,
+                0,
+                0
+            ],
+            "scale": 0.999967,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AmmoBox_762x39_20Rnd",
+            "pos": [
+                4644.242187,
+                9928.106995,
+                341.273438
+            ],
+            "ypr": [
+                -117.255326,
+                0,
+                0
+            ],
+            "scale": 0.99998,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AmmoBox_762x39_20Rnd",
+            "pos": [
+                4644.289551,
+                9928.106995,
+                341.196289
+            ],
+            "ypr": [
+                -117.25531,
+                0,
+                0
+            ],
+            "scale": 0.99998,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AmmoBox_762x39_20Rnd",
+            "pos": [
+                4644.185059,
+                9928.106995,
+                341.238281
+            ],
+            "ypr": [
+                -117.25531,
+                0,
+                0
+            ],
+            "scale": 0.99998,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AmmoBox_762x39_20Rnd",
+            "pos": [
+                4644.232422,
+                9928.106995,
+                341.161133
+            ],
+            "ypr": [
+                -117.255303,
+                0,
+                0
+            ],
+            "scale": 0.99998,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AmmoBox_762x39_20Rnd",
+            "pos": [
+                4644.121094,
+                9928.106995,
+                341.199219
+            ],
+            "ypr": [
+                -117.255303,
+                0,
+                0
+            ],
+            "scale": 0.99998,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AmmoBox_762x39_20Rnd",
+            "pos": [
+                4644.168457,
+                9928.106995,
+                341.12207
+            ],
+            "ypr": [
+                -117.25531,
+                0,
+                0
+            ],
+            "scale": 0.99998,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AmmoBox_762x39_20Rnd",
+            "pos": [
+                4644.053711,
+                9928.106995,
+                341.166016
+            ],
+            "ypr": [
+                -117.25531,
+                0,
+                0
+            ],
+            "scale": 0.99998,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AmmoBox_762x39_20Rnd",
+            "pos": [
+                4644.101074,
+                9928.106995,
+                341.088867
+            ],
+            "ypr": [
+                -117.25531,
+                0,
+                0
+            ],
+            "scale": 0.99998,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AmmoBox_762x39_20Rnd",
+            "pos": [
+                4643.992187,
+                9928.106995,
+                341.137695
+            ],
+            "ypr": [
+                -117.25531,
+                0,
+                0
+            ],
+            "scale": 0.99998,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AmmoBox_762x39_20Rnd",
+            "pos": [
+                4644.039551,
+                9928.106995,
+                341.060547
+            ],
+            "ypr": [
+                -117.25531,
+                0,
+                0
+            ],
+            "scale": 0.99998,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "TacticalBaconCan",
+            "pos": [
+                4641.758789,
+                9928.057404,
+                339.876953
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "TacticalBaconCan",
+            "pos": [
+                4641.80127,
+                9928.057404,
+                339.789062
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "TacticalBaconCan",
+            "pos": [
+                4641.845215,
+                9928.057404,
+                339.921875
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "TacticalBaconCan",
+            "pos": [
+                4641.887695,
+                9928.057404,
+                339.833984
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "TacticalBaconCan",
+            "pos": [
+                4641.924316,
+                9928.057404,
+                339.962891
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "TacticalBaconCan",
+            "pos": [
+                4641.966797,
+                9928.057404,
+                339.875
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "TacticalBaconCan",
+            "pos": [
+                4642.004883,
+                9928.057404,
+                340.003906
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "TacticalBaconCan",
+            "pos": [
+                4642.047363,
+                9928.057404,
+                339.916016
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "TacticalBaconCan",
+            "pos": [
+                4642.078613,
+                9928.057404,
+                340.041016
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "TacticalBaconCan",
+            "pos": [
+                4642.121094,
+                9928.057404,
+                339.953125
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "GorkaHelmet_Black",
+            "pos": [
+                4642.123535,
+                9928.057404,
+                339.577148
+            ],
+            "ypr": [
+                59.848449,
+                0,
+                0
+            ],
+            "scale": 0.99997,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "GorkaHelmet_Black",
+            "pos": [
+                4642.256348,
+                9928.057404,
+                339.351562
+            ],
+            "ypr": [
+                59.848449,
+                0,
+                0
+            ],
+            "scale": 0.99997,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "GorkaHelmetVisor",
+            "pos": [
+                4642.273926,
+                9928.140198,
+                339.685547
+            ],
+            "ypr": [
+                58.122905,
+                0,
+                0
+            ],
+            "scale": 0.999975,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Mich2001Helmet",
+            "pos": [
+                4642.410156,
+                9928.057404,
+                339.069336
+            ],
+            "ypr": [
+                57.720497,
+                0,
+                0
+            ],
+            "scale": 0.999983,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "GorkaHelmetVisor",
+            "pos": [
+                4642.42041,
+                9928.140198,
+                339.444336
+            ],
+            "ypr": [
+                58.122905,
+                0,
+                0
+            ],
+            "scale": 0.999975,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Mich2001Helmet",
+            "pos": [
+                4642.532715,
+                9928.057404,
+                338.864258
+            ],
+            "ypr": [
+                57.720489,
+                0,
+                0
+            ],
+            "scale": 0.999983,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "NVGoggles",
+            "pos": [
+                4642.614258,
+                9928.161621,
+                338.636719
+            ],
+            "ypr": [
+                58.055191,
+                0,
+                0
+            ],
+            "scale": 0.999991,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "NVGoggles",
+            "pos": [
+                4642.677246,
+                9928.161621,
+                338.675781
+            ],
+            "ypr": [
+                58.055191,
+                0,
+                0
+            ],
+            "scale": 0.99999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "NVGoggles",
+            "pos": [
+                4642.728027,
+                9928.161621,
+                338.707031
+            ],
+            "ypr": [
+                58.055191,
+                0,
+                0
+            ],
+            "scale": 0.99999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "NVGoggles",
+            "pos": [
+                4642.779297,
+                9928.161621,
+                338.738281
+            ],
+            "ypr": [
+                58.055183,
+                0,
+                0
+            ],
+            "scale": 0.99999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "NVGoggles",
+            "pos": [
+                4642.835938,
+                9928.161621,
+                338.773437
+            ],
+            "ypr": [
+                58.055176,
+                0,
+                0
+            ],
+            "scale": 0.99999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "NVGoggles",
+            "pos": [
+                4642.879395,
+                9928.161621,
+                338.800781
+            ],
+            "ypr": [
+                58.055172,
+                0,
+                0
+            ],
+            "scale": 0.99999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Battery9V",
+            "pos": [
+                4642.603516,
+                9928.057404,
+                338.49707
+            ],
+            "ypr": [
+                64.274383,
+                0,
+                0
+            ],
+            "scale": 0.999976,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Battery9V",
+            "pos": [
+                4642.647949,
+                9928.057404,
+                338.524414
+            ],
+            "ypr": [
+                64.274383,
+                0,
+                0
+            ],
+            "scale": 0.999976,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Battery9V",
+            "pos": [
+                4642.686035,
+                9928.057404,
+                338.547852
+            ],
+            "ypr": [
+                64.274383,
+                0,
+                0
+            ],
+            "scale": 0.999976,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Battery9V",
+            "pos": [
+                4642.724609,
+                9928.057404,
+                338.570312
+            ],
+            "ypr": [
+                64.274383,
+                0,
+                0
+            ],
+            "scale": 0.999976,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Battery9V",
+            "pos": [
+                4642.769531,
+                9928.057404,
+                338.597656
+            ],
+            "ypr": [
+                64.274383,
+                0,
+                0
+            ],
+            "scale": 0.999976,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Battery9V",
+            "pos": [
+                4642.801758,
+                9928.057404,
+                338.617187
+            ],
+            "ypr": [
+                64.274383,
+                0,
+                0
+            ],
+            "scale": 0.999976,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "CargoPants_Black",
+            "pos": [
+                4642.540527,
+                9928.788208,
+                338.361328
+            ],
+            "ypr": [
+                -30,
+                0,
+                93.399994
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "CargoPants_Black",
+            "pos": [
+                4642.502441,
+                9929.370392,
+                338.381836
+            ],
+            "ypr": [
+                -30,
+                0,
+                95
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "M65Jacket_Black",
+            "pos": [
+                4642.225586,
+                9928.506927,
+                338.818359
+            ],
+            "ypr": [
+                148.608001,
+                -0.1,
+                -90.099991
+            ],
+            "scale": 0.999951,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "M65Jacket_Black",
+            "pos": [
+                4642.199707,
+                9929.30127,
+                338.863281
+            ],
+            "ypr": [
+                147.908005,
+                -0.1,
+                -90.199997
+            ],
+            "scale": 0.999951,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "JungleBoots_Black",
+            "pos": [
+                4642.430176,
+                9927.553925,
+                339.791992
+            ],
+            "ypr": [
+                57.331135,
+                0,
+                0
+            ],
+            "scale": 0.999969,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "JungleBoots_Black",
+            "pos": [
+                4642.563965,
+                9927.553925,
+                339.545898
+            ],
+            "ypr": [
+                57.331135,
+                0,
+                0
+            ],
+            "scale": 0.999969,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "JungleBoots_Black",
+            "pos": [
+                4642.708008,
+                9927.553925,
+                339.293945
+            ],
+            "ypr": [
+                57.331135,
+                0,
+                0
+            ],
+            "scale": 0.999969,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Canteen",
+            "pos": [
+                4642.684082,
+                9928.188721,
+                338.358398
+            ],
+            "ypr": [
+                59.545604,
+                0,
+                0
+            ],
+            "scale": 0.999965,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Canteen",
+            "pos": [
+                4642.779785,
+                9928.188721,
+                338.416992
+            ],
+            "ypr": [
+                59.545593,
+                0,
+                0
+            ],
+            "scale": 0.999965,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Canteen",
+            "pos": [
+                4642.875488,
+                9928.188721,
+                338.475586
+            ],
+            "ypr": [
+                59.545593,
+                0,
+                0
+            ],
+            "scale": 0.999965,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Winchester70_Black",
+            "pos": [
+                4645.203125,
+                9928.857941,
+                340.048828
+            ],
+            "ypr": [
+                61.397995,
+                0,
+                87.999992
+            ],
+            "scale": 0.99996,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Winchester70_Black",
+            "pos": [
+                4645.289062,
+                9928.857941,
+                339.878906
+            ],
+            "ypr": [
+                61.397995,
+                0,
+                87.999992
+            ],
+            "scale": 0.99996,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Winchester70_Black",
+            "pos": [
+                4645.375488,
+                9928.857941,
+                339.717773
+            ],
+            "ypr": [
+                61.397995,
+                0,
+                87.999992
+            ],
+            "scale": 0.99996,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Winchester70_Black",
+            "pos": [
+                4645.494629,
+                9928.857941,
+                339.53418
+            ],
+            "ypr": [
+                61.397995,
+                0,
+                87.999992
+            ],
+            "scale": 0.99996,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "HuntingOptic",
+            "pos": [
+                4644.916504,
+                9928.224976,
+                339.912109
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "HuntingOptic",
+            "pos": [
+                4644.947266,
+                9928.224976,
+                339.851563
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "HuntingOptic",
+            "pos": [
+                4644.978516,
+                9928.224976,
+                339.791016
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "HuntingOptic",
+            "pos": [
+                4645.012695,
+                9928.224976,
+                339.725586
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AmmoBox_308Win_20Rnd",
+            "pos": [
+                4645.11377,
+                9928.16275,
+                339.630859
+            ],
+            "ypr": [
+                151.112991,
+                0,
+                0
+            ],
+            "scale": 0.999972,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AmmoBox_308Win_20Rnd",
+            "pos": [
+                4645.137695,
+                9928.16275,
+                339.583984
+            ],
+            "ypr": [
+                151.112976,
+                0,
+                0
+            ],
+            "scale": 0.999972,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AmmoBox_308Win_20Rnd",
+            "pos": [
+                4645.158203,
+                9928.16275,
+                339.543945
+            ],
+            "ypr": [
+                151.112961,
+                0,
+                0
+            ],
+            "scale": 0.999972,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AmmoBox_308Win_20Rnd",
+            "pos": [
+                4645.178711,
+                9928.16275,
+                339.50293
+            ],
+            "ypr": [
+                151.112961,
+                0,
+                0
+            ],
+            "scale": 0.999972,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AmmoBox_308Win_20Rnd",
+            "pos": [
+                4645.195801,
+                9928.16275,
+                339.46875
+            ],
+            "ypr": [
+                151.112961,
+                0,
+                0
+            ],
+            "scale": 0.999972,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AmmoBox_308Win_20Rnd",
+            "pos": [
+                4645.212891,
+                9928.16275,
+                339.435547
+            ],
+            "ypr": [
+                151.112961,
+                0,
+                0
+            ],
+            "scale": 0.999972,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AmmoBox_308Win_20Rnd",
+            "pos": [
+                4645.23291,
+                9928.16275,
+                339.399414
+            ],
+            "ypr": [
+                151.112961,
+                0,
+                0
+            ],
+            "scale": 0.999972,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "AmmoBox_308Win_20Rnd",
+            "pos": [
+                4645.25,
+                9928.16275,
+                339.366211
+            ],
+            "ypr": [
+                151.112961,
+                0,
+                0
+            ],
+            "scale": 0.999972,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "MilitaryBelt",
+            "pos": [
+                4643.008789,
+                9928.057404,
+                338.318359
+            ],
+            "ypr": [
+                -30.457667,
+                0,
+                0
+            ],
+            "scale": 0.999961,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "MilitaryBelt",
+            "pos": [
+                4643.057617,
+                9928.057404,
+                338.228516
+            ],
+            "ypr": [
+                -30.457659,
+                0,
+                0
+            ],
+            "scale": 0.999961,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "MilitaryBelt",
+            "pos": [
+                4643.104004,
+                9928.057404,
+                338.154297
+            ],
+            "ypr": [
+                -30.457657,
+                0,
+                0
+            ],
+            "scale": 0.999961,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "PlateCarrierVest_Black",
+            "pos": [
+                4643.101563,
+                9928.51239,
+                337.408203
+            ],
+            "ypr": [
+                145.580002,
+                2.3,
+                -89.699989
+            ],
+            "scale": 0.999996,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "PlateCarrierVest_Black",
+            "pos": [
+                4643.105957,
+                9929.190125,
+                337.401367
+            ],
+            "ypr": [
+                144.880005,
+                2.299999,
+                -90.499992
+            ],
+            "scale": 0.999996,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "PlateCarrierHolster_Black",
+            "pos": [
+                4643.251465,
+                9929.315002,
+                337.148437
+            ],
+            "ypr": [
+                56.499996,
+                -88.599884,
+                0.000002
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "PlateCarrierHolster_Black",
+            "pos": [
+                4643.251465,
+                9928.678131,
+                337.148437
+            ],
+            "ypr": [
+                -122.699997,
+                -86.300049,
+                -180
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "PlateCarrierPouches_Black",
+            "pos": [
+                4643.26709,
+                9929.019897,
+                337.086914
+            ],
+            "ypr": [
+                -123.499993,
+                -88.099983,
+                -180
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "PlateCarrierPouches_Black",
+            "pos": [
+                4643.26709,
+                9928.365723,
+                337.086914
+            ],
+            "ypr": [
+                -123.499977,
+                -88.099876,
+                179.999985
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "M79",
+            "pos": [
+                4644.125977,
+                9928.816437,
+                341.854492
+            ],
+            "ypr": [
+                61.646805,
+                0,
+                -87.999992
+            ],
+            "scale": 0.999974,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "M79",
+            "pos": [
+                4644.206055,
+                9928.816437,
+                341.700195
+            ],
+            "ypr": [
+                61.646805,
+                0,
+                -87.999992
+            ],
+            "scale": 0.999974,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "M79",
+            "pos": [
+                4644.284668,
+                9928.816437,
+                341.563477
+            ],
+            "ypr": [
+                61.646805,
+                0,
+                -87.999992
+            ],
+            "scale": 0.999974,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Land_Shed_W5",
+            "pos": [
+                4644,
+                9929,
+                339
+            ],
+            "ypr": [
+                -120.848099,
+                0,
+                0
+            ],
+            "scale": 0.999972,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "StaticObj_Furniture_long_bench",
+            "pos": [
+                4642.596191,
+                9927.553925,
+                338.818359
+            ],
+            "ypr": [
+                -121.60199,
+                0,
+                0
+            ],
+            "scale": 0.999884,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "StaticObj_Furniture_long_bench",
+            "pos": [
+                4642.868164,
+                9927.553925,
+                340.943359
+            ],
+            "ypr": [
+                150.075989,
+                0,
+                0
+            ],
+            "scale": 0.999904,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "StaticObj_Furniture_long_bench",
+            "pos": [
+                4644.745117,
+                9927.554291,
+                339.998047
+            ],
+            "ypr": [
+                61.940788,
+                0,
+                0
+            ],
+            "scale": 0.99988,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4641.700195,
+                9928.122681,
+                340.25
+            ],
+            "ypr": [
+                -120.87899,
+                0,
+                0
+            ],
+            "scale": 0.999967,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4641.777344,
+                9928.109009,
+                340.322266
+            ],
+            "ypr": [
+                -120.87899,
+                0,
+                0
+            ],
+            "scale": 0.999967,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4641.867187,
+                9928.122681,
+                340.369141
+            ],
+            "ypr": [
+                -120.878998,
+                0,
+                0
+            ],
+            "scale": 0.999966,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4641.94873,
+                9928.122681,
+                340.415039
+            ],
+            "ypr": [
+                -120.87899,
+                0,
+                0
+            ],
+            "scale": 0.999966,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4641.736328,
+                9928.192963,
+                340.298828
+            ],
+            "ypr": [
+                -120.878998,
+                0,
+                0
+            ],
+            "scale": 0.999966,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4641.825195,
+                9928.192963,
+                340.349609
+            ],
+            "ypr": [
+                -120.87899,
+                0,
+                0
+            ],
+            "scale": 0.999966,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4641.914062,
+                9928.192963,
+                340.400391
+            ],
+            "ypr": [
+                -120.87899,
+                0,
+                0
+            ],
+            "scale": 0.999966,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4641.783691,
+                9928.278717,
+                340.325195
+            ],
+            "ypr": [
+                -120.87899,
+                0,
+                0
+            ],
+            "scale": 0.999966,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4641.865234,
+                9928.278717,
+                340.371094
+            ],
+            "ypr": [
+                -120.87899,
+                0,
+                0
+            ],
+            "scale": 0.999966,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4641.831055,
+                9928.358582,
+                340.351562
+            ],
+            "ypr": [
+                -120.87899,
+                0,
+                0
+            ],
+            "scale": 0.999966,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4642.05957,
+                9928.122681,
+                340.446289
+            ],
+            "ypr": [
+                -120.87899,
+                0,
+                0
+            ],
+            "scale": 0.999967,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4642.136719,
+                9928.109009,
+                340.518555
+            ],
+            "ypr": [
+                -120.87899,
+                0,
+                0
+            ],
+            "scale": 0.999967,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4642.226562,
+                9928.122681,
+                340.56543
+            ],
+            "ypr": [
+                -120.87899,
+                0,
+                0
+            ],
+            "scale": 0.999966,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4642.308105,
+                9928.122681,
+                340.611328
+            ],
+            "ypr": [
+                -120.87899,
+                0,
+                0
+            ],
+            "scale": 0.999966,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4642.095703,
+                9928.192963,
+                340.495117
+            ],
+            "ypr": [
+                -120.87899,
+                0,
+                0
+            ],
+            "scale": 0.999966,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4642.18457,
+                9928.192963,
+                340.545898
+            ],
+            "ypr": [
+                -120.87899,
+                0,
+                0
+            ],
+            "scale": 0.999966,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4642.273437,
+                9928.192963,
+                340.59668
+            ],
+            "ypr": [
+                -120.87899,
+                0,
+                0
+            ],
+            "scale": 0.999966,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4642.143066,
+                9928.278717,
+                340.521484
+            ],
+            "ypr": [
+                -120.87899,
+                0,
+                0
+            ],
+            "scale": 0.999966,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4642.224609,
+                9928.278717,
+                340.567383
+            ],
+            "ypr": [
+                -120.87899,
+                0,
+                0
+            ],
+            "scale": 0.999966,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Plastic_Explosive",
+            "pos": [
+                4642.19043,
+                9928.358582,
+                340.547852
+            ],
+            "ypr": [
+                -120.87899,
+                0,
+                0
+            ],
+            "scale": 0.999966,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RemoteDetonator",
+            "pos": [
+                4642.513672,
+                9928.13678,
+                340.918945
+            ],
+            "ypr": [
+                151.455963,
+                0,
+                0
+            ],
+            "scale": 0.999986,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RemoteDetonator",
+            "pos": [
+                4642.548828,
+                9928.13678,
+                340.857422
+            ],
+            "ypr": [
+                151.455948,
+                0,
+                0
+            ],
+            "scale": 0.999986,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RemoteDetonator",
+            "pos": [
+                4642.591797,
+                9928.13678,
+                340.782227
+            ],
+            "ypr": [
+                151.455932,
+                0,
+                0
+            ],
+            "scale": 0.999985,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RemoteDetonator",
+            "pos": [
+                4642.625977,
+                9928.13678,
+                340.722656
+            ],
+            "ypr": [
+                151.455932,
+                0,
+                0
+            ],
+            "scale": 0.999985,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RemoteDetonator",
+            "pos": [
+                4642.657227,
+                9928.13678,
+                340.667969
+            ],
+            "ypr": [
+                151.455932,
+                0,
+                0
+            ],
+            "scale": 0.999985,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RemoteDetonator",
+            "pos": [
+                4642.596191,
+                9928.13678,
+                340.969727
+            ],
+            "ypr": [
+                151.455948,
+                0,
+                0
+            ],
+            "scale": 0.999986,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RemoteDetonator",
+            "pos": [
+                4642.631348,
+                9928.13678,
+                340.908203
+            ],
+            "ypr": [
+                151.455932,
+                0,
+                0
+            ],
+            "scale": 0.999985,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RemoteDetonator",
+            "pos": [
+                4642.674316,
+                9928.13678,
+                340.833008
+            ],
+            "ypr": [
+                151.455932,
+                0,
+                0
+            ],
+            "scale": 0.999985,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RemoteDetonator",
+            "pos": [
+                4642.708496,
+                9928.13678,
+                340.773437
+            ],
+            "ypr": [
+                151.455932,
+                0,
+                0
+            ],
+            "scale": 0.999985,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RemoteDetonator",
+            "pos": [
+                4642.739746,
+                9928.13678,
+                340.71875
+            ],
+            "ypr": [
+                151.455932,
+                0,
+                0
+            ],
+            "scale": 0.999985,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ImprovisedExplosive",
+            "pos": [
+                4642.800781,
+                9928.057404,
+                341.033203
+            ],
+            "ypr": [
+                -29.247818,
+                0,
+                0
+            ],
+            "scale": 0.999964,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ImprovisedExplosive",
+            "pos": [
+                4642.800781,
+                9928.158203,
+                341.033203
+            ],
+            "ypr": [
+                -29.247818,
+                0,
+                0
+            ],
+            "scale": 0.999984,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ImprovisedExplosive",
+            "pos": [
+                4643.026855,
+                9928.057404,
+                341.165039
+            ],
+            "ypr": [
+                -29.797587,
+                0,
+                0
+            ],
+            "scale": 0.999965,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ImprovisedExplosive",
+            "pos": [
+                4643.026855,
+                9928.156769,
+                341.165039
+            ],
+            "ypr": [
+                -29.797583,
+                0,
+                0
+            ],
+            "scale": 0.999965,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ImprovisedExplosive",
+            "pos": [
+                4643.026855,
+                9928.261871,
+                341.165039
+            ],
+            "ypr": [
+                -29.797579,
+                0,
+                0
+            ],
+            "scale": 0.999965,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ImprovisedExplosive",
+            "pos": [
+                4643.239258,
+                9928.057404,
+                341.308594
+            ],
+            "ypr": [
+                -29.797583,
+                0,
+                0
+            ],
+            "scale": 0.999965,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ImprovisedExplosive",
+            "pos": [
+                4643.239258,
+                9928.156769,
+                341.308594
+            ],
+            "ypr": [
+                -29.797579,
+                0,
+                0
+            ],
+            "scale": 0.999964,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ImprovisedExplosive",
+            "pos": [
+                4643.239258,
+                9928.261871,
+                341.308594
+            ],
+            "ypr": [
+                -29.797577,
+                0,
+                0
+            ],
+            "scale": 0.999964,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ImprovisedExplosive",
+            "pos": [
+                4642.911133,
+                9928.057404,
+                340.824219
+            ],
+            "ypr": [
+                -29.247818,
+                0,
+                0
+            ],
+            "scale": 0.999964,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ImprovisedExplosive",
+            "pos": [
+                4642.911133,
+                9928.158203,
+                340.824219
+            ],
+            "ypr": [
+                -29.247818,
+                0,
+                0
+            ],
+            "scale": 0.999984,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ImprovisedExplosive",
+            "pos": [
+                4642.911133,
+                9928.259613,
+                340.824219
+            ],
+            "ypr": [
+                -29.247818,
+                0,
+                0
+            ],
+            "scale": 0.999984,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ImprovisedExplosive",
+            "pos": [
+                4643.137207,
+                9928.057404,
+                340.956055
+            ],
+            "ypr": [
+                -29.797583,
+                0,
+                0
+            ],
+            "scale": 0.999965,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ImprovisedExplosive",
+            "pos": [
+                4643.137207,
+                9928.156769,
+                340.956055
+            ],
+            "ypr": [
+                -29.797579,
+                0,
+                0
+            ],
+            "scale": 0.999964,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ImprovisedExplosive",
+            "pos": [
+                4643.137207,
+                9928.261871,
+                340.956055
+            ],
+            "ypr": [
+                -29.797577,
+                0,
+                0
+            ],
+            "scale": 0.999964,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ImprovisedExplosive",
+            "pos": [
+                4643.349609,
+                9928.057404,
+                341.099609
+            ],
+            "ypr": [
+                -29.797583,
+                0,
+                0
+            ],
+            "scale": 0.999965,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ImprovisedExplosive",
+            "pos": [
+                4643.349609,
+                9928.156769,
+                341.099609
+            ],
+            "ypr": [
+                -29.797577,
+                0,
+                0
+            ],
+            "scale": 0.999964,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ImprovisedExplosive",
+            "pos": [
+                4643.349609,
+                9928.261871,
+                341.099609
+            ],
+            "ypr": [
+                -29.797577,
+                0,
+                0
+            ],
+            "scale": 0.999964,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.362305,
+                9928.057404,
+                341.452148
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.40918,
+                9928.057404,
+                341.479492
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.362305,
+                9928.057404,
+                341.452148
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.40918,
+                9928.057404,
+                341.479492
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.447754,
+                9928.057404,
+                341.500977
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.494629,
+                9928.057404,
+                341.52832
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.387207,
+                9928.057404,
+                341.410156
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.434082,
+                9928.057404,
+                341.4375
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.387207,
+                9928.057404,
+                341.410156
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.434082,
+                9928.057404,
+                341.4375
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.472656,
+                9928.057404,
+                341.458984
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.519531,
+                9928.057404,
+                341.486328
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.538574,
+                9928.057404,
+                341.554687
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.585449,
+                9928.057404,
+                341.582031
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.538574,
+                9928.057404,
+                341.554687
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.585449,
+                9928.057404,
+                341.582031
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.624023,
+                9928.057404,
+                341.603516
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.670898,
+                9928.057404,
+                341.630859
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.563477,
+                9928.057404,
+                341.512695
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.610352,
+                9928.057404,
+                341.540039
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.563477,
+                9928.057404,
+                341.512695
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.610352,
+                9928.057404,
+                341.540039
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.648926,
+                9928.057404,
+                341.561523
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.695801,
+                9928.057404,
+                341.588867
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.713379,
+                9928.057404,
+                341.65625
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.760254,
+                9928.057404,
+                341.683594
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.713379,
+                9928.057404,
+                341.65625
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.760254,
+                9928.057404,
+                341.683594
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.798828,
+                9928.057404,
+                341.705078
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.845703,
+                9928.057404,
+                341.732422
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.738281,
+                9928.057404,
+                341.614258
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.785156,
+                9928.057404,
+                341.641602
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.738281,
+                9928.057404,
+                341.614258
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.785156,
+                9928.057404,
+                341.641602
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.82373,
+                9928.057404,
+                341.663086
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.870605,
+                9928.057404,
+                341.69043
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.890625,
+                9928.057404,
+                341.755859
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.9375,
+                9928.057404,
+                341.783203
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.915527,
+                9928.057404,
+                341.713867
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999998,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_Explosive",
+            "pos": [
+                4643.962402,
+                9928.057404,
+                341.741211
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.431641,
+                9928.057404,
+                341.333008
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.475098,
+                9928.057404,
+                341.359375
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.431641,
+                9928.057404,
+                341.333008
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.475098,
+                9928.057404,
+                341.359375
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.515625,
+                9928.057404,
+                341.381836
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.559082,
+                9928.057404,
+                341.408203
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.431641,
+                9928.057404,
+                341.333008
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.475098,
+                9928.057404,
+                341.359375
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.431641,
+                9928.057404,
+                341.333008
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.475098,
+                9928.057404,
+                341.359375
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.515625,
+                9928.057404,
+                341.381836
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.559082,
+                9928.057404,
+                341.408203
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.461426,
+                9928.057404,
+                341.28418
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.504883,
+                9928.057404,
+                341.310547
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.461426,
+                9928.057404,
+                341.28418
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.504883,
+                9928.057404,
+                341.310547
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.54541,
+                9928.057404,
+                341.333008
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.588867,
+                9928.057404,
+                341.359375
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.604492,
+                9928.057404,
+                341.432617
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.647949,
+                9928.057404,
+                341.458984
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.604492,
+                9928.057404,
+                341.432617
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.647949,
+                9928.057404,
+                341.458984
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.688477,
+                9928.057404,
+                341.481445
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.731934,
+                9928.057404,
+                341.507812
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.604492,
+                9928.057404,
+                341.432617
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.647949,
+                9928.057404,
+                341.458984
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.604492,
+                9928.057404,
+                341.432617
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.647949,
+                9928.057404,
+                341.458984
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.688477,
+                9928.057404,
+                341.481445
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.731934,
+                9928.057404,
+                341.507812
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.634277,
+                9928.057404,
+                341.383789
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.677734,
+                9928.057404,
+                341.410156
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.634277,
+                9928.057404,
+                341.383789
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.677734,
+                9928.057404,
+                341.410156
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.718262,
+                9928.057404,
+                341.432617
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.761719,
+                9928.057404,
+                341.458984
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.771973,
+                9928.057404,
+                341.532227
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.81543,
+                9928.057404,
+                341.558594
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.771973,
+                9928.057404,
+                341.532227
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.81543,
+                9928.057404,
+                341.558594
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.855957,
+                9928.057404,
+                341.581055
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.899414,
+                9928.057404,
+                341.607422
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.771973,
+                9928.057404,
+                341.532227
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.81543,
+                9928.057404,
+                341.558594
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.771973,
+                9928.057404,
+                341.532227
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.81543,
+                9928.057404,
+                341.558594
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.855957,
+                9928.057404,
+                341.581055
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.899414,
+                9928.057404,
+                341.607422
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.801758,
+                9928.057404,
+                341.483398
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.845215,
+                9928.057404,
+                341.509766
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.801758,
+                9928.057404,
+                341.483398
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.845215,
+                9928.057404,
+                341.509766
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.885742,
+                9928.057404,
+                341.532227
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.929199,
+                9928.057404,
+                341.558594
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.956543,
+                9928.057404,
+                341.637695
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4644,
+                9928.057404,
+                341.664063
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.956543,
+                9928.057404,
+                341.637695
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4644,
+                9928.057404,
+                341.664063
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4643.986328,
+                9928.057404,
+                341.588867
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "Ammo_40mm_ChemGas",
+            "pos": [
+                4644.029785,
+                9928.057404,
+                341.615234
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "ImprovisedExplosive",
+            "pos": [
+                4642.800781,
+                9928.287537,
+                341.033203
+            ],
+            "ypr": [
+                -29.247818,
+                0,
+                0
+            ],
+            "scale": 0.999984,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4643.513184,
+                9928.073853,
+                341.188477
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4643.539551,
+                9928.073853,
+                341.139648
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4643.568848,
+                9928.073853,
+                341.224609
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4643.595215,
+                9928.073853,
+                341.175781
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4643.627441,
+                9928.073853,
+                341.259766
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4643.653809,
+                9928.073853,
+                341.210937
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4643.683105,
+                9928.073853,
+                341.295898
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4643.709473,
+                9928.073853,
+                341.24707
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4643.741211,
+                9928.073853,
+                341.323242
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 1,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4643.767578,
+                9928.073853,
+                341.274414
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4643.796875,
+                9928.073853,
+                341.359375
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4643.823242,
+                9928.073853,
+                341.310547
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4643.855469,
+                9928.073853,
+                341.394531
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4643.881836,
+                9928.073853,
+                341.345703
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4643.911133,
+                9928.073853,
+                341.430664
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4643.9375,
+                9928.073853,
+                341.381836
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4643.966309,
+                9928.073853,
+                341.464844
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4643.992676,
+                9928.073853,
+                341.416016
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4644.024902,
+                9928.073853,
+                341.5
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4644.05127,
+                9928.073853,
+                341.451172
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4644.080566,
+                9928.073853,
+                341.536133
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        },
+        {
+            "name": "RGD5Grenade",
+            "pos": [
+                4644.106934,
+                9928.073853,
+                341.487305
+            ],
+            "ypr": [
+                0,
+                0,
+                0
+            ],
+            "scale": 0.999999,
+            "enableCEPersistency": 0,
+            "customString": ""
+        }
+    ]
+}

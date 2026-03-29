@@ -31,7 +31,7 @@ React + Vite pure-frontend app for generating DayZ console object spawns.
 - All objects console-safe (Xbox/PS5 vanilla DayZ)
 - No backend — pure frontend
 
-- **🏗 Bunker Maker**: Full-panel mode for random underground bunker generation. Options: seed, 1-3 underground levels, 4 sizes (compact/standard/large/mega), 4 atmosphere styles (military/industrial/abandoned/horror), spine axis (N-S or E-W), exterior wall enclosure, convoy wrecks in tunnels, decorative props (sparse/normal/heavy), concrete floors, Sakhal keypad panels (DayZ 1.25+). Outputs init.c or JSON Spawner. 2D floor plan SVG preview with per-level view. Includes entrance bunker, emergency exit, HQ barracks rooms, container corridors, stair/ladder transitions, vehicle convoys, decorative clutter, and HESCO/castle exterior enclosure walls.
+- **🏗 Bunker Maker**: Full-panel mode for random underground bunker generation. Uses verified DayZ Underground module classnames (Land_Underground_Entrance, Land_Underground_Tunnel_Single, Land_Underground_Corridor_Main_Both/Left/Right, Land_Underground_Storage_Barracks/Big/Ammo/Lab/Workshop/Prison, Land_Underground_Stairs_Start/Block/Terminator/Exit, etc.) confirmed working on console (Xbox/PS5). Options: seed, 1-3 levels, 4 sizes, 4 styles, spine axis, exterior walls, convoy wrecks, decor props, Sakhal panels. JSON output: correct {"Objects":[{name, pos, ypr:[pitch,yaw,roll], scale, enableCEPersistency, customString}]} format — no emojis, no extra fields. init.c comments: ASCII-only, no emojis. 2D floor plan SVG preview per level. Tunnel corridor section renamed from "spine" to "tunnel" throughout.
 - **Weapon & Vehicle Builder mobile fix**: `mobileView` state toggle (⚙ Configure / 📋 Output) on small screens
 
 Key files:
