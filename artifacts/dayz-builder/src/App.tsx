@@ -383,7 +383,7 @@ const QUICK_PRESETS: Preset[] = [
 
   // 🤖 Mechs & Robots
   { category: "🤖 Mechs", label: "Mech Warrior",  shape: "mech_bipedal", params: { height:25,width:14 },            suggestedClass: "StaticObj_Container_1D" },
-  { category: "🤖 Mechs", label: "Spider Walker",  shape: "mech_walker",  params: { height:20,width:18 },            suggestedClass: "Land_BarrierConcrete_01_DE" },
+  { category: "🤖 Mechs", label: "Spider Walker",  shape: "mech_walker",  params: { height:20,width:14 },            suggestedClass: "WoodenLog" },
   { category: "🤖 Mechs", label: "Minigun Turret", shape: "mech_minigun", params: { baseRadius:10,height:20,barrelCount:6 }, suggestedClass: "Land_GasTank_Cylindrical" },
   { category: "🤖 Mechs", label: "Cannon Turret",  shape: "cannon_turret",params: { baseRadius:8,height:12 },        suggestedClass: "Land_HBarrier_5m_DE" },
 

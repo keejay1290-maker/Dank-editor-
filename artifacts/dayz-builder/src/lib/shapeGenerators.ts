@@ -909,50 +909,107 @@ function gen_mech_minigun(p: Record<string, number>): Point3D[] {
 
 function gen_mech_walker(p: Record<string, number>): Point3D[] {
   const pts: Point3D[] = [];
-  const h = p.height, w = p.width;
-  // Main body hexagonal
-  for (let ri = 0; ri <= 4; ri++) {
-    const y = h * 0.5 + h * 0.3 * ri / 4;
-    for (let j = 0; j < 6; j++) {
-      const a = Math.PI / 3 * j + Math.PI / 6;
-      pts.push({ x: w * 0.5 * Math.cos(a), y, z: w * 0.4 * Math.sin(a) });
+  const h = p.height;   // total height  (default 20)
+  const w = p.width;    // body half-width (default 14)
+
+  // ── BODY: solid rectangular building block ─────────────────────────────────
+  // Sits from bodyBot to bodyTop in Y; half-extents bw × bl
+  const bodyBot = h * 0.52;
+  const bodyTop = h;
+  const bw = w * 0.38;   // half body width  (X)
+  const bl = w * 0.52;   // half body length (Z)
+
+  // Perimeter rings at multiple Y levels
+  const bodyRings = 5;
+  for (let ri = 0; ri <= bodyRings; ri++) {
+    const by = bodyBot + (bodyTop - bodyBot) * ri / bodyRings;
+    const stepsX = 5, stepsZ = 7;
+    for (let xi = 0; xi <= stepsX; xi++) {
+      const bx = -bw + bw * 2 * xi / stepsX;
+      pts.push({ x: bx, y: by, z: -bl });
+      pts.push({ x: bx, y: by, z:  bl });
+    }
+    for (let zi = 1; zi < stepsZ; zi++) {
+      const bz = -bl + bl * 2 * zi / stepsZ;
+      pts.push({ x: -bw, y: by, z: bz });
+      pts.push({ x:  bw, y: by, z: bz });
     }
   }
-  // Sensor dome
-  for (let i = 0; i <= 5; i++) {
-    const lat = 0 + Math.PI / 2 * i / 5;
-    const y = h * 0.8 + w * 0.15 * Math.sin(lat), cr = w * 0.15 * Math.cos(lat);
-    for (let j = 0; j < 8; j++) { const a = 2 * Math.PI * j / 8; pts.push({ x: cr * Math.cos(a), y, z: cr * Math.sin(a) }); }
+  // Interior cross-braces at mid height (gives building interior feel)
+  const midY = (bodyBot + bodyTop) * 0.5;
+  for (let xi = 0; xi <= 4; xi++) {
+    const bx = -bw + bw * 2 * xi / 4;
+    for (let zi = 0; zi <= 4; zi++) {
+      const bz = -bl + bl * 2 * zi / 4;
+      pts.push({ x: bx, y: midY, z: bz });
+    }
   }
-  // 4 articulated legs
-  const legAngles = [Math.PI * 0.25, Math.PI * 0.75, -Math.PI * 0.75, -Math.PI * 0.25];
+
+  // ── 8 LEGS: spider arrangement ─────────────────────────────────────────────
+  // Angles from the Z-axis (forward), in radians — 4 per side, symmetric
+  // Spider looks natural with pairs at: ±38°, ±68°, ±112°, ±142°
+  const legDeg = [38, 68, 112, 142];
+  const legAngles: number[] = [
+    ...legDeg.map(d =>  d * Math.PI / 180),   // right side
+    ...legDeg.map(d => -d * Math.PI / 180),   // left side
+  ];
+
   legAngles.forEach(la => {
-    const lx = w * 0.45 * Math.cos(la), lz = w * 0.45 * Math.sin(la);
-    // thigh
-    for (let i = 0; i <= 6; i++) {
-      const t = i / 6;
-      pts.push({ x: lx + lx * 0.3 * t, y: h * 0.5 - h * 0.25 * t, z: lz + lz * 0.3 * t });
+    // Unit vector pointing outward from body along this leg's horizontal direction
+    const ox = Math.sin(la);
+    const oz = Math.cos(la);
+
+    // Hip: where leg meets body, at body perimeter
+    const hipX = ox * bw * 0.95;
+    const hipZ = oz * bl * 0.95;
+    const hipY = bodyBot + (bodyTop - bodyBot) * 0.15;
+
+    // Knee: angles outward strongly then bends down
+    const kneeR = w * 0.82;   // horizontal reach of knee from centre
+    const kneeX = ox * kneeR;
+    const kneeZ = oz * kneeR;
+    const kneeY = h * 0.28;   // knee is lower than hip but above ground
+
+    // Foot: final ground contact point
+    const footR = w * 1.35;
+    const footX = ox * footR;
+    const footZ = oz * footR;
+    const footY = 0;
+
+    // Upper segment — hip → knee  (dense: 10 pts)
+    const seg1 = 10;
+    for (let i = 0; i <= seg1; i++) {
+      const t = i / seg1;
+      pts.push({
+        x: hipX + (kneeX - hipX) * t,
+        y: hipY + (kneeY - hipY) * t,
+        z: hipZ + (kneeZ - hipZ) * t,
+      });
     }
-    // shin
-    for (let i = 0; i <= 6; i++) {
-      const t = i / 6;
-      const kx = lx * 1.3, kz = lz * 1.3;
-      pts.push({ x: kx + kx * 0.1 * t, y: h * 0.25 - h * 0.25 * t, z: kz + kz * 0.1 * t });
+
+    // Lower segment — knee → foot  (dense: 10 pts)
+    const seg2 = 10;
+    for (let i = 1; i <= seg2; i++) {
+      const t = i / seg2;
+      pts.push({
+        x: kneeX + (footX - kneeX) * t,
+        y: kneeY + (footY - kneeY) * t,
+        z: kneeZ + (footZ - kneeZ) * t,
+      });
     }
-    // foot claw
-    const fx = lx * 1.4, fz = lz * 1.4;
-    for (let c = -1; c <= 1; c++) {
-      pts.push({ x: fx + c * w * 0.06, y: 0, z: fz - w * 0.1 });
-      pts.push({ x: fx + c * w * 0.04, y: 0, z: fz + w * 0.05 });
+
+    // Foot claw — 3 short prongs fanning outward at ground level
+    const perpX = oz;   // perpendicular to leg direction
+    const perpZ = -ox;
+    for (const off of [-0.10, 0, 0.10]) {
+      pts.push({
+        x: footX + ox * w * 0.06 + perpX * off * w,
+        y: footY,
+        z: footZ + oz * w * 0.06 + perpZ * off * w,
+      });
     }
   });
-  // Weapon hardpoints
-  [-1, 1].forEach(side => {
-    for (let i = 0; i <= 6; i++) {
-      const y = h * 0.65;
-      pts.push({ x: side * (w * 0.5 + w * 0.1 * i / 6), y, z: -w * 0.5 * i / 6 });
-    }
-  });
+
   return pts;
 }
 

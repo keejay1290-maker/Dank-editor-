@@ -458,14 +458,21 @@ export const DAYZ_OBJECTS: DayzObject[] = [
   { value: "DZ\\rocks_sakhal\\rock_wall_01.p3d",      label: "Rock Wall Sakhal",        group: "Rocks & Natural" },
   { value: "DZ\\rocks_sakhal\\rock_monolith01.p3d",   label: "Rock Monolith Sakhal",    group: "Rocks & Natural" },
 
-  // ─── Plants & Trees ──────────────────────────────────────────────────────
-  { value: "DZ\\plants_bliss\\tree\\t_fagussylvatica_3f_summer.p3d",    label: "Beech Tree (Summer)",      group: "Plants & Trees" },
-  { value: "DZ\\plants_bliss\\tree\\t_pinussylvestris_2f_summer.p3d",   label: "Pine Tree (Summer)",       group: "Plants & Trees" },
-  { value: "DZ\\plants_bliss\\bush\\b_prunusspinosa_1s_summer.p3d",     label: "Blackthorn Bush",          group: "Plants & Trees" },
-  { value: "DZ\\plants_bliss\\tree\\t_quercusrobur_2f_summer.p3d",      label: "Oak Tree (Summer)",        group: "Plants & Trees" },
-  { value: "DZ\\plants_bliss\\tree\\t_betulapendula_2f_summer.p3d",     label: "Birch Tree (Summer)",      group: "Plants & Trees" },
-  { value: "DZ\\plants_sakhal\\tree\\t_larixkaempferi_2f_summer.p3d",   label: "Larch Tree (Sakhal)",      group: "Plants & Trees" },
-  { value: "DZ\\plants_sakhal\\tree\\t_abiessibirica_2f_summer.p3d",    label: "Fir Tree (Sakhal)",        group: "Plants & Trees" },
+  // ─── Plants & Trees (bliss) ──────────────────────────────────────────────
+  { value: "WoodenLog",                                                              label: "Wooden Log ★",             group: "Plants & Trees" },
+  { value: "DZ\\plants_bliss\\tree\\t_fagussylvatica_3f_summer.p3d",               label: "Beech Tree (Summer)",      group: "Plants & Trees" },
+  { value: "DZ\\plants_bliss\\tree\\t_pinussylvestris_2f_summer.p3d",              label: "Pine Tree (Summer)",       group: "Plants & Trees" },
+  { value: "DZ\\plants_bliss\\tree\\t_pinussylvestris_dead_fallen_1.p3d",          label: "Fallen Pine Log",          group: "Plants & Trees" },
+  { value: "DZ\\plants_bliss\\tree\\t_fagussylvatica_dead_fallen_1.p3d",           label: "Fallen Beech Log",         group: "Plants & Trees" },
+  { value: "DZ\\plants_bliss\\tree\\t_betulapendula_dead_fallen_1.p3d",            label: "Fallen Birch Log",         group: "Plants & Trees" },
+  { value: "DZ\\plants_bliss\\branch\\b_fagussylvatica_1s_summer.p3d",             label: "Beech Branch",             group: "Plants & Trees" },
+  { value: "DZ\\plants_bliss\\branch\\b_pinussylvestris_1s_summer.p3d",            label: "Pine Branch",              group: "Plants & Trees" },
+  { value: "DZ\\plants_bliss\\branch\\b_quercusrobur_1s_summer.p3d",              label: "Oak Branch",               group: "Plants & Trees" },
+  { value: "DZ\\plants_bliss\\bush\\b_prunusspinosa_1s_summer.p3d",               label: "Blackthorn Bush",          group: "Plants & Trees" },
+  { value: "DZ\\plants_bliss\\tree\\t_quercusrobur_2f_summer.p3d",                label: "Oak Tree (Summer)",        group: "Plants & Trees" },
+  { value: "DZ\\plants_bliss\\tree\\t_betulapendula_2f_summer.p3d",               label: "Birch Tree (Summer)",      group: "Plants & Trees" },
+  { value: "DZ\\plants_sakhal\\tree\\t_larixkaempferi_2f_summer.p3d",             label: "Larch Tree (Sakhal)",      group: "Plants & Trees" },
+  { value: "DZ\\plants_sakhal\\tree\\t_abiessibirica_2f_summer.p3d",              label: "Fir Tree (Sakhal)",        group: "Plants & Trees" },
 
   // ─── Misc Props ──────────────────────────────────────────────────────────
   { value: "Land_Misc_Well_Pump_Yellow",     label: "Well Pump Yellow",                 group: "Misc Props" },
