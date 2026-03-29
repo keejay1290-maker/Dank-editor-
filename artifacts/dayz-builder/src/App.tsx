@@ -7,6 +7,7 @@ import WeaponBuilder from "@/WeaponBuilder";
 import BunkerMaker from "@/BunkerMaker";
 import MazeMaker from "@/MazeMaker";
 import RaceTrackMaker from "@/RaceTrackMaker";
+import PointCloud3D from "@/PointCloud3D";
 
 type EditorMode = "architect" | "text" | "builds" | "weapons" | "bunker" | "maze" | "race";
 type OutputFormat = "initc" | "json";
@@ -602,9 +603,6 @@ export default function App() {
   const [textOutput, setTextOutput] = useState("");
   const [textArcDeg, setTextArcDeg] = useState(0);
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { updatePoints, startAutoRotate, stopAutoRotate, zoomStep, resetZoom } = use3DCanvas(canvasRef);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ── SAVE / LOAD STATE ─────────────────────────────────────────────────────
   const captureCurrentState = useCallback(() => ({
@@ -690,24 +688,6 @@ export default function App() {
     };
   }, [rawPoints, scaleVal]);
 
-  // ── REAL-TIME CANVAS UPDATE ────────────────────────────────────────────────
-  useEffect(() => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      const pts = mode === "text"
-        ? displayPoints.map(p => ({ x: p.x, y: p.y, z: p.z }))
-        : displayPoints;
-      updatePoints(pts, mode === "text" ? textScale : scaleVal, pitch, roll);
-    }, 60);
-    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
-  }, [displayPoints, scaleVal, textScale, pitch, roll, mode, updatePoints]);
-
-  // ── AUTO ROTATE ────────────────────────────────────────────────────────────
-  useEffect(() => {
-    if (autoRotate) startAutoRotate();
-    else stopAutoRotate();
-    return () => stopAutoRotate();
-  }, [autoRotate, startAutoRotate, stopAutoRotate]);
 
   const showToast = (msg: string) => {
     setToast(msg);
@@ -1106,24 +1086,18 @@ export default function App() {
             {displayPoints.length > 800 && <span className="text-[#e07a20] text-[10px]">⚠ large!</span>}
             {dims && <span className="text-[#8a7840] text-[10px]">{dims.w}×{dims.d}×{dims.h}m</span>}
             {mode === "builds" && <span className="text-[#27ae60] text-[10px] font-bold">● LIVE PREVIEW</span>}
-            <span className="ml-auto text-[#8a7840]">Drag=rotate · Scroll=zoom</span>
+            <span className="ml-auto text-[#8a7840]">Drag to orbit · Scroll to zoom</span>
           </div>
 
           {/* 3D Canvas */}
           <div className="relative bg-[#060402]" style={{ flex: "0 0 55%", minHeight: 200 }}>
-            <canvas ref={canvasRef} className="block" />
-            {/* Zoom controls */}
-            <div className="absolute bottom-2 right-2 flex flex-col gap-1">
-              <button onClick={() => zoomStep(1.25)}
-                className="w-8 h-8 flex items-center justify-center bg-[#1a1408] border border-[#3a2e18] text-[#d4a017] text-xl font-black rounded-sm hover:bg-[#2e2518] hover:border-[#d4a017] transition-all leading-none select-none"
-                title="Zoom in (also: scroll up)">+</button>
-              <button onClick={() => zoomStep(0.8)}
-                className="w-8 h-8 flex items-center justify-center bg-[#1a1408] border border-[#3a2e18] text-[#d4a017] text-xl font-black rounded-sm hover:bg-[#2e2518] hover:border-[#d4a017] transition-all leading-none select-none"
-                title="Zoom out (also: scroll down)">−</button>
-              <button onClick={resetZoom}
-                className="w-8 h-8 flex items-center justify-center bg-[#1a1408] border border-[#3a2e18] text-[#b09a6a] text-[11px] font-bold rounded-sm hover:bg-[#2e2518] hover:text-[#c8b99a] hover:border-[#6a5a3a] transition-all select-none"
-                title="Reset zoom & rotation">⟲</button>
-            </div>
+            <PointCloud3D
+              points={displayPoints}
+              globalPitch={mode === "text" ? 0 : pitch}
+              globalRoll={mode === "text" ? 0 : roll}
+              globalScale={mode === "text" ? textScale : scaleVal}
+              autoRotate={autoRotate}
+            />
           </div>
 
           {/* Output */}

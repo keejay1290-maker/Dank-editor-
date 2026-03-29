@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { formatInitC, HELPER_FUNC } from "@/lib/dayzObjects";
+import MazePreview3D from "@/MazePreview3D";
 
 // ─── Wall object registry — base length (m) = how long each model is at scale 1 ─
 const WALL_OBJECTS = [
@@ -480,39 +481,24 @@ export default function MazeMaker() {
         <SidebarContent />
       </div>
 
-      {/* Map preview */}
+      {/* 3D Map preview */}
       <div className={`${mobileTab !== "map" ? "hidden md:flex" : "flex"} flex-col flex-1 overflow-hidden border-r border-[#2e2518] md:mt-0 mt-9`}>
         <div className="px-3 py-2 border-b border-[#2e2518] shrink-0 flex items-center gap-2">
-          <span className="text-[#9a8858] text-[10px] uppercase tracking-wider">Top-Down Map</span>
-          <span className="text-[#4a3a1a] text-[9px]">— {size}×{size} · Seed #{seed}</span>
+          <span className="text-[#9a8858] text-[10px] uppercase tracking-wider">3D Preview</span>
+          <span className="text-[#4a3a1a] text-[9px]">— {size}×{size} · Seed #{seed} · {spawns.length} walls</span>
           <button onClick={rollSeed}
             className="ml-auto px-2 py-0.5 bg-[#1a1610] border border-[#2e2518] text-[#d4a017] text-[9px] rounded-sm hover:border-[#d4a017] transition-colors">
-            🎲 New Maze
+            New Maze
           </button>
         </div>
-        <div className="flex-1 overflow-auto flex items-center justify-center p-4">
-          <div className="w-full max-w-md">
-            <MazePreview seed={seed} size={size} roomSz={roomSz} />
-            <div className="mt-3 flex flex-wrap gap-1.5 justify-center">
-              <span className="bg-[#1a1610] border border-[#2e2518] text-[#d4a017] text-[9px] px-2 py-0.5 rounded-sm font-bold">{spawns.length} objects</span>
-              <span className="bg-[#1a1610] border border-[#2e2518] text-[#9a8858] text-[9px] px-2 py-0.5 rounded-sm">{cellSz}m corridors</span>
-              <span className="bg-[#1a1610] border border-[#2e2518] text-[#9a8858] text-[9px] px-2 py-0.5 rounded-sm">~{footprint}×{footprint}m</span>
-              <span className="bg-[#1a1610] border border-[#2e2518] text-[#9a8858] text-[9px] px-2 py-0.5 rounded-sm">Scale {wallScale}×</span>
-              <span className="bg-[#1a1610] border border-[#2e2518] text-[#27ae60] text-[9px] px-2 py-0.5 rounded-sm">🏆 winner's room: centre</span>
-            </div>
-            <div className="mt-3 bg-[#0e0c08] border border-[#2e2518] rounded-sm p-2.5 text-[9px] text-[#5a4a2a] leading-relaxed">
-              <p className="mb-1">
-                <span className="text-[#27ae60]">■</span> Green = entry &nbsp;
-                <span className="text-[#e74c3c]">■</span> Red = exit &nbsp;
-                <span className="text-[#d4a017]">■</span> Gold = winner's room
-              </p>
-              <p>
-                <span className="text-[#7a9a5a]">Scaled wall strategy:</span> each maze wall = 1 object at scale {wallScale.toFixed(1)}×.
-                Wall piece covers {cellSz}m so corridors match exactly.
-                Far fewer objects than multi-dot approach = much less server lag.
-              </p>
-            </div>
-          </div>
+        <div className="flex-1 min-h-0">
+          <MazePreview3D spawns={spawns} wallObj={wallObj} cellSz={cellSz} />
+        </div>
+        <div className="shrink-0 px-3 py-1.5 border-t border-[#2e2518] bg-[#0e0c08] flex flex-wrap gap-1.5">
+          <span className="bg-[#1a1610] border border-[#2e2518] text-[#d4a017] text-[9px] px-2 py-0.5 rounded-sm font-bold">{spawns.length} objects</span>
+          <span className="bg-[#1a1610] border border-[#2e2518] text-[#9a8858] text-[9px] px-2 py-0.5 rounded-sm">{cellSz}m corridors</span>
+          <span className="bg-[#1a1610] border border-[#2e2518] text-[#9a8858] text-[9px] px-2 py-0.5 rounded-sm">~{footprint}×{footprint}m</span>
+          <span className="bg-[#1a1610] border border-[#2e2518] text-[#27ae60] text-[9px] px-2 py-0.5 rounded-sm">YPR shown in 3D</span>
         </div>
       </div>
 

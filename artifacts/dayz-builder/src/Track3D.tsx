@@ -1,33 +1,8 @@
-import React, { Component, useRef, useEffect, useMemo } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
-
-// ─── Error Boundary (handles WebGL unavailable / context-lost) ────────────────
-interface EBState { err: string | null; }
-class WebGLErrorBoundary extends Component<{ children: React.ReactNode }, EBState> {
-  constructor(props: { children: React.ReactNode }) {
-    super(props);
-    this.state = { err: null };
-  }
-  static getDerivedStateFromError(e: Error): EBState {
-    return { err: e.message };
-  }
-  render() {
-    if (this.state.err) {
-      return (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#080c14] gap-3">
-          <div className="text-[#4a3820] text-[11px] uppercase tracking-wider">3D Preview Unavailable</div>
-          <div className="text-[#3a3010] text-[9px] text-center max-w-[240px] leading-relaxed">
-            WebGL is not supported or disabled in this browser.<br/>
-            The track code export still works normally.
-          </div>
-        </div>
-      );
-    }
-    return this.props.children;
-  }
-}
+import { WebGLErrorBoundary, isWebGLAvailable } from "@/WebGLErrorBoundary";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 export interface Pt { x: number; z: number; }
@@ -372,6 +347,14 @@ function Track3DScene({ waypoints, trackWidth, addBarriers, addText, barrierLen 
 
 // ─── Exported canvas ──────────────────────────────────────────────────────────
 export default function TrackPreview3D(props: Track3DSceneProps) {
+  if (!isWebGLAvailable()) {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center bg-[#080c14] gap-2">
+        <div className="text-[#4a3820] text-[11px] uppercase tracking-wider">3D Preview Unavailable</div>
+        <div className="text-[#3a3010] text-[9px] text-center max-w-[220px] leading-relaxed">WebGL is not supported in this environment. Code export still works normally.</div>
+      </div>
+    );
+  }
   return (
     <WebGLErrorBoundary>
       <Canvas

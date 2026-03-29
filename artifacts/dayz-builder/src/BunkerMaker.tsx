@@ -2,6 +2,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { generateBunker, exportBunkerInitC, exportBunkerJSON, BunkerOptions, BunkerLayout } from "@/lib/bunkerGenerator";
 import { STYLES, SIZES, BunkerStyle, BunkerSize, PlacedObject } from "@/lib/bunkerData";
+import BunkerPreview3D from "@/BunkerPreview3D";
 
 // ─── 2D Floor Plan Preview ────────────────────────────────────────────────────
 
@@ -368,25 +369,15 @@ export default function BunkerMaker() {
 
         {/* ── CENTER — Floor Plan Preview ─────────────────────────────────────── */}
         <div className={`flex flex-col overflow-hidden md:w-80 shrink-0 border-r border-[#2e2518] ${mobileView === 'preview' ? 'flex w-full' : 'hidden md:flex'}`}>
-          {/* Level switcher */}
-          <div className="flex items-center gap-1 px-3 py-1.5 border-b border-[#2e2518] bg-[#0e0c08] shrink-0">
-            <span className="text-[9px] text-[#6a5a3a] uppercase tracking-wider mr-1">Level:</span>
-            {([0, ...Array.from({length: levels}, (_,i) => i+1)]).map(lv => (
-              <button key={lv} onClick={() => setPreviewLevel(lv)}
-                className={`px-2 py-0.5 text-[9px] font-bold border rounded-sm transition-all`}
-                style={{
-                  color: previewLevel === lv ? '#0a0804' : LEVEL_COLORS[lv],
-                  background: previewLevel === lv ? LEVEL_COLORS[lv] : 'transparent',
-                  borderColor: LEVEL_COLORS[lv],
-                }}>
-                {lv === 0 ? '🌍 Surface' : `L${lv}`}
-              </button>
-            ))}
+          {/* 3D Preview header */}
+          <div className="flex items-center gap-2 px-3 py-1.5 border-b border-[#2e2518] bg-[#0e0c08] shrink-0">
+            <span className="text-[9px] text-[#9a8858] uppercase tracking-wider">3D Preview</span>
+            <span className="text-[#4a3820] text-[8px]">All levels · Orbit to explore</span>
           </div>
 
-          {/* SVG floor plan */}
-          <div className="flex-1 bg-[#060402] min-h-0">
-            <FloorPlanSVG layout={layout} showLevel={previewLevel} />
+          {/* 3D bunker preview */}
+          <div className="flex-1 min-h-0 relative">
+            <BunkerPreview3D layout={layout} />
           </div>
 
           {/* Stats strip */}
