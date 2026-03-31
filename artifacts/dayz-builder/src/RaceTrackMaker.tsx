@@ -85,6 +85,230 @@ function buildPresetWaypoints(key: PresetKey, rx: number, rz: number): Pt[] {
   }
 }
 
+// ─── DEATH RACE ───────────────────────────────────────────────────────────────
+
+// Mulberry32 seeded PRNG — same pattern as MazeMaker
+function mulberry32(seed: number) {
+  let s = seed >>> 0;
+  return {
+    next(): number {
+      s += 0x6D2B79F5;
+      let t = Math.imul(s ^ (s >>> 15), 1 | s);
+      t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    },
+    int(lo: number, hi: number): number {
+      return lo + Math.floor(this.next() * (hi - lo + 1));
+    },
+    pick<T>(arr: T[]): T {
+      return arr[Math.floor(this.next() * arr.length)];
+    },
+  };
+}
+
+interface DeathRaceOpts {
+  seed: number;
+  density: 1 | 2 | 3;
+  waypoints: Pt[];
+  posX: number; posY: number; posZ: number;
+  trackWidth: number;
+  enableRamps: boolean;
+  enableBarrels: boolean;
+  enableRoadblocks: boolean;
+  enableWrecks: boolean;
+  enableLights: boolean;
+}
+
+const BARREL_CLASSES = ["Barrel_Blue", "Barrel_Red", "Barrel_Yellow", "Barrel_Green"] as const;
+
+function generateDeathRace(opts: DeathRaceOpts): SpawnObj[] {
+  const { seed, density, waypoints, posX, posY, posZ, trackWidth } = opts;
+  const rng = mulberry32(seed);
+  const objs: SpawnObj[] = [];
+  const n = waypoints.length;
+  if (n < 2) return objs;
+
+  // Scale counts by density
+  const scale = density; // 1=light, 2=medium, 3=chaos
+
+  // Build segment list with geometry
+  const segments: Array<ReturnType<typeof segmentDir> & { p1: Pt; p2: Pt; midX: number; midZ: number }> = [];
+  for (let i = 0; i < n; i++) {
+    const p1 = waypoints[i];
+    const p2 = waypoints[(i + 1) % n];
+    const geo = segmentDir(p1, p2);
+    if (geo.len < 2) continue;
+    const midX = (p1.x + p2.x) / 2;
+    const midZ = (p1.z + p2.z) / 2;
+    segments.push({ ...geo, p1, p2, midX, midZ });
+  }
+  if (segments.length === 0) return objs;
+
+  const halfW = trackWidth / 2;
+  const BARRIER_EDGE = halfW + 0.35;
+
+  // Pick random segments without repeating too close together
+  function pickSegments(count: number): typeof segments {
+    const shuffled = [...segments].sort(() => rng.next() - 0.5);
+    return shuffled.slice(0, Math.min(count, shuffled.length));
+  }
+
+  // ── RAMPS (Land_Pier_Long_DE, pitch=-20°, 2-3 side by side) ──────────────
+  if (opts.enableRamps) {
+    const rampCount = rng.int(2, 2 + scale);
+    const rampSegs = pickSegments(rampCount);
+    for (const seg of rampSegs) {
+      const numSideBySide = rng.int(2, 3);
+      const offsetAlong = rng.next() * seg.len * 0.4 + seg.len * 0.3;
+      const cx = seg.p1.x + offsetAlong * seg.fwdX;
+      const cz = seg.p1.z + offsetAlong * seg.fwdZ;
+      for (let r = 0; r < numSideBySide; r++) {
+        const k = -((numSideBySide - 1) / 2 - r) * 4;
+        objs.push({
+          name: "Land_Pier_Long_DE",
+          x: posX + cx + k * seg.rightX,
+          y: posY,
+          z: posZ + cz + k * seg.rightZ,
+          pitch: -20, yaw: seg.yaw, roll: 0, scale: 1,
+        });
+      }
+    }
+  }
+
+  // ── BARREL WALLS (stacked 2 high, 4-6 wide across track) ─────────────────
+  if (opts.enableBarrels) {
+    const wallCount = rng.int(3, 3 + scale * 2);
+    const wallSegs = pickSegments(wallCount);
+    for (const seg of wallSegs) {
+      const barrelClass = rng.pick([...BARREL_CLASSES]);
+      const numBarrels = rng.int(4, 6);
+      const offsetAlong = rng.next() * seg.len * 0.5 + seg.len * 0.25;
+      const cx = seg.p1.x + offsetAlong * seg.fwdX;
+      const cz = seg.p1.z + offsetAlong * seg.fwdZ;
+      for (let b = 0; b < numBarrels; b++) {
+        const k = -halfW + (b + 0.5) * (trackWidth / numBarrels);
+        // Ground row
+        objs.push({
+          name: barrelClass,
+          x: posX + cx + k * seg.rightX,
+          y: posY,
+          z: posZ + cz + k * seg.rightZ,
+          pitch: 0, yaw: rng.int(0, 3) * 90, roll: 0, scale: 1,
+        });
+        // Stacked row
+        objs.push({
+          name: barrelClass,
+          x: posX + cx + k * seg.rightX,
+          y: posY + 1.0,
+          z: posZ + cz + k * seg.rightZ,
+          pitch: 0, yaw: rng.int(0, 3) * 90, roll: 0, scale: 1,
+        });
+      }
+    }
+  }
+
+  // ── ROADBLOCKS (jersey barriers diagonal, one-sided gap) ─────────────────
+  if (opts.enableRoadblocks) {
+    const blockCount = rng.int(2, 2 + scale);
+    const blockSegs = pickSegments(blockCount);
+    let gapSide = 1; // alternates left/right
+    for (const seg of blockSegs) {
+      const diagYaw = seg.yaw + rng.int(25, 35) * (rng.next() > 0.5 ? 1 : -1);
+      const offsetAlong = rng.next() * seg.len * 0.4 + seg.len * 0.3;
+      const cx = seg.p1.x + offsetAlong * seg.fwdX;
+      const cz = seg.p1.z + offsetAlong * seg.fwdZ;
+      // Place 2 barriers — leave gap on one side
+      const positions = [-halfW * 0.5, halfW * 0.5];
+      for (let pi = 0; pi < positions.length; pi++) {
+        if (pi === (gapSide > 0 ? 1 : 0)) continue; // skip gap side
+        const k = positions[pi];
+        objs.push({
+          name: "StaticObj_Wall_CncBarrier_4Block",
+          x: posX + cx + k * seg.rightX,
+          y: posY,
+          z: posZ + cz + k * seg.rightZ,
+          pitch: 0, yaw: diagYaw, roll: 0, scale: 1,
+        });
+      }
+      gapSide *= -1;
+    }
+  }
+
+  // ── TANK TRAPS (on track edges) ───────────────────────────────────────────
+  if (opts.enableRoadblocks) {
+    const trapCount = rng.int(4, 4 + scale * 2);
+    const trapSegs = pickSegments(trapCount);
+    for (const seg of trapSegs) {
+      const side = rng.next() > 0.5 ? 1 : -1;
+      const k = side * (halfW - 1.5);
+      const offsetAlong = rng.next() * seg.len * 0.6 + seg.len * 0.2;
+      const cx = seg.p1.x + offsetAlong * seg.fwdX;
+      const cz = seg.p1.z + offsetAlong * seg.fwdZ;
+      objs.push({
+        name: "Land_TankTrap_DE",
+        x: posX + cx + k * seg.rightX,
+        y: posY,
+        z: posZ + cz + k * seg.rightZ,
+        pitch: 0, yaw: rng.int(0, 3) * 90, roll: 0, scale: 1,
+      });
+    }
+  }
+
+  // ── WRECKS (on track, off-centre) ─────────────────────────────────────────
+  if (opts.enableWrecks) {
+    const wreckCount = rng.int(1, 1 + Math.floor(scale / 2));
+    const wreckClasses = ["Land_Wreck_hb01_aban1_blue_DE", "Land_Wreck_Uaz"];
+    const wreckSegs = pickSegments(wreckCount);
+    for (const seg of wreckSegs) {
+      const k = (rng.next() - 0.5) * halfW * 0.6; // off-centre
+      const offsetAlong = rng.next() * seg.len * 0.4 + seg.len * 0.3;
+      const cx = seg.p1.x + offsetAlong * seg.fwdX;
+      const cz = seg.p1.z + offsetAlong * seg.fwdZ;
+      objs.push({
+        name: rng.pick(wreckClasses),
+        x: posX + cx + k * seg.rightX,
+        y: posY,
+        z: posZ + cz + k * seg.rightZ,
+        pitch: 0, yaw: rng.int(0, 359), roll: 0, scale: 1,
+      });
+    }
+  }
+
+  // ── RAVE LIGHTS (around perimeter, outside barriers) ─────────────────────
+  if (opts.enableLights) {
+    const papiCount = rng.int(8, 8 + scale * 4);
+    const strobeCount = rng.int(4, 4 + scale * 2);
+    const lightOffset = BARRIER_EDGE + 3 + rng.next() * 2;
+
+    for (let i = 0; i < papiCount; i++) {
+      const seg = rng.pick(segments);
+      const t = rng.next() * seg.len;
+      const side = rng.next() > 0.5 ? 1 : -1;
+      objs.push({
+        name: "StaticObj_Airfield_Light_PAPI1",
+        x: posX + seg.p1.x + t * seg.fwdX + side * lightOffset * seg.rightX,
+        y: posY,
+        z: posZ + seg.p1.z + t * seg.fwdZ + side * lightOffset * seg.rightZ,
+        pitch: 0, yaw: rng.int(0, 359), roll: 0, scale: 1,
+      });
+    }
+    for (let i = 0; i < strobeCount; i++) {
+      const seg = rng.pick(segments);
+      const t = rng.next() * seg.len;
+      const side = rng.next() > 0.5 ? 1 : -1;
+      objs.push({
+        name: "StaticObj_Airfield_Light_Strobe_01",
+        x: posX + seg.p1.x + t * seg.fwdX + side * (lightOffset + 1) * seg.rightX,
+        y: posY,
+        z: posZ + seg.p1.z + t * seg.fwdZ + side * (lightOffset + 1) * seg.rightZ,
+        pitch: 0, yaw: rng.int(0, 359), roll: 0, scale: 1,
+      });
+    }
+  }
+
+  return objs;
+}
+
 // ─── SEGMENT GEOMETRY ─────────────────────────────────────────────────────────
 function segmentDir(p1: Pt, p2: Pt) {
   const dx = p2.x - p1.x, dz = p2.z - p1.z;
@@ -238,7 +462,7 @@ function toInitC(objs: SpawnObj[], comment: string): string {
     ``,
     `// ${'='.repeat(58)}`,
     `// ${comment}`,
-    `// Generated by DankDayZ Ultimate Builder`,
+    `// Generated by Dank's Dayz Studio`,
     `// ${'='.repeat(58)}`,
     `// Objects: ${objs.length}`,
     ``,
@@ -262,9 +486,24 @@ function toJSON(objs: SpawnObj[]): string {
   }, null, 2);
 }
 
+// ─── HAZARD DOT CONFIG ────────────────────────────────────────────────────────
+const HAZARD_STYLE: Array<{ match: (n: string) => boolean; color: string; label: string }> = [
+  { match: n => n === "Land_Pier_Long_DE",                  color: "#f39c12", label: "Ramp" },
+  { match: n => n.startsWith("Barrel_"),                    color: "#f1c40f", label: "Barrels" },
+  { match: n => n === "StaticObj_Wall_CncBarrier_4Block",   color: "#e74c3c", label: "Roadblock" },
+  { match: n => n === "Land_TankTrap_DE",                   color: "#c0392b", label: "Tank Trap" },
+  { match: n => n.startsWith("Land_Wreck_"),                color: "#ecf0f1", label: "Wreck" },
+  { match: n => n.startsWith("StaticObj_Airfield_"),        color: "#9b59b6", label: "Rave Light" },
+];
+
+function hazardColor(name: string): string {
+  return HAZARD_STYLE.find(h => h.match(name))?.color ?? "#ffffff";
+}
+
 // ─── SVG PREVIEW ─────────────────────────────────────────────────────────────
-function TrackPreview({ waypoints, trackWidth, addText, addBarriers }: {
+function TrackPreview({ waypoints, trackWidth, addText, addBarriers, hazardObjects, posX, posZ }: {
   waypoints: Pt[]; trackWidth: number; addText: boolean; addBarriers: boolean;
+  hazardObjects?: SpawnObj[]; posX?: number; posZ?: number;
 }) {
   if (waypoints.length < 2) return null;
   const PAD = 24;
@@ -336,8 +575,8 @@ function TrackPreview({ waypoints, trackWidth, addText, addBarriers }: {
   const { rightX: fRX, rightZ: fRZ } = segmentDir(waypoints[midIdx], waypoints[(midIdx + 1) % n]);
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" style={{ background: "#0a0804" }}>
-      <rect width={W} height={H} fill="#0a0804" />
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" style={{ background: "#080f09" }}>
+      <rect width={W} height={H} fill="#080f09" />
       {segments}
       {/* Start line */}
       <line x1={sf1.x + sfRX * sfW} y1={sf1.y + sfRZ * sfW}
@@ -352,7 +591,7 @@ function TrackPreview({ waypoints, trackWidth, addText, addBarriers }: {
         const s = toSVG(p);
         return <circle key={i} cx={s.x} cy={s.y} r={3}
           fill={i === 0 ? '#27ae60' : i === midIdx ? '#e74c3c' : '#5a4820'}
-          stroke="#d4a017" strokeWidth="0.5" />;
+          stroke="#27ae60" strokeWidth="0.5" />;
       })}
       {addText && (
         <>
@@ -360,14 +599,28 @@ function TrackPreview({ waypoints, trackWidth, addText, addBarriers }: {
           <text x={fm1.x} y={fm1.y - 6} textAnchor="middle" fontSize="7" fill="#e74c3c" fontWeight="bold">FINISH</text>
         </>
       )}
+      {/* Death Race hazard dots */}
+      {hazardObjects && hazardObjects.map((obj, i) => {
+        const wx = obj.x - (posX ?? 0);
+        const wz = obj.z - (posZ ?? 0);
+        const sx = PAD + (wx - minX) * sc;
+        const sy = PAD + (wz - minZ) * sc;
+        const color = hazardColor(obj.name);
+        return (
+          <circle key={`hz${i}`} cx={sx} cy={sy} r={3.5}
+            fill={color} fillOpacity={0.85} stroke="#000" strokeWidth="0.5">
+            <title>{obj.name}</title>
+          </circle>
+        );
+      })}
       {/* Legend */}
       <line x1={10} y1={H - 18} x2={20} y2={H - 18} stroke="#27ae60" strokeWidth="2" />
-      <text x={23} y={H - 14} fontSize="7" fill="#6a5a3a">Start</text>
+      <text x={23} y={H - 14} fontSize="7" fill="#3a6a3a">Start</text>
       <line x1={45} y1={H - 18} x2={55} y2={H - 18} stroke="#e74c3c" strokeWidth="2" strokeDasharray="3,2" />
-      <text x={58} y={H - 14} fontSize="7" fill="#6a5a3a">Finish</text>
+      <text x={58} y={H - 14} fontSize="7" fill="#3a6a3a">Finish</text>
       {addBarriers && <>
         <line x1={80} y1={H - 18} x2={90} y2={H - 18} stroke="#e74c3c" strokeWidth="1.5" />
-        <text x={93} y={H - 14} fontSize="7" fill="#6a5a3a">Barriers</text>
+        <text x={93} y={H - 14} fontSize="7" fill="#3a6a3a">Barriers</text>
       </>}
     </svg>
   );
@@ -407,6 +660,17 @@ export default function RaceTrackMaker() {
   const [format,      setFormat]      = useState<"initc"|"json">("initc");
   const [toast,       setToast]       = useState("");
   const [mobileTab,   setMobileTab]   = useState<"options"|"map"|"code">("options");
+  const [previewMode, setPreviewMode] = useState<"3D"|"2D">("3D");
+
+  // ── Death Race state ──────────────────────────────────────────────────────
+  const [deathRace,       setDeathRace]       = useState(false);
+  const [drSeed,          setDrSeed]          = useState(1337);
+  const [drDensity,       setDrDensity]       = useState<1|2|3>(2);
+  const [drRamps,         setDrRamps]         = useState(true);
+  const [drBarrels,       setDrBarrels]       = useState(true);
+  const [drRoadblocks,    setDrRoadblocks]    = useState(true);
+  const [drWrecks,        setDrWrecks]        = useState(true);
+  const [drLights,        setDrLights]        = useState(true);
 
   const barrierDef = BARRIER_OBJECTS[barrierKey];
 
@@ -414,7 +678,7 @@ export default function RaceTrackMaker() {
     buildPresetWaypoints(preset, radiusX, radiusZ),
   [preset, radiusX, radiusZ]);
 
-  const objects = useMemo(() => generateTrack({
+  const trackObjects = useMemo(() => generateTrack({
     waypoints,
     posX, posY, posZ,
     trackWidth,
@@ -426,10 +690,25 @@ export default function RaceTrackMaker() {
     textScale,
   }), [waypoints, posX, posY, posZ, trackWidth, floorObj, barrierDef, addFloor, addBarriers, addText, textScale]);
 
+  const deathRaceObjects = useMemo(() => {
+    if (!deathRace) return [];
+    return generateDeathRace({
+      seed: drSeed, density: drDensity,
+      waypoints, posX, posY, posZ, trackWidth,
+      enableRamps: drRamps, enableBarrels: drBarrels,
+      enableRoadblocks: drRoadblocks, enableWrecks: drWrecks,
+      enableLights: drLights,
+    });
+  }, [deathRace, drSeed, drDensity, waypoints, posX, posY, posZ, trackWidth,
+      drRamps, drBarrels, drRoadblocks, drWrecks, drLights]);
+
+  const objects = useMemo(() => [...trackObjects, ...deathRaceObjects],
+    [trackObjects, deathRaceObjects]);
+
   const output = useMemo(() => {
-    const comment = `RACE TRACK — ${PRESETS[preset].label}  ${radiusX}×${radiusZ}m  Width: ${trackWidth}m`;
+    const comment = `RACE TRACK — ${PRESETS[preset].label}  ${radiusX}×${radiusZ}m  Width: ${trackWidth}m${deathRace ? "  💀 DEATH RACE" : ""}`;
     return format === "initc" ? toInitC(objects, comment) : toJSON(objects);
-  }, [objects, format, preset, radiusX, radiusZ, trackWidth]);
+  }, [objects, format, preset, radiusX, radiusZ, trackWidth, deathRace]);
 
   const showToast = useCallback((msg: string) => {
     setToast(msg); setTimeout(() => setToast(""), 2200);
@@ -453,27 +732,28 @@ export default function RaceTrackMaker() {
   }) => (
     <div className="mb-3">
       <div className="flex justify-between items-center mb-1">
-        <span className="text-[#9a8858] text-[10px]">{label}</span>
+        <span className="text-[#5a8a5a] text-[10px]">{label}</span>
         <div className="flex items-center gap-1">
-          {badge && <span className="bg-[#2e2518] text-[#6a5a3a] text-[8px] px-1.5 py-0.5 rounded-sm">{badge}</span>}
-          <span className="text-[#d4a017] text-[10px] font-bold">{value}{unit}</span>
+          {badge && <span className="bg-[#1a2e1a] text-[#3a6a3a] text-[8px] px-1.5 py-0.5 rounded-sm">{badge}</span>}
+          <span className="text-[#27ae60] text-[10px] font-bold">{value}{unit}</span>
         </div>
       </div>
       <input type="range" min={min} max={max} step={step} value={value}
         onChange={e => onChange(Number(e.target.value))}
-        className="w-full h-1 bg-[#2e2518] rounded-full appearance-none cursor-pointer accent-[#d4a017]" />
+        className="w-full h-1 bg-[#1a2e1a] rounded-full appearance-none cursor-pointer accent-[#27ae60]" />
     </div>
   );
 
   const objectCounts = useMemo(() => {
-    const floor = objects.filter(o => o.name !== "StaticObj_Airfield_Light_PAPI1" && o.name === floorObj).length;
-    const barriers = objects.filter(o => o.name === barrierDef.value).length;
-    const lights = objects.filter(o => o.name === "StaticObj_Airfield_Light_PAPI1").length;
-    return { floor, barriers, lights, total: objects.length };
-  }, [objects, floorObj, barrierDef.value]);
+    const floor    = trackObjects.filter(o => o.name === floorObj).length;
+    const barriers = trackObjects.filter(o => o.name === barrierDef.value).length;
+    const lights   = trackObjects.filter(o => o.name === "StaticObj_Airfield_Light_PAPI1").length;
+    const hazards  = deathRaceObjects.length;
+    return { floor, barriers, lights, hazards, total: objects.length };
+  }, [trackObjects, deathRaceObjects, objects, floorObj, barrierDef.value]);
 
   return (
-    <div className="flex flex-1 overflow-hidden bg-[#0a0804] relative">
+    <div className="flex flex-1 overflow-hidden bg-[#080f09] relative">
 
       {/* Toast */}
       {toast && (
@@ -483,31 +763,32 @@ export default function RaceTrackMaker() {
       )}
 
       {/* Mobile tabs */}
-      <div className="md:hidden absolute top-0 left-0 right-0 flex border-b border-[#2e2518] bg-[#0e0c08] z-10">
+      <div className="md:hidden absolute top-0 left-0 right-0 flex border-b border-[#1a2e1a] bg-[#0a1209] z-10">
         {(["options","map","code"] as const).map(t => (
           <button key={t} onClick={() => setMobileTab(t)}
-            className={`flex-1 py-2 text-[10px] font-bold uppercase tracking-wider transition-colors ${mobileTab === t ? "text-[#e74c3c] border-b-2 border-[#e74c3c]" : "text-[#6a5a3a]"}`}>
+            className={`flex-1 py-2 text-[10px] font-bold uppercase tracking-wider transition-colors ${mobileTab === t ? "text-[#e74c3c] border-b-2 border-[#e74c3c]" : "text-[#3a6a3a]"}`}>
             {t === "options" ? "⚙ Options" : t === "map" ? "🗺 Map" : "📋 Code"}
           </button>
         ))}
       </div>
 
       {/* ── LEFT SIDEBAR ─────────────────────────────────────────────────────── */}
-      <div className={`${mobileTab !== "options" ? "hidden md:flex" : "flex"} w-full md:w-72 shrink-0 bg-[#0e0c08] border-r border-[#2e2518] overflow-y-auto flex-col md:mt-0 mt-9`}>
-        <div className="px-3 py-3 border-b border-[#2e2518] shrink-0">
+      <div className={`${mobileTab !== "options" ? "hidden md:flex" : "flex"} w-full md:w-72 shrink-0 bg-[#0a1209] border-r border-[#1a2e1a] overflow-y-auto flex-col md:mt-0 mt-9`}>
+        <div className="px-3 py-3 border-b border-[#1a2e1a] shrink-0">
+          <div className="text-[9px] text-[#3a6a3a] font-bold tracking-widest">DANK'S DAYZ STUDIO</div>
           <div className="text-[#e74c3c] font-bold text-[13px]">🏁 RACE TRACK MAKER</div>
-          <div className="text-[#6a5a3a] text-[9px] mt-0.5">Floating track · walls as floor · barriers on sides · START/FINISH lights</div>
+          <div className="text-[#3a6a3a] text-[9px] mt-0.5">Floating track · walls as floor · barriers on sides · START/FINISH lights</div>
         </div>
 
         <div className="p-3 space-y-4 overflow-y-auto">
 
           {/* Preset shape */}
           <div>
-            <div className="text-[#9a8858] text-[9px] uppercase tracking-wider mb-2">🔁 Track Shape</div>
+            <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-2">🔁 Track Shape</div>
             <div className="grid grid-cols-2 gap-1">
               {(Object.entries(PRESETS) as [PresetKey, typeof PRESETS[PresetKey]][]).map(([k, p]) => (
                 <button key={k} onClick={() => setPreset(k)}
-                  className={`text-left px-2 py-1.5 rounded-sm border transition-all ${preset === k ? "bg-[#e74c3c]/20 border-[#e74c3c] text-[#e74c3c]" : "border-[#2e2518] text-[#b09a6a] hover:border-[#6a5820]"}`}>
+                  className={`text-left px-2 py-1.5 rounded-sm border transition-all ${preset === k ? "bg-[#e74c3c]/20 border-[#e74c3c] text-[#e74c3c]" : "border-[#1a2e1a] text-[#b09a6a] hover:border-[#6a5820]"}`}>
                   <div className="text-[10px] font-bold">{p.icon} {p.label}</div>
                   <div className="text-[7.5px] opacity-60 mt-0.5">{p.desc}</div>
                 </button>
@@ -517,7 +798,7 @@ export default function RaceTrackMaker() {
 
           {/* Dimensions */}
           <div>
-            <div className="text-[#9a8858] text-[9px] uppercase tracking-wider mb-2">📐 Track Dimensions</div>
+            <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-2">📐 Track Dimensions</div>
             <Slider label="Radius X (East-West)" value={radiusX} onChange={setRadiusX}
               min={20} max={300} step={5} unit="m"
               badge={`${(radiusX * 2).toFixed(0)}m span`} />
@@ -531,7 +812,7 @@ export default function RaceTrackMaker() {
 
           {/* Options toggles */}
           <div>
-            <div className="text-[#9a8858] text-[9px] uppercase tracking-wider mb-2">⚙ Components</div>
+            <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-2">⚙ Components</div>
             {[
               { label: "🏗 Floor Panels (walls rotated flat)", val: addFloor, set: setAddFloor,
                 note: "Concrete walls placed with pitch=90° to create driveable surface" },
@@ -542,7 +823,7 @@ export default function RaceTrackMaker() {
             ].map(opt => (
               <div key={opt.label} className="mb-2">
                 <button onClick={() => opt.set(!opt.val)}
-                  className={`flex items-center gap-2 w-full text-left text-[10px] py-1 transition-all ${opt.val ? "text-[#e74c3c]" : "text-[#6a5a3a]"}`}>
+                  className={`flex items-center gap-2 w-full text-left text-[10px] py-1 transition-all ${opt.val ? "text-[#e74c3c]" : "text-[#3a6a3a]"}`}>
                   <span className={`w-3 h-3 border rounded-sm flex items-center justify-center shrink-0 ${opt.val ? "border-[#e74c3c] bg-[#e74c3c]/30" : "border-[#3a3020]"}`}>
                     {opt.val && <span className="text-[8px] text-[#e74c3c]">✓</span>}
                   </span>
@@ -556,9 +837,9 @@ export default function RaceTrackMaker() {
           {/* Floor object */}
           {addFloor && (
             <div>
-              <div className="text-[#9a8858] text-[9px] uppercase tracking-wider mb-1.5">🏗 Floor Object</div>
+              <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-1.5">🏗 Floor Object</div>
               <select value={floorObj} onChange={e => setFloorObj(e.target.value)}
-                className="w-full bg-[#1a1610] border border-[#2e2518] text-[#c8b99a] text-[10px] px-2 py-1.5 rounded-sm focus:outline-none focus:border-[#e74c3c] mb-1">
+                className="w-full bg-[#1a1610] border border-[#1a2e1a] text-[#b8d4b8] text-[10px] px-2 py-1.5 rounded-sm focus:outline-none focus:border-[#e74c3c] mb-1">
                 {FLOOR_OBJECTS.map(f => (
                   <option key={f.value} value={f.value}>{f.label}</option>
                 ))}
@@ -573,9 +854,9 @@ export default function RaceTrackMaker() {
           {/* Barrier object */}
           {addBarriers && (
             <div>
-              <div className="text-[#9a8858] text-[9px] uppercase tracking-wider mb-1.5">🚧 Barrier Object</div>
+              <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-1.5">🚧 Barrier Object</div>
               <select value={barrierKey} onChange={e => setBarrierKey(Number(e.target.value))}
-                className="w-full bg-[#1a1610] border border-[#2e2518] text-[#c8b99a] text-[10px] px-2 py-1.5 rounded-sm focus:outline-none focus:border-[#e74c3c] mb-1">
+                className="w-full bg-[#1a1610] border border-[#1a2e1a] text-[#b8d4b8] text-[10px] px-2 py-1.5 rounded-sm focus:outline-none focus:border-[#e74c3c] mb-1">
                 {BARRIER_OBJECTS.map((b, i) => (
                   <option key={b.value} value={i}>{b.label}</option>
                 ))}
@@ -587,7 +868,7 @@ export default function RaceTrackMaker() {
           {/* Text scale */}
           {addText && (
             <div>
-              <div className="text-[#9a8858] text-[9px] uppercase tracking-wider mb-1.5">💡 Light Text Scale</div>
+              <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-1.5">💡 Light Text Scale</div>
               <Slider label="Pixel Spacing" value={textScale} onChange={setTextScale}
                 min={0.6} max={2.5} step={0.1} unit="×" badge={`${(PIXEL_SP * textScale).toFixed(1)}m/pixel`} />
               <div className="text-[7px] text-[#5a4820] leading-relaxed">
@@ -598,7 +879,7 @@ export default function RaceTrackMaker() {
 
           {/* World position */}
           <div>
-            <div className="text-[#9a8858] text-[9px] uppercase tracking-wider mb-1.5">📍 World Origin</div>
+            <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-1.5">📍 World Origin</div>
             <div className="text-[7px] text-[#5a4820] mb-1.5 leading-relaxed">
               Set Y to the height you want the track to float at. Track tiles extend horizontally at this height.
             </div>
@@ -606,42 +887,121 @@ export default function RaceTrackMaker() {
               <div key={lbl} className="flex items-center gap-2 mb-1">
                 <span className="text-[8px] text-[#8a7840] w-16 shrink-0 truncate">{lbl}</span>
                 <input type="number" step="0.5" value={val} onChange={e => set(Number(e.target.value))}
-                  className="flex-1 bg-[#12100a] border border-[#2e2518] rounded-sm px-2 py-0.5 text-[10px] text-[#c8b99a] focus:outline-none focus:border-[#e74c3c] min-w-0" />
+                  className="flex-1 bg-[#0c1510] border border-[#1a2e1a] rounded-sm px-2 py-0.5 text-[10px] text-[#b8d4b8] focus:outline-none focus:border-[#e74c3c] min-w-0" />
               </div>
             ))}
           </div>
 
           {/* Format */}
           <div>
-            <div className="text-[#9a8858] text-[9px] uppercase tracking-wider mb-1.5">📄 Export Format</div>
+            <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-1.5">📄 Export Format</div>
             <div className="flex gap-1">
               {(["initc", "json"] as const).map(f => (
                 <button key={f} onClick={() => setFormat(f)}
-                  className={`flex-1 py-1.5 text-[10px] font-bold rounded-sm border transition-colors ${format === f ? "bg-[#e74c3c] text-white border-[#e74c3c]" : "border-[#2e2518] text-[#6a5a3a] hover:border-[#e74c3c] hover:text-[#e74c3c]"}`}>
+                  className={`flex-1 py-1.5 text-[10px] font-bold rounded-sm border transition-colors ${format === f ? "bg-[#e74c3c] text-white border-[#e74c3c]" : "border-[#1a2e1a] text-[#3a6a3a] hover:border-[#e74c3c] hover:text-[#e74c3c]"}`}>
                   {f === "initc" ? "init.c" : "JSON"}
                 </button>
               ))}
             </div>
           </div>
 
+          {/* ── DEATH RACE MODE ─────────────────────────────────────────── */}
+          <div className={`border rounded-sm p-2 ${deathRace ? "border-[#e74c3c] bg-[#1a0808]" : "border-[#1a2e1a] bg-[#0a1209]"}`}>
+            <button onClick={() => setDeathRace(v => !v)}
+              className="flex items-center gap-2 w-full text-left">
+              <span className={`w-4 h-4 border-2 rounded-sm flex items-center justify-center shrink-0 transition-all ${deathRace ? "border-[#e74c3c] bg-[#e74c3c]/30" : "border-[#3a3020]"}`}>
+                {deathRace && <span className="text-[9px] text-[#e74c3c] font-black">✓</span>}
+              </span>
+              <span className={`font-black text-[11px] tracking-wider ${deathRace ? "text-[#e74c3c]" : "text-[#3a6a3a]"}`}>
+                💀 DEATH RACE MODE
+              </span>
+            </button>
+            <div className="text-[7px] text-[#5a4820] ml-6 mt-0.5 leading-relaxed">
+              Scatter ramps, barrel walls, roadblocks, wrecks and rave lights on the track
+            </div>
+
+            {deathRace && (
+              <div className="mt-3 space-y-3">
+                {/* Seed */}
+                <div>
+                  <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-1">🎲 Seed</div>
+                  <div className="flex gap-1">
+                    <input type="number" value={drSeed} onChange={e => setDrSeed(Math.max(1, parseInt(e.target.value) || 1))}
+                      className="flex-1 bg-[#0c1510] border border-[#3a2018] rounded-sm px-2 py-1 text-[10px] text-[#b8d4b8] focus:outline-none focus:border-[#e74c3c] min-w-0" />
+                    <button onClick={() => setDrSeed(Math.floor(Math.random() * 99999) + 1)}
+                      className="px-2 py-1 bg-[#2a1208] border border-[#5a2a18] text-[#e74c3c] text-[11px] rounded-sm hover:bg-[#3a1a0a] transition-all"
+                      title="Roll random seed">🎲</button>
+                  </div>
+                  <div className="text-[7px] text-[#4a3820] mt-0.5">Same seed = same hazard layout</div>
+                </div>
+
+                {/* Density */}
+                <div>
+                  <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-1">💥 Hazard Density</div>
+                  <div className="flex gap-1">
+                    {([1, 2, 3] as const).map(d => (
+                      <button key={d} onClick={() => setDrDensity(d)}
+                        className={`flex-1 py-1.5 text-[10px] font-bold border rounded-sm transition-all ${drDensity === d ? "bg-[#e74c3c] text-white border-[#e74c3c]" : "text-[#3a6a3a] border-[#1a2e1a] hover:border-[#e74c3c]"}`}>
+                        {d === 1 ? "Light" : d === 2 ? "Medium" : "CHAOS"}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Hazard toggles */}
+                <div>
+                  <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-1.5">☑ Hazard Types</div>
+                  <div className="grid grid-cols-2 gap-1">
+                    {[
+                      { label: "🏗 Ramps",        val: drRamps,      set: setDrRamps,      note: "Angled jump ramps" },
+                      { label: "🛢 Barrel Walls",  val: drBarrels,    set: setDrBarrels,    note: "Drive-through stacks" },
+                      { label: "🚧 Roadblocks",    val: drRoadblocks, set: setDrRoadblocks, note: "Barriers + tank traps" },
+                      { label: "🚗 Wrecks",        val: drWrecks,     set: setDrWrecks,     note: "Abandoned vehicles" },
+                      { label: "💡 Rave Lights",   val: drLights,     set: setDrLights,     note: "PAPI + strobes" },
+                    ].map(opt => (
+                      <button key={opt.label} onClick={() => opt.set(v => !v)}
+                        title={opt.note}
+                        className={`flex items-center gap-1.5 px-2 py-1.5 text-left text-[9px] border rounded-sm transition-all ${opt.val ? "border-[#e74c3c]/60 text-[#e74c3c] bg-[#e74c3c]/10" : "border-[#1a2e1a] text-[#5a4a2a] hover:border-[#4a2a1a]"}`}>
+                        <span className={`w-2.5 h-2.5 border rounded-sm flex items-center justify-center shrink-0 ${opt.val ? "border-[#e74c3c] bg-[#e74c3c]/40" : "border-[#3a3020]"}`}>
+                          {opt.val && <span className="text-[7px] leading-none">✓</span>}
+                        </span>
+                        <span className="font-bold leading-tight">{opt.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Hazard count */}
+                <div className="flex justify-between text-[9px] border-t border-[#3a1a0a] pt-2">
+                  <span className="text-[#3a6a3a]">💀 Hazard objects</span>
+                  <span className="text-[#e74c3c] font-bold">{objectCounts.hazards}</span>
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Object count summary */}
-          <div className="border border-[#2e2518] rounded-sm p-2 bg-[#0e0c08]">
-            <div className="text-[#9a8858] text-[9px] uppercase tracking-wider mb-2">📊 Object Count</div>
+          <div className="border border-[#1a2e1a] rounded-sm p-2 bg-[#0a1209]">
+            <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-2">📊 Object Count</div>
             <div className="space-y-1">
               {addFloor && <div className="flex justify-between text-[9px]">
-                <span className="text-[#6a5a3a]">🏗 Floor panels</span>
-                <span className="text-[#d4a017] font-bold">{objectCounts.floor}</span>
+                <span className="text-[#3a6a3a]">🏗 Floor panels</span>
+                <span className="text-[#27ae60] font-bold">{objectCounts.floor}</span>
               </div>}
               {addBarriers && <div className="flex justify-between text-[9px]">
-                <span className="text-[#6a5a3a]">🚧 Barriers</span>
+                <span className="text-[#3a6a3a]">🚧 Barriers</span>
                 <span className="text-[#e74c3c] font-bold">{objectCounts.barriers}</span>
               </div>}
               {addText && <div className="flex justify-between text-[9px]">
-                <span className="text-[#6a5a3a]">💡 PAPI lights</span>
+                <span className="text-[#3a6a3a]">💡 PAPI lights</span>
                 <span className="text-[#3498db] font-bold">{objectCounts.lights}</span>
               </div>}
-              <div className="border-t border-[#2e2518] pt-1 flex justify-between text-[10px]">
-                <span className="text-[#9a8858]">Total</span>
+              {deathRace && <div className="flex justify-between text-[9px]">
+                <span className="text-[#e74c3c]">💀 Death Race hazards</span>
+                <span className="text-[#e74c3c] font-bold">{objectCounts.hazards}</span>
+              </div>}
+              <div className="border-t border-[#1a2e1a] pt-1 flex justify-between text-[10px]">
+                <span className="text-[#5a8a5a]">Total</span>
                 <span className={`font-bold ${objectCounts.total > 1500 ? "text-[#e67e22]" : "text-[#27ae60]"}`}>
                   {objectCounts.total}
                 </span>
@@ -659,39 +1019,89 @@ export default function RaceTrackMaker() {
         </div>
       </div>
 
-      {/* ── CENTER: 3D PREVIEW ────────────────────────────────────────────────── */}
-      <div className={`${mobileTab !== "map" ? "hidden md:flex" : "flex"} flex-col flex-1 min-w-0 overflow-hidden border-r border-[#2e2518] md:mt-0 mt-9`}>
-        <div className="flex items-center gap-2 px-3 py-2 border-b border-[#2e2518] shrink-0">
-          <span className="text-[#9a8858] text-[10px] uppercase tracking-wider">3D Preview</span>
+      {/* ── CENTER: 3D / 2D PREVIEW ──────────────────────────────────────────── */}
+      <div className={`${mobileTab !== "map" ? "hidden md:flex" : "flex"} flex-col flex-1 min-w-0 overflow-hidden border-r border-[#1a2e1a] md:mt-0 mt-9`}>
+        <div className="flex items-center gap-2 px-3 py-2 border-b border-[#1a2e1a] shrink-0">
+          <span className="text-[#5a8a5a] text-[10px] uppercase tracking-wider">Preview</span>
           <span className="text-[#4a3a1a] text-[9px]">— {PRESETS[preset].label} · {radiusX}×{radiusZ}m · {trackWidth}m wide</span>
-          <span className={`ml-auto text-[9px] font-bold px-2 py-0.5 rounded-sm ${objectCounts.total > 1500 ? "bg-[#e67e22]/20 text-[#e67e22]" : "bg-[#27ae60]/20 text-[#27ae60]"}`}>
+          <div className="ml-auto flex gap-1">
+            {(["3D","2D"] as const).map(v => (
+              <button key={v} onClick={() => setPreviewMode(v)}
+                className={`px-2 py-0.5 text-[8px] font-bold border rounded-sm transition-all ${previewMode === v ? "bg-[#27ae60] text-[#080f09] border-[#27ae60]" : "text-[#3a6a3a] border-[#1a2e1a] hover:border-[#4a3820]"}`}>
+                {v}
+              </button>
+            ))}
+          </div>
+          <span className={`text-[9px] font-bold px-2 py-0.5 rounded-sm ${objectCounts.total > 1500 ? "bg-[#e67e22]/20 text-[#e67e22]" : "bg-[#27ae60]/20 text-[#27ae60]"}`}>
             {objectCounts.total} objects
           </span>
+          <button onClick={download}
+            className="ml-auto px-3 py-1 text-[9px] font-bold bg-[#c0392b] text-white rounded-sm hover:bg-[#e74c3c] transition-all shrink-0">
+            ⬇ {format === "initc" ? "init.c" : "JSON"}
+          </button>
         </div>
         <div className="flex-1 min-h-0 relative">
-          <Suspense fallback={
-            <div className="absolute inset-0 flex items-center justify-center bg-[#080c14]">
-              <span className="text-[#4a3820] text-[11px] tracking-widest animate-pulse">LOADING 3D...</span>
+          {previewMode === "3D" ? (
+            <Suspense fallback={
+              <div className="absolute inset-0 flex items-center justify-center bg-[#080c14]">
+                <span className="text-[#4a3820] text-[11px] tracking-widest animate-pulse">LOADING 3D...</span>
+              </div>
+            }>
+              <TrackPreview3D
+                waypoints={waypoints}
+                trackWidth={trackWidth}
+                addText={addText}
+                addBarriers={addBarriers}
+                barrierLen={barrierDef.len}
+                hazardObjects={deathRace ? deathRaceObjects : []}
+                posX={posX}
+                posZ={posZ}
+              />
+            </Suspense>
+          ) : (
+            <div className="w-full h-full bg-[#060402] overflow-auto">
+              <TrackPreview
+                waypoints={waypoints}
+                trackWidth={trackWidth}
+                addText={addText}
+                addBarriers={addBarriers}
+                hazardObjects={deathRace ? deathRaceObjects : []}
+                posX={posX}
+                posZ={posZ}
+              />
             </div>
-          }>
-            <TrackPreview3D
-              waypoints={waypoints}
-              trackWidth={trackWidth}
-              addText={addText}
-              addBarriers={addBarriers}
-              barrierLen={barrierDef.len}
-            />
-          </Suspense>
+          )}
           {/* Interaction hint overlay */}
-          <div className="absolute bottom-2 right-2 pointer-events-none">
-            <div className="text-[7.5px] text-[#3a3020] bg-[#0a0804]/80 px-2 py-1 rounded-sm backdrop-blur-sm border border-[#2e2518]">
-              Drag to orbit · Scroll to zoom · Right-drag to pan
+          {previewMode === "3D" && (
+            <div className="absolute bottom-2 right-2 pointer-events-none">
+              <div className="text-[7.5px] text-[#3a3020] bg-[#080f09]/80 px-2 py-1 rounded-sm backdrop-blur-sm border border-[#1a2e1a]">
+                Drag to orbit · Scroll to zoom · Right-drag to pan
+              </div>
+            </div>
+          )}
+        </div>
+        {/* Death Race hazard legend */}
+        {deathRace && deathRaceObjects.length > 0 && (
+          <div className="shrink-0 border-t border-[#3a1a0a] bg-[#0e0804] px-3 py-1.5">
+            <div className="text-[7.5px] text-[#9a5a3a] uppercase tracking-wider mb-1 font-bold">💀 Death Race Hazards</div>
+            <div className="flex flex-wrap gap-x-3 gap-y-0.5">
+              {HAZARD_STYLE.map(h => {
+                const count = deathRaceObjects.filter(o => h.match(o.name)).length;
+                if (count === 0) return null;
+                return (
+                  <span key={h.label} className="flex items-center gap-1 text-[7.5px]">
+                    <span className="w-2.5 h-2.5 rounded-full inline-block shrink-0" style={{ background: h.color }} />
+                    <span style={{ color: h.color }}>{h.label}</span>
+                    <span className="text-[#4a3820]">×{count}</span>
+                  </span>
+                );
+              })}
             </div>
           </div>
-        </div>
+        )}
         {/* Legend strip */}
-        <div className="shrink-0 border-t border-[#2e2518] bg-[#0e0c08] px-3 py-2">
-          <div className="text-[8px] text-[#6a5a3a] leading-relaxed flex flex-wrap gap-x-3 gap-y-0.5">
+        <div className="shrink-0 border-t border-[#1a2e1a] bg-[#0a1209] px-3 py-2">
+          <div className="text-[8px] text-[#3a6a3a] leading-relaxed flex flex-wrap gap-x-3 gap-y-0.5">
             <span><span className="text-[#27ae60] font-bold">━</span> Start line (green gantry)</span>
             <span><span className="text-[#e74c3c] font-bold">━</span> Finish line (checker)</span>
             <span><span className="text-[#c0bab2] font-bold">█</span> Jersey barriers</span>
@@ -706,17 +1116,17 @@ export default function RaceTrackMaker() {
 
       {/* ── RIGHT: CODE OUTPUT ────────────────────────────────────────────────── */}
       <div className={`${mobileTab !== "code" ? "hidden md:flex" : "flex"} flex-col w-full md:w-[420px] shrink-0 min-h-0 md:mt-0 mt-9`}>
-        <div className="flex items-center gap-2 px-3 py-2 border-b border-[#2e2518] shrink-0 flex-wrap">
+        <div className="flex items-center gap-2 px-3 py-2 border-b border-[#1a2e1a] shrink-0 flex-wrap">
           {(["initc", "json"] as const).map(f => (
             <button key={f} onClick={() => setFormat(f)}
-              className={`px-3 py-1 text-[10px] font-bold rounded-sm transition-colors ${format === f ? "bg-[#e74c3c] text-white" : "text-[#6a5a3a] border border-[#2e2518] hover:border-[#e74c3c]"}`}>
+              className={`px-3 py-1 text-[10px] font-bold rounded-sm transition-colors ${format === f ? "bg-[#e74c3c] text-white" : "text-[#3a6a3a] border border-[#1a2e1a] hover:border-[#e74c3c]"}`}>
               {f === "initc" ? "init.c" : "JSON"}
             </button>
           ))}
           <span className="text-[#5a4a2a] text-[10px]">{objectCounts.total} objects</span>
           <div className="ml-auto flex gap-1.5">
             <button onClick={copy}
-              className="px-3 py-1 bg-[#1a1610] border border-[#2e2518] text-[#b09a6a] text-[10px] rounded-sm hover:border-[#e74c3c] hover:text-[#e74c3c] transition-colors">
+              className="px-3 py-1 bg-[#1a1610] border border-[#1a2e1a] text-[#b09a6a] text-[10px] rounded-sm hover:border-[#e74c3c] hover:text-[#e74c3c] transition-colors">
               Copy
             </button>
             <button onClick={download}

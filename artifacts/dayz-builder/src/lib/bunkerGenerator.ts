@@ -1,5 +1,5 @@
 
-// ─── DankDayZ Bunker Maker — Random Generator ────────────────────────────────
+// ─── Dank's Dayz Studio — Bunker Maker Random Generator ─────────────────────
 
 import {
   PlacedObject, BunkerStyle, BunkerSize,
@@ -248,15 +248,16 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
       const depthDiff = Math.abs(nextDy - dy);
       const numBlocks = Math.ceil(depthDiff / STAIR_BLOCK_H);
 
-      // Top stair
+      // Top stair — placed at current level floor
       place(PIECE_STAIRS_START.classname, `L${lv} to L${lv + 1} Stairs Top`, sdx, dy, sdz, sdx > 0 ? 270 : 90, lv, 'stair');
-      // Mid blocks
+      // Mid blocks — evenly interpolated between dy and nextDy
       for (let f = 1; f < numBlocks; f++) {
-        const stairY = dy - f * STAIR_BLOCK_H;
+        const t = f / numBlocks;
+        const stairY = dy + (nextDy - dy) * t;
         place(PIECE_STAIRS_BLOCK.classname, `L${lv} to L${lv + 1} Stairs Block ${f}`, sdx, stairY, sdz, sdx > 0 ? 270 : 90, lv, 'stair');
       }
-      // Bottom terminator
-      place(PIECE_STAIRS_TERMINATOR.classname, `L${lv} to L${lv + 1} Stairs Bottom`, sdx, nextDy + STAIR_BLOCK_H * 0.5, sdz, sdx > 0 ? 270 : 90, lv + 1, 'stair');
+      // Bottom terminator — placed at next level floor
+      place(PIECE_STAIRS_TERMINATOR.classname, `L${lv} to L${lv + 1} Stairs Bottom`, sdx, nextDy, sdz, sdx > 0 ? 270 : 90, lv + 1, 'stair');
 
       // Connector linking stairwell base to next level spine
       place(PIECE_CONNECTOR.classname, `L${lv + 1} Stair Connector`, sdx > 0 ? BRANCH_OFF * 0.3 : -BRANCH_OFF * 0.3, nextDy, sdz, sdx > 0 ? 270 : 90, lv + 1, 'stair');
@@ -267,10 +268,11 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
       // Connecting tunnel piece — bridges the gap from spine end to exit stairwell
       place(style.tunnelStraight.classname, 'Exit Approach Tunnel', 0, dy, exitZ, 0, lv, 'tunnel');
       tunnelCount++;
-      // Stair blocks rising from underground to surface
+      // Stair blocks rising from underground to surface — evenly spaced between dy and 0
       const numExitBlocks = Math.ceil(Math.abs(dy) / STAIR_BLOCK_H);
       for (let f = 0; f < numExitBlocks; f++) {
-        const stairY = dy + f * STAIR_BLOCK_H;
+        const t = (f + 1) / (numExitBlocks + 1);
+        const stairY = dy + (0 - dy) * t;
         place(PIECE_STAIRS_BLOCK.classname, `Exit Stair Block ${f + 1}`, 0, stairY, exitZ, 0, lv, 'stair');
       }
       place(PIECE_STAIRS_EXIT.classname, 'Exit Stair Top', 0, 0, exitZ, 0, 0, 'exit');
@@ -284,15 +286,18 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
       branchIdx++;
 
       // Tunnel leading to room (perpendicular to spine)
+      // Each tunnel piece is 9m long (d=9), centred at bx, running along X at yaw=90°
       const branchLen = rng.int(1, 2);
+      const tunnelHalfD = PIECE_TUNNEL_SINGLE.d * 0.5; // 4.5m
       for (let bc = 0; bc < branchLen; bc++) {
-        const bx = side * (BRANCH_OFF * 0.5 + bc * CELL_LEN * 0.7);
+        const bx = side * (tunnelHalfD + bc * PIECE_TUNNEL_SINGLE.d);
         place(PIECE_TUNNEL_SINGLE.classname, `L${lv} Branch${branchIdx} Seg${bc + 1}`, bx, dy, branchZ, side > 0 ? 90 : 270, lv, 'branch');
         tunnelCount++;
       }
 
-      // Room at branch end
-      const roomX = side * (BRANCH_OFF + branchLen * CELL_LEN * 0.7 + 2);
+      // Room placed immediately after the last tunnel piece's far edge
+      const lastTunnelFarEdge = tunnelHalfD + branchLen * PIECE_TUNNEL_SINGLE.d;
+      const roomX = side * (lastTunnelFarEdge + 1.5);
       const roomDef = rng.bool(0.4) ? style.primaryRoom : style.altRoom;
       const roomYaw = rng.bool(0.5) ? 0 : 90;
       place(roomDef.classname, `L${lv} Room ${branchIdx} (${roomDef.label})`, roomX, dy, branchZ, roomYaw, lv, 'room');
@@ -505,7 +510,7 @@ export function exportBunkerInitC(
   lines.push(
     SPAWN_HELPER,
     `// ============================================================`,
-    `// DankDayZ Ultimate Builder -- BUNKER MAKER`,
+    `// Dank's Dayz Studio -- BUNKER MAKER`,
     `// Seed: ${layout.seed} | Levels: ${layout.stats.levels} | Rooms: ${layout.stats.rooms}`,
     `// Objects: ${layout.stats.totalObjects} | Footprint: ~${layout.stats.footprintRadius * 2}m wide`,
     `// Origin: X=${worldX.toFixed(1)} Y=${worldY.toFixed(1)} Z=${worldZ.toFixed(1)}`,

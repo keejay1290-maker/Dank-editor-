@@ -1,5 +1,5 @@
 
-// ─── DankDayZ Bunker Maker — Piece Definitions ──────────────────────────────
+// ─── Dank's Dayz Studio — Bunker Maker Piece Definitions ────────────────────
 // All classnames verified from real DayZ Underground module JSON files.
 // These are the actual DayZ Underground DLC objects confirmed working on console (Xbox/PS5).
 
@@ -408,12 +408,12 @@ export const DECOR_PROPS: DecorProp[] = [
 ];
 
 export const WRECK_PROPS: DecorProp[] = [
-  { classname: 'Land_Wreck_V3S_DE',              label: 'V3S Truck Wreck',      w: 2.5, d: 8.0, h: 3.0, weight: 8, category: 'military'   },
-  { classname: 'Land_Wreck_Ural_DE',             label: 'Ural Truck Wreck',     w: 2.7, d: 9.0, h: 3.2, weight: 4, category: 'military'   },
+  { classname: 'Land_Wreck_V3S',                 label: 'V3S Truck Wreck',      w: 2.5, d: 8.0, h: 3.0, weight: 8, category: 'military'   },
+  { classname: 'Land_Wreck_Ural',                label: 'Ural Truck Wreck',     w: 2.7, d: 9.0, h: 3.2, weight: 4, category: 'military'   },
   { classname: 'Land_Wreck_Trailer_Closed_DE',   label: 'Trailer Wreck',        w: 2.5, d: 6.0, h: 2.5, weight: 6, category: 'military'   },
-  { classname: 'Land_Wreck_BTR_DE',              label: 'BTR APC Wreck',        w: 3.0, d: 7.0, h: 2.8, weight: 3, category: 'military'   },
+  { classname: 'Land_Wreck_BTR',                 label: 'BTR APC Wreck',        w: 3.0, d: 7.0, h: 2.8, weight: 3, category: 'military'   },
   { classname: 'Land_Wreck_hb01_aban1_blue_DE',  label: 'Hatchback Wreck',      w: 2.0, d: 4.0, h: 1.5, weight: 6, category: 'military'   },
-  { classname: 'Land_Wreck_offroad02_aban1_DE',  label: 'M1025 Wreck',          w: 2.2, d: 4.6, h: 1.8, weight: 6, category: 'military'   },
+  { classname: 'Land_Wreck_offroad02_aban1',     label: 'M1025 Wreck',          w: 2.2, d: 4.6, h: 1.8, weight: 6, category: 'military'   },
   { classname: 'Land_Wreck_sed01_aban1_black_DE',label: 'Sedan Wreck',          w: 2.0, d: 4.5, h: 1.5, weight: 5, category: 'military'   },
 ];
 

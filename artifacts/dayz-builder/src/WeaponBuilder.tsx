@@ -34,39 +34,232 @@ VEHICLES.forEach(v => { VEHICLE_MAP[v.id] = v; });
 
 // ─── WEAPON SILHOUETTE SVG ────────────────────────────────────────────────────
 
+type SilhouetteType = 'rifle' | 'pistol' | 'smg' | 'shotgun' | 'sniper' | 'launcher';
+
+const CATEGORY_SILHOUETTE: Record<string, SilhouetteType> = {
+  'Assault Rifle':    'rifle',
+  'Civilian Rifle':   'rifle',
+  'Sniper Rifle':     'sniper',
+  'SMG':              'smg',
+  'Pistol':           'pistol',
+  'Shotgun':          'shotgun',
+  'Grenade Launcher': 'launcher',
+  'Launcher':         'launcher',
+};
+
+// Returns SVG body elements + anchor positions for each silhouette type
+function buildSilhouette(type: SilhouetteType, W: number, H: number, barrelLen: number): {
+  elements: React.ReactNode;
+  anchors: Record<SlotType, [number, number]>;
+} {
+  const cy = H * 0.5;
+  const fill = '#2a2016', stroke = '#7a6030', dark = '#0e1a0e', mid = '#252018';
+
+  if (type === 'pistol') {
+    // Compact: short barrel, no stock, large grip below
+    const bx = W * 0.28, recW = 90, recH = 28;
+    const barrelEnd = bx + recW + 60 * Math.min(1, barrelLen / 0.25);
+    return {
+      elements: <>
+        {/* Grip */}
+        <rect x={bx + 20} y={cy + 14} width={28} height={52} fill={fill} stroke={stroke} strokeWidth="1.5" rx="4" />
+        {/* Receiver */}
+        <rect x={bx} y={cy - recH/2} width={recW} height={recH} fill={fill} stroke={stroke} strokeWidth="1.5" rx="4" />
+        {/* Slide */}
+        <rect x={bx + 8} y={cy - recH/2 - 6} width={recW - 16} height={10} fill={mid} stroke={stroke} strokeWidth="1" rx="2" />
+        {/* Barrel */}
+        <rect x={bx + recW} y={cy - 6} width={barrelEnd - bx - recW} height={12} fill={mid} stroke={stroke} strokeWidth="1" rx="1" />
+        {/* Trigger guard */}
+        <path d={`M ${bx+18} ${cy+14} Q ${bx+30} ${cy+30} ${bx+46} ${cy+14}`} fill="none" stroke={stroke} strokeWidth="1.5" />
+      </>,
+      anchors: {
+        optic:     [bx + recW * 0.5, cy - recH/2 - 22],
+        muzzle:    [barrelEnd + 8,   cy],
+        stock:     [bx - 10,         cy],
+        magazine:  [bx + 34,         cy + 52],
+        handguard: [bx + recW - 10,  cy + 20],
+      },
+    };
+  }
+
+  if (type === 'smg') {
+    // Medium: folding stock stub, short barrel, compact receiver
+    const stockX = W * 0.18, recX = W * 0.38, recW = 80, recH = 30;
+    const barrelEnd = recX + recW + 80 * Math.min(1, barrelLen / 0.35);
+    return {
+      elements: <>
+        {/* Folding stock stub */}
+        <rect x={stockX} y={cy - 8} width={recX - stockX} height={16} fill={dark} stroke={stroke} strokeWidth="1" rx="2" />
+        <rect x={stockX} y={cy - 14} width={18} height={28} fill={fill} stroke={stroke} strokeWidth="1" rx="3" />
+        {/* Receiver */}
+        <rect x={recX - 6} y={cy - recH/2} width={recW} height={recH} fill={fill} stroke={stroke} strokeWidth="1.5" rx="3" />
+        {/* Pistol grip */}
+        <rect x={recX + 18} y={cy + 14} width={22} height={38} fill={fill} stroke={stroke} strokeWidth="1" rx="3" />
+        {/* Barrel */}
+        <rect x={recX + recW - 6} y={cy - 7} width={barrelEnd - recX - recW + 6} height={14} fill={mid} stroke={stroke} strokeWidth="1" rx="1" />
+        {/* Handguard */}
+        <rect x={recX + recW - 6} y={cy + 7} width={40} height={8} fill={dark} stroke={stroke} strokeWidth="1" />
+        {/* Trigger guard */}
+        <path d={`M ${recX+16} ${cy+14} Q ${recX+28} ${cy+28} ${recX+42} ${cy+14}`} fill="none" stroke={stroke} strokeWidth="1.5" />
+        {/* Top rail */}
+        <rect x={recX} y={cy - recH/2 - 5} width={recW - 10} height={6} fill={dark} stroke={stroke} strokeWidth="1" />
+      </>,
+      anchors: {
+        optic:     [recX + recW * 0.3, cy - recH/2 - 22],
+        muzzle:    [barrelEnd + 8,     cy],
+        stock:     [stockX - 8,        cy],
+        magazine:  [recX + 30,         cy + 42],
+        handguard: [recX + recW + 14,  cy + 20],
+      },
+    };
+  }
+
+  if (type === 'shotgun') {
+    // Wide receiver, pump tube below barrel, medium barrel
+    const stockX = W * 0.12, recX = W * 0.38, recW = 90, recH = 32;
+    const barrelEnd = recX + recW + 110 * Math.min(1, barrelLen / 0.55);
+    return {
+      elements: <>
+        {/* Stock */}
+        <rect x={stockX} y={cy - 10} width={recX - stockX} height={20} fill={fill} stroke={stroke} strokeWidth="1" rx="3" />
+        {/* Receiver — wider */}
+        <rect x={recX - 8} y={cy - recH/2} width={recW} height={recH} fill={fill} stroke={stroke} strokeWidth="1.5" rx="4" />
+        {/* Pistol grip */}
+        <rect x={recX + 20} y={cy + 16} width={26} height={40} fill={fill} stroke={stroke} strokeWidth="1" rx="3" />
+        {/* Barrel */}
+        <rect x={recX + recW - 8} y={cy - 8} width={barrelEnd - recX - recW + 8} height={16} fill={mid} stroke={stroke} strokeWidth="1.5" rx="2" />
+        {/* Pump tube below barrel */}
+        <rect x={recX + recW - 8} y={cy + 10} width={barrelEnd - recX - recW - 20} height={10} fill={dark} stroke={stroke} strokeWidth="1" rx="2" />
+        {/* Pump grip */}
+        <rect x={recX + recW + 30} y={cy + 8} width={28} height={14} fill={fill} stroke={stroke} strokeWidth="1.5" rx="3" />
+        {/* Trigger guard */}
+        <path d={`M ${recX+18} ${cy+16} Q ${recX+32} ${cy+32} ${recX+50} ${cy+16}`} fill="none" stroke={stroke} strokeWidth="1.5" />
+        {/* Top rib */}
+        <rect x={recX + recW - 8} y={cy - recH/2 - 3} width={barrelEnd - recX - recW + 8} height={4} fill={dark} stroke={stroke} strokeWidth="1" />
+      </>,
+      anchors: {
+        optic:     [recX + recW * 0.3, cy - recH/2 - 22],
+        muzzle:    [barrelEnd + 8,     cy],
+        stock:     [stockX - 8,        cy],
+        magazine:  [recX + 34,         cy + 46],
+        handguard: [recX + recW + 42,  cy + 20],
+      },
+    };
+  }
+
+  if (type === 'sniper') {
+    // Very long barrel, bipod legs, prominent scope rail
+    const stockX = W * 0.06, recX = W * 0.36, recW = 85, recH = 28;
+    const barrelEnd = recX + recW + 160 * Math.min(1, barrelLen / 0.72);
+    return {
+      elements: <>
+        {/* Stock — long cheek piece */}
+        <rect x={stockX} y={cy - 8} width={recX - stockX} height={16} fill={fill} stroke={stroke} strokeWidth="1" rx="2" />
+        <rect x={stockX + 10} y={cy - 16} width={recX - stockX - 20} height={10} fill={mid} stroke={stroke} strokeWidth="1" rx="2" />
+        {/* Receiver */}
+        <rect x={recX - 6} y={cy - recH/2} width={recW} height={recH} fill={fill} stroke={stroke} strokeWidth="1.5" rx="3" />
+        {/* Pistol grip */}
+        <rect x={recX + 22} y={cy + 14} width={22} height={42} fill={fill} stroke={stroke} strokeWidth="1" rx="3" />
+        {/* Long barrel */}
+        <rect x={recX + recW - 6} y={cy - 6} width={barrelEnd - recX - recW + 6} height={12} fill={mid} stroke={stroke} strokeWidth="1.5" rx="1" />
+        {/* Muzzle brake */}
+        <rect x={barrelEnd - 12} y={cy - 10} width={12} height={20} fill={fill} stroke={stroke} strokeWidth="1.5" rx="2" />
+        {/* Scope rail — long */}
+        <rect x={recX} y={cy - recH/2 - 7} width={recW + 20} height={8} fill={dark} stroke={stroke} strokeWidth="1" rx="1" />
+        {/* Bipod legs */}
+        <line x1={recX + recW + 30} y1={cy + 6} x2={recX + recW + 20} y2={cy + 38} stroke={stroke} strokeWidth="2" />
+        <line x1={recX + recW + 30} y1={cy + 6} x2={recX + recW + 40} y2={cy + 38} stroke={stroke} strokeWidth="2" />
+        {/* Trigger guard */}
+        <path d={`M ${recX+20} ${cy+14} Q ${recX+32} ${cy+28} ${recX+46} ${cy+14}`} fill="none" stroke={stroke} strokeWidth="1.5" />
+      </>,
+      anchors: {
+        optic:     [recX + recW * 0.3, cy - recH/2 - 28],
+        muzzle:    [barrelEnd + 8,     cy],
+        stock:     [stockX - 8,        cy],
+        magazine:  [recX + 34,         cy + 46],
+        handguard: [recX + recW + 30,  cy + 20],
+      },
+    };
+  }
+
+  if (type === 'launcher') {
+    // Tube launcher: long tube, shoulder rest, grip below
+    const stockX = W * 0.10, recX = W * 0.30, tubeH = 36;
+    const barrelEnd = recX + 260 * Math.min(1, barrelLen / 0.20);
+    return {
+      elements: <>
+        {/* Shoulder rest */}
+        <rect x={stockX} y={cy - 14} width={recX - stockX} height={28} fill={fill} stroke={stroke} strokeWidth="1" rx="4" />
+        {/* Main tube */}
+        <rect x={recX} y={cy - tubeH/2} width={barrelEnd - recX} height={tubeH} fill={fill} stroke={stroke} strokeWidth="2" rx="6" />
+        {/* Grip */}
+        <rect x={recX + 60} y={cy + tubeH/2} width={24} height={44} fill={fill} stroke={stroke} strokeWidth="1" rx="3" />
+        {/* Trigger guard */}
+        <path d={`M ${recX+58} ${cy+tubeH/2} Q ${recX+72} ${cy+tubeH/2+16} ${recX+86} ${cy+tubeH/2}`} fill="none" stroke={stroke} strokeWidth="1.5" />
+        {/* Front grip */}
+        <rect x={recX + 160} y={cy + tubeH/2} width={20} height={32} fill={fill} stroke={stroke} strokeWidth="1" rx="3" />
+        {/* Sight rail */}
+        <rect x={recX + 40} y={cy - tubeH/2 - 6} width={80} height={7} fill={dark} stroke={stroke} strokeWidth="1" rx="1" />
+      </>,
+      anchors: {
+        optic:     [recX + 80,         cy - tubeH/2 - 22],
+        muzzle:    [barrelEnd + 8,     cy],
+        stock:     [stockX - 8,        cy],
+        magazine:  [recX + 72,         cy + tubeH/2 + 44],
+        handguard: [recX + 170,        cy + tubeH/2 + 16],
+      },
+    };
+  }
+
+  // Default: rifle / assault rifle / civilian rifle
+  const stockX = W * 0.12, recX = W * 0.42, recW = 80, recH = 34;
+  const barrelEnd = recX + recW + 120 * Math.min(1, barrelLen / 0.65);
+  return {
+    elements: <>
+      {/* Stock */}
+      <rect x={stockX} y={cy - 10} width={recX - stockX} height={20} fill={fill} stroke={stroke} strokeWidth="1" rx="2" />
+      {/* Cheek piece */}
+      <rect x={stockX + 8} y={cy - 18} width={recX - stockX - 24} height={10} fill={mid} stroke={stroke} strokeWidth="1" rx="2" />
+      {/* Receiver */}
+      <rect x={recX - 6} y={cy - recH/2} width={recW} height={recH} fill={fill} stroke={stroke} strokeWidth="1.5" rx="3" />
+      {/* Pistol grip */}
+      <rect x={recX + 18} y={cy + 16} width={22} height={42} fill={fill} stroke={stroke} strokeWidth="1" rx="3" />
+      {/* Handguard */}
+      <rect x={recX + recW - 6} y={cy - 8} width={80} height={16} fill={mid} stroke={stroke} strokeWidth="1" rx="2" />
+      {/* Barrel */}
+      <rect x={recX + recW + 74} y={cy - 5} width={barrelEnd - recX - recW - 74} height={10} fill={mid} stroke={stroke} strokeWidth="1" rx="1" />
+      {/* Top rail */}
+      <rect x={recX} y={cy - recH/2 - 5} width={recW + 60} height={6} fill={dark} stroke={stroke} strokeWidth="1" />
+      {/* Mag well */}
+      <rect x={recX + 4} y={cy + 16} width={18} height={8} fill={dark} stroke={stroke} strokeWidth="1" />
+      {/* Trigger guard */}
+      <path d={`M ${recX+16} ${cy+16} Q ${recX+28} ${cy+30} ${recX+42} ${cy+16}`} fill="none" stroke={stroke} strokeWidth="1.5" />
+      {/* Gas block */}
+      <rect x={recX + recW + 10} y={cy - 12} width={10} height={8} fill={dark} stroke={stroke} strokeWidth="1" />
+    </>,
+    anchors: {
+      optic:     [recX + recW * 0.2, cy - recH/2 - 24],
+      muzzle:    [barrelEnd + 8,     cy],
+      stock:     [stockX - 8,        cy],
+      magazine:  [recX + 14,         cy + 52],
+      handguard: [recX + recW + 34,  cy + 20],
+    },
+  };
+}
+
 function WeaponDiagram({ weapon, slots }: {
   weapon: WeaponDef;
   slots: Record<SlotType, SlotState>;
 }) {
   const W = 520, H = 200;
-  const recX = W * 0.45, recY = H * 0.50;
-  const stockX = W * 0.12;
-  const muzzleX = W * 0.12 + (W * 0.82) * Math.min(1, weapon.barrelLen / 0.65);
-  const barrelX2 = muzzleX;
-
-  const anchors: Record<SlotType, [number, number]> = {
-    optic:     [recX + 18, recY - 46],
-    muzzle:    [barrelX2 + 10, recY],
-    stock:     [stockX - 8, recY],
-    magazine:  [recX + 8, recY + 52],
-    handguard: [recX + 60, recY + 36],
-  };
+  const silType: SilhouetteType = CATEGORY_SILHOUETTE[weapon.category] ?? 'rifle';
+  const { elements, anchors } = buildSilhouette(silType, W, H, weapon.barrelLen);
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%"
       style={{ fontFamily: 'monospace', userSelect: 'none' }}>
-      <rect width={W} height={H} fill="#0a0804" />
-      <rect x={stockX} y={recY - 10} width={recX - stockX} height={20} fill="#2a2016" stroke="#5a4820" strokeWidth="1" rx="2" />
-      <rect x={recX - 20} y={recY + 10} width={22} height={32} fill="#2a2016" stroke="#5a4820" strokeWidth="1" rx="3" />
-      <rect x={recX - 4} y={recY - 18} width={72} height={36} fill="#2e2416" stroke="#7a6030" strokeWidth="1.5" rx="3" />
-      <path d={`M ${recX + 4} ${recY + 18} Q ${recX + 22} ${recY + 32} ${recX + 40} ${recY + 18}`}
-        fill="none" stroke="#5a4820" strokeWidth="1.5" />
-      <rect x={recX + 68} y={recY - 7} width={barrelX2 - (recX + 68)} height={14} fill="#252018" stroke="#5a4820" strokeWidth="1" rx="1" />
-      <rect x={recX + 68} y={recY - 10} width={Math.min(80, barrelX2 - recX - 68)} height={20} fill="#2a2016" stroke="#5a4820" strokeWidth="1" rx="2" />
-      <rect x={recX + 4} y={recY + 18} width={40} height={8} fill="#1e1810" stroke="#5a4820" strokeWidth="1" />
-      <rect x={recX + 20} y={recY - 18} width={28} height={8} fill="#1a1408" stroke="#6a5020" strokeWidth="1" />
-      <rect x={recX + 10} y={recY - 22} width={8} height={5} fill="#3a2e18" stroke="#7a6030" strokeWidth="1" />
-      <rect x={barrelX2 - 14} y={recY - 16} width={4} height={9} fill="#3a2e18" stroke="#7a6030" strokeWidth="1" />
+      <rect width={W} height={H} fill="#080f09" />
+      {elements}
       {ALL_SLOTS.map(slot => {
         const state = slots[slot];
         const attId = state.attachId;
@@ -78,7 +271,7 @@ function WeaponDiagram({ weapon, slots }: {
           <g key={slot}>
             <line x1={ax} y1={ay} x2={ax} y2={ay} stroke={active ? color : '#3a3020'} strokeWidth="1" strokeDasharray="2,2" />
             <circle cx={ax} cy={ay} r={active ? 9 : 6}
-              fill={active ? color + '33' : '#1a1408'}
+              fill={active ? color + '33' : '#0e1a0e'}
               stroke={active ? color : '#3a3020'}
               strokeWidth={active ? 2 : 1} />
             {active && (
@@ -86,7 +279,7 @@ function WeaponDiagram({ weapon, slots }: {
                 <text x={ax} y={ay + 1} textAnchor="middle" dominantBaseline="middle"
                   fontSize="8" fontWeight="bold" fill={color}>✓</text>
                 <rect x={ax + 12} y={ay - 10} width={Math.min(140, att!.name.length * 5.5 + 8)} height={20}
-                  fill="#12100a" stroke={color} strokeWidth="1" rx="3" />
+                  fill="#0c1510" stroke={color} strokeWidth="1" rx="3" />
                 <text x={ax + 16} y={ay + 1} dominantBaseline="middle"
                   fontSize="8.5" fill={color} fontWeight="bold">
                   {att!.name.length > 22 ? att!.name.slice(0, 21) + '…' : att!.name}
@@ -100,9 +293,9 @@ function WeaponDiagram({ weapon, slots }: {
           </g>
         );
       })}
-      <text x="8" y="14" fontSize="11" fill="#d4a017" fontWeight="bold">{weapon.name}</text>
+      <text x="8" y="14" fontSize="11" fill="#27ae60" fontWeight="bold">{weapon.name}</text>
       <text x="8" y="26" fontSize="8.5" fill="#8a7840">{weapon.classname} · {weapon.category}</text>
-      <text x={W - 8} y="14" fontSize="8" fill="#6a5a3a" textAnchor="end">TOP-DOWN VIEW</text>
+      <text x={W - 8} y="14" fontSize="8" fill="#3a6a3a" textAnchor="end">TOP-DOWN VIEW</text>
       <text x={W - 8} y="24" fontSize="7" fill="#5a4820" textAnchor="end">← STOCK — MUZZLE →</text>
     </svg>
   );
@@ -123,7 +316,7 @@ function VehicleDiagram({ vehicle, lootSlots, onSlotClick, activeSlotId }: {
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%"
       style={{ fontFamily: 'monospace', userSelect: 'none', cursor: 'pointer' }}>
-      <rect width={W} height={H} fill="#0a0804" />
+      <rect width={W} height={H} fill="#080f09" />
 
       {/* Vehicle body */}
       <rect x={W * 0.12} y={H * 0.25} width={W * 0.76} height={H * 0.50}
@@ -150,11 +343,11 @@ function VehicleDiagram({ vehicle, lootSlots, onSlotClick, activeSlotId }: {
         return (
           <g key={slot.id} onClick={() => onSlotClick(slot.id)} style={{ cursor: 'pointer' }}>
             <circle cx={cx} cy={cy} r={isActive ? 13 : 10}
-              fill={hasItem ? '#27ae6033' : isActive ? '#d4a01722' : '#1a1810'}
-              stroke={isActive ? '#d4a017' : color}
+              fill={hasItem ? '#27ae6033' : isActive ? '#27ae6022' : '#1a1810'}
+              stroke={isActive ? '#27ae60' : color}
               strokeWidth={isActive ? 2 : 1.5} />
             <text x={cx} y={cy + 1} textAnchor="middle" dominantBaseline="middle"
-              fontSize="8" fill={isActive ? '#d4a017' : hasItem ? '#27ae60' : '#6a5a3a'}
+              fontSize="8" fill={isActive ? '#27ae60' : hasItem ? '#27ae60' : '#3a6a3a'}
               fontWeight="bold">
               {hasItem ? '✓' : '+'}
             </text>
@@ -162,9 +355,9 @@ function VehicleDiagram({ vehicle, lootSlots, onSlotClick, activeSlotId }: {
             {isActive && (
               <g>
                 <rect x={cx - 55} y={cy - 28} width={110} height={16}
-                  fill="#12100a" stroke="#d4a017" strokeWidth="1" rx="3" />
+                  fill="#0c1510" stroke="#27ae60" strokeWidth="1" rx="3" />
                 <text x={cx} y={cy - 20} textAnchor="middle" dominantBaseline="middle"
-                  fontSize="7.5" fill="#d4a017" fontWeight="bold">
+                  fontSize="7.5" fill="#27ae60" fontWeight="bold">
                   {name.length > 18 ? name.slice(0, 17) + '…' : name}
                 </text>
               </g>
@@ -175,7 +368,7 @@ function VehicleDiagram({ vehicle, lootSlots, onSlotClick, activeSlotId }: {
 
       <text x="8" y="14" fontSize="11" fill="#3498db" fontWeight="bold">{vehicle.icon} {vehicle.name}</text>
       <text x="8" y="26" fontSize="8.5" fill="#8a7840">{vehicle.classname} · {vehicle.length}m × {vehicle.width}m</text>
-      <text x={W - 8} y="14" fontSize="8" fill="#6a5a3a" textAnchor="end">TOP-DOWN VIEW</text>
+      <text x={W - 8} y="14" fontSize="8" fill="#3a6a3a" textAnchor="end">TOP-DOWN VIEW</text>
       <text x={W - 8} y="24" fontSize="7" fill="#5a4820" textAnchor="end">Click slot to assign loot</text>
     </svg>
   );
@@ -212,7 +405,7 @@ function buildWeaponExport(
   }
   return [
     `// ── ${weapon.name} Display Group ──────────────────────────────────`,
-    `// Generated by DankDayZ Ultimate Builder — WEAPON DISPLAY TOOL`,
+    `// Generated by Dank's Dayz Studio — WEAPON DISPLAY TOOL`,
     `// Each item spawns separately — players pick up and attach themselves`,
     ``,
     ...items.map(i => `SpawnObject("${i.classname}", ${i.x.toFixed(3)}, ${i.y.toFixed(3)}, ${i.z.toFixed(3)}, 0, 0, 0); // ${i.note}`),
@@ -265,7 +458,7 @@ function buildVehicleExport(
   }
   return [
     `// ── ${vehicle.name} Display Group ──────────────────────────────────`,
-    `// Generated by DankDayZ Ultimate Builder — VEHICLE DISPLAY TOOL`,
+    `// Generated by Dank's Dayz Studio — VEHICLE DISPLAY TOOL`,
     `// Vehicle spawns with pre-positioned loot items`,
     ``,
     ...items.map((i, idx) =>
@@ -341,7 +534,7 @@ function WeaponPanel() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Mobile toggle — only visible on small screens */}
-      <div className="flex sm:hidden border-b border-[#2e2518] bg-[#12100a] shrink-0">
+      <div className="flex sm:hidden border-b border-[#1a2e1a] bg-[#0c1510] shrink-0">
         <button onClick={() => setMobileView('config')}
           className={`flex-1 py-2 text-[10px] font-bold transition-all border-b-2 ${mobileView === 'config' ? 'text-[#e67e22] border-[#e67e22]' : 'text-[#8a7840] border-transparent'}`}>
           ⚙ Configure
@@ -353,23 +546,23 @@ function WeaponPanel() {
       </div>
       <div className="flex flex-1 min-h-0 overflow-hidden">
       {/* Sidebar */}
-      <div className={`w-full sm:w-72 shrink-0 border-r border-[#2e2518] bg-[#0e0c08] flex-col overflow-y-auto ${mobileView === 'output' ? 'hidden sm:flex' : 'flex'}`}>
-        <div className="px-3 py-2 border-b border-[#2e2518]">
-          <div className="text-[#9a8858] text-[9px] uppercase tracking-wider mb-1.5">Select Weapon</div>
+      <div className={`w-full sm:w-72 shrink-0 border-r border-[#1a2e1a] bg-[#0a1209] flex-col overflow-y-auto ${mobileView === 'output' ? 'hidden sm:flex' : 'flex'}`}>
+        <div className="px-3 py-2 border-b border-[#1a2e1a]">
+          <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-1.5">Select Weapon</div>
           {WEAPON_CATEGORIES.map(cat => {
             const catWeapons = WEAPONS.filter(w => w.category === cat);
             if (catWeapons.length === 0) return null;
             return (
               <div key={cat} className="mb-2">
-                <div className="text-[#6a5a3a] text-[8px] uppercase tracking-wider mb-1 pl-0.5">{cat}</div>
+                <div className="text-[#3a6a3a] text-[8px] uppercase tracking-wider mb-1 pl-0.5">{cat}</div>
                 <div className="flex flex-col gap-0.5">
                   {catWeapons.map(w => (
                     <button key={w.id} onClick={() => changeWeapon(w.id)}
                       className={`text-left px-2 py-1.5 rounded-sm text-[10px] font-bold transition-all border ${
-                        weaponId === w.id ? 'bg-[#e67e22]/20 border-[#e67e22] text-[#e67e22]' : 'border-[#2e2518] text-[#b09a6a] hover:border-[#5a4820] hover:text-[#c8b99a]'
+                        weaponId === w.id ? 'bg-[#e67e22]/20 border-[#e67e22] text-[#e67e22]' : 'border-[#1a2e1a] text-[#b09a6a] hover:border-[#5a4820] hover:text-[#b8d4b8]'
                       }`}>
                       {w.name}
-                      <span className={`ml-1 text-[8px] font-normal ${weaponId === w.id ? 'text-[#e67e2299]' : 'text-[#6a5a3a]'}`}>{w.classname}</span>
+                      <span className={`ml-1 text-[8px] font-normal ${weaponId === w.id ? 'text-[#e67e2299]' : 'text-[#3a6a3a]'}`}>{w.classname}</span>
                     </button>
                   ))}
                 </div>
@@ -379,14 +572,14 @@ function WeaponPanel() {
         </div>
 
         {weapon.note && (
-          <div className="px-3 py-2 border-b border-[#2e2518]">
+          <div className="px-3 py-2 border-b border-[#1a2e1a]">
             <div className="text-[#8a7840] text-[9px] leading-relaxed">{weapon.note}</div>
           </div>
         )}
 
-        <div className="px-3 py-2 border-b border-[#2e2518]">
+        <div className="px-3 py-2 border-b border-[#1a2e1a]">
           <div className="flex items-center justify-between mb-2">
-            <div className="text-[#9a8858] text-[9px] uppercase tracking-wider">Attachments</div>
+            <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider">Attachments</div>
             {activeCount > 0 && (
               <button onClick={clearAll}
                 className="text-[8px] text-[#c0392b] hover:text-[#e74c3c] border border-[#c0392b33] hover:border-[#c0392b] px-1.5 py-0.5 rounded-sm transition-all">
@@ -406,7 +599,7 @@ function WeaponPanel() {
                 <button disabled={disabled} onClick={() => setExpandedSlot(isExpanded ? null : slot)}
                   className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-sm border text-left transition-all ${
                     disabled ? 'border-[#1e1c18] text-[#3a3020] cursor-not-allowed opacity-50'
-                    : att ? 'border-[#3a3020] bg-[#0f0e0a]' : 'border-[#2e2518] hover:border-[#5a4820]'
+                    : att ? 'border-[#3a3020] bg-[#0f0e0a]' : 'border-[#1a2e1a] hover:border-[#5a4820]'
                   }`}>
                   <span className="w-2 h-2 rounded-full shrink-0" style={{ background: disabled ? '#3a3020' : color }} />
                   <span className="flex-1 text-[10px] font-bold" style={{ color: disabled ? '#3a3020' : att ? color : '#b09a6a' }}>
@@ -418,10 +611,10 @@ function WeaponPanel() {
                   {!disabled && <span className="text-[#5a4820] text-[9px]">{isExpanded ? '▲' : '▼'}</span>}
                 </button>
                 {isExpanded && !disabled && (
-                  <div className="mt-1 ml-2 border-l border-[#2e2518] pl-2 flex flex-col gap-1">
+                  <div className="mt-1 ml-2 border-l border-[#1a2e1a] pl-2 flex flex-col gap-1">
                     <button onClick={() => setSlotAttach(slot, null)}
                       className={`text-left px-2 py-1 text-[9px] rounded-sm border transition-all ${
-                        !state.attachId ? 'border-[#5a4820] text-[#c8b99a] bg-[#1a1408]' : 'border-[#1e1c18] text-[#6a5a3a] hover:border-[#3a2e18]'
+                        !state.attachId ? 'border-[#5a4820] text-[#b8d4b8] bg-[#0e1a0e]' : 'border-[#1e1c18] text-[#3a6a3a] hover:border-[#3a2e18]'
                       }`}>
                       — No {SLOT_LABELS[slot].split(' ')[1] || 'attachment'} —
                     </button>
@@ -438,7 +631,7 @@ function WeaponPanel() {
                     ))}
                     {state.attachId && (
                       <div className="mt-1 bg-[#0d0b07] border border-[#1e1c18] rounded-sm px-2 py-1.5">
-                        <div className="text-[8px] text-[#6a5a3a] mb-1.5 uppercase tracking-wider">Fine-tune position</div>
+                        <div className="text-[8px] text-[#3a6a3a] mb-1.5 uppercase tracking-wider">Fine-tune position</div>
                         {(['dx', 'dy', 'dz'] as const).map(axis => (
                           <div key={axis} className="flex items-center gap-2 mb-1">
                             <span className="text-[8px] w-12 text-[#8a7840]">
@@ -448,13 +641,13 @@ function WeaponPanel() {
                               value={state[axis]}
                               onChange={e => setSlotOffset(slot, axis, +e.target.value)}
                               className="flex-1 h-1 accent-[#e67e22]" />
-                            <span className="text-[8px] text-[#c8b99a] w-10 text-right">
+                            <span className="text-[8px] text-[#b8d4b8] w-10 text-right">
                               {state[axis] >= 0 ? '+' : ''}{state[axis].toFixed(3)}
                             </span>
                           </div>
                         ))}
                         <button onClick={() => setSlots(prev => ({ ...prev, [slot]: { ...prev[slot], dx: 0, dy: 0, dz: 0 } }))}
-                          className="text-[7px] text-[#6a5a3a] hover:text-[#9a8858] transition-all mt-0.5">
+                          className="text-[7px] text-[#3a6a3a] hover:text-[#5a8a5a] transition-all mt-0.5">
                           Reset offsets
                         </button>
                       </div>
@@ -466,8 +659,8 @@ function WeaponPanel() {
           })}
         </div>
 
-        <div className="px-3 py-2 border-b border-[#2e2518]">
-          <div className="text-[#9a8858] text-[9px] uppercase tracking-wider mb-1.5">Weapon World Position</div>
+        <div className="px-3 py-2 border-b border-[#1a2e1a]">
+          <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-1.5">Weapon World Position</div>
           {(['X','Y','Z'] as const).map((axis, i) => {
             const val = [posX, posY, posZ][i];
             const set = [setPosX, setPosY, setPosZ][i];
@@ -475,19 +668,19 @@ function WeaponPanel() {
               <div key={axis} className="flex items-center gap-2 mb-1">
                 <span className="text-[9px] text-[#8a7840] w-5 font-bold">{axis}</span>
                 <input type="number" step="0.1" value={val} onChange={e => set(+e.target.value)}
-                  className="flex-1 bg-[#12100a] border border-[#2e2518] rounded-sm px-2 py-0.5 text-[10px] text-[#c8b99a] focus:outline-none focus:border-[#e67e22] min-w-0" />
+                  className="flex-1 bg-[#0c1510] border border-[#1a2e1a] rounded-sm px-2 py-0.5 text-[10px] text-[#b8d4b8] focus:outline-none focus:border-[#e67e22] min-w-0" />
               </div>
             );
           })}
         </div>
 
         <div className="px-3 py-2">
-          <div className="text-[#9a8858] text-[9px] uppercase tracking-wider mb-1.5">Export Format</div>
+          <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-1.5">Export Format</div>
           <div className="flex gap-1">
             {(['json', 'initc'] as const).map(f => (
               <button key={f} onClick={() => setFmt(f)}
                 className={`flex-1 py-1.5 text-[10px] font-bold rounded-sm border transition-all ${
-                  fmt === f ? 'bg-[#e67e22] text-[#0a0804] border-[#e67e22]' : 'text-[#b09a6a] border-[#2e2518] hover:border-[#6a5820]'
+                  fmt === f ? 'bg-[#e67e22] text-[#080f09] border-[#e67e22]' : 'text-[#b09a6a] border-[#1a2e1a] hover:border-[#6a5820]'
                 }`}>
                 {f === 'json' ? 'JSON' : 'init.c'}
               </button>
@@ -498,26 +691,26 @@ function WeaponPanel() {
 
       {/* Main panel */}
       <div className={`flex-1 flex-col overflow-hidden min-w-0 ${mobileView === 'config' ? 'hidden sm:flex' : 'flex'}`}>
-        <div className="flex items-center gap-3 px-3 py-1.5 bg-[#0e0c08] border-b border-[#2e2518] shrink-0">
+        <div className="flex items-center gap-3 px-3 py-1.5 bg-[#0a1209] border-b border-[#1a2e1a] shrink-0">
           <span className="text-[#e67e22] font-bold text-[11px]">{weapon.name}</span>
-          <span className="text-[#6a5a3a] text-[10px]">{weapon.classname}</span>
-          <span className="text-[#9a8858] text-[10px]">· {activeCount} attachment{activeCount !== 1 ? 's' : ''} · {activeCount + 1} objects</span>
+          <span className="text-[#3a6a3a] text-[10px]">{weapon.classname}</span>
+          <span className="text-[#5a8a5a] text-[10px]">· {activeCount} attachment{activeCount !== 1 ? 's' : ''} · {activeCount + 1} objects</span>
           <div className="ml-auto flex gap-1.5">
             <button onClick={copy} className={`px-3 py-1 text-[10px] font-bold border rounded-sm transition-all ${
-              copied ? 'bg-[#27ae60] text-[#0a0804] border-[#27ae60]' : 'border-[#e67e22] text-[#e67e22] hover:bg-[#e67e22] hover:text-[#0a0804]'
+              copied ? 'bg-[#27ae60] text-[#080f09] border-[#27ae60]' : 'border-[#e67e22] text-[#e67e22] hover:bg-[#e67e22] hover:text-[#080f09]'
             }`}>
               {copied ? '✓ Copied!' : 'Copy'}
             </button>
             <button onClick={download}
-              className="px-3 py-1 text-[10px] font-bold bg-[#e67e22] text-[#0a0804] border border-[#e67e22] rounded-sm hover:bg-[#d35400] hover:border-[#d35400] transition-all">
+              className="px-3 py-1 text-[10px] font-bold bg-[#e67e22] text-[#080f09] border border-[#e67e22] rounded-sm hover:bg-[#d35400] hover:border-[#d35400] transition-all">
               ⬇ Download
             </button>
           </div>
         </div>
-        <div className="bg-[#060402] border-b border-[#2e2518] shrink-0" style={{ height: '200px' }}>
+        <div className="bg-[#060402] border-b border-[#1a2e1a] shrink-0" style={{ height: '200px' }}>
           <WeaponDiagram weapon={weapon} slots={slots} />
         </div>
-        <div className="flex gap-2 px-3 py-2 bg-[#0a0906] border-b border-[#2e2518] shrink-0 overflow-x-auto">
+        <div className="flex gap-2 px-3 py-2 bg-[#0a0906] border-b border-[#1a2e1a] shrink-0 overflow-x-auto">
           {ALL_SLOTS.map(slot => {
             const att   = slots[slot].attachId ? ATTACHMENT_MAP[slots[slot].attachId!] : null;
             const color = SLOT_COLORS[slot];
@@ -533,18 +726,18 @@ function WeaponPanel() {
           })}
         </div>
         <div className="flex-1 flex flex-col min-h-0">
-          <div className="flex items-center gap-2 px-3 py-1.5 border-b border-[#2e2518] bg-[#0e0c08] shrink-0">
+          <div className="flex items-center gap-2 px-3 py-1.5 border-b border-[#1a2e1a] bg-[#0a1209] shrink-0">
             <span className="text-[#e67e22] text-[10px] font-bold tracking-wider">
               ▶ {fmt === 'json' ? 'JSON SPAWNER' : 'INIT.C OUTPUT'}
             </span>
-            <span className="text-[#6a5a3a] text-[9px]">
+            <span className="text-[#3a6a3a] text-[9px]">
               {fmt === 'json' ? '— paste into JSON Spawner mod' : '— paste into your mission init.c SpawnObject() block'}
             </span>
           </div>
-          <pre className="flex-1 overflow-auto px-3 py-2 text-[10px] text-[#c8b99a] leading-relaxed whitespace-pre bg-[#070503]">{output}</pre>
+          <pre className="flex-1 overflow-auto px-3 py-2 text-[10px] text-[#b8d4b8] leading-relaxed whitespace-pre bg-[#070503]">{output}</pre>
         </div>
-        <div className="px-3 py-1.5 border-t border-[#2e2518] bg-[#0e0c08] shrink-0">
-          <div className="text-[8px] text-[#6a5a3a] leading-relaxed">
+        <div className="px-3 py-1.5 border-t border-[#1a2e1a] bg-[#0a1209] shrink-0">
+          <div className="text-[8px] text-[#3a6a3a] leading-relaxed">
             💡 Tip: Spawn all items at the same time so they appear together. Lay the weapon flat (ypr 0,0,0). Players pick up attachments and slot them manually.
           </div>
         </div>
@@ -615,7 +808,7 @@ function VehiclePanel() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Mobile toggle — only visible on small screens */}
-      <div className="flex sm:hidden border-b border-[#2e2518] bg-[#12100a] shrink-0">
+      <div className="flex sm:hidden border-b border-[#1a2e1a] bg-[#0c1510] shrink-0">
         <button onClick={() => setMobileView('config')}
           className={`flex-1 py-2 text-[10px] font-bold transition-all border-b-2 ${mobileView === 'config' ? 'text-[#3498db] border-[#3498db]' : 'text-[#8a7840] border-transparent'}`}>
           ⚙ Configure
@@ -627,17 +820,17 @@ function VehiclePanel() {
       </div>
       <div className="flex flex-1 min-h-0 overflow-hidden">
       {/* Sidebar */}
-      <div className={`w-full sm:w-72 shrink-0 border-r border-[#2e2518] bg-[#0e0c08] flex-col overflow-y-auto ${mobileView === 'output' ? 'hidden sm:flex' : 'flex'}`}>
-        <div className="px-3 py-2 border-b border-[#2e2518]">
-          <div className="text-[#9a8858] text-[9px] uppercase tracking-wider mb-1.5">Select Vehicle</div>
+      <div className={`w-full sm:w-72 shrink-0 border-r border-[#1a2e1a] bg-[#0a1209] flex-col overflow-y-auto ${mobileView === 'output' ? 'hidden sm:flex' : 'flex'}`}>
+        <div className="px-3 py-2 border-b border-[#1a2e1a]">
+          <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-1.5">Select Vehicle</div>
           <div className="flex flex-col gap-0.5">
             {VEHICLES.map(v => (
               <button key={v.id} onClick={() => changeVehicle(v.id)}
                 className={`text-left px-2 py-1.5 rounded-sm text-[10px] font-bold transition-all border ${
-                  vehicleId === v.id ? 'bg-[#3498db]/20 border-[#3498db] text-[#3498db]' : 'border-[#2e2518] text-[#b09a6a] hover:border-[#4a6a8a] hover:text-[#c8b99a]'
+                  vehicleId === v.id ? 'bg-[#3498db]/20 border-[#3498db] text-[#3498db]' : 'border-[#1a2e1a] text-[#b09a6a] hover:border-[#4a6a8a] hover:text-[#b8d4b8]'
                 }`}>
                 <span className="mr-1.5">{v.icon}</span>{v.name}
-                <div className={`text-[7.5px] font-normal mt-0.5 ${vehicleId === v.id ? 'text-[#3498db99]' : 'text-[#6a5a3a]'}`}>
+                <div className={`text-[7.5px] font-normal mt-0.5 ${vehicleId === v.id ? 'text-[#3498db99]' : 'text-[#3a6a3a]'}`}>
                   {v.classname} · {v.desc}
                 </div>
               </button>
@@ -646,10 +839,10 @@ function VehiclePanel() {
         </div>
 
         {/* Active slot loot picker */}
-        <div className="px-3 py-2 border-b border-[#2e2518] flex-1">
+        <div className="px-3 py-2 border-b border-[#1a2e1a] flex-1">
           {activeSlotId ? (
             <>
-              <div className="text-[#9a8858] text-[9px] uppercase tracking-wider mb-1">
+              <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-1">
                 Loot for: <span className="text-[#3498db]">{activeSlot?.label}</span>
               </div>
 
@@ -659,8 +852,8 @@ function VehiclePanel() {
                 <input type="number" min={1} max={5} step={1}
                   value={lootSlots[activeSlotId]?.qty ?? 1}
                   onChange={e => setSlotQty(activeSlotId, Math.max(1, Math.min(5, +e.target.value)))}
-                  className="w-14 bg-[#12100a] border border-[#2e2518] rounded-sm px-1.5 py-0.5 text-[10px] text-[#c8b99a] focus:outline-none focus:border-[#3498db]" />
-                <span className="text-[8px] text-[#6a5a3a]">(1–5 copies)</span>
+                  className="w-14 bg-[#0c1510] border border-[#1a2e1a] rounded-sm px-1.5 py-0.5 text-[10px] text-[#b8d4b8] focus:outline-none focus:border-[#3498db]" />
+                <span className="text-[8px] text-[#3a6a3a]">(1–5 copies)</span>
               </div>
 
               {/* Search */}
@@ -669,7 +862,7 @@ function VehiclePanel() {
                 placeholder="Search items..."
                 value={lootSearch}
                 onChange={e => setLootSearch(e.target.value)}
-                className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[9px] px-2 py-0.5 rounded-sm mb-1.5 focus:outline-none focus:border-[#3498db]"
+                className="w-full bg-[#060402] border border-[#1a2e1a] text-[#b8d4b8] text-[9px] px-2 py-0.5 rounded-sm mb-1.5 focus:outline-none focus:border-[#3498db]"
               />
 
               {/* Category filter */}
@@ -677,7 +870,7 @@ function VehiclePanel() {
                 {['All', ...LOOT_CATEGORIES].map(cat => (
                   <button key={cat} onClick={() => setLootCategory(cat)}
                     className={`text-[8px] px-1.5 py-0.5 rounded-sm border transition-all ${
-                      lootCategory === cat ? 'border-[#3498db] text-[#3498db] bg-[#0e1820]' : 'border-[#2e2518] text-[#8a7840] hover:text-[#b09a6a]'
+                      lootCategory === cat ? 'border-[#3498db] text-[#3498db] bg-[#0e1820]' : 'border-[#1a2e1a] text-[#8a7840] hover:text-[#b09a6a]'
                     }`}>
                     {cat}
                   </button>
@@ -687,12 +880,12 @@ function VehiclePanel() {
               {/* None option */}
               <button onClick={() => setSlotItem(activeSlotId, null)}
                 className={`w-full text-left px-2 py-1 text-[9px] rounded-sm border transition-all mb-1 ${
-                  !lootSlots[activeSlotId]?.itemClassname ? 'border-[#5a4820] text-[#c8b99a] bg-[#1a1408]' : 'border-[#1e1c18] text-[#6a5a3a] hover:border-[#3a2e18]'
+                  !lootSlots[activeSlotId]?.itemClassname ? 'border-[#5a4820] text-[#b8d4b8] bg-[#0e1a0e]' : 'border-[#1e1c18] text-[#3a6a3a] hover:border-[#3a2e18]'
                 }`}>— Empty (no loot) —</button>
 
               <div className="flex flex-col gap-0.5 max-h-52 overflow-y-auto">
                 {filteredItems.length === 0 && (
-                  <div className="text-[#6a5a3a] text-[8px] text-center py-3">No items match — try a different search or category</div>
+                  <div className="text-[#3a6a3a] text-[8px] text-center py-3">No items match — try a different search or category</div>
                 )}
                 {filteredItems.map(item => {
                   const isSelected = lootSlots[activeSlotId]?.itemClassname === item.classname;
@@ -709,14 +902,14 @@ function VehiclePanel() {
               </div>
             </>
           ) : (
-            <div className="text-[#6a5a3a] text-[9px] leading-relaxed py-2">
+            <div className="text-[#3a6a3a] text-[9px] leading-relaxed py-2">
               Click a slot on the vehicle diagram to assign loot to it. Slots marked with <span className="text-[#27ae60]">✓</span> have items assigned.
             </div>
           )}
         </div>
 
         {filledCount > 0 && (
-          <div className="px-3 py-1.5 border-b border-[#2e2518]">
+          <div className="px-3 py-1.5 border-b border-[#1a2e1a]">
             <button onClick={clearAll}
               className="w-full text-[8px] text-[#c0392b] hover:text-[#e74c3c] border border-[#c0392b33] hover:border-[#c0392b] px-1.5 py-1 rounded-sm transition-all">
               Clear All Loot
@@ -724,8 +917,8 @@ function VehiclePanel() {
           </div>
         )}
 
-        <div className="px-3 py-2 border-b border-[#2e2518]">
-          <div className="text-[#9a8858] text-[9px] uppercase tracking-wider mb-1.5">Vehicle World Position</div>
+        <div className="px-3 py-2 border-b border-[#1a2e1a]">
+          <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-1.5">Vehicle World Position</div>
           {(['X','Y','Z'] as const).map((axis, i) => {
             const val = [posX, posY, posZ][i];
             const set = [setPosX, setPosY, setPosZ][i];
@@ -733,24 +926,24 @@ function VehiclePanel() {
               <div key={axis} className="flex items-center gap-2 mb-1">
                 <span className="text-[9px] text-[#8a7840] w-5 font-bold">{axis}</span>
                 <input type="number" step="0.1" value={val} onChange={e => set(+e.target.value)}
-                  className="flex-1 bg-[#12100a] border border-[#2e2518] rounded-sm px-2 py-0.5 text-[10px] text-[#c8b99a] focus:outline-none focus:border-[#3498db] min-w-0" />
+                  className="flex-1 bg-[#0c1510] border border-[#1a2e1a] rounded-sm px-2 py-0.5 text-[10px] text-[#b8d4b8] focus:outline-none focus:border-[#3498db] min-w-0" />
               </div>
             );
           })}
           <div className="flex items-center gap-2 mt-1">
             <span className="text-[9px] text-[#8a7840] w-10 font-bold">Yaw°</span>
             <input type="number" step="1" min={0} max={360} value={vehYaw} onChange={e => setVehYaw(+e.target.value)}
-              className="flex-1 bg-[#12100a] border border-[#2e2518] rounded-sm px-2 py-0.5 text-[10px] text-[#c8b99a] focus:outline-none focus:border-[#3498db] min-w-0" />
+              className="flex-1 bg-[#0c1510] border border-[#1a2e1a] rounded-sm px-2 py-0.5 text-[10px] text-[#b8d4b8] focus:outline-none focus:border-[#3498db] min-w-0" />
           </div>
         </div>
 
         <div className="px-3 py-2">
-          <div className="text-[#9a8858] text-[9px] uppercase tracking-wider mb-1.5">Export Format</div>
+          <div className="text-[#5a8a5a] text-[9px] uppercase tracking-wider mb-1.5">Export Format</div>
           <div className="flex gap-1">
             {(['json', 'initc'] as const).map(f => (
               <button key={f} onClick={() => setFmt(f)}
                 className={`flex-1 py-1.5 text-[10px] font-bold rounded-sm border transition-all ${
-                  fmt === f ? 'bg-[#3498db] text-[#0a0804] border-[#3498db]' : 'text-[#b09a6a] border-[#2e2518] hover:border-[#3a6a9a]'
+                  fmt === f ? 'bg-[#3498db] text-[#080f09] border-[#3498db]' : 'text-[#b09a6a] border-[#1a2e1a] hover:border-[#3a6a9a]'
                 }`}>
                 {f === 'json' ? 'JSON' : 'init.c'}
               </button>
@@ -761,18 +954,18 @@ function VehiclePanel() {
 
       {/* Main panel */}
       <div className={`flex-1 flex-col overflow-hidden min-w-0 ${mobileView === 'config' ? 'hidden sm:flex' : 'flex'}`}>
-        <div className="flex items-center gap-3 px-3 py-1.5 bg-[#0e0c08] border-b border-[#2e2518] shrink-0">
+        <div className="flex items-center gap-3 px-3 py-1.5 bg-[#0a1209] border-b border-[#1a2e1a] shrink-0">
           <span className="text-[#3498db] font-bold text-[11px]">{vehicle.icon} {vehicle.name}</span>
-          <span className="text-[#6a5a3a] text-[10px]">{vehicle.classname}</span>
-          <span className="text-[#9a8858] text-[10px]">· {filledCount}/{vehicle.slots.length} slots filled</span>
+          <span className="text-[#3a6a3a] text-[10px]">{vehicle.classname}</span>
+          <span className="text-[#5a8a5a] text-[10px]">· {filledCount}/{vehicle.slots.length} slots filled</span>
           <div className="ml-auto flex gap-1.5">
             <button onClick={copy} className={`px-3 py-1 text-[10px] font-bold border rounded-sm transition-all ${
-              copied ? 'bg-[#27ae60] text-[#0a0804] border-[#27ae60]' : 'border-[#3498db] text-[#3498db] hover:bg-[#3498db] hover:text-[#0a0804]'
+              copied ? 'bg-[#27ae60] text-[#080f09] border-[#27ae60]' : 'border-[#3498db] text-[#3498db] hover:bg-[#3498db] hover:text-[#080f09]'
             }`}>
               {copied ? '✓ Copied!' : 'Copy'}
             </button>
             <button onClick={download}
-              className="px-3 py-1 text-[10px] font-bold bg-[#3498db] text-[#0a0804] border border-[#3498db] rounded-sm hover:bg-[#2980b9] hover:border-[#2980b9] transition-all">
+              className="px-3 py-1 text-[10px] font-bold bg-[#3498db] text-[#080f09] border border-[#3498db] rounded-sm hover:bg-[#2980b9] hover:border-[#2980b9] transition-all">
               ⬇ Download
             </button>
           </div>
@@ -780,14 +973,14 @@ function VehiclePanel() {
 
         {/* Filled slot summary */}
         {filledCount > 0 && (
-          <div className="flex flex-wrap gap-1.5 px-3 py-2 border-b border-[#2e2518] bg-[#0a0906] shrink-0">
+          <div className="flex flex-wrap gap-1.5 px-3 py-2 border-b border-[#1a2e1a] bg-[#0a0906] shrink-0">
             {vehicle.slots.filter(s => lootSlots[s.id]?.itemClassname).map(slot => {
               const item = LOOT_ITEMS.find(i => i.classname === lootSlots[slot.id]?.itemClassname);
               const qty = lootSlots[slot.id]?.qty ?? 1;
               return (
                 <div key={slot.id} className="flex items-center gap-1 bg-[#0e1820] border border-[#3498db33] rounded-sm px-1.5 py-0.5">
                   <span className="text-[#3498db] text-[8px] font-bold">{slot.label}:</span>
-                  <span className="text-[#c8b99a] text-[8px]">{item?.name ?? lootSlots[slot.id].itemClassname}</span>
+                  <span className="text-[#b8d4b8] text-[8px]">{item?.name ?? lootSlots[slot.id].itemClassname}</span>
                   {qty > 1 && <span className="text-[#6a9abf] text-[7px]">×{qty}</span>}
                 </div>
               );
@@ -796,7 +989,7 @@ function VehiclePanel() {
         )}
 
         {/* Diagram */}
-        <div className="bg-[#060402] border-b border-[#2e2518] shrink-0" style={{ height: '220px' }}>
+        <div className="bg-[#060402] border-b border-[#1a2e1a] shrink-0" style={{ height: '220px' }}>
           <VehicleDiagram
             vehicle={vehicle}
             lootSlots={lootSlots}
@@ -807,16 +1000,16 @@ function VehiclePanel() {
 
         {/* Output */}
         <div className="flex-1 flex flex-col min-h-0">
-          <div className="flex items-center gap-2 px-3 py-1.5 border-b border-[#2e2518] bg-[#0e0c08] shrink-0">
+          <div className="flex items-center gap-2 px-3 py-1.5 border-b border-[#1a2e1a] bg-[#0a1209] shrink-0">
             <span className="text-[#3498db] text-[10px] font-bold tracking-wider">
               ▶ {fmt === 'json' ? 'JSON SPAWNER' : 'INIT.C OUTPUT'}
             </span>
-            <span className="text-[#6a5a3a] text-[9px]">vehicle + {filledCount} loot item{filledCount !== 1 ? 's' : ''}</span>
+            <span className="text-[#3a6a3a] text-[9px]">vehicle + {filledCount} loot item{filledCount !== 1 ? 's' : ''}</span>
           </div>
-          <pre className="flex-1 overflow-auto px-3 py-2 text-[10px] text-[#c8b99a] leading-relaxed whitespace-pre bg-[#070503]">{output}</pre>
+          <pre className="flex-1 overflow-auto px-3 py-2 text-[10px] text-[#b8d4b8] leading-relaxed whitespace-pre bg-[#070503]">{output}</pre>
         </div>
-        <div className="px-3 py-1.5 border-t border-[#2e2518] bg-[#0e0c08] shrink-0">
-          <div className="text-[8px] text-[#6a5a3a] leading-relaxed">
+        <div className="px-3 py-1.5 border-t border-[#1a2e1a] bg-[#0a1209] shrink-0">
+          <div className="text-[8px] text-[#3a6a3a] leading-relaxed">
             💡 Tip: Vehicle spawns first, then loot items around/inside it. Loot positions auto-rotate with vehicle yaw. All items appear on server restart.
           </div>
         </div>
@@ -832,23 +1025,24 @@ export default function WeaponBuilder() {
   const [subTab, setSubTab] = useState<'weapons' | 'vehicles'>('weapons');
 
   return (
-    <div className="flex flex-col h-full bg-[#0a0804] text-[#c8b99a] font-mono overflow-hidden">
+    <div className="flex flex-col h-full bg-[#080f09] text-[#b8d4b8] font-mono overflow-hidden">
 
       {/* Sub-tab bar */}
-      <div className="flex items-center gap-0 border-b border-[#2e2518] bg-[#0e0c08] shrink-0">
+      <div className="flex items-center gap-0 border-b border-[#1a2e1a] bg-[#0a1209] shrink-0">
+        <span className="px-3 text-[8px] text-[#3a6a3a] font-bold tracking-widest border-r border-[#1a2e1a] py-2.5">DANK'S DAYZ STUDIO</span>
         <button onClick={() => setSubTab('weapons')}
           className={`px-4 py-2.5 text-[11px] font-black tracking-wider transition-all border-b-2 ${
             subTab === 'weapons'
-              ? 'border-[#e67e22] text-[#e67e22] bg-[#0e0c08]'
-              : 'border-transparent text-[#8a7840] hover:text-[#c8b99a]'
+              ? 'border-[#e67e22] text-[#e67e22] bg-[#0a1209]'
+              : 'border-transparent text-[#8a7840] hover:text-[#b8d4b8]'
           }`}>
           🔫 WEAPON DISPLAY
         </button>
         <button onClick={() => setSubTab('vehicles')}
           className={`px-4 py-2.5 text-[11px] font-black tracking-wider transition-all border-b-2 ${
             subTab === 'vehicles'
-              ? 'border-[#3498db] text-[#3498db] bg-[#0e0c08]'
-              : 'border-transparent text-[#8a7840] hover:text-[#c8b99a]'
+              ? 'border-[#3498db] text-[#3498db] bg-[#0a1209]'
+              : 'border-transparent text-[#8a7840] hover:text-[#b8d4b8]'
           }`}>
           🚗 VEHICLE DISPLAY
         </button>

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { zipSync, strToU8 } from "fflate";
 import { getShapePoints, Point3D } from "@/lib/shapeGenerators";
 import { SHAPE_DEFS, SHAPE_GROUPS, ParamDef } from "@/lib/shapeParams";
 import { DAYZ_OBJECTS, OBJECT_GROUPS, formatInitC, HELPER_FUNC } from "@/lib/dayzObjects";
@@ -7,10 +8,14 @@ import WeaponBuilder from "@/WeaponBuilder";
 import BunkerMaker from "@/BunkerMaker";
 import MazeMaker from "@/MazeMaker";
 import RaceTrackMaker from "@/RaceTrackMaker";
+import RandomStructureMaker from "@/RandomStructureMaker";
+import ConstructionZoneMaker from "@/ConstructionZoneMaker";
+import TeleportMaker from "@/TeleportMaker";
 import PointCloud3D from "@/PointCloud3D";
 
-type EditorMode = "architect" | "text" | "builds" | "weapons" | "bunker" | "maze" | "race";
+type EditorMode = "architect" | "text" | "builds" | "weapons" | "bunker" | "maze" | "race" | "random" | "conzone" | "teleport";
 type OutputFormat = "initc" | "json";
+
 
 // ─── TEXT FONT ───────────────────────────────────────────────────────────────
 const TEXT_FONT: Record<string, number[][]> = {
@@ -117,7 +122,7 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     ctx.fillRect(0, 0, PW, PH);
 
     if (!pts.length) {
-      ctx.fillStyle = "#2e2518";
+      ctx.fillStyle = "#0e2010";
       ctx.font = `bold ${Math.round(12 * dpr)}px 'Courier New'`;
       ctx.textAlign = "center";
       ctx.fillText("← Configure shape  ·  real-time 3D updates instantly", Math.round(PW / 2), Math.round(PH / 2));
@@ -367,9 +372,9 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
 type Preset = { label: string; shape: string; params: Record<string, number>; category: string; suggestedClass?: string };
 const QUICK_PRESETS: Preset[] = [
   // 🚀 Sci-Fi & Space
-  { category: "🚀 Sci-Fi", label: "Death Star",       shape: "deathstar",        params: { radius:40,latSegs:10,lonSegs:16,dishRadius:12,dishDepth:8,dishLat:30 }, suggestedClass: "Land_Wall_Concrete_4m_DE" },
-  { category: "🚀 Sci-Fi", label: "Orbital Ring",     shape: "orbital_station",  params: { radius:40 },                                                             suggestedClass: "Land_Wall_Concrete_4m_DE" },
-  { category: "🚀 Sci-Fi", label: "DNA Helix",        shape: "dna_double",       params: { radius:12,height:40,turns:5,pointsPerTurn:12 },                         suggestedClass: "Barrel_Blue" },
+  { category: "🚀 Sci-Fi", label: "Death Star",       shape: "deathstar",        params: { radius:50,latSegs:16,lonSegs:24,dishRadius:14,dishDepth:8,dishLat:30 }, suggestedClass: "Land_GasTank_Big" },
+  { category: "🚀 Sci-Fi", label: "Orbital Ring",     shape: "orbital_station",  params: { radius:40 },                                                             suggestedClass: "Land_Wall_Concrete_8m_DE" },
+  { category: "🚀 Sci-Fi", label: "DNA Helix",        shape: "dna_double",       params: { radius:12,height:40,turns:5,pointsPerTurn:12 },                         suggestedClass: "Land_GasTank_Cylindrical" },
   { category: "🚀 Sci-Fi", label: "Millennium Falcon",shape: "millennium_falcon", params: { radius:30 },                                                             suggestedClass: "StaticObj_Container_1D" },
   { category: "🚀 Sci-Fi", label: "Sci-Fi Gate",      shape: "sci_fi_gate",      params: { width:40,height:30 },                                                    suggestedClass: "Land_Wall_Concrete_8m_DE" },
   { category: "🚀 Sci-Fi", label: "Reactor Core",     shape: "reactor_core",     params: { radius:25,height:30,rings:5 },                                           suggestedClass: "Land_GasTank_Big" },
@@ -391,8 +396,8 @@ const QUICK_PRESETS: Preset[] = [
   { category: "🏛️ Monuments", label: "Stonehenge",    shape: "stonehenge",      params: { outerRadius:30,innerRadius:16,stoneHeight:8,stoneWidth:2,outerCount:30,trilithonCount:5,archCount:6 }, suggestedClass: "DZ\\rocks_bliss\\rock_monolith1.p3d" },
   { category: "🏛️ Monuments", label: "Celtic Ring",   shape: "celtic_ring",     params: { radius:30,height:8,stoneCount:24,archCount:6 },                                   suggestedClass: "DZ\\rocks_bliss\\rock_monolith1.p3d" },
   { category: "🏛️ Monuments", label: "Azkaban",       shape: "azkaban_tower",   params: { baseRadius:20,height:60,towerCount:5 },                                           suggestedClass: "Land_Castle_Wall_6m_DE" },
-  { category: "🏛️ Monuments", label: "Skyscraper",    shape: "skyscraper",      params: { width:20,height:100,floors:20 },                                                  suggestedClass: "StaticObj_Container_1D" },
-  { category: "🏛️ Monuments", label: "Pyramid Aztec", shape: "pyramid_stepped", params: { baseSize:80,height:40,steps:6,shrink:0.18,spacing:6 },                            suggestedClass: "DZ\\rocks_bliss\\stone9_moss.p3d" },
+  { category: "🏛️ Monuments", label: "Skyscraper",    shape: "skyscraper",      params: { width:20,height:100,floors:20 },                                                  suggestedClass: "Land_HouseBlock_5F" },
+  { category: "🏛️ Monuments", label: "Pyramid Aztec", shape: "pyramid_stepped", params: { baseSize:100,height:50,steps:7,shrink:0.15,spacing:4 },                           suggestedClass: "DZ\\rocks_bliss\\stone9_moss.p3d" },
   { category: "🏛️ Monuments", label: "Prison Tower",  shape: "prison_tower",    params: { baseRadius:15,height:40,tiers:4 },                                               suggestedClass: "Land_Prison_Wall_Large" },
   { category: "🏛️ Monuments", label: "Star Fort",     shape: "star_fort",       params: { outerR:50,innerR:30,points:5,height:12,rings:2 },                                suggestedClass: "Land_Castle_Wall_3m_DE" },
   { category: "🏛️ Monuments", label: "Bastion Round", shape: "bastion_round",   params: { radius:30,height:10,towerRadius:6,towerCount:4 },                                suggestedClass: "Land_Castle_Tower_Round_DE" },
@@ -435,15 +440,15 @@ const QUICK_PRESETS: Preset[] = [
   { category: "🎬 Movies", label: "Iron Throne",    shape: "iron_throne",      params: { scale:1, height:14, spikeCount:11 },                         suggestedClass: "Sword" },
   { category: "🎬 Movies", label: "The Wall (GoT)", shape: "wall_line",        params: { length:120,height:24,rings:12,spacing:2 },                   suggestedClass: "Land_Castle_Wall2_30" },
   { category: "🎬 Movies", label: "Eye of Sauron",  shape: "eye_of_sauron",    params: { height:90,towerWidth:28,eyeRadius:22 },                      suggestedClass: "Land_Castle_Tower_Round_DE" },
-  { category: "🎬 Movies", label: "Avengers Tower", shape: "skyscraper",       params: { width:14,height:130,floors:26 },                             suggestedClass: "Land_HouseBlock_5F" },
-  { category: "🎬 Movies", label: "Borg Cube",      shape: "borg_cube",        params: { size:40,gridLines:4 },                                       suggestedClass: "StaticObj_Container_1D" },
-  { category: "🎬 Movies", label: "Mordor Gate",    shape: "sci_fi_gate",      params: { width:80,height:60 },                                        suggestedClass: "Land_Castle_Wall_6m_DE" },
-  { category: "🎬 Movies", label: "Minas Tirith",   shape: "pyramid_stepped",  params: { baseSize:90,height:60,steps:7,shrink:0.15,spacing:6 },       suggestedClass: "Land_Castle_Wall_3m_DE" },
+  { category: "🎬 Movies", label: "Avengers Tower", shape: "avengers_tower",   params: { width:14,height:130,floors:26 },                             suggestedClass: "Land_HouseBlock_5F" },
+  { category: "🎬 Movies", label: "Borg Cube",      shape: "borg_cube",        params: { size:50,gridLines:8 },                                       suggestedClass: "StaticObj_Container_1D" },
+  { category: "🎬 Movies", label: "Mordor Gate",    shape: "mordor_gate",      params: { width:80,height:60 },                                        suggestedClass: "Land_Castle_Wall_6m_DE" },
+  { category: "🎬 Movies", label: "Minas Tirith",   shape: "pyramid_stepped",  params: { baseSize:120,height:80,steps:9,shrink:0.12,spacing:4 },      suggestedClass: "Land_Castle_Wall_3m_DE" },
   { category: "🎬 Movies", label: "T-800 Terminator",shape: "t800_endoskeleton",params: { height:22,width:10 },                                       suggestedClass: "Land_HBarrier_5m_DE" },
   { category: "🎬 Movies", label: "Squid Game Arena",shape: "disc",            params: { radius:50,rings:6,points:36,innerRadius:0 },                 suggestedClass: "Land_BarrierConcrete_01_DE" },
   { category: "🎬 Movies", label: "Predator Camp",  shape: "disc",             params: { radius:10,rings:2,points:12,innerRadius:6 },                 suggestedClass: "Land_HBarrier_5m_DE" },
   { category: "🎬 Movies", label: "Nether Portal",  shape: "sci_fi_gate",      params: { width:16,height:22 },                                        suggestedClass: "Land_Castle_Wall_3m_DE" },
-  { category: "🎬 Movies", label: "Star Destroyer",  shape: "pyramid_stepped", params: { baseSize:120,height:20,steps:3,shrink:0.3,spacing:6 },       suggestedClass: "StaticObj_Container_1D" },
+  { category: "🎬 Movies", label: "Star Destroyer",  shape: "pyramid_stepped", params: { baseSize:200,height:30,steps:8,shrink:0.2,spacing:3 },        suggestedClass: "StaticObj_Container_1D" },
 
   // 🤖 Transformers
   { category: "🤖 Transformers", label: "Bumblebee",    shape: "tf_bumblebee",  params: { scale: 1 }, suggestedClass: "StaticObj_Container_1D" },
@@ -454,7 +459,7 @@ const QUICK_PRESETS: Preset[] = [
   { category: "🤖 Transformers", label: "Megatron",      shape: "tf_megatron",  params: { scale: 1 }, suggestedClass: "Land_HBarrier_5m_DE" },
   { category: "🤖 Transformers", label: "Starscream",    shape: "tf_starscream",params: { scale: 1 }, suggestedClass: "Land_HBarrier_5m_DE" },
 
-  { category: "🦄 Fantasy & Mythic", label: "Dragon", shape: "dragon", params: { scale: 1, length: 12, wings: 8, neck: 4 }, suggestedClass: "DZ\\rocks_bliss\\rock_spike1.p3d" },
+  { category: "🦄 Fantasy & Mythic", label: "Dragon", shape: "dragon", params: { scale: 1.5, length: 16, wings: 10, neck: 5 }, suggestedClass: "DZ\\rocks_bliss\\rock_spike1.p3d" },
 
   { category: "🏴‍☠️ Nautical", label: "Pirate Ship (3-mast)", shape: "pirate_ship", params: { scale: 1, length: 20, masts: 3 },   suggestedClass: "Land_Ship_Big_FrontA" },
   { category: "🏴‍☠️ Nautical", label: "Sloop (1-mast)",       shape: "pirate_ship", params: { scale: 0.6, length: 12, masts: 1 }, suggestedClass: "Land_Boat_Small1" },
@@ -582,6 +587,52 @@ const QUICK_PRESETS: Preset[] = [
   { category: "🐣 Easter", label: "Easter Cross (grand)",  shape: "easter_cross", params: { height: 35, width: 24, thickness: 3, eggs: 20 }, suggestedClass: "EasterEgg" },
   { category: "🐣 Easter", label: "Easter Egg Ring (12)",  shape: "disc",         params: { radius: 20, rings: 1, points: 12, innerRadius: 18 }, suggestedClass: "EasterEgg" },
   { category: "🐣 Easter", label: "Easter Egg Spiral",     shape: "helix",        params: { radius: 15, height: 12, turns: 3, pointsPerTurn: 8, strands: 1 }, suggestedClass: "EasterEgg" },
+
+  // ⚡ Teleporters
+  { category: "⚡ Teleporters", label: "Sci-Fi Pad",       shape: "teleporter_scifi",        params: { scale: 1, radius: 4,  columnCount: 4, padRadius: 4  }, suggestedClass: "Land_GasTank_Cylindrical" },
+  { category: "⚡ Teleporters", label: "Transporter Pad",  shape: "teleporter_transporter",  params: { scale: 1, radius: 4,  columnCount: 6, padRadius: 4  }, suggestedClass: "Land_BarrierConcrete_01_DE" },
+  { category: "⚡ Teleporters", label: "Stargate Portal",  shape: "teleporter_stargate",     params: { scale: 1, ringDiameter: 8, padRadius: 4 },             suggestedClass: "Land_Castle_Gate_DE" },
+  { category: "⚡ Teleporters", label: "UFO Abduction",    shape: "teleporter_ufo",          params: { scale: 1, radius: 4,  padRadius: 4  },                 suggestedClass: "Land_Mil_Cargo_Tower" },
+  { category: "⚡ Teleporters", label: "Ritual Circle",    shape: "teleporter_ritual",       params: { scale: 1, radius: 4,  stones: 8, padRadius: 4 },       suggestedClass: "Land_Castle_Wall_Tower_DE" },
+  { category: "⚡ Teleporters", label: "Lava Portal",      shape: "teleporter_lava",         params: { scale: 1, radius: 4,  padRadius: 4  },                 suggestedClass: "Land_Wreck_T72Wreck" },
+  { category: "⚡ Teleporters", label: "Bunker Hatch",     shape: "teleporter_bunker_hatch", params: { scale: 1, radius: 4,  padRadius: 4  },                 suggestedClass: "Land_Mil_Barracks_i" },
+  { category: "⚡ Teleporters", label: "Event Mega-Pad",   shape: "teleporter_event_mega",   params: { scale: 1, radius: 12, padRadius: 12 },                 suggestedClass: "Land_Mil_Barracks_HQ" },
+  // ⚡ Teleporter variants (Phase 2)
+  { category: "⚡ Teleporters", label: "Mirror Portal",      shape: "mirror_portal",       params: { scale: 1, radius: 5  }, suggestedClass: "Land_Castle_Gate_DE" },
+  { category: "⚡ Teleporters", label: "Wormhole Vortex",    shape: "wormhole_vortex",     params: { scale: 1, radius: 5  }, suggestedClass: "Land_Mil_Cargo_Tower" },
+  { category: "⚡ Teleporters", label: "Obelisk Pad",        shape: "obelisk_pad",         params: { scale: 1, radius: 4  }, suggestedClass: "Land_Castle_Wall_Tower_DE" },
+  { category: "⚡ Teleporters", label: "Neon Grid",          shape: "neon_grid",           params: { scale: 1, radius: 5, lines: 5 }, suggestedClass: "Land_BarrierConcrete_01_DE" },
+  { category: "⚡ Teleporters", label: "Summoning Pentagram",shape: "summoning_pentagram",  params: { scale: 1, radius: 5  }, suggestedClass: "Land_Mil_Watchtower" },
+  // 🚀 Sci-Fi (Phase 2)
+  { category: "🚀 Sci-Fi", label: "Space Elevator",    shape: "space_elevator",  params: { scale: 1, height: 20, radius: 3 }, suggestedClass: "Land_Mil_Cargo_Tower" },
+  { category: "🚀 Sci-Fi", label: "Dyson Fragment",    shape: "dyson_fragment",  params: { scale: 1, radius: 8  }, suggestedClass: "Land_Mil_Barracks_HQ" },
+  { category: "🚀 Sci-Fi", label: "Warp Core",         shape: "warp_core",       params: { scale: 1, length: 12, radius: 2 }, suggestedClass: "Land_GasTank_Cylindrical" },
+  { category: "🚀 Sci-Fi", label: "Quantum Relay",     shape: "quantum_relay",   params: { scale: 1, radius: 6, cubes: 6 }, suggestedClass: "Land_Mil_Cargo_Cont_Big" },
+  { category: "🚀 Sci-Fi", label: "Satellite Array",   shape: "satellite_array", params: { scale: 1, radius: 5  }, suggestedClass: "Land_Mil_Cargo_Tower" },
+  { category: "🚀 Sci-Fi", label: "Cryo Chamber",      shape: "cryo_chamber",    params: { scale: 1, pods: 4    }, suggestedClass: "Land_Mil_Barracks_i" },
+  // 🏛 Architecture (Phase 2)
+  { category: "🏛 Architecture", label: "Roman Aqueduct",    shape: "roman_aqueduct",   params: { scale: 1, spans: 5, archWidth: 4, archHeight: 6 }, suggestedClass: "Land_Castle_Wall_3m_DE" },
+  { category: "🏛 Architecture", label: "Gothic Cathedral",  shape: "gothic_cathedral", params: { scale: 1, width: 8, height: 14 }, suggestedClass: "Land_Castle_Wall_Tower_DE" },
+  { category: "🏛 Architecture", label: "Lighthouse",        shape: "lighthouse_tower", params: { scale: 1, height: 12 }, suggestedClass: "Land_Mil_Cargo_Tower" },
+  { category: "🏛 Architecture", label: "Water Tower",       shape: "water_tower",      params: { scale: 1, legHeight: 6, tankRadius: 3 }, suggestedClass: "Land_GasTank_Cylindrical" },
+  { category: "🏛 Architecture", label: "Ziggurat",          shape: "ziggurat",         params: { scale: 1, tiers: 4, baseWidth: 10 }, suggestedClass: "Land_Mil_Barracks_HQ" },
+  // 🌿 Nature (Phase 2)
+  { category: "🌿 Nature", label: "Mushroom Ring",   shape: "mushroom_ring",  params: { scale: 1, radius: 6, count: 7 }, suggestedClass: "Land_Mil_Tent_Big" },
+  { category: "🌿 Nature", label: "Crystal Cave",    shape: "crystal_cave",   params: { scale: 1, radius: 5, crystals: 12 }, suggestedClass: "Land_Castle_Wall_Tower_DE" },
+  { category: "🌿 Nature", label: "Meteor Crater",   shape: "meteor_crater",  params: { scale: 1, radius: 7 }, suggestedClass: "Land_Wreck_T72Wreck" },
+  { category: "🌿 Nature", label: "Ancient Stump",   shape: "ancient_stump",  params: { scale: 1, radius: 3 }, suggestedClass: "Land_Mil_Cargo_Cont_Big" },
+  // 🎪 Events (Phase 2 — new category)
+  { category: "🎪 Events", label: "Boxing Ring",       shape: "boxing_ring",      params: { scale: 1, halfWidth: 5 }, suggestedClass: "Land_BarrierConcrete_01_DE" },
+  { category: "🎪 Events", label: "Podium Stage",      shape: "podium_stage",     params: { scale: 1, width: 8, depth: 5 }, suggestedClass: "Land_Mil_Barracks_HQ" },
+  { category: "🎪 Events", label: "Finish Line Arch",  shape: "finish_arch",      params: { scale: 1, width: 8, height: 5 }, suggestedClass: "Land_Castle_Gate_DE" },
+  { category: "🎪 Events", label: "Deathmatch Arena",  shape: "deathmatch_arena", params: { scale: 1, radius: 8 }, suggestedClass: "Land_Castle_Wall_3m_DE" },
+  { category: "🎪 Events", label: "Capture Tower",     shape: "capture_tower",    params: { scale: 1, height: 8 }, suggestedClass: "Land_Mil_Cargo_Tower" },
+  // 💀 Dark (Phase 2)
+  { category: "💀 Dark", label: "Gallows",          shape: "gallows",          params: { scale: 1, height: 5 }, suggestedClass: "Land_Mil_Watchtower" },
+  { category: "💀 Dark", label: "Bone Throne",      shape: "bone_throne",      params: { scale: 1, height: 4 }, suggestedClass: "Land_Mil_Barracks_i" },
+  { category: "💀 Dark", label: "Crypt Entrance",   shape: "crypt_entrance",   params: { scale: 1, width: 3, height: 4 }, suggestedClass: "Land_Castle_Gate_DE" },
+  { category: "💀 Dark", label: "Sacrificial Pit",  shape: "sacrificial_pit",  params: { scale: 1, radius: 5 }, suggestedClass: "Land_Castle_Wall_Tower_DE" },
+  { category: "💀 Dark", label: "Plague Shrine",    shape: "plague_shrine",    params: { scale: 1, height: 6 }, suggestedClass: "Land_Mil_Cargo_Tower" },
 ];
 
 // Arena shapes available for randomization
@@ -614,6 +665,13 @@ const FAMOUS_LOCATIONS = [
   { name: "📍 Staroye",                   x: 10000, y: 200, z: 6500  },
   { name: "📍 Novodmitrovsk",            x: 11400, y: 200, z: 4900  },
   { name: "📍 Kamenka",                  x: 1800,  y: 10,  z: 2200  },
+  // ─── Sakhal ───────────────────────────────────────────────────────────────
+  { name: "🌋 Sakhal — Underground Complex", x: 4200, y: 200, z: 6800 },
+  { name: "🌋 Sakhal — Airfield",            x: 6500, y: 10,  z: 4200 },
+  { name: "🌋 Sakhal — Military Base",       x: 3800, y: 50,  z: 3200 },
+  { name: "🌋 Sakhal — Harbour",             x: 7200, y: 5,   z: 5600 },
+  { name: "🌋 Sakhal — Volcano Summit",      x: 5000, y: 850, z: 5000 },
+  { name: "🌋 Sakhal — Town Centre",         x: 4800, y: 15,  z: 4500 },
 ];
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
@@ -636,6 +694,7 @@ export default function App() {
   const [pitch, setPitch] = useState(0);
   const [roll, setRoll] = useState(0);
   const [scaleVal, setScaleVal] = useState(1.0);
+
   const [format, setFormat] = useState<OutputFormat>("initc");
   const [cePersist, setCePersist] = useState(0);
   const [includeHelper, setIncludeHelper] = useState(true);
@@ -654,10 +713,32 @@ export default function App() {
   const [presetFilter, setPresetFilter] = useState("");
   const [presetCategory, setPresetCategory] = useState("All");
 
+  // ── FAVOURITES ────────────────────────────────────────────────────────────
+  const [favourites, setFavourites] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem("dayz_fav_presets") ?? "[]"); } catch { return []; }
+  });
+  const toggleFavourite = useCallback((label: string) => {
+    setFavourites(prev => {
+      const next = prev.includes(label) ? prev.filter(l => l !== label) : [...prev, label];
+      try { localStorage.setItem("dayz_fav_presets", JSON.stringify(next)); } catch { /* ignore */ }
+      return next;
+    });
+  }, []);
+
   // Completed Builds mode
   const [selectedBuildId, setSelectedBuildId] = useState<string>(COMPLETED_BUILDS[0]?.id || "");
   const [buildFilter, setBuildFilter] = useState("");
   const [buildCategory, setBuildCategory] = useState("All");
+  const [zipGenerating, setZipGenerating] = useState(false);
+
+  // Live object count for selected build (replaces hardcoded b.frameCount)
+  const selectedBuildLiveCount = useMemo(() => {
+    const b = COMPLETED_BUILDS.find(x => x.id === selectedBuildId);
+    if (!b) return 0;
+    const pts = getShapePoints(b.shape, b.params);
+    const extras = (b.extraFrame || "").split(",").map(s => s.trim()).filter(Boolean).length;
+    return pts.length * (1 + extras);
+  }, [selectedBuildId]);
 
   // Text maker
   const [textInput, setTextInput] = useState("DAYZ");
@@ -748,12 +829,13 @@ export default function App() {
       setObjSearch("");
     }
     showToast(`✓ Loaded: ${preset.label}`);
+    // Auto-generate after state settles
+    setTimeout(() => generate(), 50);
   };
 
   const surpriseMe = () => {
     const pick = QUICK_PRESETS[Math.floor(Math.random() * QUICK_PRESETS.length)];
     applyPreset(pick);
-    showToast(`🎲 Surprise: ${pick.label}`);
   };
 
   const randomizeArenaParams = (shapeKey: string) => {
@@ -796,8 +878,9 @@ export default function App() {
   const setParam = (id: string, v: number) => setParams(prev => ({ ...prev, [id]: v }));
 
   // ── BUILD CODE STRING (pure — returns without setting state) ──────────────
-  const buildShapeCode = (): string => {
-    const ptsToUse = displayPoints;
+  const buildShapeCode = (overridePts?: Point3D[], overrideClass?: string): string => {
+    const ptsToUse = overridePts ?? displayPoints;
+    const usedClass = overrideClass ?? objClass;
     const extras = extraObjs.split(",").map(s => s.trim()).filter(Boolean);
     const lines: string[] = [];
     const jsonObjects: object[] = [];
@@ -805,7 +888,7 @@ export default function App() {
     if (format === "initc") {
       if (includeHelper) lines.push(HELPER_FUNC);
       lines.push(`// Shape: ${SHAPE_DEFS[shapeType]?.label || shapeType}`);
-      lines.push(`// Asset: ${objClass}   Base: <${posX}, ${posY}, ${posZ}>`);
+      lines.push(`// Asset: ${usedClass}   Base: <${posX}, ${posY}, ${posZ}>`);
       lines.push(`// YPR: ${pitch}° / ${yaw}° / ${roll}°   Scale: ${scaleVal}${autoOrient ? "   [Auto-Orient: ON]" : ""}`);
       lines.push(`// Objects: ${ptsToUse.length * (1 + extras.length)}`);
       if (buildNotes.trim()) lines.push(`// Notes: ${buildNotes.trim().replace(/\n+/g, " | ")}`);
@@ -828,12 +911,12 @@ export default function App() {
         : yaw;
 
       if (format === "initc") {
-        lines.push(formatInitC(objClass, wx, wy, wz, pitch, ptYaw, roll, scaleVal));
+        lines.push(formatInitC(usedClass, wx, wy, wz, pitch, ptYaw, roll, scaleVal));
         extras.forEach((ex, ei) => {
           lines.push(formatInitC(ex, wx, wy + stackY * (ei + 1), wz, pitch, ptYaw, roll, scaleVal));
         });
       } else {
-        jsonObjects.push({ name: objClass, pos: [+wx.toFixed(6), +wy.toFixed(6), +wz.toFixed(6)], ypr: [+pitch.toFixed(4), +ptYaw.toFixed(4), +roll.toFixed(4)], scale: +scaleVal.toFixed(4), enableCEPersistency: cePersist, customString: "" });
+        jsonObjects.push({ name: usedClass, pos: [+wx.toFixed(6), +wy.toFixed(6), +wz.toFixed(6)], ypr: [+pitch.toFixed(4), +ptYaw.toFixed(4), +roll.toFixed(4)], scale: +scaleVal.toFixed(4), enableCEPersistency: cePersist, customString: "" });
         extras.forEach((ex, ei) => {
           jsonObjects.push({ name: ex, pos: [+wx.toFixed(6), +(wy + stackY * (ei + 1)).toFixed(6), +wz.toFixed(6)], ypr: [+pitch.toFixed(4), +ptYaw.toFixed(4), +roll.toFixed(4)], scale: +scaleVal.toFixed(4), enableCEPersistency: cePersist, customString: "" });
         });
@@ -872,6 +955,51 @@ export default function App() {
 
   const copyCode = (code: string) => navigator.clipboard.writeText(code).then(() => showToast("✓ Copied!"));
 
+  // ── URL SHARE ─────────────────────────────────────────────────────────────
+  const shareCurrentBuild = useCallback(() => {
+    try {
+      const state = {
+        s: shapeType,
+        p: params,
+        x: posX, y: posY, z: posZ,
+        yw: yaw, pi: pitch, ro: roll,
+        sc: scaleVal,
+        cl: objClass,
+        fo: format,
+      };
+      const encoded = btoa(JSON.stringify(state));
+      const url = `${window.location.origin}${window.location.pathname}#share=${encoded}`;
+      navigator.clipboard.writeText(url).then(() => showToast("✓ Share URL copied!"));
+    } catch {
+      showToast("⚠ Could not generate share URL");
+    }
+  }, [shapeType, params, posX, posY, posZ, yaw, pitch, roll, scaleVal, objClass, format]);
+
+  // Load from URL hash on mount
+  useEffect(() => {
+    try {
+      const hash = window.location.hash;
+      if (!hash.startsWith("#share=")) return;
+      const encoded = hash.slice(7);
+      const state = JSON.parse(atob(encoded));
+      if (state.s) setShapeType(state.s);
+      if (state.p) setParams(state.p);
+      if (state.x !== undefined) setPosX(state.x);
+      if (state.y !== undefined) setPosY(state.y);
+      if (state.z !== undefined) setPosZ(state.z);
+      if (state.yw !== undefined) setYaw(state.yw);
+      if (state.pi !== undefined) setPitch(state.pi);
+      if (state.ro !== undefined) setRoll(state.ro);
+      if (state.sc !== undefined) setScaleVal(state.sc);
+      if (state.cl) setObjClass(state.cl);
+      if (state.fo) setFormat(state.fo);
+      // Clear hash after loading
+      window.history.replaceState(null, "", window.location.pathname);
+      showToast("✓ Loaded shared build!");
+    } catch { /* ignore malformed hash */ }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Download always regenerates fresh — never relies on textarea state
   const downloadCode = (code: string, ext: string, name: string) => {
     const a = document.createElement("a");
@@ -907,7 +1035,7 @@ export default function App() {
         const wx = pt.x + build.posX, wy = pt.y + build.posY, wz = pt.z + build.posZ;
         const ptYaw = build.autoOrient ? Math.atan2(pt.x - cx3, pt.z - cz3) * 180 / Math.PI : 0;
         lines.push(formatInitC(obj, wx, wy, wz, 0, ptYaw, 0, 1.0));
-        extraList.forEach((ex, ei) => lines.push(formatInitC(ex, wx, wy + ei + 1, wz, 0, ptYaw, 0, 1.0)));
+        extraList.forEach((ex, ei) => lines.push(formatInitC(ex, wx, wy, wz, 0, ptYaw, 0, 1.0)));
       });
       code = lines.join("\n");
     } else {
@@ -916,7 +1044,7 @@ export default function App() {
         const wx = pt.x + build.posX, wy = pt.y + build.posY, wz = pt.z + build.posZ;
         const ptYaw = build.autoOrient ? Math.atan2(pt.x - cx3, pt.z - cz3) * 180 / Math.PI : 0;
         objs.push({ name: obj, pos: [+wx.toFixed(3), +wy.toFixed(3), +wz.toFixed(3)], ypr: [0, +ptYaw.toFixed(4), 0], scale: 1.0, enableCEPersistency: 0, customString: "" });
-        extraList.forEach((ex, ei) => objs.push({ name: ex, pos: [+wx.toFixed(3), +(wy + ei + 1).toFixed(3), +wz.toFixed(3)], ypr: [0, +ptYaw.toFixed(4), 0], scale: 1.0, enableCEPersistency: 0, customString: "" }));
+        extraList.forEach((ex, ei) => objs.push({ name: ex, pos: [+wx.toFixed(3), +(wy).toFixed(3), +wz.toFixed(3)], ypr: [0, +ptYaw.toFixed(4), 0], scale: 1.0, enableCEPersistency: 0, customString: "" }));
       });
       code = JSON.stringify({ Objects: objs }, null, 2);
     }
@@ -925,6 +1053,87 @@ export default function App() {
     downloadCode(code, ext, build.id);
     showToast(`Downloaded ${build.name} — ${pts.length * (1 + extraList.length)} objects`);
   };
+
+  // ── BULK ZIP DOWNLOAD ─────────────────────────────────────────────────────
+  const downloadAllBuilds = useCallback(() => {
+    setZipGenerating(true);
+    setTimeout(() => {
+      try {
+        const files: Record<string, Uint8Array> = {};
+        let totalObjects = 0;
+        const readmeLines = [
+          "DayZ Builder — All Completed Builds",
+          "====================================",
+          "",
+          `${COMPLETED_BUILDS.length} builds exported on ${new Date().toISOString().slice(0, 10)}`,
+          "",
+          "init_c/   — DayZ init.c snippets (paste into your mission init.c)",
+          "json/     — JSON object lists (for map editors)",
+          "",
+          "BUILD LIST",
+          "----------",
+        ];
+
+        COMPLETED_BUILDS.forEach(build => {
+          const pts = getShapePoints(build.shape, build.params);
+          const obj = build.frameObj;
+          const extraList = (build.extraFrame || "").split(",").map(s => s.trim()).filter(Boolean);
+          const cx3 = pts.reduce((s, p) => s + p.x, 0) / Math.max(1, pts.length);
+          const cz3 = pts.reduce((s, p) => s + p.z, 0) / Math.max(1, pts.length);
+          const count = pts.length * (1 + extraList.length);
+          totalObjects += count;
+
+          readmeLines.push(`  ${build.icon} ${build.name} — ${count} objects — ${build.tagline}`);
+
+          // init.c
+          const initLines: string[] = [
+            HELPER_FUNC,
+            `// ═══ ${build.name} ═══`,
+            `// ${build.tagline}`,
+            `// Object: ${obj}${extraList.length ? " + " + extraList.join(", ") : ""}`,
+            `// Location: ${build.posX} ${build.posY} ${build.posZ}`,
+            `// Objects: ${count}`,
+            `// ${build.objectNotes}`,
+            "",
+          ];
+          pts.forEach(pt => {
+            const wx = pt.x + build.posX, wy = pt.y + build.posY, wz = pt.z + build.posZ;
+            const ptYaw = build.autoOrient ? Math.atan2(pt.x - cx3, pt.z - cz3) * 180 / Math.PI : 0;
+            initLines.push(formatInitC(obj, wx, wy, wz, 0, ptYaw, 0, 1.0));
+            extraList.forEach((ex, ei) => initLines.push(formatInitC(ex, wx, wy, wz, 0, ptYaw, 0, 1.0)));
+          });
+          files[`init_c/${build.id}.c`] = strToU8(initLines.join("\n"));
+
+          // JSON
+          const objs: object[] = [];
+          pts.forEach(pt => {
+            const wx = pt.x + build.posX, wy = pt.y + build.posY, wz = pt.z + build.posZ;
+            const ptYaw = build.autoOrient ? Math.atan2(pt.x - cx3, pt.z - cz3) * 180 / Math.PI : 0;
+            objs.push({ name: obj, pos: [+wx.toFixed(3), +wy.toFixed(3), +wz.toFixed(3)], ypr: [0, +ptYaw.toFixed(4), 0], scale: 1.0, enableCEPersistency: 0, customString: "" });
+            extraList.forEach((ex, ei) => objs.push({ name: ex, pos: [+wx.toFixed(3), +(wy).toFixed(3), +wz.toFixed(3)], ypr: [0, +ptYaw.toFixed(4), 0], scale: 1.0, enableCEPersistency: 0, customString: "" }));
+          });
+          files[`json/${build.id}.json`] = strToU8(JSON.stringify({ Objects: objs }, null, 2));
+        });
+
+        readmeLines.push("", `Total objects across all builds: ${totalObjects}`);
+        files["README.txt"] = strToU8(readmeLines.join("\n"));
+
+        const zipped = zipSync(files, { level: 6 });
+        const blob = new Blob([zipped.buffer as ArrayBuffer], { type: "application/zip" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "dayz_all_builds.zip";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+        showToast(`✓ ZIP: ${COMPLETED_BUILDS.length} builds, ${totalObjects} objects`);
+      } finally {
+        setZipGenerating(false);
+      }
+    }, 0);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const currentCode = mode === "architect" ? output : textOutput;
   const currentExt = (mode === "architect" ? format : textFormat) === "initc" ? "c" : "json";
@@ -937,25 +1146,38 @@ export default function App() {
   });
 
   return (
-    <div className="flex flex-col h-screen bg-[#0a0804] text-[#c8b99a] font-mono overflow-hidden select-none">
+    <div className="flex flex-col h-screen bg-[#080f09] text-[#b8d4b8] font-mono overflow-hidden select-none">
       {/* ── HEADER ── */}
-      <header className="shrink-0 bg-[#12100a] border-b border-[#2e2518]">
+      <header className="shrink-0 bg-[#0c1510] border-b border-[#0e2010]">
         {/* Row 1 — logo + controls */}
         <div className="flex items-center gap-2 px-3 py-2">
           <button onClick={() => setSidebarOpen(v => !v)}
-            className="flex flex-col gap-[5px] p-1.5 rounded-sm border border-[#2e2518] hover:border-[#6a5a3a] transition-colors shrink-0"
+            className="flex flex-col gap-[5px] p-1.5 rounded-sm border border-[#0e2010] hover:border-[#3a6a3a] transition-colors shrink-0"
             title={sidebarOpen ? "Hide sidebar" : "Show sidebar"}>
-            <span className="block w-4 h-0.5 bg-[#6a5a3a]" />
-            <span className="block w-4 h-0.5 bg-[#6a5a3a]" />
-            <span className="block w-4 h-0.5 bg-[#6a5a3a]" />
+            <span className="block w-4 h-0.5 bg-[#3a6a3a]" />
+            <span className="block w-4 h-0.5 bg-[#3a6a3a]" />
+            <span className="block w-4 h-0.5 bg-[#3a6a3a]" />
           </button>
           <div className="flex items-baseline gap-1.5 min-w-0">
-            <span className="text-[#d4a017] font-black text-[15px] tracking-widest shrink-0">DANK</span>
+            <span className="text-[#d4a017] font-black text-[15px] tracking-widest shrink-0">DANK'S</span>
             <span className="text-[#c0392b] font-black text-[15px] tracking-widest shrink-0">DAYZ</span>
-            <span className="text-[9px] border border-[#8b1a1a] text-[#c0392b] px-1 py-0.5 rounded-sm shrink-0">ULTIMATE v3</span>
+            <span className="text-[#b8d4b8] font-black text-[15px] tracking-widest shrink-0">STUDIO</span>
+            <span className="text-[9px] border border-[#8b1a1a] text-[#c0392b] px-1 py-0.5 rounded-sm shrink-0">v4</span>
           </div>
           <div className="ml-auto flex items-center gap-2 shrink-0">
-            <span className="text-[9px] text-[#4a3820] hidden md:block">
+            {mode === "architect" && (
+              <button onClick={shareCurrentBuild}
+                className="flex items-center gap-1 px-2 py-1 text-[9px] font-bold border border-[#0e2010] text-[#5a8a5a] hover:border-[#1abc9c] hover:text-[#1abc9c] rounded-sm transition-all"
+                title="Copy shareable URL for this build">
+                🔗 Share
+              </button>
+            )}
+            <a href="/download.html" target="_blank" rel="noopener"
+              className="flex items-center gap-1 px-2 py-1 text-[9px] font-bold border border-[#0e2010] text-[#5a8a5a] hover:border-[#27ae60] hover:text-[#27ae60] rounded-sm transition-all"
+              title="Download desktop &amp; mobile apps">
+              ⬇ Download App
+            </a>
+            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-sm bg-[#0e1a0e] text-[#6a5a2a]">
               {({architect:"BUILD",text:"TEXT",builds:"BUILDS",weapons:"WEAPONS",bunker:"BUNKER",maze:"MAZE",race:"RACE"} as Record<string,string>)[mode]}
             </span>
             <div className="w-2 h-2 rounded-full bg-[#27ae60] animate-pulse" title="Live preview active" />
@@ -963,22 +1185,25 @@ export default function App() {
         </div>
 
         {/* Row 2 — scrollable tab strip */}
-        <div className="flex overflow-x-auto scrollbar-none border-t border-[#1e1a10]" style={{scrollbarWidth:'none'}}>
+        <div className="flex overflow-x-auto scrollbar-none border-t border-[#162016]" style={{scrollbarWidth:'none'}}>
           {([
-            { key: "architect", emoji: "🏗", label: "BUILD",   active: "bg-[#d4a017] text-[#0a0804]",   inactive: "text-[#9a7a40] hover:text-[#d4a017]",   dot: "bg-[#d4a017]" },
-            { key: "text",      emoji: "✏",  label: "TEXT",    active: "bg-[#d4a017] text-[#0a0804]",   inactive: "text-[#9a7a40] hover:text-[#d4a017]",   dot: "bg-[#d4a017]" },
-            { key: "builds",    emoji: "🏆", label: "BUILDS",  active: "bg-[#27ae60] text-[#0a0804]",   inactive: "text-[#3a8a50] hover:text-[#27ae60]",   dot: "bg-[#27ae60]" },
-            { key: "weapons",   emoji: "🔫", label: "WEAPONS", active: "bg-[#e67e22] text-[#0a0804]",   inactive: "text-[#a05010] hover:text-[#e67e22]",   dot: "bg-[#e67e22]" },
-            { key: "bunker",    emoji: "🏗", label: "BUNKER",  active: "bg-[#5dade2] text-[#0a0804]",   inactive: "text-[#2a6a9a] hover:text-[#5dade2]",   dot: "bg-[#5dade2]" },
+            { key: "architect", emoji: "🏗", label: "BUILD",   active: "bg-[#2ecc71] text-[#080f09]",   inactive: "text-[#3a7a3a] hover:text-[#2ecc71]",   dot: "bg-[#2ecc71]" },
+            { key: "text",      emoji: "✏",  label: "TEXT",    active: "bg-[#2ecc71] text-[#080f09]",   inactive: "text-[#3a7a3a] hover:text-[#2ecc71]",   dot: "bg-[#2ecc71]" },
+            { key: "builds",    emoji: "🏆", label: "BUILDS",  active: "bg-[#27ae60] text-[#080f09]",   inactive: "text-[#1a6a3a] hover:text-[#27ae60]",   dot: "bg-[#27ae60]" },
+            { key: "weapons",   emoji: "🔫", label: "WEAPONS", active: "bg-[#e67e22] text-[#080f09]",   inactive: "text-[#a05010] hover:text-[#e67e22]",   dot: "bg-[#e67e22]" },
+            { key: "bunker",    emoji: "🏗", label: "BUNKER",  active: "bg-[#5dade2] text-[#080f09]",   inactive: "text-[#2a6a9a] hover:text-[#5dade2]",   dot: "bg-[#5dade2]" },
             { key: "maze",      emoji: "🌀", label: "MAZE",    active: "bg-[#9b59b6] text-white",        inactive: "text-[#6a3a8a] hover:text-[#9b59b6]",   dot: "bg-[#9b59b6]" },
             { key: "race",      emoji: "🏁", label: "RACE",    active: "bg-[#e74c3c] text-white",        inactive: "text-[#8a2a20] hover:text-[#e74c3c]",   dot: "bg-[#e74c3c]" },
+            { key: "random",    emoji: "🎲", label: "RANDOM",  active: "bg-[#1abc9c] text-[#080f09]",    inactive: "text-[#0e7a60] hover:text-[#1abc9c]",   dot: "bg-[#1abc9c]" },
+            { key: "conzone",   emoji: "🚧", label: "CONZONE", active: "bg-[#f39c12] text-[#080f09]",    inactive: "text-[#a06010] hover:text-[#f39c12]",   dot: "bg-[#f39c12]" },
+            { key: "teleport",  emoji: "⚡", label: "TELEPORT",active: "bg-[#8e44ad] text-white",         inactive: "text-[#5a2a7a] hover:text-[#8e44ad]",   dot: "bg-[#8e44ad]" },
           ] as const).map(t => {
             const isActive = mode === t.key;
             return (
               <button
                 key={t.key}
                 onClick={() => setMode(t.key as EditorMode)}
-                className={`relative flex flex-col items-center justify-center gap-0.5 px-3.5 py-2 shrink-0 font-bold transition-all duration-150 ${isActive ? t.active : `${t.inactive} hover:bg-[#1a1408]`}`}
+                className={`relative flex flex-col items-center justify-center gap-0.5 px-3.5 py-2 shrink-0 font-bold transition-all duration-150 ${isActive ? t.active : `${t.inactive} hover:bg-[#0e1a0e]`}`}
               >
                 <span className="text-[13px] leading-none">{t.emoji}</span>
                 <span className="text-[8px] tracking-widest leading-none">{t.label}</span>
@@ -1004,18 +1229,27 @@ export default function App() {
         {/* ── RACE TRACK MAKER MODE (full-panel takeover) ── */}
         {mode === "race" && <RaceTrackMaker />}
 
+        {/* ── RANDOM STRUCTURE MAKER MODE (full-panel takeover) ── */}
+        {mode === "random" && <RandomStructureMaker />}
+
+        {/* ── CONSTRUCTION ZONE MAKER MODE (full-panel takeover) ── */}
+        {mode === "conzone" && <ConstructionZoneMaker />}
+
+        {/* ── TELEPORT MAKER MODE (full-panel takeover) ── */}
+        {mode === "teleport" && <TeleportMaker />}
+
         {/* ── SIDEBAR ── */}
         {/* Mobile backdrop */}
-        {mode !== "weapons" && mode !== "bunker" && mode !== "maze" && mode !== "race" && sidebarOpen && (
+        {mode !== "weapons" && mode !== "bunker" && mode !== "maze" && mode !== "race" && mode !== "random" && mode !== "conzone" && mode !== "teleport" && sidebarOpen && (
           <div className="fixed inset-0 bg-black/50 z-20 md:hidden" onClick={() => setSidebarOpen(false)} />
         )}
-        <div className={`${(mode === "weapons" || mode === "bunker" || mode === "maze" || mode === "race") ? "hidden" : ""} ${sidebarOpen ? "w-72" : "w-0"} shrink-0 bg-[#0e0c08] border-r border-[#2e2518] overflow-y-auto flex flex-col transition-all duration-200 z-30 md:relative md:z-auto ${sidebarOpen ? "absolute inset-y-0 left-0 md:relative" : "overflow-hidden"}`}>
+        <div className={`${(mode === "weapons" || mode === "bunker" || mode === "maze" || mode === "race" || mode === "random" || mode === "conzone" || mode === "teleport") ? "hidden" : ""} ${sidebarOpen ? "w-72" : "w-0"} shrink-0 bg-[#0a1209] border-r border-[#0e2010] overflow-y-auto flex flex-col transition-all duration-200 z-30 md:relative md:z-auto ${sidebarOpen ? "absolute inset-y-0 left-0 md:relative" : "overflow-hidden"}`}>
           {mode === "architect" ? (
             <ArchitectSidebar
               shapeType={shapeType} params={params} paramDefs={currentParamDefs}
               objClass={objClass} posX={posX} posY={posY} posZ={posZ}
               yaw={yaw} pitch={pitch} roll={roll}
-              scaleVal={scaleVal} fillMode={fillMode} fillDensity={fillDensity}
+              scaleVal={scaleVal}
               format={format} cePersist={cePersist} includeHelper={includeHelper}
               extraObjs={extraObjs} stackY={stackY}
               objCount={displayPoints.length}
@@ -1027,7 +1261,7 @@ export default function App() {
               onShapeChange={onShapeChange} setObjClass={setObjClass}
               setPosX={setPosX} setPosY={setPosY} setPosZ={setPosZ}
               setYaw={setYaw} setPitch={setPitch} setRoll={setRoll}
-              setScaleVal={setScaleVal} setFillMode={setFillMode} setFillDensity={setFillDensity}
+              setScaleVal={setScaleVal}
               setFormat={setFormat} setCePersist={setCePersist} setIncludeHelper={setIncludeHelper}
               setExtraObjs={setExtraObjs} setStackY={setStackY}
               setParam={setParam} setParams={setParams} setAutoRotate={setAutoRotate}
@@ -1042,6 +1276,7 @@ export default function App() {
               buildNotes={buildNotes} setBuildNotes={setBuildNotes}
               captureCurrentState={captureCurrentState} restoreState={restoreState}
               objSearch={objSearch} setObjSearch={setObjSearch}
+              favourites={favourites} toggleFavourite={toggleFavourite}
             />
           ) : mode === "builds" ? (
             <BuildsSidebar
@@ -1073,20 +1308,20 @@ export default function App() {
         </div>
 
         {/* ── MAIN PANEL ── */}
-        <div className={`${(mode === "weapons" || mode === "bunker" || mode === "maze" || mode === "race") ? "hidden" : ""} flex-1 flex flex-col overflow-hidden`}>
+        <div className={`${(mode === "weapons" || mode === "bunker" || mode === "maze" || mode === "race" || mode === "random" || mode === "conzone" || mode === "teleport") ? "hidden" : ""} flex-1 flex flex-col overflow-hidden`}>
           {/* Info bar */}
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-[#0c0a06] border-b border-[#2e2518] text-[11px] shrink-0">
-            <span className="text-[#5a4a2a] text-[10px]">Shape</span>
-            <span className="text-[#d4a017] font-bold truncate max-w-[160px]">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-[#091209] border-b border-[#0e2010] text-[11px] shrink-0">
+            <span className="text-[#2a5a2a] text-[10px]">Shape</span>
+            <span className="text-[#27ae60] font-bold truncate max-w-[160px]">
               {mode === "architect" ? (SHAPE_DEFS[shapeType]?.label || shapeType)
                : mode === "builds" ? (COMPLETED_BUILDS.find(b => b.id === selectedBuildId)?.name || "—")
                : `"${textInput}"`}
             </span>
-            <span className={`font-mono font-bold text-[10px] px-1.5 py-0.5 rounded ${displayPoints.length > 800 ? "text-[#e07a20] bg-[#2a1206]" : "text-[#d4a017] bg-[#1a1208]"}`}>
+            <span className={`font-mono font-bold text-[10px] px-1.5 py-0.5 rounded ${displayPoints.length > 800 ? "text-[#e07a20] bg-[#0a1a0a]" : "text-[#27ae60] bg-[#0e180e]"}`}>
               {displayPoints.length} obj{displayPoints.length !== 1 ? "s" : ""}
             </span>
             {displayPoints.length > 800 && <span className="text-[#e07a20] text-[9px] font-bold">⚠ LARGE</span>}
-            {dims && <span className="text-[#6a5830] text-[9px] bg-[#111008] px-1.5 py-0.5 rounded border border-[#2a2010]">{dims.w}×{dims.d}×{dims.h}m</span>}
+            {dims && <span className="text-[#6a5830] text-[9px] bg-[#0a140a] px-1.5 py-0.5 rounded border border-[#0e2010]">{dims.w}×{dims.d}×{dims.h}m</span>}
             {mode === "builds" && <span className="text-[#27ae60] text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#0a1a0e] border border-[#1a4020]">● LIVE</span>}
             <span className="ml-auto text-[#4a3c20] text-[9px] hidden md:block">Drag · Orbit · Scroll zoom</span>
           </div>
@@ -1104,91 +1339,91 @@ export default function App() {
 
           {/* Output */}
           {mode === "builds" ? (
-            <div className="flex flex-col border-t border-[#2e2518] bg-[#0e0c08] flex-1 min-h-0">
-              <div className="flex items-center gap-2 px-3 py-1.5 border-b border-[#2e2518] shrink-0">
+            <div className="flex flex-col border-t border-[#0e2010] bg-[#0a1209] flex-1 min-h-0">
+              <div className="flex items-center gap-2 px-3 py-1.5 border-b border-[#0e2010] shrink-0">
                 <span className="text-[#27ae60] text-[11px] font-bold tracking-wider">🏆 COMPLETED BUILDS</span>
-                <span className="text-[#9a8858] text-[10px]">{COMPLETED_BUILDS.length} ready-to-download builds</span>
+                <span className="text-[#5a8a5a] text-[10px]">{COMPLETED_BUILDS.length} ready-to-download builds</span>
+                <div className="flex-1" />
+                <button
+                  onClick={downloadAllBuilds}
+                  disabled={zipGenerating}
+                  className="px-2 py-1 text-[10px] font-bold bg-[#0e2010] border border-[#27ae60] text-[#27ae60] rounded-sm hover:bg-[#27ae60] hover:text-[#080f09] transition-all disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                >
+                  {zipGenerating ? "⏳ Packing…" : "⬇ All (ZIP)"}
+                </button>
               </div>
               {(() => {
                 const b = COMPLETED_BUILDS.find(x => x.id === selectedBuildId);
                 return b ? (
                   <div className="flex-1 p-4 overflow-auto flex flex-col gap-3">
-                    <div className="text-[#d4a017] text-lg font-black">{b.icon} {b.name}</div>
-                    <div className="text-[#c8b99a] text-[11px] leading-relaxed">{b.tagline}</div>
-                    <div className="border border-[#2e2518] rounded-sm p-3 flex flex-col gap-2">
-                      <div className="text-[#9a8858] text-[10px] uppercase tracking-wider mb-1">Objects Used</div>
+                    <div className="text-[#27ae60] text-lg font-black">{b.icon} {b.name}</div>
+                    <div className="text-[#b8d4b8] text-[11px] leading-relaxed">{b.tagline}</div>
+                    <div className="border border-[#0e2010] rounded-sm p-3 flex flex-col gap-2">
+                      <div className="text-[#5a8a5a] text-[10px] uppercase tracking-wider mb-1">Objects Used</div>
                       <div className="text-[11px]">
                         <span className="text-[#27ae60] font-bold">FRAME: </span>
-                        <span className="text-[#c8b99a]">{b.frameObj}</span>
-                        {b.extraFrame && <span className="text-[#9a8858]"> + {b.extraFrame}</span>}
+                        <span className="text-[#b8d4b8]">{b.frameObj}</span>
+                        {b.extraFrame && <span className="text-[#5a8a5a]"> + {b.extraFrame}</span>}
                       </div>
                       <div className="text-[11px]">
-                        <span className="text-[#d4a017] font-bold">FILL: </span>
-                        <span className="text-[#c8b99a]">{b.fillObj}</span>
-                        {b.extraFill && <span className="text-[#9a8858]"> + {b.extraFill}</span>}
+                        <span className="text-[#27ae60] font-bold">FILL: </span>
+                        <span className="text-[#b8d4b8]">{b.fillObj}</span>
+                        {b.extraFill && <span className="text-[#5a8a5a]"> + {b.extraFill}</span>}
                       </div>
-                      <div className="text-[#9a8858] text-[10px] leading-relaxed mt-1">{b.objectNotes}</div>
+                      <div className="text-[#5a8a5a] text-[10px] leading-relaxed mt-1">{b.objectNotes}</div>
                     </div>
-                    {b.frameCount !== undefined && (
+                    {(
                       <div className="flex items-center gap-2 p-2 rounded-sm bg-[#0f1f0f] border border-[#27ae60]">
-                        <span className="text-[#27ae60] text-[18px] font-black">{b.frameCount}</span>
+                        <span className="text-[#27ae60] text-[18px] font-black">{selectedBuildLiveCount}</span>
                         <div>
                           <div className="text-[#27ae60] text-[10px] font-bold">OBJECTS TOTAL</div>
                           <div className="text-[#5a8a5a] text-[9px]">⚡ Server-friendly · stays loaded long-term</div>
                         </div>
                       </div>
                     )}
-                    <div className="border border-[#2e2518] rounded-sm p-3">
-                      <div className="text-[#9a8858] text-[10px] uppercase tracking-wider mb-2">Location</div>
-                      <div className="text-[#c8b99a] text-[11px] font-mono">
-                        <span className="text-[#d4a017] font-bold">{b.posX < 8000 ? "NWAF" : b.category === "⚡ Lightweight" ? "Krasnoe Airfield" : "Krasnoe"}</span>
+                    <div className="border border-[#0e2010] rounded-sm p-3">
+                      <div className="text-[#5a8a5a] text-[10px] uppercase tracking-wider mb-2">Location</div>
+                      <div className="text-[#b8d4b8] text-[11px] font-mono">
+                        <span className="text-[#27ae60] font-bold">{b.posX < 8000 ? "NWAF" : b.category === "⚡ Lightweight" ? "Krasnoe Airfield" : "Krasnoe"}</span>
                         {" "}X={b.posX} Y={b.posY} Z={b.posZ}
                       </div>
                       {b.category === "⚡ Lightweight" && (
-                        <div className="mt-1 text-[9px] text-[#6a5a3a]">Pre-positioned at Krasnoe Airfield flat apron — ready to paste into init.c</div>
+                        <div className="mt-1 text-[9px] text-[#3a6a3a]">Pre-positioned at Krasnoe Airfield flat apron — ready to paste into init.c</div>
                       )}
                     </div>
                     <div className="grid grid-cols-2 gap-2 mt-1">
-                      <button onClick={() => downloadBuild(b, "frame", "initc")}
-                        className="py-2 text-[11px] font-bold bg-[#1a2e1a] border border-[#27ae60] text-[#27ae60] rounded-sm hover:bg-[#27ae60] hover:text-[#0a0804] transition-all">
-                        ⬇ FRAME .c
+                      <button onClick={() => downloadBuild(b, "initc")}
+                        className="py-2 text-[11px] font-bold bg-[#0e2010] border border-[#27ae60] text-[#27ae60] rounded-sm hover:bg-[#27ae60] hover:text-[#080f09] transition-all">
+                        ⬇ init.c
                       </button>
-                      <button onClick={() => downloadBuild(b, "fill", "initc")}
-                        className="py-2 text-[11px] font-bold bg-[#2e2010] border border-[#d4a017] text-[#d4a017] rounded-sm hover:bg-[#d4a017] hover:text-[#0a0804] transition-all">
-                        ⬇ FILL .c
-                      </button>
-                      <button onClick={() => downloadBuild(b, "frame", "json")}
-                        className="py-2 text-[10px] font-bold bg-[#1a1a2e] border border-[#6a7abf] text-[#6a7abf] rounded-sm hover:bg-[#6a7abf] hover:text-[#0a0804] transition-all">
-                        ⬇ FRAME .json
-                      </button>
-                      <button onClick={() => downloadBuild(b, "fill", "json")}
-                        className="py-2 text-[10px] font-bold bg-[#1a1a2e] border border-[#6a7abf] text-[#6a7abf] rounded-sm hover:bg-[#6a7abf] hover:text-[#0a0804] transition-all">
-                        ⬇ FILL .json
+                      <button onClick={() => downloadBuild(b, "json")}
+                        className="py-2 text-[10px] font-bold bg-[#1a1a2e] border border-[#6a7abf] text-[#6a7abf] rounded-sm hover:bg-[#6a7abf] hover:text-[#080f09] transition-all">
+                        ⬇ JSON
                       </button>
                     </div>
                   </div>
                 ) : (
-                  <div className="flex-1 flex items-center justify-center text-[#9a8858] text-[11px]">
+                  <div className="flex-1 flex items-center justify-center text-[#5a8a5a] text-[11px]">
                     Select a build on the left to preview and download
                   </div>
                 );
               })()}
             </div>
           ) : (
-            <div className="flex flex-col border-t border-[#2e2518] bg-[#0e0c08] flex-1 min-h-0">
-              <div className="flex items-center gap-2 px-3 py-1.5 border-b border-[#2e2518] shrink-0">
+            <div className="flex flex-col border-t border-[#0e2010] bg-[#0a1209] flex-1 min-h-0">
+              <div className="flex items-center gap-2 px-3 py-1.5 border-b border-[#0e2010] shrink-0">
                 {/* Format toggle */}
                 {mode === "architect" && (
-                  <div className="flex gap-0.5 border border-[#2e2518] rounded-sm p-0.5 shrink-0">
+                  <div className="flex gap-0.5 border border-[#0e2010] rounded-sm p-0.5 shrink-0">
                     {(["initc", "json"] as OutputFormat[]).map(f => (
                       <button key={f} onClick={() => setFormat(f)}
-                        className={`px-2 py-0.5 text-[10px] rounded-sm font-bold transition-all ${format === f ? "bg-[#d4a017] text-[#0a0804]" : "text-[#b09a6a] hover:text-[#c8b99a]"}`}>
+                        className={`px-2 py-0.5 text-[10px] rounded-sm font-bold transition-all ${format === f ? "bg-[#27ae60] text-[#080f09]" : "text-[#b09a6a] hover:text-[#b8d4b8]"}`}>
                         {f === "initc" ? "init.c" : "JSON"}
                       </button>
                     ))}
                   </div>
                 )}
-                <div className="text-[#6a5a3a] text-[10px] flex-1 truncate">
+                <div className="text-[#3a6a3a] text-[10px] flex-1 truncate">
                   {currentCode ? `${currentCode.split("\n").length} lines` : "configure & generate →"}
                 </div>
                 <div className="flex gap-1.5 shrink-0">
@@ -1197,7 +1432,7 @@ export default function App() {
                     if (mode === "architect") setOutput(code); else setTextOutput(code);
                     copyCode(code);
                   }}
-                    className="px-3 py-1 text-[11px] border border-[#2e2518] text-[#b09a6a] hover:border-[#d4a017] hover:text-[#d4a017] rounded-sm transition-all">
+                    className="px-3 py-1 text-[11px] border border-[#0e2010] text-[#b09a6a] hover:border-[#27ae60] hover:text-[#27ae60] rounded-sm transition-all">
                     Copy
                   </button>
                   <button onClick={() => {
@@ -1205,7 +1440,7 @@ export default function App() {
                     if (mode === "architect") setOutput(code); else setTextOutput(code);
                     downloadCode(code, currentExt, mode === "architect" ? `shape_${shapeType}` : `text_${textInput || "text"}`);
                   }}
-                    className="px-3 py-1 text-[11px] bg-[#d4a017] text-[#0a0804] font-bold rounded-sm hover:bg-[#e8b82a] transition-all">
+                    className="px-3 py-1 text-[11px] bg-[#27ae60] text-[#080f09] font-bold rounded-sm hover:bg-[#e8b82a] transition-all">
                     Download
                   </button>
                 </div>
@@ -1221,7 +1456,7 @@ export default function App() {
 
       {/* Toast */}
       {toast && (
-        <div className="fixed bottom-5 right-5 bg-[#d4a017] text-[#0a0804] px-4 py-2 rounded-sm text-sm font-bold z-50 shadow-xl animate-in fade-in slide-in-from-bottom-2 duration-200">
+        <div className="fixed bottom-5 right-5 bg-[#27ae60] text-[#080f09] px-4 py-2 rounded-sm text-sm font-bold z-50 shadow-xl animate-in fade-in slide-in-from-bottom-2 duration-200">
           {toast}
         </div>
       )}
@@ -1231,7 +1466,7 @@ export default function App() {
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 function Sec({ children }: { children: React.ReactNode }) {
-  return <div className="text-[#d4a017] text-[9px] tracking-widest uppercase border-b border-[#2e2518] pb-1 mb-2 mt-3 px-3">{children}</div>;
+  return <div className="text-[#27ae60] text-[9px] tracking-widest uppercase border-b border-[#0e2010] pb-1 mb-2 mt-3 px-3">{children}</div>;
 }
 function Lbl({ children }: { children: React.ReactNode }) {
   return <div className="text-[#b09a6a] text-[10px] mb-0.5">{children}</div>;
@@ -1239,7 +1474,7 @@ function Lbl({ children }: { children: React.ReactNode }) {
 function Inp({ value, onChange, type = "number", ...rest }: { value: string | number; onChange: (v: string) => void; type?: string; [k: string]: any }) {
   return (
     <input type={type} value={value} onChange={e => onChange(e.target.value)}
-      className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1 rounded-sm mb-1.5 focus:outline-none focus:border-[#8a6a0f] transition-colors"
+      className="w-full bg-[#060402] border border-[#0e2010] text-[#b8d4b8] text-[11px] px-2 py-1 rounded-sm mb-1.5 focus:outline-none focus:border-[#8a6a0f] transition-colors"
       {...rest}
     />
   );
@@ -1249,12 +1484,12 @@ function Slider({ label, value, min, max, step = "any", onChange }: { label: str
     <div className="mb-2">
       <div className="flex justify-between items-center mb-0.5">
         <Lbl>{label}</Lbl>
-        <span className="text-[#d4a017] text-[10px] font-bold">{typeof step === "number" && step >= 1 ? Math.round(value) : value}</span>
+        <span className="text-[#27ae60] text-[10px] font-bold">{typeof step === "number" && step >= 1 ? Math.round(value) : value}</span>
       </div>
       <input type="range" value={value} min={min} max={max} step={step}
         onChange={e => onChange(parseFloat(e.target.value))}
-        className="w-full h-1 rounded-full cursor-pointer accent-[#d4a017]"
-        style={{ background: `linear-gradient(to right, #d4a017 ${((value - min) / (max - min)) * 100}%, #2e2518 0%)` }}
+        className="w-full h-1 rounded-full cursor-pointer accent-[#27ae60]"
+        style={{ background: `linear-gradient(to right, #27ae60 ${((value - min) / (max - min)) * 100}%, #0e2010 0%)` }}
       />
     </div>
   );
@@ -1299,9 +1534,9 @@ function SaveLoadPanel({ captureState, onLoad }: { captureState: () => any; onLo
         <input type="text" placeholder="Name this build..." value={saveName}
           onChange={e => { setSaveName(e.target.value); setSaveErr(""); }}
           onKeyDown={e => e.key === "Enter" && save()}
-          className="flex-1 bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[10px] px-2 py-1 rounded-sm focus:outline-none focus:border-[#d4a017]" />
+          className="flex-1 bg-[#060402] border border-[#0e2010] text-[#b8d4b8] text-[10px] px-2 py-1 rounded-sm focus:outline-none focus:border-[#27ae60]" />
         <button onClick={save} disabled={!saveName.trim()}
-          className="px-2 py-1 text-[10px] font-bold rounded-sm border border-[#d4a017] text-[#d4a017] hover:bg-[#d4a017] hover:text-[#0a0804] transition-all disabled:opacity-30 disabled:cursor-not-allowed">
+          className="px-2 py-1 text-[10px] font-bold rounded-sm border border-[#27ae60] text-[#27ae60] hover:bg-[#27ae60] hover:text-[#080f09] transition-all disabled:opacity-30 disabled:cursor-not-allowed">
           Save
         </button>
       </div>
@@ -1311,13 +1546,13 @@ function SaveLoadPanel({ captureState, onLoad }: { captureState: () => any; onLo
       ) : (
         <div className="flex flex-col gap-1">
           {saves.map(slot => (
-            <div key={slot.id} className="flex items-center gap-1 border border-[#2e2518] rounded-sm px-2 py-1 bg-[#060402]">
+            <div key={slot.id} className="flex items-center gap-1 border border-[#0e2010] rounded-sm px-2 py-1 bg-[#060402]">
               <div className="flex-1 min-w-0">
-                <div className="text-[#c8b99a] text-[10px] font-bold truncate">{slot.name}</div>
+                <div className="text-[#b8d4b8] text-[10px] font-bold truncate">{slot.name}</div>
                 <div className="text-[#5a4820] text-[8px]">{new Date(slot.timestamp).toLocaleDateString()} · {slot.data.shapeType}</div>
               </div>
               <button onClick={() => onLoad(slot.data)}
-                className="px-1.5 py-0.5 text-[8px] text-[#d4a017] border border-[#d4a01733] hover:border-[#d4a017] rounded-sm transition-all shrink-0">
+                className="px-1.5 py-0.5 text-[8px] text-[#27ae60] border border-[#27ae6033] hover:border-[#27ae60] rounded-sm transition-all shrink-0">
                 Load
               </button>
               <button onClick={() => persist(saves.filter(s => s.id !== slot.id))}
@@ -1370,9 +1605,9 @@ function SpacingCalcPanel() {
 
   const numInput = (label: string, val: string, set: (v: string) => void, ph: string) => (
     <div>
-      <div className="text-[8px] text-[#9a8858] mb-0.5">{label}</div>
+      <div className="text-[8px] text-[#5a8a5a] mb-0.5">{label}</div>
       <input type="number" value={val} onChange={e => set(e.target.value)} placeholder={ph}
-        className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[10px] px-2 py-1 rounded-sm focus:outline-none focus:border-[#d4a017]" />
+        className="w-full bg-[#060402] border border-[#0e2010] text-[#b8d4b8] text-[10px] px-2 py-1 rounded-sm focus:outline-none focus:border-[#27ae60]" />
     </div>
   );
 
@@ -1385,14 +1620,14 @@ function SpacingCalcPanel() {
         {numInput("Point B — X", bx, setBx, "7430")}
         {numInput("Point B — Z", bz, setBz, "5600")}
         <div>
-          <div className="text-[8px] text-[#9a8858] mb-0.5">Points (2–20)</div>
+          <div className="text-[8px] text-[#5a8a5a] mb-0.5">Points (2–20)</div>
           <input type="number" min={2} max={20} value={count} onChange={e => setCount(+e.target.value)}
-            className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[10px] px-2 py-1 rounded-sm focus:outline-none focus:border-[#d4a017]" />
+            className="w-full bg-[#060402] border border-[#0e2010] text-[#b8d4b8] text-[10px] px-2 py-1 rounded-sm focus:outline-none focus:border-[#27ae60]" />
         </div>
         {numInput("Fixed Y (height)", fixedY, setFixedY, "383")}
       </div>
       {dist !== null && (
-        <div className={`text-[9px] mb-1.5 ${dist === 0 ? 'text-[#c0392b]' : 'text-[#d4a017]'}`}>
+        <div className={`text-[9px] mb-1.5 ${dist === 0 ? 'text-[#c0392b]' : 'text-[#27ae60]'}`}>
           {dist === 0
             ? '⚠ Points A and B are the same — all objects will stack!'
             : <><strong>Distance: {dist.toFixed(2)}m</strong>{pts.length > 1 && <span className="text-[#8a7840]"> · {(dist / (pts.length - 1)).toFixed(2)}m gap</span>}</>
@@ -1402,9 +1637,9 @@ function SpacingCalcPanel() {
       {pts.length > 0 && (
         <>
           <div className="flex items-center justify-between mb-1">
-            <div className="text-[8px] text-[#9a8858]">{pts.length} coordinates:</div>
+            <div className="text-[8px] text-[#5a8a5a]">{pts.length} coordinates:</div>
             <button onClick={copy}
-              className={`text-[8px] px-1.5 py-0.5 rounded-sm border transition-all ${copied ? "border-[#27ae60] text-[#27ae60]" : "border-[#d4a01733] text-[#d4a017] hover:border-[#d4a017]"}`}>
+              className={`text-[8px] px-1.5 py-0.5 rounded-sm border transition-all ${copied ? "border-[#27ae60] text-[#27ae60]" : "border-[#27ae6033] text-[#27ae60] hover:border-[#27ae60]"}`}>
               {copied ? "✓ Copied" : "Copy All"}
             </button>
           </div>
@@ -1433,7 +1668,7 @@ function ArchitectSidebar(p: any) {
   const sec = (k: string, label: string, children: React.ReactNode) => (
     <div>
       <button onClick={() => toggle(k)}
-        className="w-full flex items-center justify-between text-[#9a8858] text-[9px] tracking-wider uppercase border-b border-[#1e1c18] pb-1 mb-2 mt-3 px-3 bg-transparent hover:text-[#d4a017] transition-colors">
+        className="w-full flex items-center justify-between text-[#5a8a5a] text-[9px] tracking-wider uppercase border-b border-[#1e1c18] pb-1 mb-2 mt-3 px-3 bg-transparent hover:text-[#27ae60] transition-colors">
         <span>{label}</span>
         <span className="text-[#5a4820]">{collapsed[k] ? "▶" : "▼"}</span>
       </button>
@@ -1450,44 +1685,66 @@ function ArchitectSidebar(p: any) {
             <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[#6a5830] text-[11px] pointer-events-none">⌕</span>
             <input type="text" placeholder="Search presets..." value={p.presetFilter}
               onChange={e => p.setPresetFilter(e.target.value)}
-              className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] pl-6 pr-2 py-1 rounded-sm focus:outline-none focus:border-[#8a6a0f] transition-colors"
+              className="w-full bg-[#060402] border border-[#0e2010] text-[#b8d4b8] text-[11px] pl-6 pr-2 py-1 rounded-sm focus:outline-none focus:border-[#8a6a0f] transition-colors"
             />
           </div>
           {/* Category tabs — scrollable pill row */}
-          <div className="flex gap-1 mb-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+          <div className="flex gap-1 mb-2 overflow-x-auto scrollbar-none pb-0.5" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {(p.presetCategories || []).map((cat: string) => (
               <button key={cat} onClick={() => p.setPresetCategory(cat)}
-                className={`shrink-0 text-[9px] px-2 py-0.5 rounded-full border transition-all duration-150 ${p.presetCategory === cat ? "border-[#d4a017] text-[#0a0804] bg-[#d4a017] font-bold" : "border-[#3a2e18] text-[#9a8050] hover:border-[#d4a017]/60 hover:text-[#c8b99a]"}`}>
+                className={`shrink-0 text-[9px] px-2 py-0.5 rounded-full border transition-all duration-150 ${p.presetCategory === cat ? "border-[#27ae60] text-[#080f09] bg-[#27ae60] font-bold" : "border-[#3a2e18] text-[#9a8050] hover:border-[#27ae60]/60 hover:text-[#b8d4b8]"}`}>
                 {cat}
               </button>
             ))}
           </div>
           <div className="flex items-center justify-between mb-1">
-            <span className="text-[9px] text-[#5a4a2a]">
+            <span className="text-[9px] text-[#2a5a2a]">
               {p.filteredPresets.length} preset{p.filteredPresets.length !== 1 ? "s" : ""}
               {p.presetCategory !== "All" && ` · ${p.presetCategory}`}
             </span>
             {p.presetFilter && (
-              <button onClick={() => p.setPresetFilter("")} className="text-[9px] text-[#8a6a30] hover:text-[#d4a017] transition-colors">✕ clear</button>
+              <button onClick={() => p.setPresetFilter("")} className="text-[9px] text-[#8a6a30] hover:text-[#27ae60] transition-colors">✕ clear</button>
             )}
           </div>
           <div className="grid grid-cols-2 gap-1 max-h-52 overflow-y-auto pr-0.5">
             {p.filteredPresets.map((preset: any) => {
               const isActive = p.selectedPresetLabel === preset.label;
+              const isFav = (p.favourites ?? []).includes(preset.label);
               return (
-                <button key={preset.label} onClick={() => p.applyPreset(preset)}
-                  className={`text-left text-[10px] px-2 py-1.5 rounded border transition-all duration-150 flex items-center gap-1 min-w-0 ${isActive ? "border-[#d4a017] text-[#d4a017] bg-[#1a1408] shadow-[0_0_8px_rgba(212,160,23,0.2)]" : "border-[#2e2518] text-[#c0aa70] hover:border-[#d4a017]/50 hover:text-[#e8c878] hover:bg-[#120e06]"}`}>
-                  {isActive && <span className="shrink-0 text-[#d4a017] text-[9px]">✓</span>}
-                  <span className="truncate">{preset.label}</span>
-                </button>
+                <div key={preset.label} className="relative group">
+                  <button onClick={() => p.applyPreset(preset)}
+                    className={`w-full text-left text-[10px] px-2 py-1.5 pr-6 rounded border transition-all duration-150 flex items-center gap-1 min-w-0 ${isActive ? "border-[#27ae60] text-[#27ae60] bg-[#0e1a0e] shadow-[0_0_8px_rgba(39,174,96,0.2)]" : "border-[#0e2010] text-[#c0aa70] hover:border-[#27ae60]/50 hover:text-[#e8c878] hover:bg-[#120e06]"}`}>
+                    {isActive && <span className="shrink-0 text-[#27ae60] text-[9px]">✓</span>}
+                    <span className="truncate">{preset.label}</span>
+                  </button>
+                  <button
+                    onClick={e => { e.stopPropagation(); p.toggleFavourite(preset.label); }}
+                    className={`absolute right-1 top-1/2 -translate-y-1/2 text-[10px] transition-all ${isFav ? "opacity-100 text-[#f39c12]" : "opacity-0 group-hover:opacity-60 text-[#5a8a5a] hover:text-[#f39c12]"}`}
+                    title={isFav ? "Remove from favourites" : "Add to favourites"}>
+                    {isFav ? "★" : "☆"}
+                  </button>
+                </div>
               );
             })}
             {p.filteredPresets.length === 0 && (
               <div className="col-span-2 text-center text-[10px] text-[#8a7840] py-3">No presets match filter</div>
             )}
           </div>
+          {(p.favourites ?? []).length > 0 && (
+            <div className="mt-2 pt-2 border-t border-[#0e2010]">
+              <div className="text-[8px] text-[#5a4820] mb-1 tracking-widest">★ FAVOURITES ({p.favourites.length})</div>
+              <div className="flex flex-wrap gap-1">
+                {(p.favourites as string[]).map((label: string) => (
+                  <button key={label} onClick={() => { const pr = p.filteredPresets.find((x: any) => x.label === label) ?? { label, shape: label, params: {}, category: "" }; p.applyPreset(pr); }}
+                    className="text-[9px] px-1.5 py-0.5 rounded border border-[#f39c1244] text-[#f39c12] bg-[#120e06] hover:border-[#f39c12] transition-colors truncate max-w-[120px]">
+                    ★ {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
           <button onClick={p.onSurpriseMe}
-            className="mt-2 w-full py-1.5 text-[10px] font-bold rounded border border-[#d4a017]/40 text-[#d4a017] bg-[#14100a] hover:bg-[#d4a017] hover:text-[#0a0804] hover:border-[#d4a017] transition-all duration-150 active:scale-95">
+            className="mt-2 w-full py-1.5 text-[10px] font-bold rounded border border-[#27ae60]/40 text-[#27ae60] bg-[#14100a] hover:bg-[#27ae60] hover:text-[#080f09] hover:border-[#27ae60] transition-all duration-150 active:scale-95">
             🎲 Surprise Me — Random Preset
           </button>
         </div>
@@ -1498,7 +1755,7 @@ function ArchitectSidebar(p: any) {
         <div className="px-3">
           {/* Big roll button */}
           <button onClick={p.onRollArena}
-            className="w-full py-2.5 mb-2.5 text-[11px] font-black tracking-wider rounded-sm border border-[#d4a017] text-[#0a0804] bg-[#d4a017] hover:bg-[#e8b82a] hover:border-[#e8b82a] transition-all shadow-lg">
+            className="w-full py-2.5 mb-2.5 text-[11px] font-black tracking-wider rounded-sm border border-[#27ae60] text-[#080f09] bg-[#27ae60] hover:bg-[#e8b82a] hover:border-[#e8b82a] transition-all shadow-lg">
             🎲 ROLL RANDOM ARENA
           </button>
           {/* 6 arena type tiles */}
@@ -1512,15 +1769,15 @@ function ArchitectSidebar(p: any) {
               { key: "pvp_arena",       icon: "🔵", label: "Ring"      },
             ].map(({ key, icon, label }) => (
               <button key={key} onClick={() => p.onShapeChange(key)}
-                className={`text-center px-1 py-1.5 rounded-sm border transition-all ${p.shapeType === key ? "border-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] hover:border-[#6a5a3a] bg-[#060402]"}`}>
+                className={`text-center px-1 py-1.5 rounded-sm border transition-all ${p.shapeType === key ? "border-[#27ae60] bg-[#0e1a0e]" : "border-[#0e2010] hover:border-[#3a6a3a] bg-[#060402]"}`}>
                 <div className="text-base leading-none mb-0.5">{icon}</div>
-                <div className={`text-[9px] font-bold ${p.shapeType === key ? "text-[#d4a017]" : "text-[#b09a6a]"}`}>{label}</div>
+                <div className={`text-[9px] font-bold ${p.shapeType === key ? "text-[#27ae60]" : "text-[#b09a6a]"}`}>{label}</div>
               </button>
             ))}
           </div>
           {/* Randomize current arena type */}
           <button onClick={p.onRollSameArena}
-            className="w-full py-1 text-[10px] font-bold rounded-sm border border-[#3a2e18] text-[#b09a6a] hover:border-[#d4a017] hover:text-[#d4a017] transition-all">
+            className="w-full py-1 text-[10px] font-bold rounded-sm border border-[#3a2e18] text-[#b09a6a] hover:border-[#27ae60] hover:text-[#27ae60] transition-all">
             🔀 Randomize This Type Again
           </button>
         </div>
@@ -1536,14 +1793,14 @@ function ArchitectSidebar(p: any) {
             placeholder="Search classname or label..."
             value={p.objSearch || ""}
             onChange={e => p.setObjSearch(e.target.value)}
-            className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1 rounded-sm mb-1 focus:outline-none focus:border-[#8a6a0f]"
+            className="w-full bg-[#060402] border border-[#0e2010] text-[#b8d4b8] text-[11px] px-2 py-1 rounded-sm mb-1 focus:outline-none focus:border-[#8a6a0f]"
           />
           {(p.objSearch || "").length > 0 && (
             <div className="text-[9px] text-[#7a6040] mb-1">
               {DAYZ_OBJECTS.filter(o => `${o.label} ${o.value}`.toLowerCase().includes((p.objSearch || "").toLowerCase())).length} matches
             </div>
           )}
-          <select className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1.5 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
+          <select className="w-full bg-[#060402] border border-[#0e2010] text-[#b8d4b8] text-[11px] px-2 py-1.5 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
             onChange={e => { p.setObjClass(e.target.value); p.setObjSearch(""); }} value={p.objClass}>
             {(() => {
               const q = (p.objSearch || "").toLowerCase().trim();
@@ -1584,7 +1841,7 @@ function ArchitectSidebar(p: any) {
       {sec("shape", "🔷 Shape", (
         <div className="px-3">
           <Lbl>Shape Type</Lbl>
-          <select className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1.5 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
+          <select className="w-full bg-[#060402] border border-[#0e2010] text-[#b8d4b8] text-[11px] px-2 py-1.5 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
             value={p.shapeType} onChange={e => p.onShapeChange(e.target.value)}>
             {SHAPE_GROUPS.map(group => (
               <optgroup key={group} label={group}>
@@ -1595,23 +1852,9 @@ function ArchitectSidebar(p: any) {
             ))}
           </select>
 
-          <Lbl>Structure Mode</Lbl>
-          <div className="flex gap-1 mb-3">
-            {(["frame", "fill"] as FillMode[]).map(f => (
-              <button key={f} onClick={() => p.setFillMode(f)}
-                className={`flex-1 py-1.5 text-[10px] rounded-sm border font-bold transition-all ${p.fillMode === f ? "bg-[#1e4a2a] text-[#5dcc80] border-[#2e6a3a]" : "border-[#2e2518] text-[#b09a6a] hover:border-[#6a5a3a]"}`}>
-                {f === "frame" ? "🔲 FRAME" : "⬛ FILL"}
-              </button>
-            ))}
-          </div>
-
-          {p.fillMode === "fill" && (
-            <Slider label="Fill Density (layers inside)" value={p.fillDensity} min={1} max={6} step={1} onChange={v => p.setFillDensity(v)} />
-          )}
-
           {/* Parameters as sliders */}
           {p.paramDefs.length > 0 && (
-            <div className="border border-[#2e2518] rounded-sm p-2 bg-[#060402]">
+            <div className="border border-[#0e2010] rounded-sm p-2 bg-[#060402]">
               {p.paramDefs.map((def: ParamDef) => (
                 <Slider key={def.id}
                   label={def.label}
@@ -1627,7 +1870,7 @@ function ArchitectSidebar(p: any) {
                   p.paramDefs.forEach((def: ParamDef) => { defaults[def.id] = def.val; });
                   p.setParams(defaults);
                 }}
-                className="mt-1 text-[8px] text-[#6a5a3a] hover:text-[#d4a017] transition-colors border border-[#2e2518] hover:border-[#d4a01744] px-2 py-0.5 rounded-sm w-full">
+                className="mt-1 text-[8px] text-[#3a6a3a] hover:text-[#27ae60] transition-colors border border-[#0e2010] hover:border-[#27ae6044] px-2 py-0.5 rounded-sm w-full">
                 ↺ Reset to defaults
               </button>
             </div>
@@ -1641,7 +1884,7 @@ function ArchitectSidebar(p: any) {
           {/* Famous Locations picker */}
           <Lbl>Famous Chernarus Location</Lbl>
           <select
-            className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1.5 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
+            className="w-full bg-[#060402] border border-[#0e2010] text-[#b8d4b8] text-[11px] px-2 py-1.5 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
             defaultValue=""
             onChange={e => {
               const loc = (p.famousLocations || []).find((l: any) => l.name === e.target.value);
@@ -1694,29 +1937,29 @@ function ArchitectSidebar(p: any) {
             <>
               <Lbl>CE Persistency</Lbl>
               <select value={p.cePersist} onChange={e => p.setCePersist(parseInt(e.target.value))}
-                className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1.5 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]">
+                className="w-full bg-[#060402] border border-[#0e2010] text-[#b8d4b8] text-[11px] px-2 py-1.5 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]">
                 <option value={0}>0 — disabled (recommended)</option>
                 <option value={1}>1 — enabled</option>
               </select>
             </>
           )}
           <label className="flex items-center gap-2 text-[10px] text-[#b09a6a] cursor-pointer">
-            <input type="checkbox" className="accent-[#d4a017]" checked={p.includeHelper} onChange={e => p.setIncludeHelper(e.target.checked)} />
+            <input type="checkbox" className="accent-[#27ae60]" checked={p.includeHelper} onChange={e => p.setIncludeHelper(e.target.checked)} />
             Include SpawnObject() helper
           </label>
           <label className="flex items-center gap-2 text-[10px] text-[#b09a6a] cursor-pointer">
-            <input type="checkbox" className="accent-[#d4a017]" checked={p.autoRotate} onChange={e => p.setAutoRotate(e.target.checked)} />
+            <input type="checkbox" className="accent-[#27ae60]" checked={p.autoRotate} onChange={e => p.setAutoRotate(e.target.checked)} />
             Auto-spin 3D preview
           </label>
-          <div className="border-t border-[#2e2518] pt-2 mt-1">
+          <div className="border-t border-[#0e2010] pt-2 mt-1">
             <div className="text-[9px] text-[#8a6a0f] mb-1 uppercase tracking-wider">🔄 Auto-Orient YPR</div>
-            <label className="flex items-center gap-2 text-[10px] text-[#c8b99a] cursor-pointer mb-1">
-              <input type="checkbox" className="accent-[#d4a017]" checked={p.autoOrient} onChange={e => p.setAutoOrient(e.target.checked)} />
+            <label className="flex items-center gap-2 text-[10px] text-[#b8d4b8] cursor-pointer mb-1">
+              <input type="checkbox" className="accent-[#27ae60]" checked={p.autoOrient} onChange={e => p.setAutoOrient(e.target.checked)} />
               <span>Auto-orient objects (faces outward/inward)</span>
             </label>
             {p.autoOrient && (
               <label className="flex items-center gap-2 text-[10px] text-[#b09a6a] cursor-pointer ml-4">
-                <input type="checkbox" className="accent-[#d4a017]" checked={p.orientInward} onChange={e => p.setOrientInward(e.target.checked)} />
+                <input type="checkbox" className="accent-[#27ae60]" checked={p.orientInward} onChange={e => p.setOrientInward(e.target.checked)} />
                 Face inward (toward center)
               </label>
             )}
@@ -1743,11 +1986,11 @@ function ArchitectSidebar(p: any) {
             onChange={e => p.setBuildNotes(e.target.value)}
             placeholder="e.g. North arena, Troitskoe base — added March 2025&#10;Use Land_Castle_Wall_3m_DE for frame objects..."
             rows={4}
-            className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[10px] px-2 py-1.5 rounded-sm resize-none focus:outline-none focus:border-[#d4a017] placeholder-[#3a2e18] leading-relaxed"
+            className="w-full bg-[#060402] border border-[#0e2010] text-[#b8d4b8] text-[10px] px-2 py-1.5 rounded-sm resize-none focus:outline-none focus:border-[#27ae60] placeholder-[#3a2e18] leading-relaxed"
           />
           {p.buildNotes.trim() && (
             <button onClick={() => p.setBuildNotes("")}
-              className="mt-1 text-[8px] text-[#5a4820] hover:text-[#9a8858] transition-colors">
+              className="mt-1 text-[8px] text-[#5a4820] hover:text-[#5a8a5a] transition-colors">
               Clear notes
             </button>
           )}
@@ -1761,10 +2004,9 @@ function ArchitectSidebar(p: any) {
 
       {/* Stats — compact strip */}
       <div className="mx-3 mt-3 rounded-sm border border-[#1e1c18] px-2 py-1.5 bg-[#060402] flex items-center gap-3 flex-wrap text-[9px]">
-        <span className="text-[#d4a017] font-bold">{p.objCount} obj</span>
+        <span className="text-[#27ae60] font-bold">{p.objCount} obj</span>
         {p.dims && <span className="text-[#8a7840]">{p.dims.w}×{p.dims.d}×{p.dims.h}m</span>}
         <span className="text-[#8a7840]">{p.scaleVal.toFixed(2)}×</span>
-        <span className="text-[#8a7840]">{p.fillMode}{p.fillMode === "fill" ? ` d${p.fillDensity}` : ""}</span>
         {p.autoOrient && <span className="text-[#27ae60]">{p.orientInward ? "↙ inward" : "↗ outward"}</span>}
       </div>
 
@@ -1773,13 +2015,13 @@ function ArchitectSidebar(p: any) {
         <div className="px-3 mx-3 mt-2">
           <div className="rounded-sm border border-[#c0392b55] bg-[#1a0808] px-2 py-1.5 text-[8px] text-[#c0392b] leading-snug">
             ⚠ <strong>{p.objCount} objects</strong> — DayZ console may struggle above ~1 000.
-            {p.fillMode === "fill" ? " Try lowering Fill Density or switching to Frame mode." : " Consider a smaller shape or higher spacing."}
+            {" Consider a smaller shape or higher spacing."}
           </div>
         </div>
       )}
       {p.objCount > 500 && p.objCount <= 1000 && (
         <div className="px-3 mx-3 mt-2">
-          <div className="rounded-sm border border-[#d4a01744] bg-[#1a1408] px-2 py-1.5 text-[8px] text-[#c8a050] leading-snug">
+          <div className="rounded-sm border border-[#27ae6044] bg-[#0e1a0e] px-2 py-1.5 text-[8px] text-[#c8a050] leading-snug">
             ℹ <strong>{p.objCount} objects</strong> — getting large. Test server performance before final use.
           </div>
         </div>
@@ -1788,11 +2030,11 @@ function ArchitectSidebar(p: any) {
       {/* Buttons */}
       <div className="px-3 mt-3 flex flex-col gap-1.5">
         <button onClick={p.onGenerate}
-          className="w-full py-2.5 bg-[#d4a017] text-[#0a0804] font-black text-[12px] tracking-widest rounded-sm hover:bg-[#e8b82a] transition-all shadow-lg">
-          ⚙ GENERATE CODE
+          className={`w-full py-2.5 font-black text-[12px] tracking-widest rounded-sm transition-all shadow-lg ${p.objCount > 1500 ? "bg-[#c0392b] text-white hover:bg-[#e74c3c]" : "bg-[#27ae60] text-[#080f09] hover:bg-[#e8b82a]"}`}>
+          {p.objCount > 1500 ? "⚠ GENERATE CODE" : "⚙ GENERATE CODE"}
         </button>
         <button onClick={p.onClear}
-          className="w-full py-1.5 bg-[#1e1608] text-[#b09a6a] text-[11px] font-bold rounded-sm hover:bg-[#2e2518] hover:text-[#8a7a5a] transition-all">
+          className="w-full py-1.5 bg-[#1e1608] text-[#b09a6a] text-[11px] font-bold rounded-sm hover:bg-[#0e2010] hover:text-[#8a7a5a] transition-all">
           ✕ Clear Output
         </button>
       </div>
@@ -1809,7 +2051,7 @@ function TextSidebar(p: any) {
         <Lbl>Type your text (A–Z, 0–9, !?., space)</Lbl>
         <input type="text" value={p.textInput} onChange={e => p.setTextInput(e.target.value.toUpperCase())}
           placeholder="DAYZ"
-          className="w-full bg-[#060402] border-2 border-[#d4a017] text-[#d4a017] text-xl px-3 py-2 rounded-sm mb-2 focus:outline-none font-mono font-black tracking-[0.3em] text-center"
+          className="w-full bg-[#060402] border-2 border-[#27ae60] text-[#27ae60] text-xl px-3 py-2 rounded-sm mb-2 focus:outline-none font-mono font-black tracking-[0.3em] text-center"
         />
         <Slider label="Letter Height (m)" value={p.textLetterH} min={3} max={50} step={1} onChange={p.setTextLetterH} />
         <Slider label="Letter Spacing" value={p.textSpacing} min={0.8} max={2.5} step={0.05} onChange={p.setTextSpacing} />
@@ -1820,14 +2062,14 @@ function TextSidebar(p: any) {
           <Lbl>Arc Bend (°) — 0=straight, 180=semicircle, 360=full ring</Lbl>
           {p.textArcDeg !== 0 && (
             <button onClick={() => p.setTextArcDeg(0)}
-              className="text-[9px] px-1.5 py-0.5 border border-[#6a5a3a] text-[#b09a6a] rounded-sm hover:border-[#d4a017] hover:text-[#d4a017] transition-all">
+              className="text-[9px] px-1.5 py-0.5 border border-[#3a6a3a] text-[#b09a6a] rounded-sm hover:border-[#27ae60] hover:text-[#27ae60] transition-all">
               Reset
             </button>
           )}
         </div>
         <Slider label="" value={p.textArcDeg} min={-360} max={360} step={5} onChange={p.setTextArcDeg} />
         {Math.abs(p.textArcDeg) >= 1 && (
-          <div className="text-[9px] text-[#d4a017] mb-1.5 px-0.5">
+          <div className="text-[9px] text-[#27ae60] mb-1.5 px-0.5">
             {Math.abs(p.textArcDeg) < 180 ? "Arc curve" : Math.abs(p.textArcDeg) < 360 ? "Horseshoe arc" : "Full circle"} — {p.textArcDeg > 0 ? "curves Z+" : "curves Z-"}
           </div>
         )}
@@ -1847,7 +2089,7 @@ function TextSidebar(p: any) {
             ["Strobe Light", "StaticObj_Airfield_Light_Strobe_01"],
           ].map(([label, val]) => (
             <button key={val} onClick={() => p.setTextObj(val)}
-              className={`text-left text-[10px] px-2 py-1.5 rounded-sm border truncate transition-all ${p.textObj === val ? "border-[#d4a017] text-[#d4a017] bg-[#1a1408]" : "border-[#2e2518] text-[#b09a6a] hover:border-[#6a5a3a] hover:text-[#c8b99a]"}`}>
+              className={`text-left text-[10px] px-2 py-1.5 rounded-sm border truncate transition-all ${p.textObj === val ? "border-[#27ae60] text-[#27ae60] bg-[#0e1a0e]" : "border-[#0e2010] text-[#b09a6a] hover:border-[#3a6a3a] hover:text-[#b8d4b8]"}`}>
               {label}
             </button>
           ))}
@@ -1858,9 +2100,9 @@ function TextSidebar(p: any) {
           placeholder="Search classname or label..."
           value={p.textObjSearch || ""}
           onChange={(e: any) => p.setTextObjSearch(e.target.value)}
-          className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1 rounded-sm mb-1 focus:outline-none focus:border-[#8a6a0f]"
+          className="w-full bg-[#060402] border border-[#0e2010] text-[#b8d4b8] text-[11px] px-2 py-1 rounded-sm mb-1 focus:outline-none focus:border-[#8a6a0f]"
         />
-        <select className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1.5 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
+        <select className="w-full bg-[#060402] border border-[#0e2010] text-[#b8d4b8] text-[11px] px-2 py-1.5 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
           value={p.textObj} onChange={(e: any) => { p.setTextObj(e.target.value); p.setTextObjSearch(""); }}>
           {(() => {
             const q = (p.textObjSearch || "").toLowerCase().trim();
@@ -1886,7 +2128,7 @@ function TextSidebar(p: any) {
         </select>
         <Lbl>Custom Classname (type any valid DayZ class)</Lbl>
         <input type="text" value={p.textObj} onChange={(e: any) => p.setTextObj(e.target.value)}
-          className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1.5 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
+          className="w-full bg-[#060402] border border-[#0e2010] text-[#b8d4b8] text-[11px] px-2 py-1.5 rounded-sm mb-2 focus:outline-none focus:border-[#8a6a0f]"
         />
       </div>
 
@@ -1904,21 +2146,21 @@ function TextSidebar(p: any) {
       <div className="flex gap-1 px-3 mb-3">
         {(["initc", "json"] as OutputFormat[]).map(f => (
           <button key={f} onClick={() => p.setTextFormat(f)}
-            className={`flex-1 py-1.5 text-[11px] rounded-sm border font-bold transition-all ${p.textFormat === f ? "bg-[#d4a017] text-[#0a0804] border-[#d4a017]" : "border-[#2e2518] text-[#b09a6a] hover:border-[#6a5a3a]"}`}>
+            className={`flex-1 py-1.5 text-[11px] rounded-sm border font-bold transition-all ${p.textFormat === f ? "bg-[#27ae60] text-[#080f09] border-[#27ae60]" : "border-[#0e2010] text-[#b09a6a] hover:border-[#3a6a3a]"}`}>
             {f === "initc" ? "init.c" : "JSON"}
           </button>
         ))}
       </div>
 
       {/* Live stats */}
-      <div className="px-3 mx-3 rounded-sm border border-[#2e2518] p-2 bg-[#060402] text-[10px]">
-        <div className="flex justify-between mb-1"><span className="text-[#b09a6a]">Objects</span><span className="text-[#d4a017] font-bold">{p.objCount}</span></div>
-        <div className="flex justify-between"><span className="text-[#b09a6a]">Scale</span><span className="text-[#d4a017]">{p.textScale.toFixed(2)}×</span></div>
+      <div className="px-3 mx-3 rounded-sm border border-[#0e2010] p-2 bg-[#060402] text-[10px]">
+        <div className="flex justify-between mb-1"><span className="text-[#b09a6a]">Objects</span><span className="text-[#27ae60] font-bold">{p.objCount}</span></div>
+        <div className="flex justify-between"><span className="text-[#b09a6a]">Scale</span><span className="text-[#27ae60]">{p.textScale.toFixed(2)}×</span></div>
       </div>
 
       <div className="px-3 mt-3">
         <button onClick={p.onGenerate}
-          className="w-full py-2.5 bg-[#d4a017] text-[#0a0804] font-black text-[12px] tracking-widest rounded-sm hover:bg-[#e8b82a] transition-all shadow-lg">
+          className="w-full py-2.5 bg-[#27ae60] text-[#080f09] font-black text-[12px] tracking-widest rounded-sm hover:bg-[#e8b82a] transition-all shadow-lg">
           ⚙ GENERATE TEXT CODE
         </button>
       </div>
@@ -1938,7 +2180,7 @@ function BuildsSidebar(p: {
   onSelect: (id: string) => void;
   onFilterChange: (v: string) => void;
   onCategoryChange: (v: string) => void;
-  onDownload: (b: CompletedBuild, mode: "frame" | "fill", fmt: "initc" | "json") => void;
+  onDownload: (b: CompletedBuild, fmt: "initc" | "json") => void;
 }) {
   const CATS = ["All", ...Array.from(new Set(p.builds.map(b => b.category)))];
   const filtered = p.builds.filter(b => {
@@ -1951,7 +2193,7 @@ function BuildsSidebar(p: {
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="px-3 pt-3 pb-2 border-b border-[#2e2518] shrink-0">
+      <div className="px-3 pt-3 pb-2 border-b border-[#0e2010] shrink-0">
         <div className="text-[#27ae60] text-[9px] font-bold tracking-widest uppercase mb-2">
           🏆 Completed Builds — {p.builds.length} Builds Ready
         </div>
@@ -1960,15 +2202,15 @@ function BuildsSidebar(p: {
           value={p.filter}
           onChange={e => p.onFilterChange(e.target.value)}
           placeholder="Search builds..."
-          className="w-full bg-[#060402] border border-[#2e2518] text-[#c8b99a] text-[11px] px-2 py-1.5 rounded-sm focus:outline-none focus:border-[#27ae60] transition-colors mb-2"
+          className="w-full bg-[#060402] border border-[#0e2010] text-[#b8d4b8] text-[11px] px-2 py-1.5 rounded-sm focus:outline-none focus:border-[#27ae60] transition-colors mb-2"
         />
         {/* Category tabs */}
         <div className="flex flex-wrap gap-1">
           {CATS.map(cat => (
             <button key={cat} onClick={() => p.onCategoryChange(cat)}
               className={`px-1.5 py-0.5 text-[9px] rounded-sm font-bold transition-all border ${p.category === cat
-                ? "bg-[#27ae60] text-[#0a0804] border-[#27ae60]"
-                : "border-[#2e2518] text-[#9a8858] hover:border-[#27ae60] hover:text-[#7ec060]"
+                ? "bg-[#27ae60] text-[#080f09] border-[#27ae60]"
+                : "border-[#0e2010] text-[#5a8a5a] hover:border-[#27ae60] hover:text-[#7ec060]"
               }`}>
               {cat === "All" ? "All" : cat.split(" ")[0]}
             </button>
@@ -1979,7 +2221,7 @@ function BuildsSidebar(p: {
       {/* Build list */}
       <div className="flex-1 overflow-y-auto">
         {filtered.length === 0 && (
-          <div className="px-3 py-6 text-center text-[#9a8858] text-[11px]">No builds match your search</div>
+          <div className="px-3 py-6 text-center text-[#5a8a5a] text-[11px]">No builds match your search</div>
         )}
         {filtered.map(b => {
           const isSelected = b.id === p.selectedId;
@@ -1992,8 +2234,8 @@ function BuildsSidebar(p: {
               <div className="flex items-center gap-1.5 px-3 pt-2 pb-1">
                 <span className="text-base shrink-0">{b.icon}</span>
                 <div className="min-w-0 flex-1">
-                  <div className={`text-[11px] font-bold truncate ${isSelected ? "text-[#27ae60]" : "text-[#c8b99a]"}`}>{b.name}</div>
-                  <div className="text-[9px] text-[#9a8858] truncate">{b.category}</div>
+                  <div className={`text-[11px] font-bold truncate ${isSelected ? "text-[#27ae60]" : "text-[#b8d4b8]"}`}>{b.name}</div>
+                  <div className="text-[9px] text-[#5a8a5a] truncate">{b.category}</div>
                 </div>
                 <span className={`text-[8px] px-1 py-0.5 rounded-sm border font-bold shrink-0 ${loc === "NWAF" ? "border-[#1a4a6a] text-[#4a9abf]" : "border-[#4a1a1a] text-[#bf4a4a]"}`}>
                   {loc}
@@ -2003,27 +2245,32 @@ function BuildsSidebar(p: {
               {/* Tagline */}
               <div className="px-3 pb-1 text-[9px] text-[#8a7840] leading-relaxed line-clamp-2">{b.tagline}</div>
 
-              {/* Object count badge */}
-              {b.frameCount !== undefined && (
-                <div className="px-3 pb-1 flex items-center gap-1.5">
-                  <span className="px-1.5 py-0.5 rounded-sm text-[8px] font-bold bg-[#1a2e1a] border border-[#27ae60] text-[#27ae60]">
-                    ⚡ {b.frameCount} objects
-                  </span>
-                  <span className="text-[#6a5a3a] text-[8px]">server-friendly</span>
-                </div>
-              )}
+              {/* Object count badge — live computed */}
+              {(() => {
+                const pts = getShapePoints(b.shape, b.params);
+                const extras = (b.extraFrame || "").split(",").map((s: string) => s.trim()).filter(Boolean).length;
+                const liveN = pts.length * (1 + extras);
+                return (
+                  <div className="px-3 pb-1 flex items-center gap-1.5">
+                    <span className="px-1.5 py-0.5 rounded-sm text-[8px] font-bold bg-[#0e2010] border border-[#27ae60] text-[#27ae60]">
+                      ⚡ {liveN} objects
+                    </span>
+                    <span className="text-[#3a6a3a] text-[8px]">server-friendly</span>
+                  </div>
+                );
+              })()}
 
               {/* Download buttons */}
               <div className="px-3 pb-2 grid grid-cols-2 gap-1">
                 <button
-                  onClick={e => { e.stopPropagation(); p.onDownload(b, "frame", "initc"); }}
-                  className="py-1.5 text-[9px] font-bold border border-[#27ae60] text-[#27ae60] rounded-sm hover:bg-[#27ae60] hover:text-[#0a0804] transition-all">
-                  ⬇ FRAME .c
+                  onClick={e => { e.stopPropagation(); p.onDownload(b, "initc"); }}
+                  className="py-1.5 text-[9px] font-bold border border-[#27ae60] text-[#27ae60] rounded-sm hover:bg-[#27ae60] hover:text-[#080f09] transition-all">
+                  ⬇ init.c
                 </button>
                 <button
-                  onClick={e => { e.stopPropagation(); p.onDownload(b, "fill", "initc"); }}
-                  className="py-1.5 text-[9px] font-bold border border-[#d4a017] text-[#d4a017] rounded-sm hover:bg-[#d4a017] hover:text-[#0a0804] transition-all">
-                  ⬇ FILL .c
+                  onClick={e => { e.stopPropagation(); p.onDownload(b, "json"); }}
+                  className="py-1.5 text-[9px] font-bold border border-[#6a7abf] text-[#6a7abf] rounded-sm hover:bg-[#6a7abf] hover:text-[#080f09] transition-all">
+                  ⬇ JSON
                 </button>
               </div>
             </div>
@@ -2032,7 +2279,7 @@ function BuildsSidebar(p: {
       </div>
 
       {/* Footer */}
-      <div className="px-3 py-2 border-t border-[#2e2518] text-[9px] text-[#9a8858] shrink-0">
+      <div className="px-3 py-2 border-t border-[#0e2010] text-[9px] text-[#5a8a5a] shrink-0">
         All builds pre-positioned at NWAF or Krasnoe · Console safe
       </div>
     </div>
