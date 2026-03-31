@@ -4,6 +4,7 @@ import { getShapePoints, Point3D } from "@/lib/shapeGenerators";
 import { SHAPE_DEFS, SHAPE_GROUPS, ParamDef } from "@/lib/shapeParams";
 import { DAYZ_OBJECTS, OBJECT_GROUPS, formatInitC, HELPER_FUNC } from "@/lib/dayzObjects";
 import { COMPLETED_BUILDS, CompletedBuild } from "@/lib/completedBuilds";
+import { generateBuildInterior, interiorToInitC, interiorToJSON } from "@/lib/buildInteriorData";
 import WeaponBuilder from "@/WeaponBuilder";
 import BunkerMaker from "@/BunkerMaker";
 import MazeMaker from "@/MazeMaker";
@@ -730,6 +731,8 @@ export default function App() {
   const [buildFilter, setBuildFilter] = useState("");
   const [buildCategory, setBuildCategory] = useState("All");
   const [zipGenerating, setZipGenerating] = useState(false);
+  const [addInterior, setAddInterior] = useState(false);
+  const [lootSeed, setLootSeed] = useState(() => Math.floor(Math.random() * 99999));
 
   // Live object count for selected build (replaces hardcoded b.frameCount)
   const selectedBuildLiveCount = useMemo(() => {
@@ -1019,6 +1022,10 @@ export default function App() {
     const cx3 = pts.reduce((s, p) => s + p.x, 0) / Math.max(1, pts.length);
     const cz3 = pts.reduce((s, p) => s + p.z, 0) / Math.max(1, pts.length);
 
+    const interiorEntries = (addInterior && build.interiorType)
+      ? generateBuildInterior(build, lootSeed)
+      : [];
+
     let code = "";
     if (fmt === "initc") {
       const lines: string[] = [
@@ -1027,7 +1034,7 @@ export default function App() {
         `// ${build.tagline}`,
         `// Object: ${obj}${extraList.length ? " + " + extraList.join(", ") : ""}`,
         `// Location: ${build.posX} ${build.posY} ${build.posZ} (${build.posX < 8000 ? "NWAF" : "Krasnoe"})`,
-        `// Objects: ${pts.length * (1 + extraList.length)}`,
+        `// Objects: ${pts.length * (1 + extraList.length)}${interiorEntries.length ? ` + ${interiorEntries.length} interior/loot` : ""}`,
         `// ${build.objectNotes}`,
         "",
       ];
@@ -1035,8 +1042,9 @@ export default function App() {
         const wx = pt.x + build.posX, wy = pt.y + build.posY, wz = pt.z + build.posZ;
         const ptYaw = build.autoOrient ? Math.atan2(pt.x - cx3, pt.z - cz3) * 180 / Math.PI : 0;
         lines.push(formatInitC(obj, wx, wy, wz, 0, ptYaw, 0, 1.0));
-        extraList.forEach((ex, ei) => lines.push(formatInitC(ex, wx, wy, wz, 0, ptYaw, 0, 1.0)));
+        extraList.forEach((ex) => lines.push(formatInitC(ex, wx, wy, wz, 0, ptYaw, 0, 1.0)));
       });
+      if (interiorEntries.length > 0) lines.push("", interiorToInitC(interiorEntries));
       code = lines.join("\n");
     } else {
       const objs: object[] = [];
@@ -1044,14 +1052,16 @@ export default function App() {
         const wx = pt.x + build.posX, wy = pt.y + build.posY, wz = pt.z + build.posZ;
         const ptYaw = build.autoOrient ? Math.atan2(pt.x - cx3, pt.z - cz3) * 180 / Math.PI : 0;
         objs.push({ name: obj, pos: [+wx.toFixed(3), +wy.toFixed(3), +wz.toFixed(3)], ypr: [0, +ptYaw.toFixed(4), 0], scale: 1.0, enableCEPersistency: 0, customString: "" });
-        extraList.forEach((ex, ei) => objs.push({ name: ex, pos: [+wx.toFixed(3), +(wy).toFixed(3), +wz.toFixed(3)], ypr: [0, +ptYaw.toFixed(4), 0], scale: 1.0, enableCEPersistency: 0, customString: "" }));
+        extraList.forEach((ex) => objs.push({ name: ex, pos: [+wx.toFixed(3), +(wy).toFixed(3), +wz.toFixed(3)], ypr: [0, +ptYaw.toFixed(4), 0], scale: 1.0, enableCEPersistency: 0, customString: "" }));
       });
+      if (interiorEntries.length > 0) objs.push(...interiorToJSON(interiorEntries));
       code = JSON.stringify({ Objects: objs }, null, 2);
     }
 
     const ext = fmt === "initc" ? "c" : "json";
     downloadCode(code, ext, build.id);
-    showToast(`Downloaded ${build.name} — ${pts.length * (1 + extraList.length)} objects`);
+    const total = pts.length * (1 + extraList.length) + interiorEntries.length;
+    showToast(`Downloaded ${build.name} — ${total} objects${interiorEntries.length ? ` (incl. ${interiorEntries.length} interior/loot)` : ""}`);
   };
 
   // ── BULK ZIP DOWNLOAD ─────────────────────────────────────────────────────
@@ -1391,6 +1401,35 @@ export default function App() {
                         <div className="mt-1 text-[9px] text-[#3a6a3a]">Pre-positioned at Krasnoe Airfield flat apron — ready to paste into init.c</div>
                       )}
                     </div>
+                    {/* Interior & Loot toggle */}
+                    {b.interiorType && (
+                      <div className="mt-2 p-2 bg-[#0a1a0a] border border-[#1e3a1e] rounded-sm">
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="flex items-center gap-2 cursor-pointer select-none">
+                            <input
+                              type="checkbox"
+                              checked={addInterior}
+                              onChange={e => setAddInterior(e.target.checked)}
+                              className="accent-[#27ae60]"
+                            />
+                            <span className="text-[10px] text-[#7abf7a] font-bold uppercase tracking-wider">Add Interior &amp; Loot</span>
+                          </label>
+                          {addInterior && (
+                            <button
+                              onClick={() => setLootSeed(Math.floor(Math.random() * 99999))}
+                              className="text-[9px] px-2 py-0.5 bg-[#1a2e1a] border border-[#27ae60] text-[#27ae60] rounded-sm hover:bg-[#27ae60] hover:text-[#080f09] transition-all"
+                            >
+                              🎲 Randomise Loot
+                            </button>
+                          )}
+                        </div>
+                        {addInterior && (
+                          <div className="text-[9px] text-[#3a6a3a]">
+                            Seed: <span className="text-[#27ae60] font-mono">{lootSeed}</span> · Theme: <span className="text-[#7abf7a]">{b.lootTheme ?? b.interiorType}</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
                     <div className="grid grid-cols-2 gap-2 mt-1">
                       <button onClick={() => downloadBuild(b, "initc")}
                         className="py-2 text-[11px] font-bold bg-[#0e2010] border border-[#27ae60] text-[#27ae60] rounded-sm hover:bg-[#27ae60] hover:text-[#080f09] transition-all">

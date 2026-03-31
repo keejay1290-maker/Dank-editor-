@@ -33,6 +33,8 @@ export interface CompletedBuild {
   // Pre-computed object counts (frame pts / fill pts estimate)
   frameCount?: number;
   fillCount?: number;
+  interiorType?: "open" | "building" | "structure";
+  lootTheme?: "military" | "civilian" | "medical" | "industrial" | "mixed";
 }
 
 // NWAF (Northwest Airfield, Chernarus) — long flat tarmac runway
@@ -55,6 +57,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     fillObj: "Barrel_Blue",
     ...NWAF, posY: 175,
     objectNotes: "Gas tanks trace the spherical rings; barrels give a dense blue metallic fill.",
+    interiorType: "structure",
+    lootTheme: "military",
   },
   {
     id: "halo_ring",
@@ -69,6 +73,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     autoOrient: true,
     ...NWAF, posY: 160,
     objectNotes: "Rail platform segments curve naturally around the ring; concrete slabs thicken the band.",
+    interiorType: "structure",
+    lootTheme: "military",
   },
   {
     id: "borg_cube",
@@ -82,6 +88,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     fillObj: "StaticObj_Container_1C",
     ...NWAF,
     objectNotes: "Industrial shipping containers on every face grid — perfect Borg collective architecture.",
+    interiorType: "structure",
+    lootTheme: "mixed",
   },
   {
     id: "orbital_station",
@@ -95,6 +103,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     fillObj: "Land_GasTank_Cylindrical",
     ...NWAF, posY: 165,
     objectNotes: "Concrete round tanks trace the ring; gas tanks fill the curved station body.",
+    interiorType: "structure",
+    lootTheme: "mixed",
   },
   {
     id: "millennium_falcon",
@@ -108,6 +118,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     fillObj: "Barrel_Green",
     ...NWAF,
     objectNotes: "Gas tanks frame the hull rings; green barrels fill the disc — distinct ship silhouette.",
+    interiorType: "structure",
+    lootTheme: "mixed",
   },
   {
     id: "black_hole",
@@ -121,6 +133,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     fillObj: "Land_BarbedWire_01_DE",
     ...NWAF,
     objectNotes: "Czech hedgehog tank traps spiral outward; barbed wire fills the accretion disc arms.",
+    interiorType: "structure",
+    lootTheme: "mixed",
   },
   {
     id: "crashed_ufo",
@@ -135,6 +149,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Barrel_Yellow",
     ...KRASN,
     objectNotes: "Gas cylinders trace the crashed disc edge; green + yellow barrels imply bio-contamination.",
+    interiorType: "structure",
+    lootTheme: "mixed",
   },
 
   // ─── 🎬 Movies & TV ─────────────────────────────────────────────────────────
@@ -151,6 +167,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_BarbedWire_01_DE",
     ...NWAF,
     objectNotes: "Power line towers trace the dark spire; radio towers fill the frame with a sinister silhouette. Barbed wire adds the spike detail.",
+    interiorType: "structure",
+    lootTheme: "mixed",
   },
   {
     id: "minas_tirith",
@@ -165,6 +183,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_Wall_Brick_8m_DE",
     ...KRASN,
     objectNotes: "Monument walls trace the iconic white-stone tower rings; brick+concrete walls fill the citadel body.",
+    interiorType: "open",
+    lootTheme: "military",
   },
   {
     id: "atat_walker",
@@ -179,6 +199,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_BarrierConcrete_01_DE",
     ...NWAF,
     objectNotes: "BTR wreck chunks trace the leg/body structure; containers fill the boxy hull; concrete barriers add the armour plate detail.",
+    interiorType: "structure",
+    lootTheme: "military",
   },
   {
     id: "t800",
@@ -193,6 +215,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_BarbedWire_01_DE",
     ...NWAF,
     objectNotes: "Czech hedgehog traps read as the angular skeleton joints; barbed wire laces through the ribcage. Blue barrels give a metallic chrome fill.",
+    interiorType: "structure",
+    lootTheme: "military",
   },
   {
     id: "mordor_gate",
@@ -207,6 +231,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_BarrierConcrete_02_DE",
     ...KRASN,
     objectNotes: "Concrete 8m walls form the dark tower flanks; concrete barriers detail the arch. Very imposing gate structure.",
+    interiorType: "open",
+    lootTheme: "military",
   },
   {
     id: "star_destroyer",
@@ -220,6 +246,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     fillObj: "Land_BarrierConcrete_01_DE",
     ...NWAF,
     objectNotes: "Shipping containers define the wedge silhouette; concrete barriers fill the stepped decks.",
+    interiorType: "structure",
+    lootTheme: "military",
   },
 
   // ─── 🏛 Monuments ─────────────────────────────────────────────────────────
@@ -235,6 +263,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     fillObj: "DZ\\rocks_bliss\\stone9_moss.p3d",
     ...NWAF,
     objectNotes: "Rock monoliths ARE the standing stones — couldn't be more fitting. Mossy stones fill between the megaliths.",
+    interiorType: "open",
+    lootTheme: "mixed",
   },
   {
     id: "colosseum",
@@ -250,6 +280,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     autoOrient: true,
     ...KRASN,
     objectNotes: "Concrete 4m walls trace the tiered arches; brick walls add texture between tiers; barriers fill the seating bowl.",
+    interiorType: "open",
+    lootTheme: "mixed",
   },
   {
     id: "celtic_ring",
@@ -264,6 +296,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFill: "DZ\\rocks_bliss\\clutter_01.p3d",
     ...NWAF,
     objectNotes: "Monolith rocks form the outer standing stones; mossy stones and rock clutter fill the inner sacred ground.",
+    interiorType: "open",
+    lootTheme: "mixed",
   },
   {
     id: "pyramid_aztec",
@@ -279,6 +313,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     autoOrient: true,
     ...NWAF,
     objectNotes: "8m concrete walls define each step tier; large concrete slabs fill the step faces; barriers add the decorative detail.",
+    interiorType: "open",
+    lootTheme: "mixed",
   },
 
   // ─── 💀 Dark & Horror ──────────────────────────────────────────────────────
@@ -294,6 +330,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     fillObj: "Barrel_Red",
     ...KRASN,
     objectNotes: "Rock spikes form the jagged skull bone structure; red barrels fill the skull with a bloody interior.",
+    interiorType: "open",
+    lootTheme: "mixed",
   },
   {
     id: "volcano",
@@ -308,6 +346,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFill: "DZ\\rocks_bliss\\clutter_01.p3d",
     ...KRASN,
     objectNotes: "Rock monoliths outline the volcanic cone ridges and lava flows; mossy stones and clutter fill the mountain body.",
+    interiorType: "open",
+    lootTheme: "mixed",
   },
   {
     id: "mushroom_cloud",
@@ -322,6 +362,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Barrel_Red",
     ...NWAF, posY: 135,
     objectNotes: "Yellow hazmat barrels trace the cloud outline; big gas tanks fill the stem and cap. Red barrels accent the fireball base.",
+    interiorType: "structure",
+    lootTheme: "mixed",
   },
 
   // ─── 🤖 Mechs ─────────────────────────────────────────────────────────────
@@ -338,6 +380,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_Wreck_T72_DE",
     ...NWAF,
     objectNotes: "BTR wreck chunks form the armour plates; T72 wreck pieces add heavy tank-grade armour to the mech joints. Containers fill the torso.",
+    interiorType: "structure",
+    lootTheme: "military",
   },
   {
     id: "spider_walker",
@@ -352,6 +396,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_BarbedWire_01_DE",
     ...NWAF,
     objectNotes: "BTR wrecks mark the leg joints and body rings; hedgehogs fill with a spiky mechanical look; barbed wire adds leg-spine detail.",
+    interiorType: "structure",
+    lootTheme: "military",
   },
 
   // ─── 🏰 Military & Bases ───────────────────────────────────────────────────
@@ -369,6 +415,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     autoOrient: true,
     ...KRASN,
     objectNotes: "HESCO 5m barriers form the star-fort walls and bastions; sandbag walls fill the ramparts; barbed wire crowns the parapets.",
+    interiorType: "open",
+    lootTheme: "military",
   },
   {
     id: "prison_tower",
@@ -384,6 +432,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     autoOrient: true,
     ...KRASN,
     objectNotes: "Tall military watchtowers ring each floor; concrete 4m walls fill between towers; bunkers at ground level anchor the structure.",
+    interiorType: "building",
+    lootTheme: "military",
   },
 
   // ─── ⚡ Lightweight Builds — server-friendly, handcrafted originals ──────────
@@ -402,6 +452,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     ...KRASN, posX: 11900, posZ: 12490,
     frameCount: 22, fillCount: 22,
     objectNotes: "Frame mode: 22 birch trees — 12 form the four structural trunks rising from ground, 4 mark the platform edges, 4 define the wall corners, 2 ridge the roofline. Fill mode swaps to wooden pallets for a solid timber-platform look. Drop it in a forest clearing for peak immersion.",
+    interiorType: "building",
+    lootTheme: "civilian",
   },
   {
     id: "lw_checkpoint",
@@ -416,6 +468,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     ...KRASN, posX: 11970, posZ: 12610,
     frameCount: 9, fillCount: 9,
     objectNotes: "9 concrete barriers arranged in a classic zigzag — vehicles must slow to navigate. Two flanking positions for shooters, two rear watchtower slots. Fill mode converts to sandbag corners for a softer, entrenched look. Ultra-lightweight: 9 objects total.",
+    interiorType: "open",
+    lootTheme: "military",
   },
   {
     id: "lw_watchtower_triangle",
@@ -430,6 +484,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     ...KRASN, posX: 12010, posZ: 12480,
     frameCount: 7, fillCount: 7,
     objectNotes: "Three tall military watchtowers form an equilateral triangle — any approach is covered by at least two towers. Three sandbag wall midpoints seal the gaps. One central object marks the command post or fire pit. Just 7 objects — negligible server load, maximum threat.",
+    interiorType: "building",
+    lootTheme: "military",
   },
   {
     id: "lw_fuel_depot",
@@ -444,6 +500,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     ...KRASN, posX: 11930, posZ: 12580,
     frameCount: 10, fillCount: 10,
     objectNotes: "Frame: 2 big gas tanks + 2 cylindrical pump tanks behind the canopy, with 3 staggered concrete barriers defending the approach and 2 guard positions on the flanks — 10 objects total. Fill mode swaps everything to cylindrical tanks for a tighter industrial look.",
+    interiorType: "structure",
+    lootTheme: "industrial",
   },
   {
     id: "lw_sniper_nest",
@@ -458,6 +516,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     ...KRASN, posX: 12050, posZ: 12540,
     frameCount: 8, fillCount: 8,
     objectNotes: "5 large rock monoliths form an irregular base pentagon — varied radius breaks the man-made pattern. 2 elevated monoliths at 3m height give the sniper a raised firing platform. 1 rear rock marks the concealed exit route. Fill mode uses jagged rock spikes for a more dramatic, hostile look.",
+    interiorType: "open",
+    lootTheme: "military",
   },
   {
     id: "lw_farmstead",
@@ -472,6 +532,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     ...KRASN, posX: 11880, posZ: 12520,
     frameCount: 16, fillCount: 16,
     objectNotes: "4 brick walls define the house corners. 4 larger walls define the barn (offset to the right). 1 silo position, 1 well, and 6 perimeter fence-post walls round out the compound at 16 objects. Fill mode hardens everything to concrete — now it's a fortified homestead rather than a farm.",
+    interiorType: "building",
+    lootTheme: "civilian",
   },
   {
     id: "lw_survivor_camp",
@@ -486,6 +548,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     ...KRASN, posX: 11960, posZ: 12510,
     frameCount: 10, fillCount: 10,
     objectNotes: "10 objects. Frame: small military tents at all 10 positions — one at centre as the community tent, four around it, a cluster of three supply tents, two perimeter lookouts. Fill: replaces tents with blue barrels to show the supply cache layout. The fire in the middle is implied by the central object.",
+    interiorType: "building",
+    lootTheme: "civilian",
   },
   {
     id: "lw_bunker_line",
@@ -500,6 +564,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     ...KRASN, posX: 12000, posZ: 12560,
     frameCount: 11, fillCount: 11,
     objectNotes: "4+4 sandbag wall sections create a parallel-channel approach — infantry can advance under cover. 1 central command bunker anchors the far end. 2 flanking concrete bunkers extend the defensive line. 11 objects total. Fill mode replaces sandbag walls with concrete bunkers for a hardened fortress look.",
+    interiorType: "building",
+    lootTheme: "military",
   },
   {
     id: "lw_power_relay",
@@ -514,6 +580,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     ...KRASN, posX: 11920, posZ: 12560,
     frameCount: 8, fillCount: 8,
     objectNotes: "Three tall power-line towers march in a row — instantly recognisable as an electrical relay station or transmission line. Two concrete tanks sit behind (fuel or transformer housings). Three small substation boxes face the front. Just 8 objects. Fill swaps towers for concrete tanks — a pure industrial tank farm.",
+    interiorType: "structure",
+    lootTheme: "industrial",
   },
   {
     id: "lw_radio_outpost",
@@ -528,6 +596,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     ...KRASN, posX: 12030, posZ: 12500,
     frameCount: 6, fillCount: 6,
     objectNotes: "The lightest build in the collection at just 6 objects. One radio tower stands central. Three towers mark the 120° guy-wire anchor triangle around it. Two smaller towers represent instrument sheds or relay boxes. Fill switches to military tents — operational camp around the mast.",
+    interiorType: "building",
+    lootTheme: "military",
   },
   {
     id: "lw_guard_post",
@@ -542,6 +612,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     ...KRASN, posX: 11890, posZ: 12550,
     frameCount: 9, fillCount: 9,
     objectNotes: "Same generator as the full checkpoint but scaled down to width:6/depth:5 — now it fits a single road lane or server entrance. Frame uses rounded sandbag positions for a casual, organic-looking post. Fill mode places guardhouses at all 9 points for a proper staffed checkpoint feel.",
+    interiorType: "building",
+    lootTheme: "military",
   },
   {
     id: "lw_tank_trap_line",
@@ -556,6 +628,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     ...KRASN, posX: 11950, posZ: 12470,
     frameCount: 11, fillCount: 11,
     objectNotes: "Czech hedgehog tank traps line both walls — any vehicle pushing through will be channelled and slowed. 1 command bunker anchors the far end. 2 HESCO barrier flankers provide infantry cover. Fill swaps hedgehogs for 5m HESCO barriers — a hardened vehicle lane or server gate. 11 objects.",
+    interiorType: "structure",
+    lootTheme: "military",
   },
 
   // ─── 🤖 Transformers — Movie-accurate Cybertronian mechs ─────────────────
@@ -572,6 +646,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "ArmBandYellow",
     ...NWAF, posX: 4630, posZ: 10490,
     objectNotes: "Pure yellow barrel army — every point is a Barrel_Yellow, giving that iconic Bumblebee colour. Door wing panels, Camaro shoulder wheel arches, hood chest plate stripe, and twin antennae are all explicitly shaped in the point cloud. Frame mode traces the clean robot silhouette; Fill packs density into the whole mech. Add ArmBandYellow at each point for finer interior detail on console.",
+    interiorType: "structure",
+    lootTheme: "mixed",
   },
   {
     id: "tf_optimus",
@@ -586,6 +662,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_Wreck_V3S_DE",
     ...NWAF, posX: 4760, posZ: 10490,
     objectNotes: "Shipping Container 1D (red/grey) traces the hulking frame — the enormous chest grille, broad shoulders, and smoke stacks are all point-perfect. Container 1C fills the interior with mass. The truck bumper row at the feet and fuel tank cylinders at the hips nail the semi-truck transformation aesthetic. Frame this at NWAF runway for maximum cinematic impact.",
+    interiorType: "structure",
+    lootTheme: "mixed",
   },
   {
     id: "tf_ironhide",
@@ -600,6 +678,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_TankTrap_DE",
     ...NWAF, posX: 4500, posZ: 10490,
     objectNotes: "Dark Container 1Bo gives Ironhide his black military look — the widest chest on the roster (6m). BTR wreck pieces fill the interior with heavy armour-plate mass. Czech hedgehog tank traps at the dual cannon muzzles punch out perfectly from the forearm. Armour-plate overlays on thighs and wheel wells are all individually placed point clusters.",
+    interiorType: "structure",
+    lootTheme: "mixed",
   },
   {
     id: "tf_jazz",
@@ -614,6 +694,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_BarrierConcrete_01_DE",
     ...NWAF, posX: 4630, posZ: 10360,
     objectNotes: "Silver Container 1C traces Jazz's sleek, athletic silhouette — the narrowest chest (4.2m) with a distinctive Solstice racing stripe across the sternum. Sedan wreck pieces fill the interior with sporty urban debris. The rear spoiler is its own point cluster arching over the back. Concrete barriers add detail to the ankle spoiler extensions. Built for speed, this is your eye-candy centrepiece.",
+    interiorType: "structure",
+    lootTheme: "mixed",
   },
   {
     id: "tf_ratchet",
@@ -628,6 +710,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_Wreck_offroad02_aban1_DE",
     ...NWAF, posX: 4890, posZ: 10490,
     objectNotes: "HESCO 5m barriers trace Ratchet's boxy, blocky frame — the Hummer H2 roofline turned into armoured shoulder sections looming over a wide medical-cross chest. HESCO 10m barriers fill the interior with mass and depth. Offroad wreck pieces at the roof-rack sensor array add the perfect Ratchet rescue-vehicle detail. A wide, reassuring silhouette that dominates any spawn zone.",
+    interiorType: "structure",
+    lootTheme: "mixed",
   },
   {
     id: "tf_megatron",
@@ -642,6 +726,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_Wreck_BTR_DE",
     ...NWAF, posX: 4370, posZ: 10490,
     objectNotes: "Czech hedgehog tank traps trace Megatron's spiky, alien-armoured silhouette — angular chest spines, the enormous fusion cannon housing off the right shoulder, and lateral face-spikes on the alien head are all point-perfect. T72 tank wrecks fill the interior with heavy armour. BTR APC wrecks mark the fusion cannon muzzle ring. A menacing enemy centrepiece — face him against your Optimus Prime.",
+    interiorType: "structure",
+    lootTheme: "military",
   },
   {
     id: "tf_starscream",
@@ -656,6 +742,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_BarrierConcrete_02_DE",
     ...NWAF, posX: 4630, posZ: 10230,
     objectNotes: "Concrete barriers trace Starscream's lean grey-blue frame — the swept F-22 delta wings dominate at 6m per side, the jet cockpit nose protrudes from the chest, and vertical tail fins rise from the shoulders. MI-8 helicopter wreck pieces fill the interior with aviation mass. Leg-mounted missile pods and seeker-jet crown ridge complete the treacherous air-commander look. Place him on the NWAF runway with wings spread for maximum impact.",
+    interiorType: "structure",
+    lootTheme: "military",
   },
   {
     id: "dragon",
@@ -670,6 +758,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_BarrierConcrete_01_DE",
     ...NWAF, posX: 4900, posZ: 10300,
     objectNotes: "Helicopter wreck pieces trace the dragon's armoured scales and body silhouette. Red barrels fill the interior with fire-breath colour. Concrete barriers form the wing ribs and tail spine. Place on any flat ground for a legendary landmark — survivors will see it from across the map.",
+    interiorType: "structure",
+    lootTheme: "mixed",
   },
   {
     id: "pirate_ship",
@@ -684,6 +774,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_TankTrap_DE",
     posX: 6500, posY: 2, posZ: 2500,
     objectNotes: "Long concrete barriers follow the hull ribs and mast spars. BTR wrecks fill the interior with a heavy weathered bulk. Tank traps mark the cannon ports along both gun decks. Place her on the coast near Cherno for a legendary waterfront landmark. Survivors will question their sanity.",
+    interiorType: "open",
+    lootTheme: "mixed",
   },
   {
     id: "pvp_arena",
@@ -698,6 +790,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_TankTrap_DE",
     ...NWAF, posX: 4800, posZ: 10600,
     objectNotes: "Concrete barriers form the thick outer walls and corner tower columns. Shipping containers mark loot positions on the floor grid and elevated platform edges. Tank traps dot the central podium and gate entrances. A complete PVP/event arena — fill with guns and tell your players: fight to the death.",
+    interiorType: "open",
+    lootTheme: "military",
   },
   {
     id: "helipad",
@@ -712,6 +806,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_Wreck_heli_MI8_DE",
     ...NWAF, posX: 4780, posZ: 10420,
     objectNotes: "Concrete barriers of two sizes trace the pad perimeter, H-marking bars, and approach stripes. MI-8 helicopter wreck halves anchor the windsock corner and approach arrows. Perfect for military base roleplay — drop the elevated variant on any rooftop for premium aesthetics.",
+    interiorType: "structure",
+    lootTheme: "military",
   },
   {
     id: "arena_colosseum",
@@ -726,6 +822,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_TankTrap_DE",
     ...NWAF, posX: 5100, posZ: 10700,
     objectNotes: "Long concrete barriers trace the oval outer facade, each tier stepping inward. Short barriers fill the seating rows and gate pillar pairs. Tank traps mark the arena floor grid and hypogeum passage positions. An iconic PVP centerpiece — players fight in the sand while your community watches from the tiers.",
+    interiorType: "open",
+    lootTheme: "military",
   },
   {
     id: "arena_fort",
@@ -740,6 +838,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "StaticObj_Container_1D",
     ...NWAF, posX: 4500, posZ: 10800,
     objectNotes: "Concrete barriers build the perimeter walls and corner bastions. Short barriers stack the crenellations, gate arches, and interior barricade rows. Shipping containers mark the loot zones in each half. A classic two-team attack/defend arena — one team storms through the portcullis, the other holds the keep.",
+    interiorType: "open",
+    lootTheme: "military",
   },
   {
     id: "arena_maze",
@@ -754,6 +854,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Barrel_Red",
     ...NWAF, posX: 4300, posZ: 10550,
     objectNotes: "Concrete barriers build every maze wall segment. Tank traps mark dead ends and loot drop positions. Red barrels dot the center podium. Change the Grid Size parameter to get a completely different maze layout — no two sizes generate the same corridors. Perfect for hide-and-seek PVP.",
+    interiorType: "open",
+    lootTheme: "military",
   },
   {
     id: "arena_siege",
@@ -768,6 +870,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_TankTrap_DE",
     ...NWAF, posX: 4900, posZ: 10850,
     objectNotes: "Concrete barriers form the defensive curtain wall with its 3 towers and gate arch. BTR wrecks fill the central keep interior for dramatic bulk. Tank traps mark attacker trench lines and sandbag cover. The most exciting asymmetric PVP — 5 attackers vs 3 defenders, capture the keep in 10 minutes.",
+    interiorType: "open",
+    lootTheme: "military",
   },
   {
     id: "arena_compound",
@@ -782,6 +886,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_TankTrap_DE",
     ...NWAF, posX: 4650, posZ: 10970,
     objectNotes: "Concrete barriers build the perimeter, gate arches, and cover rows — the staggered gaps force players to angle around cover rather than charge straight. Containers mark the 4 objective points and central loot pile. Tank traps block vehicle entry. Compact and balanced — great for 3v3 to 5v5 skirmishes.",
+    interiorType: "open",
+    lootTheme: "military",
   },
 
   // ── FEATURED PvP BUILDS ─────────────────────────────────────────────────────
@@ -798,6 +904,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_TankTrap_DE",
     ...NWAF, posX: 4820, posZ: 10320,
     objectNotes: "HESCO 5m barriers form the main octagonal perimeter — they sit flush together and give authentic military FOB height. Corner HESCOs join the angle junctions. Czech hedgehog tank traps mark loot positions on the arena floor and block the 8 gate gaps between sections. This is the lowest-lag PvP arena you can run — perfect for servers with 30+ players because it keeps object count under 300. The HESCO is our ★ best modern wall for PvP: it's 2m tall, opaque, and console-safe on Xbox and PS5.",
+    interiorType: "open",
+    lootTheme: "military",
   },
   {
     id: "pvp_featured_castle",
@@ -812,6 +920,8 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_Castle_Tower_Round_DE",
     ...NWAF, posX: 5250, posZ: 10480,
     objectNotes: "Castle Stone Wall 3m pieces build the perimeter — they snap cleanly in a straight line and look incredible. Castle Stone Wall 6m handles long wall runs. Round castle towers mark all 4 corner bastions plus the 4 midpoint towers. Medium detail adds staircase ramps at each bastion corner leading to the wall-top walkway at 70% wall height — giving snipers an elevated position that's only accessible via the stairs. Pallet boxes provide ground-level cover in each courtyard half. This is the ★ BEST LOOKING arena type — the stone textures give it a genuine medieval DayZ castle feel.",
+    interiorType: "open",
+    lootTheme: "military",
   },
   {
     id: "pvp_featured_colosseum_heavy",
@@ -826,5 +936,7 @@ export const COMPLETED_BUILDS: CompletedBuild[] = [
     extraFrame: "Land_Castle_Tower_Round_DE",
     ...NWAF, posX: 5050, posZ: 10200,
     objectNotes: "Brick Wall 8m spans the long oval runs of the colosseum facade — 3 tiers of arched, stepped brickwork. Brick Wall 4m fills the shorter arch sections and seating risers. Round castle towers mark the 4 cardinal gate pillars (N/S/E/W entries) and create the iconic colosseum archway silhouette. Heavy detail adds: 4 vomitorium stairways rising from the sand floor up through the seating to the wall-top at 85% height; barrel/crate clusters as arena cover at 6 floor positions; full barbed wire cap on the outer parapet; and pallet stacks beneath every arch pillar for atmosphere. The most impressive PvP build in DayZ — when your players first see this from outside, they WILL be wowed.",
+    interiorType: "open",
+    lootTheme: "military",
   },
 ];

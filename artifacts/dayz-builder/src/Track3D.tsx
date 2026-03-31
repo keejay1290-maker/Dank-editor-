@@ -298,6 +298,9 @@ function AutoCamera({ waypoints, trackWidth }: { waypoints: Pt[]; trackWidth: nu
   return null;
 }
 
+// ─── Hazard object type (subset of SpawnObj) ──────────────────────────────────
+interface HazardObj { x: number; y: number; z: number; name: string; }
+
 // ─── 3D Scene ─────────────────────────────────────────────────────────────────
 interface Track3DSceneProps {
   waypoints: Pt[];
@@ -305,9 +308,12 @@ interface Track3DSceneProps {
   addBarriers: boolean;
   addText: boolean;
   barrierLen: number;
+  hazardObjects?: HazardObj[];
+  posX?: number;
+  posZ?: number;
 }
 
-function Track3DScene({ waypoints, trackWidth, addBarriers, addText, barrierLen }: Track3DSceneProps) {
+function Track3DScene({ waypoints, trackWidth, addBarriers, addText, barrierLen, hazardObjects }: Track3DSceneProps) {
   const floorXfms   = useMemo(() => buildFloorTiles(waypoints, trackWidth),                     [waypoints, trackWidth]);
   const barrierXfms = useMemo(() => addBarriers ? buildBarriers(waypoints, trackWidth, barrierLen) : [], [waypoints, trackWidth, barrierLen, addBarriers]);
   const dashXfms    = useMemo(() => buildCenterDashes(waypoints),                               [waypoints]);
@@ -330,6 +336,21 @@ function Track3DScene({ waypoints, trackWidth, addBarriers, addText, barrierLen 
       {addBarriers && <Barriers xfms={barrierXfms} />}
       <CenterLine xfms={dashXfms} />
       {addText && <StartFinish waypoints={waypoints} trackWidth={trackWidth} />}
+
+      {/* ── Death-race hazard objects ──────────────────────────────────────── */}
+      {hazardObjects && hazardObjects.map((h, i) => (
+        <mesh key={i} position={[h.x, h.y + 0.5, h.z]}>
+          <boxGeometry args={[0.8, 1.0, 0.8]} />
+          <meshStandardMaterial color={
+            h.name.includes("Mine") ? "#ff4444" :
+            h.name.includes("Barrel") ? "#ff8800" :
+            h.name.includes("Wire") ? "#cccc00" : "#ff6600"
+          } emissive={
+            h.name.includes("Mine") ? "#440000" :
+            h.name.includes("Barrel") ? "#331100" : "#221100"
+          } />
+        </mesh>
+      ))}
 
       {/* ── Camera & controls ─────────────────────────────────────────────── */}
       <AutoCamera waypoints={waypoints} trackWidth={trackWidth} />

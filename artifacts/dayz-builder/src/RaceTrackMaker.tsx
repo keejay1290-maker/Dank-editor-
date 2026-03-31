@@ -121,8 +121,13 @@ interface DeathRaceOpts {
 
 const BARREL_CLASSES = ["Barrel_Blue", "Barrel_Red", "Barrel_Yellow", "Barrel_Green"] as const;
 
+// Thickness of a flat floor tile (Land_Wall_Concrete_4m_DE laid at pitch=90).
+// Hazard objects must sit on top of the floor, not embedded inside it.
+const FLOOR_THICKNESS = 0.3;
+
 function generateDeathRace(opts: DeathRaceOpts): SpawnObj[] {
   const { seed, density, waypoints, posX, posY, posZ, trackWidth } = opts;
+  const floorY = posY + FLOOR_THICKNESS; // top surface of floor tiles
   const rng = mulberry32(seed);
   const objs: SpawnObj[] = [];
   const n = waypoints.length;
@@ -167,7 +172,7 @@ function generateDeathRace(opts: DeathRaceOpts): SpawnObj[] {
         objs.push({
           name: "Land_Pier_Long_DE",
           x: posX + cx + k * seg.rightX,
-          y: posY,
+          y: floorY,
           z: posZ + cz + k * seg.rightZ,
           pitch: -20, yaw: seg.yaw, roll: 0, scale: 1,
         });
@@ -191,7 +196,7 @@ function generateDeathRace(opts: DeathRaceOpts): SpawnObj[] {
         objs.push({
           name: barrelClass,
           x: posX + cx + k * seg.rightX,
-          y: posY,
+          y: floorY,
           z: posZ + cz + k * seg.rightZ,
           pitch: 0, yaw: rng.int(0, 3) * 90, roll: 0, scale: 1,
         });
@@ -199,7 +204,7 @@ function generateDeathRace(opts: DeathRaceOpts): SpawnObj[] {
         objs.push({
           name: barrelClass,
           x: posX + cx + k * seg.rightX,
-          y: posY + 1.0,
+          y: floorY + 1.0,
           z: posZ + cz + k * seg.rightZ,
           pitch: 0, yaw: rng.int(0, 3) * 90, roll: 0, scale: 1,
         });
@@ -225,7 +230,7 @@ function generateDeathRace(opts: DeathRaceOpts): SpawnObj[] {
         objs.push({
           name: "StaticObj_Wall_CncBarrier_4Block",
           x: posX + cx + k * seg.rightX,
-          y: posY,
+          y: floorY,
           z: posZ + cz + k * seg.rightZ,
           pitch: 0, yaw: diagYaw, roll: 0, scale: 1,
         });
@@ -247,7 +252,7 @@ function generateDeathRace(opts: DeathRaceOpts): SpawnObj[] {
       objs.push({
         name: "Land_TankTrap_DE",
         x: posX + cx + k * seg.rightX,
-        y: posY,
+        y: floorY,
         z: posZ + cz + k * seg.rightZ,
         pitch: 0, yaw: rng.int(0, 3) * 90, roll: 0, scale: 1,
       });
@@ -267,7 +272,7 @@ function generateDeathRace(opts: DeathRaceOpts): SpawnObj[] {
       objs.push({
         name: rng.pick(wreckClasses),
         x: posX + cx + k * seg.rightX,
-        y: posY,
+        y: floorY,
         z: posZ + cz + k * seg.rightZ,
         pitch: 0, yaw: rng.int(0, 359), roll: 0, scale: 1,
       });
@@ -287,7 +292,7 @@ function generateDeathRace(opts: DeathRaceOpts): SpawnObj[] {
       objs.push({
         name: "StaticObj_Airfield_Light_PAPI1",
         x: posX + seg.p1.x + t * seg.fwdX + side * lightOffset * seg.rightX,
-        y: posY,
+        y: floorY,
         z: posZ + seg.p1.z + t * seg.fwdZ + side * lightOffset * seg.rightZ,
         pitch: 0, yaw: rng.int(0, 359), roll: 0, scale: 1,
       });
@@ -299,7 +304,7 @@ function generateDeathRace(opts: DeathRaceOpts): SpawnObj[] {
       objs.push({
         name: "StaticObj_Airfield_Light_Strobe_01",
         x: posX + seg.p1.x + t * seg.fwdX + side * (lightOffset + 1) * seg.rightX,
-        y: posY,
+        y: floorY,
         z: posZ + seg.p1.z + t * seg.fwdZ + side * (lightOffset + 1) * seg.rightZ,
         pitch: 0, yaw: rng.int(0, 359), roll: 0, scale: 1,
       });
@@ -702,6 +707,14 @@ export default function RaceTrackMaker() {
   }, [deathRace, drSeed, drDensity, waypoints, posX, posY, posZ, trackWidth,
       drRamps, drBarrels, drRoadblocks, drWrecks, drLights]);
 
+  // For the 3D/2D preview, hazard Y must be relative to the track (posY=0 baseline).
+  // The preview renders floor tiles at y=0.15; hazards need y=FLOOR_THICKNESS so they
+  // sit on top. Subtract posY and add FLOOR_THICKNESS to normalise.
+  const deathRaceObjectsForPreview = useMemo(
+    () => deathRaceObjects.map(o => ({ ...o, y: o.y - posY })),
+    [deathRaceObjects, posY],
+  );
+
   const objects = useMemo(() => [...trackObjects, ...deathRaceObjects],
     [trackObjects, deathRaceObjects]);
 
@@ -1053,7 +1066,7 @@ export default function RaceTrackMaker() {
                 addText={addText}
                 addBarriers={addBarriers}
                 barrierLen={barrierDef.len}
-                hazardObjects={deathRace ? deathRaceObjects : []}
+                hazardObjects={deathRace ? deathRaceObjectsForPreview : []}
                 posX={posX}
                 posZ={posZ}
               />
@@ -1065,7 +1078,7 @@ export default function RaceTrackMaker() {
                 trackWidth={trackWidth}
                 addText={addText}
                 addBarriers={addBarriers}
-                hazardObjects={deathRace ? deathRaceObjects : []}
+                hazardObjects={deathRace ? deathRaceObjectsForPreview : []}
                 posX={posX}
                 posZ={posZ}
               />

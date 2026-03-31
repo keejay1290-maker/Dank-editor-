@@ -1,4 +1,5 @@
 // All classnames verified against vanilla DayZ 1.25 types.xml (console-safe Xbox / PS5)
+import { BUILD_LOOT_ITEMS } from "@/lib/dayzLootDB";
 
 export interface VehicleSlot {
   id: string;
@@ -159,78 +160,11 @@ export const VEHICLES: VehicleDef[] = [
   },
 ];
 
-export const LOOT_ITEMS: LootItem[] = [
-  // Medical
-  { classname: "FirstAidKit",              name: "FAK (First Aid Kit)",    category: "Medical"  },
-  { classname: "BandageDressing",          name: "Bandage Dressing",       category: "Medical"  },
-  { classname: "Morphine",                 name: "Morphine Auto-Injector", category: "Medical"  },
-  { classname: "Epinephrine",              name: "Epinephrine Pen",        category: "Medical"  },
-  { classname: "BloodBagFull",             name: "Blood Bag (Full)",       category: "Medical"  },
-  { classname: "BloodBagIV",              name: "Blood Bag IV",           category: "Medical"  },
-  { classname: "SalineBagIV",             name: "Saline Bag IV",          category: "Medical"  },
-  { classname: "Splint",                   name: "Splint",                 category: "Medical"  },
-  { classname: "CharcoalTablets",          name: "Charcoal Tablets",       category: "Medical"  },
-  { classname: "TetracyclineAntibiotics",  name: "Tetracycline",           category: "Medical"  },
-  { classname: "VitaminBottle",            name: "Vitamins",               category: "Medical"  },
-
-  // Food
-  { classname: "Rice",                    name: "Rice Bag",               category: "Food"     },
-  { classname: "TunaCan",                 name: "Tuna Can",               category: "Food"     },
-  { classname: "BakedBeansCan",           name: "Baked Beans Can",        category: "Food"     },
-  { classname: "WaterBottle",             name: "Water Bottle (Full)",    category: "Food"     },
-  { classname: "Canteen",                 name: "Canteen",                category: "Food"     },
-  { classname: "SodaCan_Pipsi",          name: "Pipsi Can",              category: "Food"     },
-  { classname: "Apple",                   name: "Apple",                  category: "Food"     },
-  { classname: "CannedSardines",          name: "Canned Sardines",        category: "Food"     },
-
-  // Vehicle Parts
-  { classname: "CanisterGasoline",        name: "Gasoline Jerry Can",     category: "Vehicle"  },
-  { classname: "CanisterOil",             name: "Oil Canister",           category: "Vehicle"  },
-  { classname: "CarBattery",             name: "Car Battery",            category: "Vehicle"  },
-  { classname: "SparkPlug",              name: "Spark Plug",             category: "Vehicle"  },
-  { classname: "CarRadiator",            name: "Car Radiator",           category: "Vehicle"  },
-  { classname: "CivSedanWheel",          name: "Sedan Wheel",            category: "Vehicle"  },
-  { classname: "Offroad_02_Wheel",       name: "Offroad Wheel",          category: "Vehicle"  },
-  { classname: "Truck_01_Wheel",         name: "Truck Wheel",            category: "Vehicle"  },
-  { classname: "TruckBattery",           name: "Truck Battery",          category: "Vehicle"  },
-  { classname: "CarKey",                name: "Car Key",                category: "Vehicle"  },
-
-  // Tools
-  { classname: "Hacksaw",               name: "Hacksaw",                category: "Tools"    },
-  { classname: "FirefighterAxe",        name: "Fire Axe",               category: "Tools"    },
-  { classname: "Screwdriver",           name: "Screwdriver",            category: "Tools"    },
-  { classname: "WeldingMask",           name: "Welding Mask",           category: "Tools"    },
-  { classname: "BarbedWire",            name: "Barbed Wire",            category: "Tools"    },
-  { classname: "CombinationLock",       name: "Combination Lock",       category: "Tools"    },
-  { classname: "TireRepairKit",         name: "Tire Repair Kit",        category: "Tools"    },
-  { classname: "Rope",                  name: "Rope",                   category: "Tools"    },
-
-  // Gear
-  { classname: "TacticalGloves_Black",  name: "Tactical Gloves (Black)",category: "Gear"     },
-  { classname: "HikingBootsLow_Beige",  name: "Hiking Boots (Beige)",   category: "Gear"     },
-  { classname: "BallisticHelmet_Black", name: "Ballistic Helmet",       category: "Gear"     },
-  { classname: "PlateCarrierVest",      name: "Plate Carrier",          category: "Gear"     },
-  { classname: "NVGoggles",            name: "Night Vision Goggles",    category: "Gear"     },
-
-  // Weapons
-  { classname: "M4A1",                 name: "M4A1",                   category: "Weapons"  },
-  { classname: "AKM",                  name: "AKM",                    category: "Weapons"  },
-  { classname: "CZ527",                name: "CZ 527",                 category: "Weapons"  },
-  { classname: "Winchester70",         name: "Winchester Model 70",    category: "Weapons"  },
-  { classname: "FNX45",               name: "FNX-45 Pistol",          category: "Weapons"  },
-  { classname: "CZ75",               name: "CZ 75 Pistol",            category: "Weapons"  },
-  { classname: "MP5K",               name: "MP5-K",                   category: "Weapons"  },
-  { classname: "AK101",              name: "AK-101",                  category: "Weapons"  },
-
-  // Ammo
-  { classname: "Mag_STANAG_30Rnd",         name: "STANAG 30rnd Mag",   category: "Ammo" },
-  { classname: "Mag_AKM_Drum75Rnd",        name: "AK Drum 75rnd",      category: "Ammo" },
-  { classname: "Mag_FNX45_15Rnd",          name: "FNX-45 15rnd Mag",   category: "Ammo" },
-  { classname: "Ammo_762x39",              name: "7.62x39 Loose Ammo", category: "Ammo" },
-  { classname: "Ammo_308Win",              name: ".308 Win Loose",      category: "Ammo" },
-  { classname: "Ammo_45ACP",              name: ".45 ACP Loose",       category: "Ammo" },
-  { classname: "RGD5Grenade",             name: "RGD-5 Grenade",       category: "Ammo" },
-  { classname: "FlashGrenade",             name: "Flash Grenade",       category: "Ammo" },
-];
+// LOOT_ITEMS — sourced from the full dayzLootDB, mapped to legacy { classname, name, category } shape.
+export const LOOT_ITEMS: LootItem[] = BUILD_LOOT_ITEMS.map(e => ({
+  classname: e.classname,
+  name: e.displayName,
+  category: e.category,
+}));
 
 export const LOOT_CATEGORIES = [...new Set(LOOT_ITEMS.map(i => i.category))];
