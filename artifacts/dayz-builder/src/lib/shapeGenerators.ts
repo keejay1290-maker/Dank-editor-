@@ -119,6 +119,52 @@ export function getShapePoints(shapeType: string, params: Record<string, number>
     case 'pumpkin_ring': return gen_pumpkin_ring(p);
     case 'easter_cross': return gen_easter_cross(p);
     case 'ice_wall': return gen_ice_wall(p);
+    // ── Teleporters ──────────────────────────────────────────────────────────
+    case 'teleporter_scifi':        return gen_teleporter_scifi(p);
+    case 'teleporter_transporter':  return gen_teleporter_transporter(p);
+    case 'teleporter_stargate':     return gen_teleporter_stargate(p);
+    case 'teleporter_ufo':          return gen_teleporter_ufo(p);
+    case 'teleporter_ritual':       return gen_teleporter_ritual(p);
+    case 'teleporter_lava':         return gen_teleporter_lava(p);
+    case 'teleporter_bunker_hatch': return gen_teleporter_bunker_hatch(p);
+    case 'teleporter_event_mega':   return gen_teleporter_event_mega(p);
+    case 'mirror_portal':           return gen_mirror_portal(p);
+    case 'wormhole_vortex':         return gen_wormhole_vortex(p);
+    case 'obelisk_pad':             return gen_obelisk_pad(p);
+    case 'neon_grid':               return gen_neon_grid(p);
+    case 'summoning_pentagram':     return gen_summoning_pentagram(p);
+    // ── Sci-Fi ───────────────────────────────────────────────────────────────
+    case 'space_elevator':  return gen_space_elevator(p);
+    case 'dyson_fragment':  return gen_dyson_fragment(p);
+    case 'warp_core':       return gen_warp_core(p);
+    case 'quantum_relay':   return gen_quantum_relay(p);
+    case 'satellite_array': return gen_satellite_array(p);
+    case 'cryo_chamber':    return gen_cryo_chamber(p);
+    // ── Architecture ─────────────────────────────────────────────────────────
+    case 'roman_aqueduct':   return gen_roman_aqueduct(p);
+    case 'gothic_cathedral': return gen_gothic_cathedral(p);
+    case 'lighthouse_tower': return gen_lighthouse_tower(p);
+    case 'water_tower':      return gen_water_tower(p);
+    case 'ziggurat':         return gen_ziggurat(p);
+    case 'avengers_tower':   return gen_avengers_tower(p);
+    case 'mordor_gate':      return gen_mordor_gate(p);
+    // ── Nature ───────────────────────────────────────────────────────────────
+    case 'mushroom_ring':  return gen_mushroom_ring(p);
+    case 'crystal_cave':   return gen_crystal_cave(p);
+    case 'meteor_crater':  return gen_meteor_crater(p);
+    case 'ancient_stump':  return gen_ancient_stump(p);
+    // ── Events ───────────────────────────────────────────────────────────────
+    case 'boxing_ring':      return gen_boxing_ring(p);
+    case 'podium_stage':     return gen_podium_stage(p);
+    case 'finish_arch':      return gen_finish_arch(p);
+    case 'deathmatch_arena': return gen_deathmatch_arena(p);
+    case 'capture_tower':    return gen_capture_tower(p);
+    // ── Dark ─────────────────────────────────────────────────────────────────
+    case 'gallows':          return gen_gallows(p);
+    case 'bone_throne':      return gen_bone_throne(p);
+    case 'crypt_entrance':   return gen_crypt_entrance(p);
+    case 'sacrificial_pit':  return gen_sacrificial_pit(p);
+    case 'plague_shrine':    return gen_plague_shrine(p);
     default: return [];
   }
 }
@@ -1114,42 +1160,74 @@ function gen_skyscraper(p: Record<string, number>): Point3D[] {
 function gen_prison_tower(p: Record<string, number>): Point3D[] {
   const pts: Point3D[] = [];
   const h = p.height, r = p.radius;
-  // Main tower cylinder with thick walls
-  for (let ri = 0; ri <= p.wallRings; ri++) {
-    const y = h * ri / p.wallRings;
-    for (let j = 0; j < 20; j++) {
-      const a = 2 * Math.PI * j / 20;
-      pts.push({ x: r * Math.cos(a), y, z: r * Math.sin(a) });
-      // inner wall
-      pts.push({ x: r * 0.85 * Math.cos(a), y, z: r * 0.85 * Math.sin(a) });
+  const wallRings = p.wallRings || 8;
+  const crenHeight = p.crenHeight || 3;
+  const WALL_PTS = 24;   // points around circumference
+  const INNER_R  = r * 0.82; // inner wall radius
+
+  // ── Outer + inner wall rings at each height level ──────────────────────────
+  for (let ri = 0; ri <= wallRings; ri++) {
+    const y = h * ri / wallRings;
+    for (let j = 0; j < WALL_PTS; j++) {
+      const a = 2 * Math.PI * j / WALL_PTS;
+      pts.push({ x: r       * Math.cos(a), y, z: r       * Math.sin(a) });
+      pts.push({ x: INNER_R * Math.cos(a), y, z: INNER_R * Math.sin(a) });
     }
   }
-  // Battlements / crenellations at top
+
+  // ── Interior floor plates at each level ────────────────────────────────────
+  const floors = Math.max(2, Math.round(wallRings / 2));
+  for (let fi = 0; fi <= floors; fi++) {
+    const y = h * fi / floors;
+    const gridN = Math.ceil(INNER_R * 2 / 3);
+    for (let xi = 0; xi <= gridN; xi++) {
+      for (let zi = 0; zi <= gridN; zi++) {
+        const fx = -INNER_R + INNER_R * 2 * xi / gridN;
+        const fz = -INNER_R + INNER_R * 2 * zi / gridN;
+        if (fx * fx + fz * fz <= INNER_R * INNER_R * 0.92) {
+          pts.push({ x: fx, y, z: fz });
+        }
+      }
+    }
+  }
+
+  // ── Entrance gap (south face, ground level) ────────────────────────────────
+  // Door arch — 3 points wide at y=0..doorH
+  const doorH = Math.min(h * 0.25, 5);
+  const doorW = Math.PI / 6; // ±30° arc gap
+  for (let di = 0; di <= 6; di++) {
+    const y = doorH * di / 6;
+    const a = Math.PI / 2; // south
+    pts.push({ x: r       * Math.cos(a), y, z: r       * Math.sin(a) });
+    pts.push({ x: INNER_R * Math.cos(a), y, z: INNER_R * Math.sin(a) });
+    // arch top
+    if (di === 6) {
+      for (let ai = 0; ai <= 4; ai++) {
+        const aa = a - doorW + doorW * 2 * ai / 4;
+        pts.push({ x: r * Math.cos(aa), y, z: r * Math.sin(aa) });
+      }
+    }
+  }
+
+  // ── Battlements at top ─────────────────────────────────────────────────────
   const crenN = 16;
   for (let j = 0; j < crenN; j++) {
     const a = 2 * Math.PI * j / crenN;
-    const cr = r * 1.05;
-    pts.push({ x: cr * Math.cos(a), y: h, z: cr * Math.sin(a) });
-    pts.push({ x: cr * Math.cos(a), y: h + p.crenHeight, z: cr * Math.sin(a) });
+    const cr = r * 1.02;
+    pts.push({ x: cr * Math.cos(a), y: h,              z: cr * Math.sin(a) });
+    pts.push({ x: cr * Math.cos(a), y: h + crenHeight, z: cr * Math.sin(a) });
   }
-  // Arrow slit windows
-  for (let row = 1; row <= 4; row++) {
-    const y = h * row / 5;
-    for (let j = 0; j < 6; j++) {
-      const a = 2 * Math.PI * j / 6;
-      pts.push({ x: r * Math.cos(a), y: y - p.windowH / 2, z: r * Math.sin(a) });
-      pts.push({ x: r * Math.cos(a), y: y + p.windowH / 2, z: r * Math.sin(a) });
-    }
-  }
-  // Conical roof
-  for (let ri = 0; ri <= 6; ri++) {
-    const t = ri / 6;
-    const y = h + p.crenHeight + h * 0.3 * t;
-    const cr = r * 1.05 * (1 - t);
+
+  // ── Conical roof ───────────────────────────────────────────────────────────
+  for (let ri = 0; ri <= 8; ri++) {
+    const t = ri / 8;
+    const y = h + crenHeight + h * 0.35 * t;
+    const cr = r * 1.02 * (1 - t);
     if (cr > 0.5) {
-      for (let j = 0; j < 12; j++) { const a = 2 * Math.PI * j / 12; pts.push({ x: cr * Math.cos(a), y, z: cr * Math.sin(a) }); }
+      for (let j = 0; j < 14; j++) { const a = 2 * Math.PI * j / 14; pts.push({ x: cr * Math.cos(a), y, z: cr * Math.sin(a) }); }
     }
   }
+
   return pts;
 }
 
@@ -5403,6 +5481,7 @@ function gen_easter_cross(p: Record<string, number>): Point3D[] {
     }
   }
 
+
   return pts;
 }
 
@@ -5449,3 +5528,5 @@ function gen_ice_wall(p: Record<string, number>): Point3D[] {
 
   return pts;
 }
+
+

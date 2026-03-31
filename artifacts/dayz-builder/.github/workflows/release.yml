@@ -1,0 +1,184 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  # ── Linux AppImage ──────────────────────────────────────────────────────────
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Vite (electron mode)
+        run: pnpm build:electron
+
+      - name: Compile Electron main process
+        run: pnpm electron:compile
+
+      - name: Package Linux
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npx electron-builder --linux --publish always
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: release/*.AppImage
+
+  # ── Windows NSIS installer ──────────────────────────────────────────────────
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Vite (electron mode)
+        run: pnpm build:electron
+
+      - name: Compile Electron main process
+        run: pnpm electron:compile
+
+      - name: Package Windows
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npx electron-builder --win --publish always
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: release/*.exe
+
+  # ── macOS DMG ───────────────────────────────────────────────────────────────
+  build-mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Vite (electron mode)
+        run: pnpm build:electron
+
+      - name: Compile Electron main process
+        run: pnpm electron:compile
+
+      - name: Package macOS
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          # Code signing — set these secrets if you have an Apple Developer cert
+          # CSC_LINK: ${{ secrets.MAC_CERT_P12_BASE64 }}
+          # CSC_KEY_PASSWORD: ${{ secrets.MAC_CERT_PASSWORD }}
+        run: npx electron-builder --mac --publish always
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-build
+          path: release/*.dmg
+
+  # ── Android APK ─────────────────────────────────────────────────────────────
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Vite (electron mode — same output used by Capacitor)
+        run: pnpm build:electron
+
+      - name: Sync Capacitor
+        run: npx cap sync android
+
+      - name: Build Android APK
+        working-directory: android
+        run: ./gradlew assembleRelease --no-daemon
+
+      - name: Rename APK
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          cp android/app/build/outputs/apk/release/app-release-unsigned.apk \
+             "release/DankDayz-Editor-${VERSION}.apk"
+
+      - name: Upload APK to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-build
+          path: release/*.apk
+
+  # ── Create / update GitHub Release ─────────────────────────────────────────
+  release:
+    needs: [build-linux, build-windows, build-mac, build-android]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

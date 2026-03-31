@@ -707,12 +707,11 @@ export default function RaceTrackMaker() {
   }, [deathRace, drSeed, drDensity, waypoints, posX, posY, posZ, trackWidth,
       drRamps, drBarrels, drRoadblocks, drWrecks, drLights]);
 
-  // For the 3D/2D preview, hazard Y must be relative to the track (posY=0 baseline).
-  // The preview renders floor tiles at y=0.15; hazards need y=FLOOR_THICKNESS so they
-  // sit on top. Subtract posY and add FLOOR_THICKNESS to normalise.
+  // For the 3D/2D preview, coords must be relative to the track origin (posX/Y/Z = 0).
+  // generateDeathRace adds posX/Y/Z to all coords; subtract them back for preview.
   const deathRaceObjectsForPreview = useMemo(
-    () => deathRaceObjects.map(o => ({ ...o, y: o.y - posY })),
-    [deathRaceObjects, posY],
+    () => deathRaceObjects.map(o => ({ ...o, x: o.x - posX, y: o.y - posY, z: o.z - posZ })),
+    [deathRaceObjects, posX, posY, posZ],
   );
 
   const objects = useMemo(() => [...trackObjects, ...deathRaceObjects],

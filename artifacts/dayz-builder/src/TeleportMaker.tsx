@@ -104,6 +104,25 @@ export default function TeleportMaker() {
   const [padB, setPadB] = useState<PadConfig | null>(null);
   const [guideOpen, setGuideOpen] = useState(false);
 
+  function exportAllJSON() {
+    const pads: Array<{ cfg: PadConfig; label: string }> = [{ cfg: padA, label: "A" }];
+    if (padB) pads.push({ cfg: padB, label: "B" });
+    for (const { cfg, label } of pads) {
+      const r = rng(cfg.seed);
+      const theme = THEMES.find(t => t.key === cfg.theme)!;
+      const pts = getShapePoints(theme.shape, {
+        scale: 1, padRadius: cfg.padRadius,
+        radius: cfg.padRadius * 0.9,
+        columnCount: 4 + Math.round(r() * 4),
+        ringDiameter: cfg.padRadius * 1.8,
+        stones: 6 + Math.round(r() * 4),
+      });
+      const areaName = makeAreaName(cfg.theme, label);
+      downloadFile(buildObjectsJson(pts, theme.suggestedClass, cfg.posX, cfg.posY, cfg.posZ, label), `${areaName}_objects.json`);
+      downloadFile(buildPraJson(cfg.padRadius, cfg.posX, cfg.posY, cfg.posZ, cfg.destX, cfg.destY, cfg.destZ, areaName), `${areaName}_pra.json`);
+    }
+  }
+
   const cfg = activePad === "A" ? padA : (padB ?? padA);
   const setCfg = useCallback((patch: Partial<PadConfig>) => {
     if (activePad === "A") setPadA(p => ({ ...p, ...patch }));
@@ -158,6 +177,10 @@ export default function TeleportMaker() {
         </div>
         <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#0e2010] border border-[#27ae60] text-[#27ae60]">{objects3D.length} objects</span>
         <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#0a1a0a] border border-[#1abc9c] text-[#1abc9c]">✓ CONSOLE SAFE</span>
+        <button onClick={exportAllJSON}
+          className="ml-auto px-3 py-1 text-[10px] font-bold bg-[#27ae60] text-[#080f09] rounded hover:bg-[#2ecc71] transition-all">
+          ⬇ Export All JSON
+        </button>
       </div>
 
       {/* Body */}
