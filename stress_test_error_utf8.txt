@@ -1,0 +1,622 @@
+﻿node.exe : npm warn 
+Unknown project config 
+"auto-install-peers". This 
+will stop working in the 
+next major version of npm. 
+See `npm help npmrc` for 
+supported config options.
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
+    + CategoryInfo         
+     : NotSpecified: (npm  
+   warn Unknow...config    
+ options.:String) [], R    
+emoteException
+    + FullyQualifiedErrorI 
+   d : NativeCommandError
+ 
+npm warn Unknown project 
+config "strict-peer-depende
+ncies". This will stop 
+working in the next major 
+version of npm. See `npm 
+help npmrc` for supported 
+config options.
+file:///C:/Users/Shadow/App
+Data/Local/npm-cache/_npx/f
+2342a4b64a2bc92/node_module
+s/vite/dist/node/chunks/nod
+e.js:3720
+		const wrapper = new 
+Error(summary);
+		                ^
+
+Error: Transform failed 
+with 1 error:
+
+[31m[PARSE_ERROR] 
+Error:[0m File appears to 
+be binary.
+
+    at transformWithOxc (fi
+le:///C:/Users/Shadow/AppDa
+ta/Local/npm-cache/_npx/f23
+42a4b64a2bc92/node_modules/
+vite/dist/node/chunks/node.
+js:3720:19)
+    at TransformPluginConte
+xt.transform (file:///C:/Us
+ers/Shadow/AppData/Local/np
+m-cache/_npx/f2342a4b64a2bc
+92/node_modules/vite/dist/n
+ode/chunks/node.js:3788:26)
+    at EnvironmentPluginCon
+tainer.transform (file:///C
+:/Users/Shadow/AppData/Loca
+l/npm-cache/_npx/f2342a4b64
+a2bc92/node_modules/vite/di
+st/node/chunks/node.js:3004
+8:51)
+    at loadAndTransform (fi
+le:///C:/Users/Shadow/AppDa
+ta/Local/npm-cache/_npx/f23
+42a4b64a2bc92/node_modules/
+vite/dist/node/chunks/node.
+js:24177:26) {
+  errors: [Getter/Setter],
+  plugin: 'vite:oxc',
+  id: 'C:/Users/Shadow/Down
+loads/Dank-editor-preview/a
+rtifacts/dayz-builder/src/l
+ib/shapeParams.ts',
+  pluginCode: 'export 
+interface ParamDef {\n' +
+    '  id: string;\n' +
+    '  label: string;\n' +
+    '  val: number;\n' +
+    '  min: number;\n' +
+    '  max: number;\n' +
+    '  step?: number;\n' +
+    '}\n' +
+    '\n' +
+    'export interface 
+ShapeDef {\n' +
+    '  label: string;\n' +
+    '  group: string;\n' +
+    '  params: 
+ParamDef[];\n' +
+    '}\n' +
+    '\n' +
+    'export const 
+SHAPE_DEFS: Record<string, 
+ShapeDef> = {\n' +
+    '  azkaban_prison: { 
+label: "Azkaban Prison", 
+group: "Monuments", 
+params: [ { id: "width", 
+label: "Width", val: 40, 
+min: 20, max: 100, step: 5 
+}, { id: "height", label: 
+"Height", val: 100, min: 
+40, max: 200, step: 10 } ] 
+},\n' +
+    '  stargate_portal: { 
+label: "Stargate Portal", 
+group: "Sci-Fi", params: [ 
+{ id: "radius", label: 
+"Radius", val: 20, min: 
+10, max: 80, step: 2 } ] 
+},\n' +
+    `  helms_deep: { 
+label: "Helm's Deep", 
+group: "Monuments", 
+params: [ { id: "width", 
+label: "Wall Length", val: 
+100, min: 40, max: 250, 
+step: 10 } ] },\n` +
+    '  jurassic_park_gate: 
+{ label: "Jurassic Park 
+Gate", group: "Monuments", 
+params: [ { id: "width", 
+label: "Width", val: 30, 
+min: 10, max: 80, step: 5 
+}, { id: "height", label: 
+"Height", val: 25, min: 
+10, max: 60, step: 5 } ] 
+},\n' +
+    '  nakatomi_plaza: { 
+label: "Nakatomi Plaza", 
+group: "Monuments", 
+params: [ { id: "width", 
+label: "Width", val: 30, 
+min: 10, max: 80, step: 5 
+}, { id: "height", label: 
+"Height", val: 140, min: 
+40, max: 250, step: 10 } ] 
+},\n' +
+    '  matrix_zion_dock: { 
+label: "Zion Dock", group: 
+"Sci-Fi", params: [ { id: 
+"width", label: "Radius", 
+val: 100, min: 40, max: 
+200, step: 10 } ] },\n' +
+    '  
+fortress_of_solitude: { 
+label: "Fortress of 
+Solitude", group: 
+"Monuments", params: [ { 
+id: "width", label: 
+"Radius", val: 60, min: 
+20, max: 150, step: 5 } ] 
+},\n' +
+    '  wall_maria: { 
+label: "Wall Maria", 
+group: "Monuments", 
+params: [ { id: "width", 
+label: "Radius", val: 200, 
+min: 50, max: 400, step: 
+10 }, { id: "height", 
+label: "Height", val: 50, 
+min: 20, max: 100, step: 5 
+} ] },\n' +
+    '  barad_dur: { label: 
+"Barad-d├╗r", group: 
+"Monuments", params: [ { 
+id: "width", label: "Base 
+Width", val: 50, min: 20, 
+max: 100, step: 5 }, { id: 
+"height", label: "Height", 
+val: 200, min: 50, max: 
+350, step: 10 } ] },\n' +
+    '  tardis: { label: 
+"TARDIS", group: "Sci-Fi", 
+params: [ { id: "height", 
+label: "Height", val: 10, 
+min: 4, max: 30, step: 1 } 
+] },\n' +
+    '  nuketown: { label: 
+"Nuketown", group: 
+"Military", params: [ { 
+id: "width", label: "Arena 
+Width", val: 60, min: 20, 
+max: 150, step: 5 } ] 
+},\n' +
+    '  dust2_a_site: { 
+label: "Dust 2 - A Site", 
+group: "Military", params: 
+[ { id: "width", label: 
+"Site Width", val: 50, 
+min: 20, max: 120, step: 5 
+} ] },\n' +
+    `  peach_castle: { 
+label: "Peach's Castle", 
+group: "Monuments", 
+params: [ { id: "radius", 
+label: "Castle Radius", 
+val: 40, min: 10, max: 
+100, step: 5 } ] },\n` +
+    '  shinra_hq: { label: 
+"Shinra HQ", group: 
+"Sci-Fi", params: [ { id: 
+"width", label: "Radius", 
+val: 40, min: 20, max: 
+100, step: 5 }, { id: 
+"height", label: "Height", 
+val: 180, min: 50, max: 
+300, step: 10 } ] },\n' +
+    '  halo_control_room: 
+{ label: "Halo Control 
+Room", group: "Sci-Fi", 
+params: [ { id: "width", 
+label: "Base Width", val: 
+100, min: 40, max: 200, 
+step: 10 }, { id: 
+"height", label: "Height", 
+val: 80, min: 30, max: 
+150, step: 10 } ] },\n' +
+    '  colosseum: { label: 
+"The Colosseum", group: 
+"Monuments", params: [ { 
+id: "width", label: 
+"Radius", val: 80, min: 
+30, max: 150, step: 5 }, { 
+id: "height", label: 
+"Height", val: 40, min: 
+15, max: 80, step: 5 } ] 
+},\n' +
+    '  golden_gate_bridge: 
+{ label: "Golden Gate 
+Bridge", group: 
+"Monuments", params: [ { 
+id: "width", label: 
+"Span", val: 300, min: 
+100, max: 600, step: 20 }, 
+{ id: "height", label: 
+"Height", val: 100, min: 
+30, max: 200, step: 10 } ] 
+},\n' +
+    '  normandy_bunkers: { 
+label: "Normandy Bunkers", 
+group: "Military", params: 
+[ { id: "width", label: 
+"Length", val: 120, min: 
+40, max: 300, step: 10 } ] 
+},\n' +
+    '  the_pentagon: { 
+label: "The Pentagon", 
+group: "Military", params: 
+[ { id: "width", label: 
+"Radius", val: 100, min: 
+30, max: 200, step: 5 } ] 
+},\n' +
+    '  pyramid_giza: { 
+label: "Pyramid of Giza", 
+group: "Monuments", 
+params: [ { id: "width", 
+label: "Base Width", val: 
+120, min: 30, max: 250, 
+step: 10 } ] },\n' +
+    '  taj_mahal: { label: 
+"Taj Mahal", group: 
+"Monuments", params: [ { 
+id: "radius", label: "Base 
+Radius", val: 30, min: 10, 
+max: 80, step: 2 } ] },\n' 
++
+    '  stonehenge: { 
+label: "Stonehenge", 
+group: "Monuments", 
+params: [ { id: "radius", 
+label: "Ring Radius", val: 
+25, min: 8, max: 60, step: 
+2 } ] },\n' +
+    '  
+starship_enterprise: { 
+label: "Starship 
+Enterprise", group: 
+"Sci-Fi", params: [ { id: 
+"width", label: "Scale %", 
+val: 100, min: 50, max: 
+300, step: 10 } ] },\n' +
+    '  star_destroyer: { 
+label: "Star Destroyer", 
+group: "Sci-Fi", params: [ 
+{ id: "width", label: 
+"Width", val: 100, min: 
+30, max: 250, step: 10 }, 
+{ id: "length", label: 
+"Length", val: 200, min: 
+50, max: 500, step: 10 } ] 
+},\n' +
+    '  king_kong_empire: { 
+label: "Empire State 
+(Kong)", group: 
+"Monuments", params: [ { 
+id: "height", label: 
+"Tower Height", val: 180, 
+min: 50, max: 350, step: 
+10 } ] },\n' +
+    '\n' +
+    '  // ÔöÇÔöÇ SCI-FI / 
+EPIC ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔ
+öÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔ
+öÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔ
+öÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔ
+öÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔ
+öÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔ
+öÇÔöÇ\n' +
+    '´┐¢´┐¢ÔöÇÔöÇÔöÇÔöÇÔöÇÔ
+öÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔ
+öÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔ
+öÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔ
+öÇÔöÇÔöÇÔöÇÔöÇ\n' +
+    '  deathstar: {\n' +
+    '    label: "Ôÿá Death 
+Star", group: "Sci-Fi / 
+Epic",\n' +
+    '    params: [\n' +
+    '      { id: "radius", 
+label: "Equatorial Radius 
+(m)", val: 40, min: 5, 
+max: 200 },\n' +
+    '      { id: 
+"latSegs", label: 
+"Latitude Segments", val: 
+10, min: 4, max: 20 },\n' +
+    '      { id: 
+"lonSegs", label: 
+"Longitude Segments", val: 
+16, min: 6, max: 32 },\n' +
+    '      { id: 
+"dishRadius", label: "Dish 
+Indent Radius (m)", val: 
+12, min: 2, max: 60 },\n' +
+    '      { id: 
+"dishDepth", label: "Dish 
+Depth (m)", val: 8, min: 
+1, max: 30 },\n' +
+    '      { id: 
+"dishLat", label: "Dish 
+Latitude (deg)", val: 30, 
+min: -80, max: 80 },\n' +
+    '    ]\n' +
+    '  },\n' +
+    '  sphere: {\n' +
+    '    label: "Sphere 
+Shell", group: "Sci-Fi / 
+Epic",\n' +
+    '    params: [\n' +
+    '      { id: "radius", 
+label: "Radius (m)", val: 
+25, min: 2, max: 200 },\n' 
++
+    '      { id: 
+"latSegs", label: 
+"Latitude Rings", val: 8, 
+min: 3, max: 20 },\n' +
+    '      { id: 
+"lonSegs", label: 
+"Longitude Points", val: 
+12, min: 4, max: 32 },\n' +
+    '    ]\n' +
+    '  },\n' +
+    '  hemisphere: {\n' +
+    '    label: 
+"Hemisphere", group: 
+"Sci-Fi / Epic",\n' +
+    '    params: [\n' +
+    '      { id: "radius", 
+label: "Radius (m)", val: 
+25, min: 2, max: 200 },\n' 
++
+    '      { id: 
+"latSegs", label: "Rings", 
+val: 6, min: 2, max: 16 
+},\n' +
+    '      { id: 
+"lonSegs", label: "Points 
+per Ring", val: 12, min: 
+4, max: 32 },\n' +
+    '    ]\n' +
+    '  },\n' +
+    '  torus: {\n' +
+    '    label: "Torus / 
+Ring Gate", group: "Sci-Fi 
+/ Epic",\n' +
+    '    params: [\n' +
+    '      { id: "majorR", 
+label: "Major Radius (m)", 
+val: 30, min: 5, max: 150 
+},\n' +
+    '      { id: "minorR", 
+label: "Tube Radius (m)", 
+val: 8, min: 1, max: 50 
+},\n' +
+    '      { id: 
+"majorSegs", label: 
+"Segments Around", val: 
+32, min: 6, max: 80 },\n' +
+    '      { id: 
+"minorSegs", label: 
+"Segments Tube", val: 12, 
+min: 3, max: 32 },\n' +
+    '    ]\n' +
+    '  },\n' +
+    '  disc: {\n' +
+    '    label: "Flat Disc 
+/ Platform", group: 
+"Sci-Fi / Epic",\n' +
+    '    params: [\n' +
+    '      { id: "radius", 
+label: "Radius (m)", val: 
+30, min: 2, max: 200 },\n' 
++
+    '      { id: "rings", 
+label: "Concentric Rings", 
+val: 3, min: 1, max: 12 
+},\n' +
+    '      { id: "points", 
+label: "Points per Ring", 
+val: 16, min: 4, max: 48 
+},\n' +
+    '      { id: 
+"innerRadius", label: 
+"Inner Hole Radius", val: 
+0, min: 0, max: 150 },\n' +
+    '    ]\n' +
+    '  },\n' +
+    '  helix: {\n' +
+    '    label: "Helix / 
+DNA Spiral", group: 
+"Sci-Fi / Epic",\n' +
+    '    params: [\n' +
+    '      { id: "radius", 
+label: "Helix Radius (m)", 
+val: 15, min: 2, max: 100 
+},\n' +
+    '      { id: "height", 
+label: "Total Height (m)", 
+val: 30, min: 3, max: 200 
+},\n' +
+    '      { id: "turns", 
+label: "Turns", val: 4, 
+min: 1, max: 20 },\n' +
+    '      { id: 
+"pointsPerTurn", label: 
+"Points/Turn", val: 12, 
+min: 4, max: 32 },\n' +
+    '      { id: 
+"strands", label: "Strands 
+(1-4)", val: 1, min: 1, 
+max: 4 },\n' +
+    '    ]\n' +
+    '  },\n' +
+    '  cone: {\n' +
+    '    label: "Cone", 
+group: "Sci-Fi / Epic",\n' 
++
+    '    params: [\n' +
+    '      { id: "radius", 
+label: "Base Radius (m)", 
+val: 20, min: 2, max: 150 
+},\n' +
+    '      { id: "height", 
+label: "Height (m)", val: 
+25, min: 2, max: 200 },\n' 
++
+    '      { id: "rings", 
+label: "Height Rings", 
+val: 5, min: 2, max: 20 
+},\n' +
+    '      { id: "points", 
+label: "Points/Ring", val: 
+12, min: 3, max: 32 },\n' +
+    '    ]\n' +
+    '  },\n' +
+    '  cylinder: {\n' +
+    '    label: 
+"Cylinder", group: "Sci-Fi 
+/ Epic",\n' +
+    '    params: [\n' +
+    '      { id: "radius", 
+label: "Radius (m)", val: 
+20, min: 2, max: 150 },\n' 
++
+    '      { id: "height", 
+label: "Height (m)", val: 
+20, min: 2, max: 150 },\n' 
++
+    '      { id: "rings", 
+label: "Height Segments", 
+val: 4, min: 1, max: 20 
+},\n' +
+    '      { id: "points", 
+label: "Points/Ring", val: 
+12, min: 3, max: 32 },\n' +
+    '      { id: "caps", 
+label: "Caps (0=No, 
+1=Yes)", val: 1, min: 0, 
+max: 1, step: 1 },\n' +
+    '    ]\n' +
+    '  },\n' +
+    '  hyperboloid: {\n' +
+    '    label: 
+"Hyperboloid (hourglass)", 
+group: "Sci-Fi / Epic",\n' 
++
+    '    params: [\n' +
+    '      { id: 
+"radiusTop", label: "Top 
+Radius (m)", val: 15, min: 
+1, max: 100 },\n' +
+    '      { id: 
+"radiusMid", label: "Waist 
+Radius (m)", val: 8, min: 
+1, max: 100 },\n' +
+    '      { id: "height", 
+label: "Height (m)", val: 
+30, min: 4, max: 200 },\n' 
++
+    '      { id: "rings", 
+label: "Height Rings", 
+val: 8, min: 3, max: 24 
+},\n' +
+    '      { id: "points", 
+label: "Points/Ring", val: 
+14, min: 4, max: 32 },\n' +
+    '    ]\n' +
+    '  },\n' +
+    '  mobius: {\n' +
+    '    label: "M├Âbius 
+Strip", group: "Sci-Fi / 
+Epic",\n' +
+    '    params: [\n' +
+    '      { id: "radius", 
+label: "Ring Radius (m)", 
+val: 25, min: 5, max: 120 
+},\n' +
+    '      { id: "width", 
+label: "Strip Width (m)", 
+val: 8, min: 1, max: 40 
+},\n' +
+    '      { id: "segs", 
+label: "Segments", val: 
+20, min: 8, max: 60 },\n' +
+    '      { id: 
+"widthSegs", label: "Width 
+Divisions", val: 4, min: 
+1, max: 10 },\n' +
+    '    ]\n' +
+    '  },\n' +
+    '  icosphere: {\n' +
+    '    label: "Icosphere 
+(faceted)", group: "Sci-Fi 
+/ Epic",\n' +
+    '    params: [\n' +
+    '      { id: "radius", 
+label: "Radius (m)", val: 
+25, min: 3, max: 150 },\n' 
++
+    '      { id: 
+"subdivisions", label: 
+"Subdivisions (1-3)", val: 
+1, min: 1, max: 3, step: 1 
+},\n' +
+    '    ]\n' +
+    '  },\n' +
+    '  millennium_falcon: 
+{\n' +
+    '    label: "ÔÜí 
+Millennium Falcon", group: 
+"Sci-Fi / Epic",\n' +
+    '    params: [\n' +
+    '      { id: "radius", 
+label: "Hull Radius (m)", 
+val: 40, min: 8, max: 120 
+},\n' +
+    '    ]\n' +
+    '  },\n' +
+    '  orbital_station: 
+{\n' +
+    '    label: "ƒø© 
+Orbital Station", group: 
+"Sci-Fi / Epic",\n' +
+    '    params: [\n' +
+    '      { id: "radius", 
+label: "Ring Radius (m)", 
+val: 35, min: 10, max: 150 
+},\n' +
+    '    ]\n' +
+    '  },\n' +
+    '  reactor_core: {\n' +
+    '    label: "ÔÜø 
+Reactor Core", group: 
+"Sci-Fi / Epic",\n' +
+    '    params: [\n' +
+    '      { id: "radius", 
+label: "Radius (m)", val: 
+25, min: 5, max: 100 },\n' 
++
+    '      { id: "height", 
+label: "Height (m)", val: 
+30, min: 5, max: 120 },\n' 
++
+    '      { id: "rings", 
+label: "Plasma Rings", 
+val: 5, min: 2, max: 12 
+},\n' +
+    '    ]\n' +
+    '  },\n' +
+    '  sci_fi_gate: {\n' +
+    '    label: "ƒö« 
+Sci-Fi Portal'... 42410 
+more characters
+}
+
+Node.js v25.8.2

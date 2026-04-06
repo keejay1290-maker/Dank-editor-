@@ -1,0 +1,47 @@
+﻿
+=== FINAL VERIFICATION REPORT ===
+
+VERIFIED (37):
+  OK: NorseHelm
+  OK: GreatHelm
+  OK: ChristmasTree
+  OK: UndergroundStashSnow
+  OK: EasterEgg
+  OK: Plant_Pumpkin
+  OK: Land_Boat_Small1
+  OK: Land_Boat_Small2
+  OK: Land_Castle_Bergfrit
+  OK: Land_Castle_Bergfrit2
+  OK: Land_Castle_Bastion2
+  OK: Land_Castle_Stairs_nolc
+  OK: Land_Power_Station
+  OK: Land_Radio_Building
+  OK: Land_Pier_Crane_A
+  OK: Land_Barn_Brick1
+  OK: Land_Barn_Brick2
+  OK: Land_Mil_Tent_Big1_1
+  OK: Land_Mil_Barracks1
+  OK: Land_Mil_Barracks2
+  OK: Land_Bunker1_Double
+  OK: Land_Mil_Fortified_Nest_Big
+  OK: Land_Mil_Fortified_Nest_Small
+  OK: Land_Mil_Fortified_Nest_Watchtower
+  OK: Land_DieselPowerPlant_Tank_Big
+  OK: Land_DieselPowerPlant_Tank_Small
+  OK: Land_Container_1Bo
+  OK: Land_Container_1Mo
+  OK: Land_Prison_Wall_Large
+  OK: StaticObj_Wreck_BMP1_DE
+  OK: StaticObj_Wreck_T72_Chassis_DE
+  OK: Wreck_MI8_Crashed
+  OK: BarbedWire
+  OK: Barrel_Blue
+  OK: Barrel_Red
+  OK: Barrel_Green
+  OK: Barrel_Yellow
+
+NOT IN valid_objects_lower (1):
+  ?? StaticObj_Container_1D
+
+Note: "??" does not necessarily mean invalid.
+mapgroupproto/mapgrouppos objects (map structures) may not appear in types.xml but ARE vanilla.

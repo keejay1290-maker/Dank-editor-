@@ -1,0 +1,4279 @@
+{
+    "Objects": [
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              14759.467773000002,
+              27.651508,
+              13322.829102000002
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              14754.467773000002,
+              25.040107,
+              13309.729493
+            ],
+              "ypr": [
+              2,
+              21,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike1.p3d",
+              "pos": [
+              14766.866210000002,
+              15.498830000000027,
+              13300.682618
+            ],
+              "ypr": [
+              -62.000004,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith2.p3d",
+              "pos": [
+              14766.676758000003,
+              27.026519999999987,
+              13307.847656
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              14749.828125999997,
+              25.181596000000003,
+              13301.696289
+            ],
+              "ypr": [
+              -54,
+              14.999999,
+              -3
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              14756.727539999998,
+              23.546396,
+              13296.696289
+            ],
+              "ypr": [
+              -104,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              14749.513671999997,
+              28.51205000000001,
+              13307.991211
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart1.p3d",
+              "pos": [
+              14776.734374000003,
+              15.73366699999999,
+              13321.035156999998
+            ],
+              "ypr": [
+              42,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              14772.267578000003,
+              22.469707,
+              13317.429688
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart1.p3d",
+              "pos": [
+              14778.234374000003,
+              18.76586699999999,
+              13314.834960999999
+            ],
+              "ypr": [
+              174,
+              -5.00001,
+              -176
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart1.p3d",
+              "pos": [
+              14774.535156000002,
+              16.48756699999999,
+              13322.134766
+            ],
+              "ypr": [
+              -73,
+              0,
+              1
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith3.p3d",
+              "pos": [
+              14781.4375,
+              16.302327999999996,
+              13320.680664
+            ],
+              "ypr": [
+              0,
+              14.999999,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith3.p3d",
+              "pos": [
+              14780.337891,
+              19.359626,
+              13320.88086
+            ],
+              "ypr": [
+              98.999992,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_corylusavellana_2s.p3d",
+              "pos": [
+              14784.995117,
+              16.09289199999999,
+              13321.671874999998
+            ],
+              "ypr": [
+              119,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_corylusavellana_1f.p3d",
+              "pos": [
+              14785.266602000002,
+              16.866415000000003,
+              13323.318358999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_sambucusnigra_1s.p3d",
+              "pos": [
+              14786.250976999998,
+              15.667079999999988,
+              13314.333984
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_naked_2s.p3d",
+              "pos": [
+              14785.279297000001,
+              15.727714000000006,
+              13311.571289000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\d_quercusrobur_fallenc.p3d",
+              "pos": [
+              14790.099609,
+              15.38984600000002,
+              13316.081053999998
+            ],
+              "ypr": [
+              49,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart1.p3d",
+              "pos": [
+              14778.434570000003,
+              17.05756699999999,
+              13308.234375
+            ],
+              "ypr": [
+              25.000002,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\d_piceaabies_fallenc.p3d",
+              "pos": [
+              14791.655273000002,
+              15.247876999999995,
+              13318.916015
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\d_fagussylvatica_stumpb.p3d",
+              "pos": [
+              14783.933593000002,
+              15.84543,
+              13318.179688
+            ],
+              "ypr": [
+              -42,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\d_fagussylvatica_fallen.p3d",
+              "pos": [
+              14783.444335999999,
+              23.143551999999982,
+              13310.980469
+            ],
+              "ypr": [
+              -86,
+              -8.000001,
+              38
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_betulapendula_1fb.p3d",
+              "pos": [
+              14785.919921999997,
+              15.65154500000001,
+              13312.295899
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_betulapendula_1f.p3d",
+              "pos": [
+              14785.271484999997,
+              15.701720999999992,
+              13314.487305
+            ],
+              "ypr": [
+              -2,
+              -4,
+              -7
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              15099.367187000003,
+              65.690109,
+              13702.029298000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              15090.527343999998,
+              75.634292,
+              13694.096679999999
+            ],
+              "ypr": [
+              -146,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              15091.527343999998,
+              77.761993,
+              13693.496094
+            ],
+              "ypr": [
+              43,
+              13,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              15093.527343999998,
+              82.46719300000001,
+              13706.496094
+            ],
+              "ypr": [
+              -6,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              15107.927734999997,
+              81.729698,
+              13700.396483999999
+            ],
+              "ypr": [
+              11,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              15099.627929999997,
+              81.343399,
+              13692.795898
+            ],
+              "ypr": [
+              -61,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike3.p3d",
+              "pos": [
+              15105.926758000003,
+              81.056053,
+              13695.113281000002
+            ],
+              "ypr": [
+              -37,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              15092.727539999998,
+              79.004394,
+              13705.896483999999
+            ],
+              "ypr": [
+              -1,
+              0,
+              -55
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith3.p3d",
+              "pos": [
+              15101.337891,
+              80.174629,
+              13710.280274
+            ],
+              "ypr": [
+              95,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              15097.027343999998,
+              85.32459200000001,
+              13700.896483999999
+            ],
+              "ypr": [
+              135.000015,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              15099.427734999997,
+              85.695694,
+              13706.295898
+            ],
+              "ypr": [
+              51,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              15105.627929999997,
+              85.580299,
+              13700.996094
+            ],
+              "ypr": [
+              -27,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              15101.127929999997,
+              86.901497,
+              13700.196289
+            ],
+              "ypr": [
+              -4,
+              14,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith3.p3d",
+              "pos": [
+              15102.4375,
+              83.934524,
+              13693.38086
+            ],
+              "ypr": [
+              -101,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              9090.107422000003,
+              157.66271999999998,
+              3251.724853999999
+            ],
+              "ypr": [
+              -80,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              15100.417969000002,
+              83.65532699999999,
+              13710.834960999999
+            ],
+              "ypr": [
+              101,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart1.p3d",
+              "pos": [
+              15100.535156000002,
+              82.08726399999999,
+              13707.934571
+            ],
+              "ypr": [
+              -121.000008,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              11202.767578000003,
+              111.016609,
+              15243.229493
+            ],
+              "ypr": [
+              67,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              11199.167969000002,
+              108.474609,
+              15225.429688
+            ],
+              "ypr": [
+              -4,
+              17,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith2.p3d",
+              "pos": [
+              11190.676758000003,
+              113.31372099999999,
+              15230.347656
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              11228.967773000002,
+              108.466606,
+              15217.329102000002
+            ],
+              "ypr": [
+              -149,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith2.p3d",
+              "pos": [
+              11207.077148000002,
+              108.618721,
+              15214.147461
+            ],
+              "ypr": [
+              -65,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith2.p3d",
+              "pos": [
+              11220.376953000003,
+              108.94471699999998,
+              15214.347656
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              11214.767578000003,
+              113.939605,
+              15217.129884
+            ],
+              "ypr": [
+              -81,
+              0,
+              -83
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              11207.567383000003,
+              119.454605,
+              15233.229493
+            ],
+              "ypr": [
+              3.00003,
+              -4,
+              66.000206
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              11222.667969000002,
+              119.003608,
+              15231.329102000002
+            ],
+              "ypr": [
+              29.999998,
+              2,
+              -46.000198
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              11215.267578000003,
+              119.385604,
+              15232.929688
+            ],
+              "ypr": [
+              6.00002,
+              -14.999999,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith3.p3d",
+              "pos": [
+              11201.237305,
+              125.947525,
+              15236.080078
+            ],
+              "ypr": [
+              0,
+              5,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith3.p3d",
+              "pos": [
+              11192.337891,
+              113.357528,
+              15239.280274
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith2.p3d",
+              "pos": [
+              11197.077148000002,
+              114.23171999999998,
+              15249.347656
+            ],
+              "ypr": [
+              40,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              11202.527343999998,
+              122.5513,
+              15219.396483999999
+            ],
+              "ypr": [
+              -64.000008,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith3.p3d",
+              "pos": [
+              11215.837891,
+              129.50653,
+              15219.480469
+            ],
+              "ypr": [
+              -98.999992,
+              -1,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              11228.313475999998,
+              126.67115000000001,
+              15224.191406
+            ],
+              "ypr": [
+              -26,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              11225.113280999998,
+              109.93515000000001,
+              15209.291016000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_betulapendula_2s.p3d",
+              "pos": [
+              11217.708984,
+              108.75425700000001,
+              15204.003906000002
+            ],
+              "ypr": [
+              -67,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\b_betulapendula_1f.p3d",
+              "pos": [
+              11217.664063,
+              108.638534,
+              15203.503906
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\b_fagussylvatica_1f.p3d",
+              "pos": [
+              11217.412109,
+              108.500382,
+              15200.875977
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\b_piceaabies_1fb.p3d",
+              "pos": [
+              11212.782226999998,
+              109.40538,
+              15210.745116999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_prunusspinosa_1s.p3d",
+              "pos": [
+              11216.794922000001,
+              109.130363,
+              15208.901367
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_prunusspinosa_2s.p3d",
+              "pos": [
+              11212.504883,
+              109.33641099999998,
+              15209.736327999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\d_fagussylvatica_fallenb.p3d",
+              "pos": [
+              11211.038085999999,
+              109.30578499999999,
+              15207.241211
+            ],
+              "ypr": [
+              -56,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart1.p3d",
+              "pos": [
+              349.59576400000253,
+              463.439376,
+              15012.334960999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              352.2117319999975,
+              462.963302,
+              15015.096679999999
+            ],
+              "ypr": [
+              24,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              342.58874599999746,
+              463.652298,
+              15016.596679999999
+            ],
+              "ypr": [
+              -69,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              338.2917489999975,
+              463.381302,
+              15023.496094
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              349.6447449999975,
+              462.27830500000005,
+              15027.795898
+            ],
+              "ypr": [
+              107,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              342.8867499999975,
+              462.556289,
+              15029.696289
+            ],
+              "ypr": [
+              63,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              337.7547309999975,
+              464.624283,
+              15024.696289
+            ],
+              "ypr": [
+              -10,
+              -26.000002,
+              168
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              341.7747199999975,
+              465.68229599999995,
+              15027.196289
+            ],
+              "ypr": [
+              -176,
+              28.999998,
+              -179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              341.83074999999747,
+              466.49031,
+              15019.896483999999
+            ],
+              "ypr": [
+              -170.999985,
+              -8.000001,
+              -156
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike3.p3d",
+              "pos": [
+              346.0059510000027,
+              464.305954,
+              15027.113281000002
+            ],
+              "ypr": [
+              -2,
+              -14,
+              -72
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              346.00872899999746,
+              466.39829999999995,
+              15019.096679999999
+            ],
+              "ypr": [
+              176,
+              -9,
+              -179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              350.2177439999975,
+              466.27830500000005,
+              15019.096679999999
+            ],
+              "ypr": [
+              -9,
+              6,
+              -152
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              351.1885680000027,
+              462.21971099999996,
+              15026.535156999998
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              370.0685730000027,
+              462.948715,
+              14993.035156999998
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart1.p3d",
+              "pos": [
+              380.2197560000025,
+              460.738357,
+              15017.134766
+            ],
+              "ypr": [
+              -61,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              332.07959000000267,
+              451.9626,
+              15035.029298000001
+            ],
+              "ypr": [
+              143,
+              14.999999,
+              2
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              1555.3977059999975,
+              316.574295,
+              7840.2163089999995
+            ],
+              "ypr": [
+              -72,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              1565.3277589999975,
+              315.85029599999996,
+              7839.636229999999
+            ],
+              "ypr": [
+              43,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith3.p3d",
+              "pos": [
+              1566.137451,
+              320.176513,
+              7845.700684
+            ],
+              "ypr": [
+              -11,
+              -4,
+              45.999996
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith3.p3d",
+              "pos": [
+              1557.867554,
+              317.932525,
+              7842.94043
+            ],
+              "ypr": [
+              -50.000004,
+              -24,
+              -22
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith3.p3d",
+              "pos": [
+              1562.637451,
+              320.099517,
+              7843.44043
+            ],
+              "ypr": [
+              -179.999985,
+              -21,
+              -179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              1561.3232419999981,
+              319.72116000000005,
+              7854.051270000001
+            ],
+              "ypr": [
+              -57.000004,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              1565.3176270000026,
+              316.373734,
+              7849.994628999999
+            ],
+              "ypr": [
+              35.000004,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2fb.p3d",
+              "pos": [
+              1566.015992,
+              309.18859900000007,
+              7877.7641600000015
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2fb.p3d",
+              "pos": [
+              1558.605958,
+              311.644593,
+              7865.994140000002
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2fb.p3d",
+              "pos": [
+              1579.355958,
+              311.79959199999996,
+              7874.023925000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2fb.p3d",
+              "pos": [
+              1586.3059090000002,
+              312.846589,
+              7868.914062000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2fb.p3d",
+              "pos": [
+              1581.1558840000002,
+              314.56659,
+              7854.324218000002
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2fb.p3d",
+              "pos": [
+              1581.7559820000001,
+              313.196595,
+              7865.194335000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2fb.p3d",
+              "pos": [
+              1587.5358890000002,
+              314.57760700000006,
+              7857.354003000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2fb.p3d",
+              "pos": [
+              1594.0559090000002,
+              314.71859800000004,
+              7858.824218000002
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2fb.p3d",
+              "pos": [
+              1592.2159430000002,
+              314.942597,
+              7853.5141600000015
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2fb.p3d",
+              "pos": [
+              1586.355958,
+              313.969605,
+              7862.813964000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2fb.p3d",
+              "pos": [
+              1576.9859620000002,
+              310.01361099999997,
+              7883.934081000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2fb.p3d",
+              "pos": [
+              1570.4259040000002,
+              314.61859200000004,
+              7849.793945000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2fb.p3d",
+              "pos": [
+              1571.5059820000001,
+              315.417603,
+              7839.983886000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2fb.p3d",
+              "pos": [
+              1537.765992,
+              311.58261200000004,
+              7851.7641600000015
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_prunusspinosa_1s.p3d",
+              "pos": [
+              1569.5750730000004,
+              314.84938,
+              7847.400878000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_prunusspinosa_1s.p3d",
+              "pos": [
+              1572.5251460000004,
+              314.578354,
+              7849.101074000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_prunusspinosa_1s.p3d",
+              "pos": [
+              1569.0950930000004,
+              315.228378,
+              7843.360839000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_prunusspinosa_1s.p3d",
+              "pos": [
+              1571.9151610000004,
+              315.33335900000003,
+              7837.721191000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              9074.267578000003,
+              162.696609,
+              3302.7695320000007
+            ],
+              "ypr": [
+              101,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              9073.437500000002,
+              154.001602,
+              3296.609376000001
+            ],
+              "ypr": [
+              -69,
+              -11,
+              151
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              9066.267578999998,
+              177.937301,
+              3308.0563959999995
+            ],
+              "ypr": [
+              29.999998,
+              -3,
+              -97
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              9066.727539999998,
+              176.631302,
+              3300.0463869999994
+            ],
+              "ypr": [
+              -45.999996,
+              0,
+              -97
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              9075.158203999998,
+              178.140289,
+              3297.0463869999994
+            ],
+              "ypr": [
+              -111,
+              0,
+              -6
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              9073.797851000003,
+              182.201599,
+              3312.859376000001
+            ],
+              "ypr": [
+              -89,
+              -2,
+              -62.000198
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              9075.387695999998,
+              182.02629100000001,
+              3297.6462399999996
+            ],
+              "ypr": [
+              94,
+              0,
+              -131
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              9070.118164999998,
+              181.181289,
+              3298.4562989999995
+            ],
+              "ypr": [
+              -81.999992,
+              3,
+              -2
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike3.p3d",
+              "pos": [
+              9065.146484000003,
+              182.220963,
+              3305.453369000001
+            ],
+              "ypr": [
+              25.000002,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              9073.023436999998,
+              187.858154,
+              3303.3513180000004
+            ],
+              "ypr": [
+              2,
+              -27,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              9078.727539000003,
+              171.325729,
+              3293.974853999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              9069.417969000002,
+              167.971725,
+              3297.104736999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              9080.248047000003,
+              178.23973099999998,
+              3298.854736999999
+            ],
+              "ypr": [
+              42,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart1.p3d",
+              "pos": [
+              9076.194335000002,
+              160.088363,
+              3283.7946779999993
+            ],
+              "ypr": [
+              0,
+              25.000002,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              9069.967773000002,
+              160.84072899999998,
+              3287.964843999999
+            ],
+              "ypr": [
+              -21.999998,
+              25.000002,
+              -12.999999
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith2.p3d",
+              "pos": [
+              9077.077148000002,
+              150.76771499999998,
+              3259.8974610000005
+            ],
+              "ypr": [
+              -6,
+              17,
+              -12
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              9068.807617000002,
+              152.826721,
+              3269.104736999999
+            ],
+              "ypr": [
+              -95,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2f.p3d",
+              "pos": [
+              9079.101562000002,
+              164.136459,
+              3284.157958000001
+            ],
+              "ypr": [
+              0,
+              10,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2f.p3d",
+              "pos": [
+              9078.821288000001,
+              157.719467,
+              3271.607910000001
+            ],
+              "ypr": [
+              -3,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2f.p3d",
+              "pos": [
+              9064.930663000001,
+              154.557465,
+              3276.567871000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2f.p3d",
+              "pos": [
+              9084.821288000001,
+              161.185455,
+              3273.4978020000012
+            ],
+              "ypr": [
+              -40.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2f.p3d",
+              "pos": [
+              9082.611327000002,
+              156.221466,
+              3261.287841000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2f.p3d",
+              "pos": [
+              9073.220702000002,
+              153.768463,
+              3265.9277340000012
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2f.p3d",
+              "pos": [
+              9060.871093000002,
+              147.145462,
+              3257.127929000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2f.p3d",
+              "pos": [
+              9069.071288000001,
+              149.208466,
+              3253.967773000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2f.p3d",
+              "pos": [
+              9071.121093000002,
+              156.37146,
+              3275.4277340000012
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2f.p3d",
+              "pos": [
+              9061.960937000002,
+              150.370468,
+              3268.137939000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2d.p3d",
+              "pos": [
+              9080.690429999997,
+              156.416671,
+              3265.906005000001
+            ],
+              "ypr": [
+              -3,
+              0,
+              -3
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2d.p3d",
+              "pos": [
+              9068.020507999998,
+              155.88566600000001,
+              3277.496093000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2fb.p3d",
+              "pos": [
+              9063.545899,
+              146.29460200000003,
+              3249.194091000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2fb.p3d",
+              "pos": [
+              9085.925782,
+              165.442597,
+              3282.664062000001
+            ],
+              "ypr": [
+              57.000004,
+              0,
+              5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              9078.748047000003,
+              179.350723,
+              3306.8046879999993
+            ],
+              "ypr": [
+              -126.999992,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              9075.307617000002,
+              182.511719,
+              3303.194824999999
+            ],
+              "ypr": [
+              61,
+              -10,
+              -166
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              9084.757812000003,
+              178.389725,
+              3306.5346679999993
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              9073.977539000003,
+              179.24671899999998,
+              3299.8347169999993
+            ],
+              "ypr": [
+              33,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              13744.067383000003,
+              -10.519524,
+              3697.5896000000007
+            ],
+              "ypr": [
+              -107,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith3.p3d",
+              "pos": [
+              13735.837891,
+              4.795586999999998,
+              3695.600586
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              13741.828125999997,
+              5.053356000000003,
+              3690.8962399999996
+            ],
+              "ypr": [
+              -100.000008,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              13754.127929999997,
+              5.462476000000003,
+              3699.3862299999996
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              13749.427734999997,
+              5.753146000000003,
+              3693.4763179999995
+            ],
+              "ypr": [
+              -137,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              13742.712889999999,
+              0.7086600000000098,
+              3686.9912110000005
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              13740.328125999997,
+              5.009626000000003,
+              3703.0761719999996
+            ],
+              "ypr": [
+              52,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              13740.313475999998,
+              7.834930000000011,
+              3688.5412600000004
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              13733.013671999997,
+              0.6792300000000098,
+              3686.5812990000004
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              13733.317383000003,
+              5.268314999999987,
+              3710.744872999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              13737.227539999998,
+              9.192996000000003,
+              3696.4162599999995
+            ],
+              "ypr": [
+              1,
+              9.99999,
+              149
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              13745.527343999998,
+              9.132796000000003,
+              3692.0961909999996
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              13740.227539999998,
+              8.384386000000003,
+              3702.0363769999994
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              13749.227539999998,
+              8.824696000000003,
+              3700.9362789999996
+            ],
+              "ypr": [
+              -95,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              13741.727539999998,
+              9.630296000000003,
+              3694.0263669999995
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              13745.627929999997,
+              9.103296000000002,
+              3698.4663089999995
+            ],
+              "ypr": [
+              -56,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              13753.712889999999,
+              2.49927000000001,
+              3705.7111820000005
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              13747.117187000003,
+              2.853054999999987,
+              3705.734863999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith3.p3d",
+              "pos": [
+              13759.037109,
+              -0.6837160000000027,
+              3696.70044
+            ],
+              "ypr": [
+              179,
+              1,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith2.p3d",
+              "pos": [
+              13732.176758000003,
+              1.4833789999999878,
+              3704.1875000000005
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              13742.017578000003,
+              12.369624999999987,
+              3698.974853999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              2815.5275880000027,
+              -12.073053999999999,
+              1281.2994390000008
+            ],
+              "ypr": [
+              -40.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              2808.5476070000027,
+              -6.870900000000001,
+              1294.5594490000008
+            ],
+              "ypr": [
+              -117.000008,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              2803.433348999998,
+              9.56705000000001,
+              1287.3411870000004
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              2814.753173999998,
+              7.18754000000001,
+              1291.6011960000005
+            ],
+              "ypr": [
+              14.999999,
+              57.000004,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              2810.793212999998,
+              7.956210000000009,
+              1278.3012700000004
+            ],
+              "ypr": [
+              -98,
+              86.000015,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              2821.5676279999975,
+              -0.6242759999999973,
+              1269.9362789999996
+            ],
+              "ypr": [
+              -78,
+              22,
+              -6
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              2825.233397999998,
+              6.2803900000000095,
+              1279.5412600000004
+            ],
+              "ypr": [
+              52.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              2822.563231999998,
+              0.2944000000000099,
+              1288.5611570000005
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike1.p3d",
+              "pos": [
+              2828.9660640000025,
+              -2.860180999999975,
+              1287.4526380000007
+            ],
+              "ypr": [
+              -21.999998,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              2813.543212999998,
+              0.7688300000000099,
+              1303.7412110000005
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              2822.353270999998,
+              0.3976130000000099,
+              1295.9711910000005
+            ],
+              "ypr": [
+              -115.999992,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              2821.2878419999975,
+              7.642026000000003,
+              1286.4462889999995
+            ],
+              "ypr": [
+              -48.000004,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              2816.4477549999974,
+              7.826026000000002,
+              1284.6063229999995
+            ],
+              "ypr": [
+              -13,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              2819.9877939999974,
+              7.458916000000002,
+              1279.7463379999995
+            ],
+              "ypr": [
+              -122,
+              0,
+              179
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              2812.1176759999976,
+              7.583986000000003,
+              1281.9362789999996
+            ],
+              "ypr": [
+              -51,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              2803.693358999998,
+              5.67202000000001,
+              1297.7312010000005
+            ],
+              "ypr": [
+              -90,
+              -47,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              2822.4775390000027,
+              5.6986949999999865,
+              1278.3048099999992
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              10134.595703000003,
+              171.284271,
+              14507.756837
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              10121.785156000004,
+              173.204177,
+              14521.691407
+            ],
+              "ypr": [
+              -26.000011,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              10125.364258000003,
+              179.661178,
+              14521.447266000001
+            ],
+              "ypr": [
+              64.000015,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              10136.996093999998,
+              192.39785700000002,
+              14520.928710999999
+            ],
+              "ypr": [
+              -42,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              10141.352539999998,
+              192.13414,
+              14513.695312
+            ],
+              "ypr": [
+              -45.999992,
+              6,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith3.p3d",
+              "pos": [
+              10144.603516,
+              186.80166599999998,
+              14503.636719
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith2.p3d",
+              "pos": [
+              10145.560547000003,
+              185.375778,
+              14496.327149
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              10143.721679999997,
+              191.366302,
+              14507.228516
+            ],
+              "ypr": [
+              -17.000008,
+              14.000003,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              10128.579101999998,
+              192.278213,
+              14511.49707
+            ],
+              "ypr": [
+              -130.999985,
+              5.000009,
+              179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              10136.462890999997,
+              192.474594,
+              14515.298827999999
+            ],
+              "ypr": [
+              166.999954,
+              -4.000009,
+              179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              10140.084961999997,
+              191.863296,
+              14506.998047
+            ],
+              "ypr": [
+              -172.000031,
+              -9.000008,
+              176.999908
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              10140.820311999998,
+              184.550308,
+              14524.175781
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              10132.561523999997,
+              192.336319,
+              14509.080077999999
+            ],
+              "ypr": [
+              51.000011,
+              0,
+              179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              10136.217773999997,
+              192.076446,
+              14506.773437
+            ],
+              "ypr": [
+              -169.999908,
+              -2,
+              174.999847
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              10141.356445999998,
+              191.005188,
+              14498.375
+            ],
+              "ypr": [
+              179.999985,
+              -1.000009,
+              179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              10137.154297999998,
+              191.440658,
+              14497.742187
+            ],
+              "ypr": [
+              -179,
+              1,
+              168.999969
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              10133.182617999997,
+              192.082962,
+              14501.751952999999
+            ],
+              "ypr": [
+              0,
+              0,
+              -176
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              10142.469726000003,
+              188.591614,
+              14498.852539
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              10129.866211000002,
+              188.837357,
+              14499.34375
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              10133.655273000002,
+              191.802261,
+              14500.584960999999
+            ],
+              "ypr": [
+              -155.000015,
+              -17,
+              -178.000031
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith2.p3d",
+              "pos": [
+              10132.461914000003,
+              184.75140399999998,
+              14493.480469
+            ],
+              "ypr": [
+              -53.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              10139.512695999998,
+              190.884323,
+              14491.992187
+            ],
+              "ypr": [
+              87.000008,
+              -1,
+              -175.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              10142.025391000003,
+              184.078918,
+              14493.466797
+            ],
+              "ypr": [
+              179.999985,
+              -18.000008,
+              179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              10139.106445000003,
+              184.12855499999998,
+              14490.767579
+            ],
+              "ypr": [
+              96.000023,
+              -21,
+              -168.000015
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              10134.320312999998,
+              191.874801,
+              14495.665039
+            ],
+              "ypr": [
+              -19.000006,
+              0,
+              -169
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              10122.864257999998,
+              194.896896,
+              14508.78125
+            ],
+              "ypr": [
+              -30.000006,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              10148.279296999997,
+              180.78955000000002,
+              14516.029297000001
+            ],
+              "ypr": [
+              54.999992,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              10152.498046999997,
+              178.60127200000002,
+              14507.590820000001
+            ],
+              "ypr": [
+              -139.999985,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              10125.103514999999,
+              188.78305,
+              14528.713867
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              10144.331054999997,
+              190.783294,
+              14499.379883
+            ],
+              "ypr": [
+              -18.000017,
+              5,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              10131.051757999998,
+              191.22958300000002,
+              14491.616211
+            ],
+              "ypr": [
+              42,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_prunusspinosa_1s.p3d",
+              "pos": [
+              10144.835937,
+              183.930664,
+              14488.936523
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\d_fagussylvatica_stump.p3d",
+              "pos": [
+              10139.072265999997,
+              184.357804,
+              14487.625
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_betulapendula_1f.p3d",
+              "pos": [
+              10141.683593999998,
+              184.146377,
+              14480.558594
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_betulapendula_2s.p3d",
+              "pos": [
+              10145.049804000002,
+              183.820388,
+              14489.297851000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\d_piceaabies_fallenc.p3d",
+              "pos": [
+              10142.448242000002,
+              184.03921499999998,
+              14483.698242
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_cemetery_tombstone2",
+              "pos": [
+              10141.857422,
+              184.893372,
+              14479.480469
+            ],
+              "ypr": [
+              -56.999989,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_bench3",
+              "pos": [
+              10142.175781,
+              184.59935,
+              14477.677734
+            ],
+              "ypr": [
+              -87.999977,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_corylusavellana_1f.p3d",
+              "pos": [
+              10139.430664000001,
+              184.16116300000002,
+              14491.052733999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_betulahumilis_1s.p3d",
+              "pos": [
+              10148.290039000001,
+              183.871002,
+              14486.674806
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_betulahumilis_1s.p3d",
+              "pos": [
+              10141.581055,
+              184.102569,
+              14481.795899
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              8960.957031000004,
+              278.027877,
+              7835.773927000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              8972.141601000003,
+              278.118057,
+              7826.221192000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith2.p3d",
+              "pos": [
+              8971.498047000003,
+              292.66449,
+              7825.866699
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8963.480468999998,
+              293.62416099999996,
+              7825.1225589999995
+            ],
+              "ypr": [
+              -90,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8957.218750999997,
+              293.188125,
+              7830.1494139999995
+            ],
+              "ypr": [
+              -33.000004,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8957.167968999998,
+              292.971145,
+              7838.966796999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8962.460937999998,
+              292.715011,
+              7844.067870999999
+            ],
+              "ypr": [
+              34,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8968.185547999998,
+              289.17954999999995,
+              7845.335448999999
+            ],
+              "ypr": [
+              81,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8976.887695999998,
+              293.026291,
+              7829.739745999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8984.972656999997,
+              288.603439,
+              7838.575194999999
+            ],
+              "ypr": [
+              110.999977,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8977.220703999998,
+              289.21022000000005,
+              7843.305176
+            ],
+              "ypr": [
+              93.000031,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_wallh3.p3d",
+              "pos": [
+              8982.937500000002,
+              289.622589,
+              7845.869629000002
+            ],
+              "ypr": [
+              -132.999939,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8970.710937999998,
+              292.118332,
+              7845.099609
+            ],
+              "ypr": [
+              83.999992,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_wallh3.p3d",
+              "pos": [
+              8963.214844000002,
+              290.522674,
+              7852.0454100000015
+            ],
+              "ypr": [
+              -175,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8975.740234999997,
+              291.72737099999995,
+              7843.980957
+            ],
+              "ypr": [
+              97.000015,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_wallh3.p3d",
+              "pos": [
+              8952.190430000002,
+              291.8367,
+              7841.915039000001
+            ],
+              "ypr": [
+              117.000114,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              8953.937499999998,
+              291.32125800000006,
+              7830.984863000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8968.475586999997,
+              297.238205,
+              7834.905272999999
+            ],
+              "ypr": [
+              0,
+              0,
+              179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8972.416015999997,
+              297.201095,
+              7838.182129
+            ],
+              "ypr": [
+              0,
+              0,
+              179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8961.064453999998,
+              296.912155,
+              7838.592285
+            ],
+              "ypr": [
+              -105,
+              1,
+              179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8965.362304999997,
+              296.98417600000005,
+              7841.622069999999
+            ],
+              "ypr": [
+              -66,
+              0,
+              179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8972.695312999998,
+              297.35093700000004,
+              7830.242187
+            ],
+              "ypr": [
+              65,
+              0,
+              179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8977.469726999998,
+              297.389084,
+              7838.050292999999
+            ],
+              "ypr": [
+              0,
+              0,
+              179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8981.062500999997,
+              292.73826599999995,
+              7836.306151999999
+            ],
+              "ypr": [
+              0,
+              0,
+              179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8964.997070999998,
+              297.31837399999995,
+              7826.135254
+            ],
+              "ypr": [
+              93.000031,
+              0,
+              -179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike3.p3d",
+              "pos": [
+              8983.300781000004,
+              292.277908,
+              7839.348144000001
+            ],
+              "ypr": [
+              -40.000004,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_wallh3.p3d",
+              "pos": [
+              8974.068359000003,
+              295.309173,
+              7846.505859000002
+            ],
+              "ypr": [
+              -145.000031,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_wallh3.p3d",
+              "pos": [
+              8957.492187000003,
+              295.201416,
+              7844.360840000001
+            ],
+              "ypr": [
+              145,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike3.p3d",
+              "pos": [
+              8964.125976000003,
+              296.344101,
+              7844.433105000001
+            ],
+              "ypr": [
+              -7.000004,
+              -75.000038,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              8967.422850999998,
+              294.50997900000004,
+              7823.557129000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              8979.374022999998,
+              292.24740599999996,
+              7828.762695
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              8957.967772999998,
+              293.706054,
+              7825.563477000001
+            ],
+              "ypr": [
+              -104,
+              3,
+              -3.000002
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8956.207031999997,
+              296.69431999999995,
+              7828.955078
+            ],
+              "ypr": [
+              -35.000004,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8954.372070999998,
+              296.313949,
+              7834.276854999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8964.516601999998,
+              297.2173,
+              7831.483397999999
+            ],
+              "ypr": [
+              -18.000006,
+              0,
+              -179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8979.845703999998,
+              295.88542099999995,
+              7834.499022999999
+            ],
+              "ypr": [
+              -2,
+              13,
+              19.000008
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8964.157226999998,
+              297.88615400000003,
+              7838.214843999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8965.792968999998,
+              293.898605,
+              7838.954102
+            ],
+              "ypr": [
+              -18.000006,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8971.598632999998,
+              298.11259400000006,
+              7833.842772999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\stone4.p3d",
+              "pos": [
+              8966.810547,
+              295.291718,
+              7832.362305
+            ],
+              "ypr": [
+              -1,
+              11.000002,
+              9.999998
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_apart2.p3d",
+              "pos": [
+              8967.753906000004,
+              297.38234,
+              7829.81543
+            ],
+              "ypr": [
+              0,
+              -40.999996,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\stone2.p3d",
+              "pos": [
+              8966.190429000002,
+              296.18827799999997,
+              7833.521972
+            ],
+              "ypr": [
+              -7,
+              -5,
+              78
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\stone4.p3d",
+              "pos": [
+              8965.788086,
+              295.274384,
+              7834.088867999999
+            ],
+              "ypr": [
+              0,
+              -22,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\stone2.p3d",
+              "pos": [
+              8964.931640000003,
+              293.871048,
+              7834.771484
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_1sb.p3d",
+              "pos": [
+              8988.972655999998,
+              289.01020800000003,
+              7832.621583000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_piceaabies_2sb.p3d",
+              "pos": [
+              8992.645507999998,
+              285.13758900000005,
+              7845.106444999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              83.67858899999749,
+              302.60731499999997,
+              8279.478516
+            ],
+              "ypr": [
+              -10.000004,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              91.37661799999748,
+              302.53852800000004,
+              8294.34082
+            ],
+              "ypr": [
+              73.999977,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              99.68733999999748,
+              302.57399,
+              8293.338867
+            ],
+              "ypr": [
+              136.999969,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              90.28491299999749,
+              303.17008899999996,
+              8277.830077999999
+            ],
+              "ypr": [
+              -126.999931,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith1.p3d",
+              "pos": [
+              88.47458600000269,
+              287.388107,
+              8288.647462
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              85.84846599999749,
+              302.41276500000004,
+              8288.421875
+            ],
+              "ypr": [
+              15.000003,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              95.36969099999749,
+              306.67954999999995,
+              8291.453125
+            ],
+              "ypr": [
+              -40.000004,
+              0,
+              179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              99.19135299999748,
+              301.88472,
+              8288.589844
+            ],
+              "ypr": [
+              -172.999985,
+              0,
+              -3.000026
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              92.38468999999748,
+              306.659897,
+              8287.484375
+            ],
+              "ypr": [
+              134,
+              0,
+              179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              89.97270999999748,
+              306.557144,
+              8283.287108999999
+            ],
+              "ypr": [
+              -74,
+              0,
+              179.999985
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              94.8138959999981,
+              301.393554,
+              8296.422852
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              85.9982599999981,
+              303.670349,
+              8292.265625
+            ],
+              "ypr": [
+              -69,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              87.2001799999981,
+              302.78149400000007,
+              8280.579102
+            ],
+              "ypr": [
+              -44,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike2.p3d",
+              "pos": [
+              101.3747559999981,
+              304.059082,
+              8288.246094
+            ],
+              "ypr": [
+              -17.000004,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith2.p3d",
+              "pos": [
+              88.79341900000269,
+              303.662292,
+              8277.567383
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike3.p3d",
+              "pos": [
+              86.87532800000268,
+              307.66542100000004,
+              8283.545898
+            ],
+              "ypr": [
+              4.999994,
+              -49,
+              19
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike3.p3d",
+              "pos": [
+              99.77248400000269,
+              303.458756,
+              8294.820312000002
+            ],
+              "ypr": [
+              159.000015,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_spike3.p3d",
+              "pos": [
+              93.70227800000269,
+              307.776962,
+              8289.956054000002
+            ],
+              "ypr": [
+              -6,
+              -10,
+              -81.000053
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\rocks\\rock_monolith4.p3d",
+              "pos": [
+              8960.228515999997,
+              297.13597100000004,
+              7830.430176
+            ],
+              "ypr": [
+              -1,
+              0,
+              -179.999954
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          }
+    ]
+}

@@ -1,0 +1,54 @@
+﻿
+=== COMPLETED BUILD OBJECT COUNT AUDIT ===
+
+(Estimates ÔÇö actual count computed by shapeGenerators at runtime)
+
+Ô£ô  OK          death_star                           ~640 objects
+Ô£ô  OK          borg_cube                            ~192 objects
+Ô£ô  OK          orbital_station                      ~180 objects
+Ô£ô  OK          millennium_falcon                    ~180 objects
+Ô£ô  OK          black_hole                           ~200 objects
+Ô£ô  OK          crashed_ufo                          ~150 objects
+Ô£ô  OK          eye_of_sauron                        ~300 objects
+Ô£ô  OK          minas_tirith                         ~420 objects
+Ô£ô  OK          atat_walker                          ~200 objects
+Ô£ô  OK          t800                                 ~220 objects
+Ô£ô  OK          mordor_gate                          ~480 objects
+Ô£ô  OK          star_destroyer                       ~360 objects
+Ô£ô  OK          stonehenge                           ~60 objects
+Ô£ô  OK          colosseum                            ~720 objects
+Ô£ô  OK          celtic_ring                          ~80 objects
+Ô£ô  OK          pyramid_aztec                        ~360 objects
+Ô£ô  OK          giant_skull                          ~400 objects
+Ô£ô  OK          volcano                              ~600 objects
+Ô£ô  OK          mushroom_cloud                       ~500 objects
+Ô£ô  OK          mech_bipedal                         ~250 objects
+Ô£ô  OK          spider_walker                        ~220 objects
+Ô£ô  OK          star_fort                            ~480 objects
+Ô£ô  OK          prison_tower                         ~300 objects
+Ô£ô  OK          lw_treehouse                         ~22 objects
+Ô£ô  OK          lw_checkpoint                        ~9 objects
+Ô£ô  OK          lw_watchtower_triangle               ~7 objects
+Ô£ô  OK          lw_fuel_depot                        ~10 objects
+Ô£ô  OK          lw_sniper_nest                       ~8 objects
+Ô£ô  OK          lw_farmstead                         ~16 objects
+Ô£ô  OK          lw_survivor_camp                     ~10 objects
+Ô£ô  OK          lw_bunker_line                       ~11 objects
+Ô£ô  OK          lw_power_relay                       ~8 objects
+Ô£ô  OK          lw_radio_outpost                     ~6 objects
+Ô£ô  OK          lw_guard_post                        ~9 objects
+Ô£ô  OK          lw_tank_trap_line                    ~11 objects
+Ô£ô  OK          dragon                               ~160 objects
+Ô£ô  OK          pirate_ship                          ~300 objects
+Ô£ô  OK          pvp_arena                            ~320 objects
+Ô£ô  OK          helipad                              ~100 objects
+Ô£ô  OK          arena_colosseum                      ~480 objects
+Ô£ô  OK          arena_fort                           ~320 objects
+Ô£ô  OK          arena_maze                           ~200 objects
+Ô£ô  OK          arena_siege                          ~280 objects
+Ô£ô  OK          arena_compound                       ~320 objects
+Ô£ô  OK          pvp_featured_hesco                   ~280 objects
+ÔÜá  WARNING     pvp_featured_colosseum_heavy         ~900 objects
+
+Total builds: 46
+Flagged over 1200: NONE

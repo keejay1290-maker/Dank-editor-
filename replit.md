@@ -1,0 +1,139 @@
+# Workspace
+
+## Overview
+
+pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.
+
+## DankDayZ Ultimate Builder (artifacts/dayz-builder)
+
+React + Vite pure-frontend app for generating DayZ console object spawns.
+
+- **8 tabs**: BUILD, TEXT, BUILDS, WEAPONS, BUNKER, MAZE, RACE (full-panel takeover modes for WEAPONS, BUNKER, MAZE, RACE)
+- **🏁 Race Track Maker** (`RaceTrackMaker.tsx`): 6 preset shapes (Oval, Rectangle, Diamond, Triangle, Figure-8, L-Shape); configurable track width (8–24m); floating track using `Land_Wall_Concrete_4m_DE` with pitch=90° as flat floor panels (4m across × 3m along); `StaticObj_Wall_CncBarrier_4Block` barriers on both sides; `StaticObj_Airfield_Light_PAPI1` PAPI lights spell "START" and "FINISH" at start/finish lines using 3×5 dot-matrix pixel font; 3-panel layout (settings sidebar + SVG top-down map + code output); exports init.c or JSON; object count badge with >1500 warning; toast notifications for copy/download
+- **69+ shape generators** including **saturn** (sphere + tilted flat ring), **crown** (circular crown with spike/valley zigzag), **olympic_rings** (5-ring interlocked layout) plus new `wall_perimeter` (rectangular base perimeter with configurable wall spacing, gate positions on any 4 sides, corner towers) across groups: Sci-Fi, Mechs & Robots, Tunnels, Structures, Fortifications, Body Parts, Primitives, Epic/Unique, ⚡ Lightweight, 🤖 Transformers, 🦄 Fantasy & Mythic, 🏴‍☠️ Nautical, ⚔ Arenas
+- **6 Arena generators**: pvp_arena (ring), arena_colosseum (Roman oval), arena_fort (square castle), arena_maze (procedural labyrinth), arena_siege (asymmetric attacker/defender), arena_compound (military grid) — all with Lightweight/Medium/Heavy detail levels
+- **Detail levels (1/2/3)** on all arena generators: Lightweight = perimeter only; Medium = + staircase ramp access, interior cover clusters (pallets, crates, barricades), wall-top walkway access points; Heavy = + barbed wire cap, full perimeter walkway, loot barrel rings, elevated platform elements
+- **494+ verified DayZ classnames** in 27 grouped categories with live object search filter — sources: niboj/DayzXboxConfigTutorial Xbox dump, DayZ wiki List of Buildings, Bistudio community wiki
+- Object groups: Arena & Castle Walls, Gates & Fences (all variants), Military Buildings (barracks 1-6/round, guard towers, ATC, Tisy), Airfield Structures, Tisy Military Base, Crates & Storage, Steps & Access, Containers, Wrecks (30+), Boats & Ships, Industrial Buildings (cement works all variants, coal plant, quarry, workshops, garage), Farm Buildings (barns, cowsheds), Smokestacks & Towers, Rail Structures, Civilian Buildings (houses 1W/2W/2B, HouseBlock 1F-5F), Civic Buildings (hospital, school, police, prison, fire station, stores), Sheds & Small Structures, Special Structures (castle bergfrit/donjon, church, hotel, lunapark), Military Props, Rocks & Natural, Plants & Trees, Misc Props, Weapons, Armbands, Airstrip Lights, Flat Objects, Parts
+- **Object search filter**: Live search in Build mode and Text Maker mode — type classname or label to narrow 494+ items across 27 groups
+- **Best wall recommendations**: Castle Stone Wall 3m (★ best medieval arena), HESCO 5m (★ best military), Concrete Wall 4m (★ best modern) — all console-safe Xbox/PS5
+- **3 featured PvP builds** in Completed Builds: ⭐ HESCO Combat Ring (lightweight, 280 obj), ⭐ Castle Fortress (medium, 520 obj), ⭐ Grand Roman Colosseum (heavy, 900 obj)
+- **Arena Maker panel**: ROLL RANDOM ARENA button + 6 type tiles + "Randomize This Type Again"
+- **7 Transformer mechs**: Bumblebee, Optimus Prime, Ironhide, Jazz, Ratchet, Megatron, Starscream — built via shared `_buildMechPts(TFConfig)` helper
+- **Real-time 3D canvas**: `useMemo` computes points, `useEffect` debounces 60ms, auto-rotate with requestAnimationFrame
+- **Live dimensions**: bounding box W×D×H in metres displayed in info bar and stats panel
+- **Famous Locations picker**: 25 Chernarus landmarks (NWAF, NEAF, Tisy, Cherno, etc.) fill X/Y/Z instantly
+- **Position Jitter slider**: 0–15m random scatter per object (applied at generate time, perfect for organic-looking builds)
+- **🎲 Surprise Me button**: loads a random preset from the full list
+- **Full YPR sliders**: Yaw/Pitch/Roll all live — Yaw applied to world coords, Pitch/Roll shown in 3D preview
+- **Fill Mode** with density slider (1–6 interior layers)
+- **Quick Presets** (139) with searchable filter, category pills (rounded-full, solid gold when active), preset count display, ✕ clear button, checkmark on active preset, gold glow on active card, hover highlight, and categories: All, Sci-Fi, Mechs, Monuments, Furniture, Medieval (incl. Crown), Dark, Nature, Movies, Transformers, Fantasy, Nautical, Structures (incl. Olympic Rings), Arenas, Architecture, Amphitheater, Log Cabin, Bridges, Freeway, 🏕 DayZ Survival
+- **Completed Builds gallery**: 35+ themed builds with object notes and download
+- **Text Maker**: renders A–Z, 0–9, punctuation in 3D with configurable extrusion depth, rings, scale
+- **Output**: init.c (with SpawnObject() helper) or JSON Spawner format
+- **Extra objects**: stack multiple object classes per spawn point with Y offset
+- All objects console-safe (Xbox/PS5 vanilla DayZ)
+- No backend — pure frontend
+
+- **🏗 Bunker Maker**: Full-panel mode for random underground bunker generation. Uses verified DayZ Underground module classnames (Land_Underground_Entrance, Land_Underground_Tunnel_Single, Land_Underground_Corridor_Main_Both/Left/Right, Land_Underground_Storage_Barracks/Big/Ammo/Lab/Workshop/Prison, Land_Underground_Stairs_Start/Block/Terminator/Exit, etc.) confirmed working on console (Xbox/PS5). Options: seed, 1-3 levels, 4 sizes, 4 styles, spine axis, exterior walls, convoy wrecks, decor props, Sakhal panels. JSON output: correct {"Objects":[{name, pos, ypr:[pitch,yaw,roll], scale, enableCEPersistency, customString}]} format — no emojis, no extra fields. init.c comments: ASCII-only, no emojis. 2D floor plan SVG preview per level. Tunnel corridor section renamed from "spine" to "tunnel" throughout.
+- **Weapon & Vehicle Builder mobile fix**: `mobileView` state toggle (⚙ Configure / 📋 Output) on small screens
+
+Key files:
+- `src/App.tsx` — main app, 3D renderer hook, sidebar components; EditorMode = architect|text|builds|weapons|bunker
+- `src/lib/shapeGenerators.ts` — all shape generation functions + `getShapePoints()` switch
+- `src/lib/shapeParams.ts` — SHAPE_DEFS with param sliders per shape + SHAPE_GROUPS
+- `src/lib/dayzObjects.ts` — DayZ object classnames + formatInitC + HELPER_FUNC
+- `src/lib/bunkerData.ts` — all bunker piece definitions, decor props, style/size presets
+- `src/lib/bunkerGenerator.ts` — seeded Mulberry32 RNG, spine+branch layout generator, init.c/JSON exporters
+- `src/BunkerMaker.tsx` — full-panel Bunker Maker UI component
+
+## Stack
+
+- **Monorepo tool**: pnpm workspaces
+- **Node.js version**: 24
+- **Package manager**: pnpm
+- **TypeScript version**: 5.9
+- **API framework**: Express 5
+- **Database**: PostgreSQL + Drizzle ORM
+- **Validation**: Zod (`zod/v4`), `drizzle-zod`
+- **API codegen**: Orval (from OpenAPI spec)
+- **Build**: esbuild (CJS bundle)
+
+## Structure
+
+```text
+artifacts-monorepo/
+├── artifacts/              # Deployable applications
+│   └── api-server/         # Express API server
+├── lib/                    # Shared libraries
+│   ├── api-spec/           # OpenAPI spec + Orval codegen config
+│   ├── api-client-react/   # Generated React Query hooks
+│   ├── api-zod/            # Generated Zod schemas from OpenAPI
+│   └── db/                 # Drizzle ORM schema + DB connection
+├── scripts/                # Utility scripts (single workspace package)
+│   └── src/                # Individual .ts scripts, run via `pnpm --filter @workspace/scripts run <script>`
+├── pnpm-workspace.yaml     # pnpm workspace (artifacts/*, lib/*, lib/integrations/*, scripts)
+├── tsconfig.base.json      # Shared TS options (composite, bundler resolution, es2022)
+├── tsconfig.json           # Root TS project references
+└── package.json            # Root package with hoisted devDeps
+```
+
+## TypeScript & Composite Projects
+
+Every package extends `tsconfig.base.json` which sets `composite: true`. The root `tsconfig.json` lists all packages as project references. This means:
+
+- **Always typecheck from the root** — run `pnpm run typecheck` (which runs `tsc --build --emitDeclarationOnly`). This builds the full dependency graph so that cross-package imports resolve correctly. Running `tsc` inside a single package will fail if its dependencies haven't been built yet.
+- **`emitDeclarationOnly`** — we only emit `.d.ts` files during typecheck; actual JS bundling is handled by esbuild/tsx/vite...etc, not `tsc`.
+- **Project references** — when package A depends on package B, A's `tsconfig.json` must list B in its `references` array. `tsc --build` uses this to determine build order and skip up-to-date packages.
+
+## Root Scripts
+
+- `pnpm run build` — runs `typecheck` first, then recursively runs `build` in all packages that define it
+- `pnpm run typecheck` — runs `tsc --build --emitDeclarationOnly` using project references
+
+## Packages
+
+### `artifacts/api-server` (`@workspace/api-server`)
+
+Express 5 API server. Routes live in `src/routes/` and use `@workspace/api-zod` for request and response validation and `@workspace/db` for persistence.
+
+- Entry: `src/index.ts` — reads `PORT`, starts Express
+- App setup: `src/app.ts` — mounts CORS, JSON/urlencoded parsing, routes at `/api`
+- Routes: `src/routes/index.ts` mounts sub-routers; `src/routes/health.ts` exposes `GET /health` (full path: `/api/health`)
+- Depends on: `@workspace/db`, `@workspace/api-zod`
+- `pnpm --filter @workspace/api-server run dev` — run the dev server
+- `pnpm --filter @workspace/api-server run build` — production esbuild bundle (`dist/index.cjs`)
+- Build bundles an allowlist of deps (express, cors, pg, drizzle-orm, zod, etc.) and externalizes the rest
+
+### `lib/db` (`@workspace/db`)
+
+Database layer using Drizzle ORM with PostgreSQL. Exports a Drizzle client instance and schema models.
+
+- `src/index.ts` — creates a `Pool` + Drizzle instance, exports schema
+- `src/schema/index.ts` — barrel re-export of all models
+- `src/schema/<modelname>.ts` — table definitions with `drizzle-zod` insert schemas (no models definitions exist right now)
+- `drizzle.config.ts` — Drizzle Kit config (requires `DATABASE_URL`, automatically provided by Replit)
+- Exports: `.` (pool, db, schema), `./schema` (schema only)
+
+Production migrations are handled by Replit when publishing. In development, we just use `pnpm --filter @workspace/db run push`, and we fallback to `pnpm --filter @workspace/db run push-force`.
+
+### `lib/api-spec` (`@workspace/api-spec`)
+
+Owns the OpenAPI 3.1 spec (`openapi.yaml`) and the Orval config (`orval.config.ts`). Running codegen produces output into two sibling packages:
+
+1. `lib/api-client-react/src/generated/` — React Query hooks + fetch client
+2. `lib/api-zod/src/generated/` — Zod schemas
+
+Run codegen: `pnpm --filter @workspace/api-spec run codegen`
+
+### `lib/api-zod` (`@workspace/api-zod`)
+
+Generated Zod schemas from the OpenAPI spec (e.g. `HealthCheckResponse`). Used by `api-server` for response validation.
+
+### `lib/api-client-react` (`@workspace/api-client-react`)
+
+Generated React Query hooks and fetch client from the OpenAPI spec (e.g. `useHealthCheck`, `healthCheck`).
+
+### `scripts` (`@workspace/scripts`)
+
+Utility scripts package. Each script is a `.ts` file in `src/` with a corresponding npm script in `package.json`. Run scripts via `pnpm --filter @workspace/scripts run <script>`. Scripts can import any workspace package (e.g., `@workspace/db`) by adding it as a dependency in `scripts/package.json`.

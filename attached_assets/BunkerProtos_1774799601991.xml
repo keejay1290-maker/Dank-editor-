@@ -1,0 +1,162 @@
+<group name="StaticObj_Furniture_tv_a" lootmax="1">
+                        <usage name="Military" />                
+                        <container name="lootFloor" lootmax="1">                        
+                        <tag name="floor" />
+                        <category name="containers" />
+                        <category name="clothes" />
+                        <category name="weapons"/>
+                        <category name="explosives"/>
+                        <point pos="0.015625 -0.539886 -0.016602" range="0.500000" height="1.500000" />
+						</container>
+</group>
+<group name="StaticObj_Furniture_case_a_open" lootmax="2">
+                        <usage name="Military" />                
+                        <container name="lootFloor" lootmax="2">                        
+                        <tag name="floor" />
+                        <category name="containers" />
+                        <category name="clothes" />
+                        <category name="weapons"/>
+                        <category name="explosives"/>
+                           <point pos="0.204101 0.0599980 -0.163574" range="0.500000" height="1.500000" />
+                           <point pos="0.105469 0.084015 -0.400391" range="0.500000" height="1.500000" />
+						   </container>
+</group>
+<group name="StaticObj_ToolTrolley_02_F" lootmax="2">
+                        <usage name="Military" />                
+                        <container name="lootFloor" lootmax="2">                        
+                        <tag name="floor" />
+                        <category name="containers" />
+                        <category name="clothes" />
+                        <category name="weapons"/>
+                        <category name="explosives"/>
+                           <point pos="0.169531 0.520325 0.020019" range="0.500000" height="1.500000" />
+                           <point pos="-0.341992 0.509460 0.020019" range="0.500000" height="1.500000" />
+						   </container>
+</group>
+<group name="StaticObj_Furniture_Vojenska_palanda" lootmax="12">
+                        <usage name="Military" />                
+                        <container name="lootFloor" lootmax="12">                        
+                        <tag name="floor" />
+                        <category name="containers" />
+                        <category name="clothes" />
+                        <category name="weapons"/>
+                        <category name="explosives"/>
+                           <point pos="-0.320313 0.426605 0.334961" range="0.500000" height="1.500000" />
+                           <point pos="0.420898 0.417144 -0.185547" range="0.500000" height="1.500000" />
+                           <point pos="0.476562 0.426605 0.334961" range="0.500000" height="1.500000" />
+                           <point pos="-1.117188 0.426605 0.435059" range="0.500000" height="1.500000" />
+                           <point pos="-1.117188 1.214965 0.435059" range="0.500000" height="1.500000" />
+                           <point pos="-1.172852 1.205505 -0.085449" range="0.500000" height="1.500000" />
+                           <point pos="-0.375977 1.205505 -0.185547" range="0.500000" height="1.500000" />
+                           <point pos="-0.320313 1.214965 0.334961" range="0.500000" height="1.500000" />
+                           <point pos="0.420898 1.205505 -0.185547" range="0.500000" height="1.500000" />
+                           <point pos="0.476562 1.214965 0.334961" range="0.500000" height="1.500000" />
+                           <point pos="-1.172852 0.417144 -0.085449" range="0.500000" height="1.500000" />
+                           <point pos="-0.375977 0.417144 -0.185547" range="0.500000" height="1.500000" />
+						   </container>
+</group>
+<group name="StaticObj_Furniture_case_d" lootmax="5">
+                        <usage name="Military" />                
+                        <container name="lootFloor" lootmax="5">                        
+                        <tag name="floor" />
+                        <category name="containers" />
+                        <category name="clothes" />
+                        <category name="weapons"/>
+                        <category name="explosives"/>
+                           <point pos="0.006836 0.470977 -0.196289" range="0.500000" height="1.500000" />
+                           <point pos="0.006836 1.603698 -0.196289" range="0.500000" height="1.500000" />
+                           <point pos="0.006836 1.240905 0.204101" range="0.500000" height="1.500000" />
+                           <point pos="0.006836 0.084228 -0.196289" range="0.500000" height="1.500000" />
+                           <point pos="0.006836 0.845916 0.204101" range="0.500000" height="1.500000" />
+						   </container>
+</group>
+<group name="StaticObj_Medical_Tarp_Large_Yellow" lootmax="9">
+                        <usage name="Military" />                
+                        <container name="lootFloor" lootmax="9">                        
+                        <tag name="floor" />
+                        <category name="containers" />
+                        <category name="clothes" />
+                        <category name="weapons"/>
+                        <category name="explosives"/>
+                           <point pos="2.103516 -0.004578 -1.305664" range="0.500000" height="1.500000" />
+                           <point pos="0.609375 -0.004578 0.195801" range="0.500000" height="1.500000" />
+                           <point pos="2.003907 -0.004578 1.597168" range="0.500000" height="1.500000" />
+                           <point pos="-1.880859 -0.004578 1.597168" range="0.500000" height="1.500000" />
+                           <point pos="-1.880859 -0.004578 0.295898" range="0.500000" height="1.500000" />
+                           <point pos="-1.880859 -0.004578 -1.605957" range="0.500000" height="1.500000" />
+                           <point pos="-0.386718 -0.004578 -1.605957" range="0.500000" height="1.500000" />
+                           <point pos="0.808594 -0.004578 -1.605957" range="0.500000" height="1.500000" />
+                           <point pos="-0.984375 -0.004578 -0.004395" range="0.500000" height="1.500000" />
+						   </container>
+</group>
+<group name="StaticObj_Furniture_workbench_DZ" lootmax="3">
+                        <usage name="Military" />                
+                        <container name="lootFloor" lootmax="3">                        
+                        <tag name="floor" />
+                        <category name="containers" />
+                        <category name="clothes" />
+                        <category name="weapons"/>
+                        <category name="explosives"/>
+                           <point pos="-0.107422 -0.456543 0.541504" range="0.500000" height="1.500000" />
+                           <point pos="-0.107422 -0.456543 -0.759766" range="0.500000" height="1.500000" />
+                           <point pos="-0.107422 0.479523 -0.159180" range="0.500000" height="1.500000" />
+						   </container>
+</group>
+<group name="StaticObj_Misc_WoodTable_Outdoor" lootmax="17">
+                        <usage name="Military" />                
+                        <container name="lootFloor" lootmax="17">                        
+                        <tag name="floor" />
+                        <category name="containers" />
+                        <category name="clothes" />
+                        <category name="weapons"/>
+                        <category name="explosives"/>
+                           <point pos="-0.908203 -0.086731 -0.821289" range="0.500000" height="1.500000" />
+                           <point pos="0.087890 -0.086731 -0.821289" range="0.500000" height="1.500000" />
+                           <point pos="0.884765 -0.086731 -0.821289" range="0.500000" height="1.500000" />
+                           <point pos="0.884765 -0.086731 0.880372" range="0.500000" height="1.500000" />
+                           <point pos="0.386718 -0.086731 0.880372" range="0.500000" height="1.500000" />
+                           <point pos="-0.111328 -0.086731 0.880372" range="0.500000" height="1.500000" />
+                           <point pos="-0.708985 -0.086731 0.880372" range="0.500000" height="1.500000" />
+                           <point pos="-1.007813 0.462616 0.279786" range="0.500000" height="1.500000" />
+                           <point pos="-1.007813 0.462616 -0.220703" range="0.500000" height="1.500000" />
+                           <point pos="-0.509766 0.462616 -0.220703" range="0.500000" height="1.500000" />
+                           <point pos="-0.509766 0.462616 0.279786" range="0.500000" height="1.500000" />
+                           <point pos="-0.111328 0.462616 0.279786" range="0.500000" height="1.500000" />
+                           <point pos="-0.111328 0.462616 -0.220703" range="0.500000" height="1.500000" />
+                           <point pos="0.287109 0.462616 -0.220703" range="0.500000" height="1.500000" />
+                           <point pos="0.287109 0.462616 0.279786" range="0.500000" height="1.500000" />
+                           <point pos="0.785156 0.462616 0.279786" range="0.500000" height="1.500000" />
+                           <point pos="0.785156 0.462616 -0.220703" range="0.500000" height="1.500000" />
+						   </container>
+</group>
+<group name="StaticObj_Furniture_tools_racking_DZ" lootmax="8">
+                        <usage name="Military" />                
+                        <container name="lootFloor" lootmax="8">                        
+                        <tag name="floor" />
+                        <category name="containers" />
+                        <category name="clothes" />
+                        <category name="weapons"/>
+                        <category name="explosives"/>
+                           <point pos="-0.050781 0.068450 0.325196" range="0.500000" height="1.500000" />
+                           <point pos="-0.050781 0.068450 -0.175293" range="0.500000" height="1.500000" />
+                           <point pos="-0.050781 0.557769 0.325196" range="0.500000" height="1.500000" />
+                           <point pos="-0.050781 0.557769 -0.175293" range="0.500000" height="1.500000" />
+                           <point pos="-0.050781 1.076141 0.325196" range="0.500000" height="1.500000" />
+                           <point pos="-0.050781 1.076141 -0.175293" range="0.500000" height="1.500000" />
+                           <point pos="-0.050781 1.572296 0.325196" range="0.500000" height="1.500000" />
+                           <point pos="-0.050781 1.572296 -0.175293" range="0.500000" height="1.500000" />
+						   </container>
+</group>
+<group name="StaticObj_Misc_CinderBlocks" lootmax="8">
+                        <usage name="Military" />                
+                        <container name="lootFloor" lootmax="8">                        
+                        <tag name="floor" />
+                        <category name="containers" />
+                        <category name="clothes" />
+                        <category name="weapons"/>
+                        <category name="explosives"/>
+                           <point pos="0.113281 0.014953 -0.203613" range="0.500000" height="1.500000" />
+                           <point pos="-0.285156 0.443817 0.396972" range="0.500000" height="1.500000" />
+                           <point pos="-0.285156 0.014953 -0.203613" range="0.500000" height="1.500000" />
+						   </container>
+</group>

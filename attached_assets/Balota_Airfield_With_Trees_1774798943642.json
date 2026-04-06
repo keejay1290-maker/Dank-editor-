@@ -1,0 +1,5689 @@
+{
+    "Objects": [
+{
+              "name": "Land_Airfield_Hangar_Green",
+              "pos": [
+              5140.620117,
+              16.930456,
+              2372.840088
+            ],
+              "ypr": [
+              49.999992,
+              1.5,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Radar_Mobile1",
+              "pos": [
+              4886.416016,
+              9.509363,
+              2537.921875
+            ],
+              "ypr": [
+              -127.499985,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_ATC_Small",
+              "pos": [
+              4894.709961,
+              19.989031,
+              2523.580078
+            ],
+              "ypr": [
+              141.5,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_ATC_Big",
+              "pos": [
+              5046.164063,
+              24.973446,
+              2470.347656
+            ],
+              "ypr": [
+              -40.499992,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Wreck_UH1Y",
+              "pos": [
+              5235.57373,
+              6.629854,
+              2260.292725
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Wreck_C130J",
+              "pos": [
+              4902.359863,
+              14.8699,
+              2578.23999
+            ],
+              "ypr": [
+              -84.999985,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Wreck_C130J",
+              "pos": [
+              4971.029785,
+              14.7751,
+              2458.169922
+            ],
+              "ypr": [
+              -132,
+              0,
+              0.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Wreck_C130J",
+              "pos": [
+              5230.810059,
+              14.3483,
+              2253.590088
+            ],
+              "ypr": [
+              -90.499901,
+              1,
+              12.499982
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Barracks6",
+              "pos": [
+              4864.310059,
+              9.624338,
+              2528.189941
+            ],
+              "ypr": [
+              50.999989,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Barracks6",
+              "pos": [
+              4852.810059,
+              9.537301,
+              2565.379883
+            ],
+              "ypr": [
+              141.5,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Barracks2",
+              "pos": [
+              5017.332031,
+              10.893501,
+              2407.351563
+            ],
+              "ypr": [
+              -39.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Barracks1",
+              "pos": [
+              5032.929688,
+              11.435777,
+              2392.899658
+            ],
+              "ypr": [
+              -130,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Barracks4",
+              "pos": [
+              4994.279785,
+              11.022076,
+              2435.76001
+            ],
+              "ypr": [
+              -39.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Farm_WaterTower_Small",
+              "pos": [
+              4984.10791,
+              14.226432,
+              2426.807861
+            ],
+              "ypr": [
+              -130.999954,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Farm_WaterTower_Small",
+              "pos": [
+              4867.132324,
+              14.582623,
+              2576.651855
+            ],
+              "ypr": [
+              51.5,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Farm_WaterTower_Small",
+              "pos": [
+              4930.728516,
+              14.309259,
+              2502.5354
+            ],
+              "ypr": [
+              51.5,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Fortified_Nest_Watchtower",
+              "pos": [
+              4920.561035,
+              11.576953,
+              2509.208008
+            ],
+              "ypr": [
+              53.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Tent_Big2_3",
+              "pos": [
+              4919.924805,
+              11.492193,
+              2450.258545
+            ],
+              "ypr": [
+              -39.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Container_1Moh",
+              "pos": [
+              4888.481934,
+              10.676183,
+              2464.272461
+            ],
+              "ypr": [
+              -44.999992,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Container_1Moh",
+              "pos": [
+              4908.399902,
+              10.716558,
+              2445.629883
+            ],
+              "ypr": [
+              -132.5,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Barracks5",
+              "pos": [
+              5014.414551,
+              15.660253,
+              2505.880859
+            ],
+              "ypr": [
+              -130,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_container_2d",
+              "pos": [
+              4935.852539,
+              12.053858,
+              2508.96875
+            ],
+              "ypr": [
+              -39.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Container_1Mo",
+              "pos": [
+              4938.07373,
+              10.694099,
+              2511.039063
+            ],
+              "ypr": [
+              -39.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Barracks_Round",
+              "pos": [
+              5063.399902,
+              10.302611,
+              2356.379883
+            ],
+              "ypr": [
+              -130,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Barracks_Round",
+              "pos": [
+              5058.495117,
+              10.302611,
+              2362.285645
+            ],
+              "ypr": [
+              -130,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Container_1Moh",
+              "pos": [
+              5054.25,
+              10.560292,
+              2369.449951
+            ],
+              "ypr": [
+              -130,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Container_1Moh",
+              "pos": [
+              5051.720215,
+              10.540893,
+              2372.149902
+            ],
+              "ypr": [
+              -130,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Barracks_Round",
+              "pos": [
+              5102.700195,
+              10.506028,
+              2291.48999
+            ],
+              "ypr": [
+              49.499996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Misc_Scaffolding",
+              "pos": [
+              4968.949219,
+              12.278217,
+              2472.712402
+            ],
+              "ypr": [
+              139.999985,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Misc_Scaffolding",
+              "pos": [
+              4980.22998,
+              12.275769,
+              2459.73999
+            ],
+              "ypr": [
+              139.999985,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Tisy_KitchenRoom",
+              "pos": [
+              5162.794922,
+              14.246181,
+              2221.924072
+            ],
+              "ypr": [
+              50.499996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_City_FireStation",
+              "pos": [
+              5169.089844,
+              9.499453,
+              2316.22998
+            ],
+              "ypr": [
+              50.499996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Tower_TC3_Red",
+              "pos": [
+              5189.162598,
+              9.825734,
+              2292.537109
+            ],
+              "ypr": [
+              -39.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Tisy_Barracks",
+              "pos": [
+              5150.089844,
+              13.903399,
+              2248.620117
+            ],
+              "ypr": [
+              -130,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_FuelStation_Feed",
+              "pos": [
+              5159.339844,
+              9.85868,
+              2317.610107
+            ],
+              "ypr": [
+              46.999992,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Tisy_KitchenRoom",
+              "pos": [
+              4932.772461,
+              13.885731,
+              2612.307617
+            ],
+              "ypr": [
+              49.499996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_fueldstation_shed",
+              "pos": [
+              4984.208984,
+              12.667336,
+              2534.430176
+            ],
+              "ypr": [
+              -130,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_FuelStation_Feed",
+              "pos": [
+              4979.458496,
+              10.613708,
+              2539.465332
+            ],
+              "ypr": [
+              -39.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_FuelStation_Feed_Enoch",
+              "pos": [
+              4984,
+              10.509956,
+              2534.300049
+            ],
+              "ypr": [
+              -39.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_FuelStation_Feed",
+              "pos": [
+              4988.577148,
+              10.613708,
+              2529.055176
+            ],
+              "ypr": [
+              -39.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_DieselPowerPlant_Tank_Small",
+              "pos": [
+              5007.491211,
+              14.808066,
+              2532.327393
+            ],
+              "ypr": [
+              -44.999992,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Barracks1",
+              "pos": [
+              4953.291504,
+              11.873308,
+              2571.843262
+            ],
+              "ypr": [
+              -130,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Barracks5",
+              "pos": [
+              5092.384277,
+              15.429324,
+              2407.26123
+            ],
+              "ypr": [
+              -130,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Container_1Moh",
+              "pos": [
+              5113.390137,
+              10.704078,
+              2379.050049
+            ],
+              "ypr": [
+              49.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Container_1Moh",
+              "pos": [
+              5113.458984,
+              10.679093,
+              2375.655518
+            ],
+              "ypr": [
+              49.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Repair_Center",
+              "pos": [
+              5065.456543,
+              12.068776,
+              2442.358398
+            ],
+              "ypr": [
+              49.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Repair_Center",
+              "pos": [
+              5076.367188,
+              12.068776,
+              2429.445801
+            ],
+              "ypr": [
+              49.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Roadblock_WoodenCrate",
+              "pos": [
+              5223.970215,
+              9.889345,
+              2252.649902
+            ],
+              "ypr": [
+              -56.499981,
+              -22.500002,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Roadblock_WoodenCrate",
+              "pos": [
+              5222.648926,
+              9.751365,
+              2251.452393
+            ],
+              "ypr": [
+              -62.999973,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Roadblock_WoodenCrate",
+              "pos": [
+              5229.470215,
+              10.174139,
+              2253.25
+            ],
+              "ypr": [
+              -80.999977,
+              -3.999999,
+              13
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Roadblock_WoodenCrate",
+              "pos": [
+              5221.375,
+              9.638251,
+              2253.14917
+            ],
+              "ypr": [
+              0.000032,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_wall_fen5_10",
+              "pos": [
+              4842.758789,
+              10.9425,
+              2574.390625
+            ],
+              "ypr": [
+              139,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_wall_fen5_10",
+              "pos": [
+              4850.299805,
+              10.9425,
+              2580.870117
+            ],
+              "ypr": [
+              139.5,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_wall_fen5_10_d",
+              "pos": [
+              4835.381348,
+              10.943963,
+              2567.606445
+            ],
+              "ypr": [
+              139,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_wall_fen5_10",
+              "pos": [
+              4874.146973,
+              10.712416,
+              2503.155029
+            ],
+              "ypr": [
+              -129.927231,
+              0,
+              -0.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_wall_fen5_10",
+              "pos": [
+              4867.702637,
+              10.799901,
+              2510.810791
+            ],
+              "ypr": [
+              -129.927628,
+              0,
+              -0.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_wall_fen5_10",
+              "pos": [
+              4861.290527,
+              10.894885,
+              2518.450439
+            ],
+              "ypr": [
+              -129.926987,
+              0,
+              -1
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_wall_fen5_10_d",
+              "pos": [
+              4829.80957,
+              10.809,
+              2564.452148
+            ],
+              "ypr": [
+              -40.999992,
+              0,
+              1.999999
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_wall_fen5_10",
+              "pos": [
+              4854.846191,
+              10.972372,
+              2526.106201
+            ],
+              "ypr": [
+              -129.927628,
+              0,
+              -0.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_wall_fen5_10_d",
+              "pos": [
+              4848.169922,
+              11.148794,
+              2533.629883
+            ],
+              "ypr": [
+              -130,
+              0,
+              -0.55
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_wall_fen5_10",
+              "pos": [
+              4835.859863,
+              11.2325,
+              2548.969971
+            ],
+              "ypr": [
+              -130,
+              0,
+              1
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_wall_fen5_10_d",
+              "pos": [
+              4842.952148,
+              11.238453,
+              2541.945313
+            ],
+              "ypr": [
+              50.999989,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4838.399902,
+              9.888926,
+              2572.75
+            ],
+              "ypr": [
+              -39.499996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4833.82959,
+              9.871428,
+              2568.978027
+            ],
+              "ypr": [
+              -39.499996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4828.851563,
+              9.871428,
+              2564.83252
+            ],
+              "ypr": [
+              -39.499996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4840.640137,
+              10.936231,
+              2540.060059
+            ],
+              "ypr": [
+              50.499996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4845.212891,
+              10.850767,
+              2534.606934
+            ],
+              "ypr": [
+              53.999985,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_wall_fen5_10",
+              "pos": [
+              4881.692871,
+              10.666441,
+              2502.575928
+            ],
+              "ypr": [
+              139.999985,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_wall_fen5_10_d",
+              "pos": [
+              4888.64209,
+              10.663543,
+              2509.729004
+            ],
+              "ypr": [
+              -39.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_4m",
+              "pos": [
+              4890.315918,
+              10.006012,
+              2501.629639
+            ],
+              "ypr": [
+              -35.999981,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4905.952148,
+              10.07574,
+              2515.158447
+            ],
+              "ypr": [
+              -35.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_1m",
+              "pos": [
+              4898.106445,
+              10.049021,
+              2498.651611
+            ],
+              "ypr": [
+              -125.999924,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_4m",
+              "pos": [
+              4888.859863,
+              10.004149,
+              2490.530029
+            ],
+              "ypr": [
+              -41.5,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_roadbarrier",
+              "pos": [
+              4875.720215,
+              9.91555,
+              2477.98999
+            ],
+              "ypr": [
+              -130,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_wall_fen5_10",
+              "pos": [
+              4829.430176,
+              11.055014,
+              2556.600098
+            ],
+              "ypr": [
+              -130,
+              0,
+              1
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4917.620117,
+              10.392817,
+              2429.659912
+            ],
+              "ypr": [
+              9,
+              0,
+              4.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_1m",
+              "pos": [
+              4912.773438,
+              10.821831,
+              2430.028076
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_4m",
+              "pos": [
+              4908.255859,
+              10.046008,
+              2437.604736
+            ],
+              "ypr": [
+              -98.999931,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_barbedwire",
+              "pos": [
+              4931.268066,
+              10.283658,
+              2412.715088
+            ],
+              "ypr": [
+              -98.999931,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Guardhouse",
+              "pos": [
+              4844.620605,
+              11.026198,
+              2593.785156
+            ],
+              "ypr": [
+              -120.999992,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_roadbarrier",
+              "pos": [
+              4846.339844,
+              10.322968,
+              2586.699951
+            ],
+              "ypr": [
+              147.999939,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_roadbarrier",
+              "pos": [
+              4857.970215,
+              10.327897,
+              2606.379883
+            ],
+              "ypr": [
+              54.499996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4851.949219,
+              10.437806,
+              2602.85498
+            ],
+              "ypr": [
+              -35.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4846.938965,
+              10.453233,
+              2599.254639
+            ],
+              "ypr": [
+              -35.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4879.802246,
+              10.138412,
+              2617.965088
+            ],
+              "ypr": [
+              -44.999981,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_1m",
+              "pos": [
+              4871.587402,
+              10.440121,
+              2608.828125
+            ],
+              "ypr": [
+              -143.999893,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4892.685547,
+              10.128233,
+              2621.156006
+            ],
+              "ypr": [
+              9,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4961.294922,
+              10.209729,
+              2575.587402
+            ],
+              "ypr": [
+              -35.999977,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4967.22998,
+              10.0666,
+              2577.02002
+            ],
+              "ypr": [
+              3.499997,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4973.762207,
+              9.931867,
+              2575.594482
+            ],
+              "ypr": [
+              18,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_4m",
+              "pos": [
+              4979.499512,
+              9.789069,
+              2574.235107
+            ],
+              "ypr": [
+              18,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_barbedwire",
+              "pos": [
+              4950.146973,
+              10.279373,
+              2584.634033
+            ],
+              "ypr": [
+              35.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_4m",
+              "pos": [
+              4936.722168,
+              10.123913,
+              2589.898438
+            ],
+              "ypr": [
+              18,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_barbedwire",
+              "pos": [
+              5003.378418,
+              11.054494,
+              2556.474365
+            ],
+              "ypr": [
+              -134.999863,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_round",
+              "pos": [
+              5030.689941,
+              10.3539,
+              2516.129883
+            ],
+              "ypr": [
+              -71.999893,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_round",
+              "pos": [
+              5030.149902,
+              10.316646,
+              2523.23999
+            ],
+              "ypr": [
+              -96.999886,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_round",
+              "pos": [
+              5027.157227,
+              10.494173,
+              2529.804443
+            ],
+              "ypr": [
+              -116.999947,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_round",
+              "pos": [
+              5028.549805,
+              10.727304,
+              2510.120117
+            ],
+              "ypr": [
+              -54.999992,
+              0,
+              3.499997
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5022.901367,
+              10.566051,
+              2535.711182
+            ],
+              "ypr": [
+              53.999985,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5018.013672,
+              10.92787,
+              2541.365967
+            ],
+              "ypr": [
+              44.999981,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_4m",
+              "pos": [
+              5013.054199,
+              11.09365,
+              2545.875977
+            ],
+              "ypr": [
+              35.999977,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5071.709961,
+              9.31557,
+              2479.219971
+            ],
+              "ypr": [
+              45,
+              0,
+              -3.499997
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5067.45752,
+              9.021874,
+              2484.802246
+            ],
+              "ypr": [
+              55.499989,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_barbedwire",
+              "pos": [
+              5056.509766,
+              9.564754,
+              2494.939941
+            ],
+              "ypr": [
+              -125.999992,
+              0,
+              -1.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_1m",
+              "pos": [
+              5074.962891,
+              9.753579,
+              2475.884521
+            ],
+              "ypr": [
+              45,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_round",
+              "pos": [
+              5124.260254,
+              11.96912,
+              2429.097656
+            ],
+              "ypr": [
+              -116.999916,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_4m",
+              "pos": [
+              5127.182617,
+              11.824444,
+              2423.438477
+            ],
+              "ypr": [
+              62.999973,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_barbedwire",
+              "pos": [
+              5115.254883,
+              11.299333,
+              2440.820801
+            ],
+              "ypr": [
+              -134.999863,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_bagfence_round",
+              "pos": [
+              5099.334961,
+              9.776366,
+              2456.585449
+            ],
+              "ypr": [
+              44.999981,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_bagfence_3m",
+              "pos": [
+              5101.867188,
+              9.829842,
+              2452.690186
+            ],
+              "ypr": [
+              44.999992,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_bagfence_corner",
+              "pos": [
+              5094.530273,
+              9.836142,
+              2458.249512
+            ],
+              "ypr": [
+              134.999863,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_bagfence_3m",
+              "pos": [
+              5101.470215,
+              9.7939,
+              2450.550049
+            ],
+              "ypr": [
+              -44.999992,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_bagfence_3m",
+              "pos": [
+              5093.590332,
+              9.814853,
+              2461.585449
+            ],
+              "ypr": [
+              62.999962,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_bagfence_3m",
+              "pos": [
+              5092.483398,
+              9.823121,
+              2464.3125
+            ],
+              "ypr": [
+              -107.999939,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_bagfence_3m",
+              "pos": [
+              5102.051758,
+              9.787328,
+              2448.615967
+            ],
+              "ypr": [
+              -134.999863,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_bagfence_3m",
+              "pos": [
+              5104.178223,
+              9.819798,
+              2446.524902
+            ],
+              "ypr": [
+              44.999992,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_barbedwire",
+              "pos": [
+              5143.460938,
+              11.797153,
+              2409.30957
+            ],
+              "ypr": [
+              -18,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_barbedwire",
+              "pos": [
+              5152.830566,
+              12.169698,
+              2403.257324
+            ],
+              "ypr": [
+              -98.999931,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_long",
+              "pos": [
+              5148.580078,
+              8.9678,
+              2358.399902
+            ],
+              "ypr": [
+              49.999992,
+              1,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_long",
+              "pos": [
+              5150.899902,
+              9.06778,
+              2360.389893
+            ],
+              "ypr": [
+              49.499992,
+              0.5,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_long",
+              "pos": [
+              5153.060059,
+              9.132769,
+              2362.280029
+            ],
+              "ypr": [
+              49.999992,
+              1,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_long",
+              "pos": [
+              5155.379883,
+              9.220254,
+              2364.27002
+            ],
+              "ypr": [
+              49.499992,
+              1,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_long",
+              "pos": [
+              5146.263672,
+              8.962797,
+              2356.422119
+            ],
+              "ypr": [
+              49.499996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_long",
+              "pos": [
+              5139.459961,
+              8.90281,
+              2350.550049
+            ],
+              "ypr": [
+              49.999992,
+              0.5,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_long",
+              "pos": [
+              5141.78125,
+              8.872812,
+              2352.542725
+            ],
+              "ypr": [
+              49.499996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_long",
+              "pos": [
+              5143.950195,
+              8.9278,
+              2354.429932
+            ],
+              "ypr": [
+              49.999992,
+              1,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_endl",
+              "pos": [
+              5156.853516,
+              10.018412,
+              2365.744873
+            ],
+              "ypr": [
+              -107.999939,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_long",
+              "pos": [
+              5128.589844,
+              9.058092,
+              2383.649902
+            ],
+              "ypr": [
+              -128.505005,
+              -0.5,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_long",
+              "pos": [
+              5126.220215,
+              8.963009,
+              2381.719971
+            ],
+              "ypr": [
+              -129.005005,
+              -1.999999,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_long",
+              "pos": [
+              5124.009766,
+              8.86053,
+              2379.828857
+            ],
+              "ypr": [
+              -129.003983,
+              -1.50265,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_long",
+              "pos": [
+              5121.726074,
+              8.810539,
+              2377.959961
+            ],
+              "ypr": [
+              -131.003998,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_long",
+              "pos": [
+              5130.959961,
+              9.112986,
+              2385.570068
+            ],
+              "ypr": [
+              -129.005005,
+              -2.499999,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_long",
+              "pos": [
+              5137.890137,
+              9.395453,
+              2391.399902
+            ],
+              "ypr": [
+              -128.503998,
+              -0.5,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_long",
+              "pos": [
+              5135.579102,
+              9.237966,
+              2389.352051
+            ],
+              "ypr": [
+              -129.005005,
+              -2.499999,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_long",
+              "pos": [
+              5133.319824,
+              9.160482,
+              2387.5
+            ],
+              "ypr": [
+              -128.505005,
+              -0.5,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_long",
+              "pos": [
+              5140.09375,
+              9.230922,
+              2393.181641
+            ],
+              "ypr": [
+              -127.499985,
+              7.999989,
+              -0.999999
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5189.17334,
+              9.457349,
+              2164.04248
+            ],
+              "ypr": [
+              49.756542,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roadblock_bags_long",
+              "pos": [
+              5119.648438,
+              8.415606,
+              2376.221924
+            ],
+              "ypr": [
+              -129.003983,
+              -13.49999,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5184.665527,
+              9.417356,
+              2169.477539
+            ],
+              "ypr": [
+              49.756542,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5175.688965,
+              9.282378,
+              2180.283203
+            ],
+              "ypr": [
+              49.756542,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5180.196777,
+              9.337369,
+              2174.855713
+            ],
+              "ypr": [
+              49.756542,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5166.149902,
+              9.460733,
+              2191.679932
+            ],
+              "ypr": [
+              49.756485,
+              0,
+              3.499997
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5157.180176,
+              9.858162,
+              2202.488525
+            ],
+              "ypr": [
+              49.756542,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5161.689941,
+              9.81067,
+              2197.060059
+            ],
+              "ypr": [
+              49.756485,
+              0,
+              1.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5170.662598,
+              9.268261,
+              2186.249023
+            ],
+              "ypr": [
+              49.756401,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5239.832031,
+              9.908266,
+              2224.9646
+            ],
+              "ypr": [
+              49.595974,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5230.825684,
+              10.17329,
+              2235.746826
+            ],
+              "ypr": [
+              49.595974,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5225.835938,
+              10.320659,
+              2241.092773
+            ],
+              "ypr": [
+              49.595974,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5235.350586,
+              10.140796,
+              2230.329834
+            ],
+              "ypr": [
+              49.595974,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5229.649902,
+              10.268952,
+              2155.209961
+            ],
+              "ypr": [
+              -17.206995,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5243.92041,
+              9.72453,
+              2220.112549
+            ],
+              "ypr": [
+              58.596004,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5222.294922,
+              10.317994,
+              2153.796387
+            ],
+              "ypr": [
+              -10.206989,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Fortified_Nest_Watchtower",
+              "pos": [
+              5267.939941,
+              11.373269,
+              2191.080078
+            ],
+              "ypr": [
+              -131.499924,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5263.22998,
+              9.949265,
+              2182.590088
+            ],
+              "ypr": [
+              -40.499992,
+              0,
+              -1.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5257.849609,
+              9.871447,
+              2177.928223
+            ],
+              "ypr": [
+              -40.499992,
+              0,
+              -1.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5252.119141,
+              10.116737,
+              2172.580322
+            ],
+              "ypr": [
+              -40.499992,
+              0,
+              0.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5246.73877,
+              10.118905,
+              2167.918457
+            ],
+              "ypr": [
+              -40.499992,
+              0,
+              -1.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5241.390137,
+              10.148245,
+              2162.97998
+            ],
+              "ypr": [
+              -40.499992,
+              0,
+              -1.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5235.589844,
+              10.086218,
+              2158.350098
+            ],
+              "ypr": [
+              -33,
+              0,
+              1
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_barbedwire",
+              "pos": [
+              5274.148438,
+              9.36418,
+              2236.043457
+            ],
+              "ypr": [
+              18,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_barbedwire",
+              "pos": [
+              5281.062988,
+              9.450609,
+              2221.936279
+            ],
+              "ypr": [
+              -107.999939,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_barbedwire",
+              "pos": [
+              5265.740234,
+              9.238631,
+              2246.213623
+            ],
+              "ypr": [
+              -143.999893,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_barbedwire",
+              "pos": [
+              5246.742188,
+              9.539003,
+              2259.901367
+            ],
+              "ypr": [
+              -134.999863,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_round",
+              "pos": [
+              5250.844238,
+              9.446198,
+              2247.001709
+            ],
+              "ypr": [
+              -71.999947,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5249.525879,
+              9.435951,
+              2240.052979
+            ],
+              "ypr": [
+              -80.999954,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_4m",
+              "pos": [
+              5248.182617,
+              9.519694,
+              2233.806885
+            ],
+              "ypr": [
+              -80.999954,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5212.478027,
+              9.582439,
+              2288.093018
+            ],
+              "ypr": [
+              49.595974,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5202.909668,
+              10.078237,
+              2299.463623
+            ],
+              "ypr": [
+              49.595974,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5193.899902,
+              9.495834,
+              2310.25
+            ],
+              "ypr": [
+              49.596001,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5198.430176,
+              9.770783,
+              2304.830078
+            ],
+              "ypr": [
+              49.596001,
+              0,
+              -2.499999
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5207.434082,
+              9.933261,
+              2294.042236
+            ],
+              "ypr": [
+              49.595837,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5186.313965,
+              10.545768,
+              2355.921875
+            ],
+              "ypr": [
+              49.595798,
+              0,
+              1.999999
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5172.060059,
+              11.964643,
+              2373.22998
+            ],
+              "ypr": [
+              49.596001,
+              0,
+              1.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5176.589844,
+              11.589447,
+              2367.810059
+            ],
+              "ypr": [
+              49.596001,
+              0,
+              3
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5191.649902,
+              10.128354,
+              2350.340088
+            ],
+              "ypr": [
+              49.596004,
+              0,
+              1.999999
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5181.049805,
+              10.944256,
+              2361.449951
+            ],
+              "ypr": [
+              49.596004,
+              0,
+              1.999999
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_barbedwire",
+              "pos": [
+              5192.919922,
+              9.601313,
+              2316.465576
+            ],
+              "ypr": [
+              -71.999947,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_barbedwire",
+              "pos": [
+              5198.209961,
+              9.502111,
+              2318.350098
+            ],
+              "ypr": [
+              -75.5,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_barbedwire",
+              "pos": [
+              5205.680176,
+              9.035831,
+              2328.639893
+            ],
+              "ypr": [
+              -62.999901,
+              0,
+              4.999995
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5223.850098,
+              9.493513,
+              2279.75
+            ],
+              "ypr": [
+              -144,
+              0,
+              -1
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Container_1Mo",
+              "pos": [
+              5243.839355,
+              10.285949,
+              2227.993408
+            ],
+              "ypr": [
+              135,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Container_1Mo",
+              "pos": [
+              5258.399902,
+              10.026476,
+              2204.439941
+            ],
+              "ypr": [
+              139.999985,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Container_1Moh",
+              "pos": [
+              5179.716309,
+              10.82896,
+              2220.871094
+            ],
+              "ypr": [
+              -129.5,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Container_1Moh",
+              "pos": [
+              5183.870605,
+              10.844934,
+              2216.278809
+            ],
+              "ypr": [
+              -129.5,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_container_2c",
+              "pos": [
+              5181.77002,
+              12.230741,
+              2218.48999
+            ],
+              "ypr": [
+              50.499996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5130.733887,
+              9.651906,
+              2234.449219
+            ],
+              "ypr": [
+              50.025867,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5126.254883,
+              9.636909,
+              2239.899658
+            ],
+              "ypr": [
+              50.025867,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5117.330078,
+              9.734394,
+              2250.75
+            ],
+              "ypr": [
+              50.025894,
+              0,
+              1
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5121.811523,
+              9.709396,
+              2245.300537
+            ],
+              "ypr": [
+              50.025757,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5107.845703,
+              10.01264,
+              2262.192383
+            ],
+              "ypr": [
+              50.025867,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5103.402832,
+              9.967733,
+              2267.589355
+            ],
+              "ypr": [
+              50.025867,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5112.330078,
+              9.985218,
+              2256.73999
+            ],
+              "ypr": [
+              50.025703,
+              0,
+              1.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5136.351074,
+              9.642788,
+              2227.915039
+            ],
+              "ypr": [
+              50.025867,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5141.520508,
+              9.658638,
+              2216.135986
+            ],
+              "ypr": [
+              50.025867,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5140.836426,
+              9.712776,
+              2222.460693
+            ],
+              "ypr": [
+              50.025867,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_barbedwire",
+              "pos": [
+              5147.058105,
+              9.655881,
+              2210.492676
+            ],
+              "ypr": [
+              -125.99987,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5151.858887,
+              9.862987,
+              2205.969971
+            ],
+              "ypr": [
+              23,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_4m",
+              "pos": [
+              5099.641113,
+              9.881884,
+              2271.846191
+            ],
+              "ypr": [
+              53.999985,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_4m",
+              "pos": [
+              5066.470215,
+              9.864089,
+              2281.643311
+            ],
+              "ypr": [
+              -44.999992,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4939.790039,
+              10.1168,
+              2403.01001
+            ],
+              "ypr": [
+              -23,
+              0,
+              -0.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4947.419922,
+              10.126445,
+              2405.669922
+            ],
+              "ypr": [
+              -18,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4954.75,
+              9.98501,
+              2407.26001
+            ],
+              "ypr": [
+              -18,
+              0,
+              1.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4991.370117,
+              9.211658,
+              2379.48999
+            ],
+              "ypr": [
+              47.511288,
+              0,
+              -2.499999
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4986.169922,
+              8.934754,
+              2384.810059
+            ],
+              "ypr": [
+              47.511288,
+              0,
+              -1.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4981.109863,
+              8.78772,
+              2390.02002
+            ],
+              "ypr": [
+              47.511288,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4975.810059,
+              8.860383,
+              2395
+            ],
+              "ypr": [
+              47.511196,
+              0,
+              1
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4970.600098,
+              9.138378,
+              2400.320068
+            ],
+              "ypr": [
+              47.511288,
+              0,
+              4.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4965.540039,
+              9.658708,
+              2405.530029
+            ],
+              "ypr": [
+              47.511288,
+              0,
+              3.999999
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5011.830078,
+              10.114661,
+              2358.360107
+            ],
+              "ypr": [
+              47.511288,
+              0,
+              -0.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5006.540039,
+              10.092351,
+              2363.340088
+            ],
+              "ypr": [
+              47.511196,
+              0,
+              -1
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5001.330078,
+              9.880466,
+              2368.659912
+            ],
+              "ypr": [
+              47.511288,
+              0,
+              -1.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4996.60498,
+              9.570576,
+              2373.714355
+            ],
+              "ypr": [
+              47.511288,
+              0,
+              -3
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5037.626465,
+              10.195725,
+              2332.190918
+            ],
+              "ypr": [
+              -143.999893,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5030.604492,
+              10.183231,
+              2337.76709
+            ],
+              "ypr": [
+              -143.999893,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_bagfence_3m",
+              "pos": [
+              5055.535156,
+              9.813007,
+              2319.085938
+            ],
+              "ypr": [
+              18,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_barbedwire",
+              "pos": [
+              5060.257813,
+              10.06403,
+              2314.493408
+            ],
+              "ypr": [
+              27,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Barracks_Round",
+              "pos": [
+              5122.029785,
+              10.517479,
+              2285.159912
+            ],
+              "ypr": [
+              -130,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_gcontainer_big",
+              "pos": [
+              5106.330078,
+              9.776149,
+              2308.159912
+            ],
+              "ypr": [
+              -130,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Water_Station",
+              "pos": [
+              5100.839844,
+              11.014479,
+              2314.169922
+            ],
+              "ypr": [
+              49.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Farm_WaterTower_Small",
+              "pos": [
+              5092.370117,
+              14.059338,
+              2309.959961
+            ],
+              "ypr": [
+              -130,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_ControlTower",
+              "pos": [
+              5109.77002,
+              16.993956,
+              2271.409912
+            ],
+              "ypr": [
+              -39.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Misc_Well_Pump_Blue",
+              "pos": [
+              4957,
+              10.039106,
+              2559.199951
+            ],
+              "ypr": [
+              139.999985,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Misc_Well_Pump_Blue",
+              "pos": [
+              5048.569824,
+              10.0016,
+              2381.75
+            ],
+              "ypr": [
+              -39.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_GuardTower",
+              "pos": [
+              5216.816895,
+              15.506794,
+              2165.00708
+            ],
+              "ypr": [
+              -39.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Guardhouse1",
+              "pos": [
+              4848.366211,
+              12.082358,
+              2609.4021
+            ],
+              "ypr": [
+              144.000031,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_GuardTower",
+              "pos": [
+              5283.884277,
+              14.98878,
+              2214.822266
+            ],
+              "ypr": [
+              -39.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Container_1Moh",
+              "pos": [
+              5118.939453,
+              10.558666,
+              2291.317383
+            ],
+              "ypr": [
+              -125.999924,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4923.423828,
+              9.855644,
+              2633.263184
+            ],
+              "ypr": [
+              49.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4928.850098,
+              9.750247,
+              2627.199951
+            ],
+              "ypr": [
+              49.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4910.104492,
+              10.017351,
+              2628.127441
+            ],
+              "ypr": [
+              -39.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              4916.75,
+              10.063745,
+              2633.77002
+            ],
+              "ypr": [
+              -39.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Fortified_Nest_Watchtower",
+              "pos": [
+              4915.487305,
+              11.571968,
+              2623.256104
+            ],
+              "ypr": [
+              49.999966,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_tree_pavement1",
+              "pos": [
+              4854.080078,
+              10.0599,
+              2546.530029
+            ],
+              "ypr": [
+              -39.499996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_1m",
+              "pos": [
+              4905.312988,
+              10.080492,
+              2625.219482
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_tree_pavement1",
+              "pos": [
+              4871.748047,
+              9.839458,
+              2561.282471
+            ],
+              "ypr": [
+              -39.499996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_tree_pavement1",
+              "pos": [
+              4872.504883,
+              9.791965,
+              2547.56665
+            ],
+              "ypr": [
+              -39.499996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Fortified_Nest_Watchtower",
+              "pos": [
+              4977.452148,
+              11.217725,
+              2409.114502
+            ],
+              "ypr": [
+              139.999985,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Tent_Big1_1",
+              "pos": [
+              5124.629883,
+              9.623459,
+              2402.879883
+            ],
+              "ypr": [
+              49.999992,
+              2,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Tent_Big1_2",
+              "pos": [
+              5118.049805,
+              9.62428,
+              2411.060059
+            ],
+              "ypr": [
+              49.999996,
+              2.499999,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Mil_Tent_Big2_5",
+              "pos": [
+              5113.109863,
+              11.726073,
+              2418.629883
+            ],
+              "ypr": [
+              -38.5,
+              0,
+              -2.499999
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Medical_Tent_Big",
+              "pos": [
+              5108.100098,
+              9.739815,
+              2425.919922
+            ],
+              "ypr": [
+              -39.999996,
+              0,
+              -2.499999
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_City_Hospital",
+              "pos": [
+              5188.423828,
+              17.282354,
+              2186.569092
+            ],
+              "ypr": [
+              -130.499847,
+              0,
+              -1
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5207.733398,
+              10.043552,
+              2153.520264
+            ],
+              "ypr": [
+              1.114712,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5194.487793,
+              9.716106,
+              2159.372559
+            ],
+              "ypr": [
+              30.208256,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5214.789063,
+              10.17853,
+              2153.316162
+            ],
+              "ypr": [
+              1.114676,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5200.549805,
+              9.811062,
+              2155.76001
+            ],
+              "ypr": [
+              30.20829,
+              0,
+              -1.5
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_roads_partrunway_beton",
+              "pos": [
+              5186.450195,
+              39.767601,
+              2202.27002
+            ],
+              "ypr": [
+              -39.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_barbedwire",
+              "pos": [
+              4875.080078,
+              10.418294,
+              2483.06665
+            ],
+              "ypr": [
+              -134.999863,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_1m",
+              "pos": [
+              4930.235352,
+              10.064604,
+              2596.162598
+            ],
+              "ypr": [
+              -18,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_6m",
+              "pos": [
+              5045.950195,
+              9.496236,
+              2506.590088
+            ],
+              "ypr": [
+              45.999989,
+              0,
+              1.999999
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_mil_hbarrier_1m",
+              "pos": [
+              5042.189941,
+              9.68159,
+              2510.75
+            ],
+              "ypr": [
+              46.499989,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_barbedwire",
+              "pos": [
+              5035.060059,
+              10.239854,
+              2520.830078
+            ],
+              "ypr": [
+              -9,
+              0,
+              1.999999
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Tisy_Garages",
+              "pos": [
+              5392.649902,
+              17.988199,
+              2201.689941
+            ],
+              "ypr": [
+              66,
+              -1,
+              -1.999999
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_fagussylvatica_2s.p3d",
+              "pos": [
+              4871.634766000003,
+              9.821553999999988,
+              2546.962890999999
+            ],
+              "ypr": [
+              106.997589,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_fagussylvatica_2s.p3d",
+              "pos": [
+              4853.216797000003,
+              9.93907999999999,
+              2545.9545899999994
+            ],
+              "ypr": [
+              106.997589,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_fagussylvatica_2s.p3d",
+              "pos": [
+              4871.568848000003,
+              9.93907999999999,
+              2560.8959959999993
+            ],
+              "ypr": [
+              40.190311,
+              0,
+              0
+              ],
+              "scale": 0.999999,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_tree_pavement2",
+              "pos": [
+              5173.169922,
+              10.041617,
+              2209.245117
+            ],
+              "ypr": [
+              -40.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_tree_pavement2",
+              "pos": [
+              5173.106445,
+              10.041617,
+              2211.92334
+            ],
+              "ypr": [
+              -40.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_tree_pavement2",
+              "pos": [
+              5178.463379,
+              10.074535,
+              2212.103516
+            ],
+              "ypr": [
+              -40.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_tree_pavement2",
+              "pos": [
+              5184.563477,
+              9.848847,
+              2202.572754
+            ],
+              "ypr": [
+              -40.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_tree_pavement2",
+              "pos": [
+              5178.080078,
+              9.958041,
+              2214.429443
+            ],
+              "ypr": [
+              -40.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_tree_pavement2",
+              "pos": [
+              5167.087402,
+              9.976865,
+              2212.005127
+            ],
+              "ypr": [
+              -40.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_tree_pavement2",
+              "pos": [
+              5174.608887,
+              9.951668,
+              2215.485352
+            ],
+              "ypr": [
+              -40.999996,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_pipes",
+              "pos": [
+              5116.608887,
+              9.998593,
+              2296.815918
+            ],
+              "ypr": [
+              -125.99987,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_pipes",
+              "pos": [
+              5115.250488,
+              10.00484,
+              2295.150391
+            ],
+              "ypr": [
+              53.999985,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_concretepipe",
+              "pos": [
+              5112.117676,
+              10.54676,
+              2298.841553
+            ],
+              "ypr": [
+              27,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "staticobj_misc_concretepipe",
+              "pos": [
+              5109.415039,
+              10.54676,
+              2301.243896
+            ],
+              "ypr": [
+              -127.442146,
+              0,
+              0
+              ],
+              "scale": 0.999999,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Container_1Mo",
+              "pos": [
+              5152.300781,
+              12.822,
+              2390.049072
+            ],
+              "ypr": [
+              139.5,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "StaticObj_Container_1D",
+              "pos": [
+              5148.649902,
+              12.788515,
+              2396.179932
+            ],
+              "ypr": [
+              49.999992,
+              0,
+              0
+              ],
+              "scale": 0.999997,
+              "enableCEPersistency": false
+          },
+{
+              "name": "StaticObj_Container_1C",
+              "pos": [
+              5150.316895,
+              12.783651,
+              2394.268555
+            ],
+              "ypr": [
+              49.999992,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "StaticObj_Container_1C",
+              "pos": [
+              5154.524902,
+              12.827647,
+              2392.034424
+            ],
+              "ypr": [
+              139.5,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "StaticObj_Misc_WoodenCrate_5x",
+              "pos": [
+              5158.090332,
+              12.616182,
+              2388.643799
+            ],
+              "ypr": [
+              -130.499985,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "Land_Container_1Mo",
+              "pos": [
+              5160.575195,
+              12.822,
+              2382.420166
+            ],
+              "ypr": [
+              50.999989,
+              0,
+              0
+              ],
+              "scale": 0.999999,
+              "enableCEPersistency": false
+          },
+{
+              "name": "StaticObj_Container_1C",
+              "pos": [
+              5157.615234,
+              12.8276,
+              2385.618408
+            ],
+              "ypr": [
+              51.299999,
+              0,
+              0
+              ],
+              "scale": 0.999998,
+              "enableCEPersistency": false
+          },
+{
+              "name": "StaticObj_Misc_Razorwire",
+              "pos": [
+              5159.319824,
+              12.219275,
+              2389.909912
+            ],
+              "ypr": [
+              49.999992,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "StaticObj_Misc_WoodenCrate_5x",
+              "pos": [
+              5157.628906,
+              12.616182,
+              2389.312744
+            ],
+              "ypr": [
+              -130.499985,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "StaticObj_Misc_WoodenCrate_5x",
+              "pos": [
+              5160.756348,
+              12.616182,
+              2385.408936
+            ],
+              "ypr": [
+              -130.499985,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "StaticObj_Misc_Razorwire",
+              "pos": [
+              5153.868164,
+              12.219275,
+              2395.730225
+            ],
+              "ypr": [
+              49.999992,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "StaticObj_Tisy_Garages_Grass_L",
+              "pos": [
+              5387.149902,
+              14.7803,
+              2199.488281
+            ],
+              "ypr": [
+              65.000702,
+              0,
+              -2.099999
+              ],
+              "scale": 0.999986,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_betulahumilis_1s.p3d",
+              "pos": [
+              5253.941894000001,
+              9.443221999999995,
+              2203.722413000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_anthoxanthum_bended.p3d",
+              "pos": [
+              5251.5668940000005,
+              8.974731999999985,
+              2215.0466309999997
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "StaticObj_Tisy_Garages_Grass_R",
+              "pos": [
+              5386.650879,
+              15.055244,
+              2199.338867
+            ],
+              "ypr": [
+              63.971882,
+              0.215937,
+              -2.299999
+              ],
+              "scale": 0.989475,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_dirtgrass_bunch.p3d",
+              "pos": [
+              5245.950684000001,
+              9.429298999999993,
+              2210.644287
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_dirtgrass_bunch.p3d",
+              "pos": [
+              5197.543945000001,
+              9.543480999999995,
+              2188.636963
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_dirtgrass_bunch.p3d",
+              "pos": [
+              5192.339844000001,
+              9.543497999999994,
+              2194.716553
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_concretegrass_bunch.p3d",
+              "pos": [
+              5197.802246000001,
+              9.543516999999994,
+              2199.439453
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_concretegrass_bunch.p3d",
+              "pos": [
+              5187.354492000001,
+              9.621482999999994,
+              2217.070557
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_dirtgrass_bunch.p3d",
+              "pos": [
+              5206.199219000001,
+              9.448667999999994,
+              2259.040039
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_elytrigiaforest.p3d",
+              "pos": [
+              5197.894042999999,
+              9.556626999999994,
+              2268.6376950000003
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_elytrigia_green.p3d",
+              "pos": [
+              5168.449219000001,
+              9.443174000000008,
+              2237.8361809999988
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_lolium.p3d",
+              "pos": [
+              5169.638184,
+              9.515312000000012,
+              2240.702637000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_twigs.p3d",
+              "pos": [
+              5170.666992000001,
+              9.504643000000003,
+              2240.764648
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_polypodiophyta.p3d",
+              "pos": [
+              5208.4438470000005,
+              9.28095,
+              2182.296143
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 0.999999,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_leafs_spread.p3d",
+              "pos": [
+              5207.686035,
+              9.49999799999999,
+              2182.447754
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_rosacanina_2s.p3d",
+              "pos": [
+              5205.414062999999,
+              9.383057999999997,
+              2178.1665040000003
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_carduus_f.p3d",
+              "pos": [
+              5182.507813,
+              10.221829000000008,
+              2213.13208
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_anthoxanthum.p3d",
+              "pos": [
+              5180.081542999999,
+              9.983250000000012,
+              2204.810790999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_elytrigiadirt.p3d",
+              "pos": [
+              5204.042968999999,
+              9.556616999999994,
+              2228.0581060000004
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_twigs.p3d",
+              "pos": [
+              5188.558105000001,
+              9.531321000000004,
+              2220.439453
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_undergrowth.p3d",
+              "pos": [
+              5177.591308,
+              9.788870000000006,
+              2203.3088380000013
+            ],
+              "ypr": [
+              27,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_vaccinium_tall.p3d",
+              "pos": [
+              5179.356934,
+              10.216467999999988,
+              2204.4106449999995
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_fagussylvatica_2d.p3d",
+              "pos": [
+              5213.477539,
+              8.984646999999988,
+              2274.2346200000006
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_fagussylvatica_2sb_trail_r.p3d",
+              "pos": [
+              5154.561035000002,
+              8.880174000000011,
+              2345.3935550000006
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_fagussylvatica_2sb_trail_r.p3d",
+              "pos": [
+              5115.237304000003,
+              10.190732000000011,
+              2433.4072270000006
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 0.999999,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_fagussylvatica_3d.p3d",
+              "pos": [
+              5116.950195,
+              8.274955000000006,
+              2465.175049
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 0.999999,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_malusdomestica_3s.p3d",
+              "pos": [
+              5091.074706999998,
+              9.525927999999984,
+              2461.621337999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_quercusrobur_3s.p3d",
+              "pos": [
+              5067.155761999998,
+              9.419443000000008,
+              2306.615723
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_carduus_f.p3d",
+              "pos": [
+              5159.311035,
+              9.572195000000008,
+              2253.218994
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\p_heracleum.p3d",
+              "pos": [
+              5158.407714999998,
+              9.42593200000001,
+              2254.321046000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\p_heracleum.p3d",
+              "pos": [
+              5162.254882999997,
+              9.073389000000011,
+              2315.846681000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\p_heracleum.p3d",
+              "pos": [
+              5127.784179999997,
+              9.433993000000012,
+              2286.154298000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\p_heracleum.p3d",
+              "pos": [
+              5106.446776999997,
+              9.25828600000001,
+              2311.6682140000007
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\b_betulapendula_1f.p3d",
+              "pos": [
+              5113.000489,
+              9.365007000000013,
+              2308.0397950000006
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\b_fagussylvatica_1f.p3d",
+              "pos": [
+              5082.8911130000015,
+              9.424713000000008,
+              2334.0207520000004
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\p_heracleum.p3d",
+              "pos": [
+              5081.733886999998,
+              9.482157000000011,
+              2340.6914070000007
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_dirtgrass_bunch.p3d",
+              "pos": [
+              5084.716797000001,
+              9.369248999999995,
+              2342.559326
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_vaccinium.p3d",
+              "pos": [
+              5047.874512,
+              9.428223000000006,
+              2380.1320799999994
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_elytrigiaforest.p3d",
+              "pos": [
+              5043.805175999999,
+              9.369718999999995,
+              2391.0788570000004
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_polypodiophyta.p3d",
+              "pos": [
+              5048.665039,
+              9.320056,
+              2380.173096
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_concretegrass_bunch.p3d",
+              "pos": [
+              5034.744629000001,
+              9.543491999999993,
+              2456.6601570000003
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_undergrowth.p3d",
+              "pos": [
+              4980.148926,
+              9.280876000000006,
+              2460.0219720000014
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_elytrigia_green.p3d",
+              "pos": [
+              4980.1923830000005,
+              9.284756000000009,
+              2464.905028999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_twigs_b.p3d",
+              "pos": [
+              4979.787598000002,
+              9.510873,
+              2463.3918449999996
+            ],
+              "ypr": [
+              -18,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_dirtgrass_bunch.p3d",
+              "pos": [
+              4990.370606000001,
+              9.543508999999995,
+              2467.314209
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_leafs_spread.p3d",
+              "pos": [
+              4980.583984999999,
+              9.49998999999999,
+              2532.630615
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_leafs_spread.p3d",
+              "pos": [
+              4982.872071,
+              9.49998799999999,
+              2540.607422
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_elytrigiaforest.p3d",
+              "pos": [
+              4985.315429999999,
+              9.556616999999994,
+              2527.8720700000003
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_taraxacum.p3d",
+              "pos": [
+              4986.351562,
+              9.532882000000006,
+              2528.444824
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_elytrigiadirt.p3d",
+              "pos": [
+              4973.179198999999,
+              9.556618999999994,
+              2537.0161130000006
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_concretegrass_bunch.p3d",
+              "pos": [
+              4987.623047000001,
+              9.543493999999994,
+              2539.638916
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_concretegrass_bunch.p3d",
+              "pos": [
+              4975.309082000001,
+              9.543490999999994,
+              2546.78711
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_concretegrass_bunch.p3d",
+              "pos": [
+              5000.391602000001,
+              10.246773999999995,
+              2542.115235
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_concretegrass_bunch.p3d",
+              "pos": [
+              4984.896485000001,
+              9.543499999999995,
+              2544.733155
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\p_heracleum.p3d",
+              "pos": [
+              5004.973632999997,
+              9.73842500000001,
+              2536.015626000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_dirtgrass_bunch.p3d",
+              "pos": [
+              4999.475098000001,
+              9.573236999999994,
+              2529.158203
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_concretegrass_bunch.p3d",
+              "pos": [
+              4980.488770000001,
+              9.543489999999995,
+              2532.464112
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_twigs.p3d",
+              "pos": [
+              4980.632324000001,
+              9.504655000000003,
+              2537.564697
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_twigs_b.p3d",
+              "pos": [
+              4993.039551000002,
+              9.510001,
+              2534.0441889999997
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_twigs.p3d",
+              "pos": [
+              4985.748047000001,
+              9.504651000000003,
+              2517.7592769999997
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_hypericum_f.p3d",
+              "pos": [
+              4989.94043,
+              9.555269000000006,
+              2530.410156
+            ],
+              "ypr": [
+              -9,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_polypodiophyta.p3d",
+              "pos": [
+              4981.300293,
+              9.206863,
+              2532.016846
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_twigs_b.p3d",
+              "pos": [
+              4985.267578000002,
+              9.510017,
+              2532.695312
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_vaccinium.p3d",
+              "pos": [
+              4967.964355,
+              9.346840000000007,
+              2543.6447759999996
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_hypericum.p3d",
+              "pos": [
+              4976.092285,
+              9.555249000000007,
+              2549.376709
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_leafs_spread.p3d",
+              "pos": [
+              4975.033692,
+              9.49999999999999,
+              2549.0053709999997
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\p_urtica.p3d",
+              "pos": [
+              4968.586426,
+              9.623266000000008,
+              2544.2299799999996
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\b_quercusrobur_1f.p3d",
+              "pos": [
+              4969.722655999997,
+              9.36283900000001,
+              2547.5668940000014
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\b_quercusrobur_1f.p3d",
+              "pos": [
+              4962.632323999997,
+              9.36578700000001,
+              2552.240478000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\b_piceaabies_1f.p3d",
+              "pos": [
+              4925.404785999997,
+              9.87999400000001,
+              2598.0432139999994
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_betulapendula_1fb.p3d",
+              "pos": [
+              4903.037108999998,
+              9.773864000000009,
+              2609.669434
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_fagussylvatica_3d.p3d",
+              "pos": [
+              4875.299805,
+              9.527036000000003,
+              2597.155029
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 0.999999,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_fagussylvatica_2sb_trail_y.p3d",
+              "pos": [
+              4868.345703000003,
+              9.298887000000011,
+              2610.8774420000004
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_fraxinusexcelsior_2s.p3d",
+              "pos": [
+              4896.499999999997,
+              9.146862000000002,
+              2623.4082039999994
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_fraxinusexcelsior_2s.p3d",
+              "pos": [
+              4959.604980999998,
+              9.335350000000002,
+              2581.661865999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_malusdomestica_2s.p3d",
+              "pos": [
+              5002.547852000001,
+              9.016530999999995,
+              2408.7687999999994
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 0.999999,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_sorbus_2s.p3d",
+              "pos": [
+              5027.231934,
+              9.643135000000008,
+              2481.7749019999997
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\tree\\t_robiniapseudoacacia_2s.p3d",
+              "pos": [
+              4936.064453,
+              8.660385000000005,
+              2634.238037
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants_bliss\\building\\ivy_special_e.p3d",
+              "pos": [
+              5046.84082,
+              19.15436,
+              2450.935547
+            ],
+              "ypr": [
+              -63.000031,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "StaticObj_Garbage_Pile4",
+              "pos": [
+              5178.805176,
+              9.558432,
+              2299.270996
+            ],
+              "ypr": [
+              35.999985,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_elytrigiaforest.p3d",
+              "pos": [
+              5177.818358999999,
+              9.685614999999993,
+              2298.5749510000005
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_lolium.p3d",
+              "pos": [
+              5177.513184,
+              9.515336000000014,
+              2299.3735350000006
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_twigs.p3d",
+              "pos": [
+              5176.583984000002,
+              9.504656000000004,
+              2297.236083
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\l_long_pile_b.p3d",
+              "pos": [
+              5179.262695,
+              9.510475999999992,
+              2298.018066
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_dirtgrass_bunch.p3d",
+              "pos": [
+              5174.194824000001,
+              9.543486999999994,
+              2297.969239
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_dirtgrass_bunch.p3d",
+              "pos": [
+              5129.366211000001,
+              9.543491999999993,
+              2348.276123
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_anthoxanthum_bended.p3d",
+              "pos": [
+              5069.55957,
+              9.458990999999987,
+              2356.5261229999996
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_rosacanina_1s.p3d",
+              "pos": [
+              5068.719238,
+              9.16117599999999,
+              2344.988526000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_prunusspinosa_1s.p3d",
+              "pos": [
+              5070.123535000001,
+              9.198035000000006,
+              2353.782226000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_elytrigiatall.p3d",
+              "pos": [
+              5249.525879,
+              9.551403999999993,
+              2181.754639
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_hypericum.p3d",
+              "pos": [
+              5261.990234,
+              9.021487000000006,
+              2185.090088
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_elytrigia_green.p3d",
+              "pos": [
+              5232.917481000001,
+              9.334182000000007,
+              2167.619139999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_calamagrostis.p3d",
+              "pos": [
+              5225.233399,
+              9.252148000000007,
+              2168.673095999999
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_twigs.p3d",
+              "pos": [
+              5231.356445000001,
+              9.504661000000004,
+              2168.378906
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_carduus_f.p3d",
+              "pos": [
+              5230.895508,
+              9.311510000000009,
+              2167.146973
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_calamagrostis.p3d",
+              "pos": [
+              5207.926758,
+              9.001141000000008,
+              2179.8784179999993
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_prunusspinosa_1s.p3d",
+              "pos": [
+              5205.6938470000005,
+              9.524787000000005,
+              2172.000976000001
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_carduus_f.p3d",
+              "pos": [
+              5107.328613,
+              9.145697000000009,
+              2388.059814
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\clutter\\c_polypodiophyta_c.p3d",
+              "pos": [
+              5111.111328,
+              9.353636999999999,
+              2384.7045900000003
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          },
+{
+              "name": "DZ\\plants\\bush\\b_sambucusnigra_2s.p3d",
+              "pos": [
+              5103.389647999999,
+              9.554249999999993,
+              2387.2851559999995
+            ],
+              "ypr": [
+              0,
+              0,
+              0
+              ],
+              "scale": 1,
+              "enableCEPersistency": false
+          }
+    ]
+}

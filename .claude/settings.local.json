@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find \"c:\\\\Users\\\\Shadow\\\\Downloads\\\\Dank-editor-preview\\\\artifacts\\\\dayz-builder\\\\src\" -type f \\\\\\( -name \"*.ts\" -o -name \"*.tsx\" \\\\\\) -exec wc -l {} \\\\;)",
+      "Read(//c/Users/Shadow/Downloads/Dank-editor-preview/{lines=$1; file=$2} END {print lines \"/**)",
+      "Bash(sort -k2)",
+      "Read(//tmp/**)",
+      "Bash(xargs -0 wc -l)",
+      "Bash(find /c/Users/Shadow/Downloads/Dank-editor-preview/artifacts/dayz-builder/src -type f '\\(' -name '*.ts' -o -name '*.tsx' '\\)' -exec sh -c 'lines=$\\(wc -l < \"$1\"\\); if [ \"$lines\" -lt 3 ]; then echo \"$1 \\($lines lines\\)\"; fi' _ '{}' ';')"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">DankDayz Editor</string>
+    <string name="title_activity_main">DankDayz Editor</string>
+    <string name="package_name">com.dankdayz.editor</string>
+    <string name="custom_url_scheme">com.dankdayz.editor</string>
+</resources>

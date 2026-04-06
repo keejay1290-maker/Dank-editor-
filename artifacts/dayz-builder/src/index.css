@@ -1,0 +1,96 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --font-mono: var(--app-font-mono);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+}
+
+:root {
+  --background: 20 10% 4%;
+  --foreground: 40 30% 80%;
+  --border: 30 20% 14%;
+  --input: 30 20% 10%;
+  --ring: 42 70% 45%;
+  --card: 25 15% 8%;
+  --card-foreground: 40 30% 80%;
+  --popover: 25 15% 8%;
+  --popover-foreground: 40 30% 80%;
+  --primary: 42 70% 45%;
+  --primary-foreground: 20 10% 4%;
+  --secondary: 0 50% 30%;
+  --secondary-foreground: 40 30% 90%;
+  --muted: 30 15% 12%;
+  --muted-foreground: 40 15% 45%;
+  --accent: 210 50% 25%;
+  --accent-foreground: 40 30% 90%;
+  --destructive: 0 60% 40%;
+  --destructive-foreground: 40 30% 90%;
+  --app-font-mono: 'Courier New', Courier, monospace;
+  --radius: 3px;
+  --gold: 42 70% 45%;
+  --gold-dim: 42 50% 30%;
+  --red-bright: 0 60% 55%;
+}
+
+@layer base {
+  * { @apply border-border; }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Courier New', Courier, monospace;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: hsl(var(--background)); }
+::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--ring)); }
+
+/* Canvas cursor */
+canvas { cursor: grab; }
+canvas:active { cursor: grabbing; }
+
+/* Gold text */
+.text-gold { color: hsl(var(--gold)); }
+.text-red-bright { color: hsl(var(--red-bright)); }
+.border-gold { border-color: hsl(var(--gold)); }
+.bg-gold { background-color: hsl(var(--gold)); }
+
+/* Pulse animation */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px hsl(var(--red-bright)); }
+  50% { opacity: 0.4; box-shadow: none; }
+}
+.pulse-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: hsl(var(--red-bright));
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+
+/* Rotate animation for scale preview */
+@keyframes spin-slow { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }

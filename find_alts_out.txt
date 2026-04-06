@@ -1,0 +1,33 @@
+﻿czechhedgehog: NOT FOUND
+barracks: land_mil_barracks1 | land_mil_barracks2 | land_mil_barracks3 | land_mil_barracks4 | land_mil_barracks5 | land_mil_barracks5_basement | land_mil_barracks6 | land_mil_barracks6_old
+watchtower: land_mil_fortified_nest_watchtower | watchtower | watchtowerkit
+hbarrier: NOT FOUND
+wall_concrete: NOT FOUND
+wreck_bmp: staticobj_wreck_bmp1_de | staticobj_wreck_bmp2_de | staticobj_wreck_bmp1_noplacement_de
+wreck_t72: staticobj_wreck_t72_chassis_de | staticobj_wreck_t72_turret_de
+cargo_tower: NOT FOUND
+wall_brick: NOT FOUND
+pier: land_pier_crane_a | land_pier_crane_b
+boat_small: land_boat_small1 | land_boat_small2 | land_boat_small3 | land_boat_small9_de
+tanks_gas: NOT FOUND
+tank_big: land_dieselpowerplant_tank_big
+powerline: NOT FOUND
+barn_brick: land_barn_brick1 | land_barn_brick2
+castle_stairs: land_castle_stairs_nolc
+guardian: NOT FOUND
+hedgehog: NOT FOUND
+hesco: NOT FOUND
+nest_big: land_mil_fortified_nest_big
+nest_small: land_mil_fortified_nest_small
+fortif: land_mil_fortified_nest_small | land_mil_fortified_nest_big | land_mil_fortified_nest_watchtower
+bunker: land_bunker1_double | land_bunker1_left | land_bunker1_right | land_bunker2_double | land_bunker2_left | land_bunker2_right
+container: land_container_1mo | land_container_1moh | land_container_1bo | land_container_1aoh | land_container_1aoh_de | land_container_1bo_de | land_container_1mo_de | land_container_1moh_de
+watchtow: land_mil_fortified_nest_watchtower | watchtower | watchtowerkit
+guard_tower: NOT FOUND
+guard tower: NOT FOUND
+czechh: NOT FOUND
+bmp: staticobj_wreck_bmp1_de | staticobj_wreck_bmp2_de | staticobj_wreck_bmp1_noplacement_de
+t72: staticobj_wreck_t72_chassis_de | staticobj_wreck_t72_turret_de
+wreck_heli: NOT FOUND
+mi8: wreck_mi8 | wreck_mi8_crashed
+heli_wreck: NOT FOUND

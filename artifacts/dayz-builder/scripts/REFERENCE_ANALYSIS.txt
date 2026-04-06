@@ -1,0 +1,43 @@
+DANKVAULT™ REFERENCE ANALYSIS — ARCHITECTURAL FIDELITY REPORT (V2)
+================================================================
+Source: DayZ Official Modular Piece Logic, Scalespeeder GitHub Research & Community Standards
+Timestamp: 2026-04-04 23:00
+
+[1] MODULAR GRID LOGIC (REFINED)
+---------------------------------
+Official interiors (Underground, Warhead, Bunker) adhere to a 12.0m grid for primary nodes.
+Secondary modular objects (Containers, H-Barriers) adhere to 6.0m or 3.0m grids.
+- 12.0m Snap: Land_Underground_Tunnel_Single, Land_Underground_Room_Small
+- 6.0m Snap: Land_Container_1Bo, StaticObj_Mil_HBarrier_6m
+- 3.0m Snap: StaticObj_Roadblock_CncBlock
+DankVault Recommendation: Use 12.0m snap for bunkers to prevent light leaks.
+
+[2] LIVONIA UNDERGROUND ASSETS (SCALESPPEEDER VERIFIED)
+-------------------------------------------------------
+These assets require the 'Underground' or 'Bunker' family in the engine.
+- PRIMARY: Land_Underground_Entrance, Land_Underground_Tunnel_Single, Land_Underground_Tunnel_Double
+- ROOMS: Land_Underground_Room_Small, Land_Underground_Corridor_Side
+- VERTICAL: Land_Underground_Stairs_Block (Use 12.0m vertical offset if possible)
+NOTE: Tunnels are often placed at Y=500 or higher in mission files to hide from players until intended.
+
+[3] THE "PEDESTAL" PATTERN (STABILITY UPGRADE)
+-----------------------------------------------
+When placing large modular pieces (Bunkers/Castles) on uneven terrain, terrain clipping will break internal navigation.
+FIX: Always place a 'pedestal' layer of Concrete Blocks (StaticObj_Roadblock_CncBlock) or HESCOs as a foundation.
+This ensures the primary building logic remains elevated above the map's terrain mesh.
+
+[4] CONSOLE / NITRADO GUARD (CRITICAL)
+---------------------------------------
+Nitrado/Console mission files (init.c) have limited memory caches for spawned objects.
+- GLOBAL LIMIT: 2000-2500 active objects in one local area.
+- CRASH RISK: Overlapping more than 50 complex meshes (like Wrecks) in a 10m radius.
+- FIX: Use larger objects (20m Castle Wall) instead of multiple small ones to lower total object count.
+
+[5] LOOT SPAWNING STANDARDS
+----------------------------
+Placing static objects DOES NOT spawn loot automatically on console unless configured in mapgroupproto.xml.
+DankVault Mitigation: High-Density loot is placed at spawn-time using the 'Loot Generator' logic to ensure immediate availability in custom builds.
+
+[CONCLUSION]
+All procedural generators (Maze, Masterpiece) should prefer the 12.0m grid for stability and the 'pedestal' pattern for terrain compliance. 
+The standard angular snap for modular pieces is 22.5° increments (e.g. 0, 22.5, 45, etc.).
