@@ -1326,7 +1326,7 @@ export default function App() {
         {mode === "conzone" && <ConstructionZoneMaker />}
 
         {/* ── SHIPWRECK MAKER MODE ── */}
-        {mode === "shipwreck" && <ShipwreckBuilder onGenerate={(pts, p) => generate(p, () => pts)} />}
+        {mode === "shipwreck" && <ShipwreckBuilder onGenerate={(_pts, p) => { setShapeType(p.shape || "shipwreck"); setParams(prev => ({ ...prev, ...p })); }} />}
 
         {/* ── TELEPORT MAKER MODE ── */}
         {mode === "teleport" && <TeleportMaker />}
@@ -2924,7 +2924,7 @@ function BuildsSidebar(p: {
           
           return (
             <div key={b.id}
-              onClick={() => { p.onSelect(b.id); p.onLoadIntoEditor(b); }}
+              onClick={() => p.onSelect(b.id)}
               className={`border-b border-[#1e1c18] cursor-pointer p-3 transition-all ${isSelected ? "bg-[#0f1f0f] border-l-2 border-l-[#27ae60]" : "hover:bg-[#0f0d09]"}`}>
               <div className="flex justify-between items-start mb-1">
                 <div className={`text-[11px] font-bold ${isSelected ? "text-[#27ae60]" : "text-[#b8d4b8]"}`}>{b.name}</div>

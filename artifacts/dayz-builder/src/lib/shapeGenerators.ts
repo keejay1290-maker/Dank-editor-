@@ -281,8 +281,6 @@ function getRawPoints(shapeType: string, params: Record<string, number>): Point3
     case 'tunnel_square': return gen_tunnel_square(p);
     case 'tunnel_hex': return gen_tunnel_hex(p);
     case 'reactor_core': return gen_reactor_core(p);
-    case 'crashed_ufo': return gen_crashed_ufo(p);
-    case 'volcano': return gen_volcano(p);
     case 'treehouse': return gen_treehouse(p);
     case 'fuel_depot': return gen_fuel_depot(p);
     case 'sniper_nest': return gen_sniper_nest(p);

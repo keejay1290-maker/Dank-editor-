@@ -6,7 +6,26 @@
       "Bash(sort -k2)",
       "Read(//tmp/**)",
       "Bash(xargs -0 wc -l)",
-      "Bash(find /c/Users/Shadow/Downloads/Dank-editor-preview/artifacts/dayz-builder/src -type f '\\(' -name '*.ts' -o -name '*.tsx' '\\)' -exec sh -c 'lines=$\\(wc -l < \"$1\"\\); if [ \"$lines\" -lt 3 ]; then echo \"$1 \\($lines lines\\)\"; fi' _ '{}' ';')"
+      "Bash(find /c/Users/Shadow/Downloads/Dank-editor-preview/artifacts/dayz-builder/src -type f '\\(' -name '*.ts' -o -name '*.tsx' '\\)' -exec sh -c 'lines=$\\(wc -l < \"$1\"\\); if [ \"$lines\" -lt 3 ]; then echo \"$1 \\($lines lines\\)\"; fi' _ '{}' ';')",
+      "Bash(gh auth:*)",
+      "Bash(where gh:*)",
+      "Bash(powershell -command \"where.exe gh\")",
+      "Read(//c/Program Files/GitHub CLI/**)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" auth status)",
+      "Bash(npm install:*)",
+      "Bash(pnpm install:*)",
+      "Bash(where pnpm:*)",
+      "Read(//c/Users/Shadow/AppData/Roaming/npm/**)",
+      "Read(//c/Program Files/nodejs/**)",
+      "Bash(powershell -command \"Get-Command pnpm -ErrorAction SilentlyContinue | Select-Object Source\")",
+      "Bash(powershell -command \"Get-Command pnpm\")",
+      "Read(//c/Users/Shadow/AppData/Local/pnpm//**)",
+      "Bash(/c/Users/Shadow/AppData/Local/npm-cache/_npx/e6e0ed1aca658cae/node_modules/.bin/pnpm install:*)",
+      "Bash(node_modules/.bin/tsc --noEmit)",
+      "Bash(\"/c/Users/Shadow/Downloads/Dank-editor-preview/node_modules/.bin/tsc\" --noEmit)",
+      "Bash(node_modules/.bin/vite --host 0.0.0.0 --port 5173)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173)",
+      "Bash(node_modules/.bin/vite build:*)"
     ]
   }
 }
