@@ -4,6 +4,7 @@ import { OrbitControls, PerspectiveCamera, Stars, Html } from '@react-three/drei
 import * as THREE from 'three';
 import { Point3D } from './lib/types';
 import { WebGLErrorBoundary } from './WebGLErrorBoundary';
+import { getMimic } from './lib/shapeMimic';
 
 /**
  * 🎨 DANKVAULT™ OBJECT COLORS
@@ -31,7 +32,10 @@ const OBJECT_COLORS: Record<string, string> = {
  */
 function ObjectCloud({ points, objClass, mode, overlays }: { points: Point3D[], objClass: string, mode: string, overlays: any }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
-  const color = OBJECT_COLORS[objClass] ?? '#27ae60';
+  const mimic = useMemo(() => getMimic(objClass), [objClass]);
+  const color = mimic.color ?? OBJECT_COLORS[objClass] ?? '#27ae60';
+  // Use proper DayZ object dimensions from the mimic catalogue
+  const [bw, bh, bd] = mimic.args.length >= 3 ? mimic.args : [mimic.args[0] || 2, mimic.args[0] || 2, mimic.args[0] || 2];
 
   useEffect(() => {
     if (!meshRef.current) return;
@@ -40,7 +44,7 @@ function ObjectCloud({ points, objClass, mode, overlays }: { points: Point3D[], 
       dummy.position.set(p.x, p.y, p.z);
       dummy.rotation.set(
         ((p.pitch || 0) * Math.PI) / 180,
-        ((p.yaw || 0) * Math.PI) / 180,
+        -((p.yaw || 0) * Math.PI) / 180,
         ((p.roll || 0) * Math.PI) / 180
       );
       dummy.scale.set(p.scale || 1, p.scale || 1, p.scale || 1);
@@ -55,15 +59,15 @@ function ObjectCloud({ points, objClass, mode, overlays }: { points: Point3D[], 
 
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, points.length]}>
-      <boxGeometry args={[0.9, 0.9, 0.9]} />
-      <meshStandardMaterial 
-        color={color} 
-        transparent={opacity < 1} 
+      <boxGeometry args={[bw, bh, bd]} />
+      <meshStandardMaterial
+        color={color}
+        transparent={opacity < 1}
         opacity={opacity}
-        roughness={0.3} 
-        metalness={isBunker ? 0.8 : 0.4}
+        roughness={0.35}
+        metalness={isBunker ? 0.8 : 0.25}
         emissive={color}
-        emissiveIntensity={mode === "sandbox_hud" ? 0.5 : 0.1}
+        emissiveIntensity={mode === "sandbox_hud" ? 0.4 : 0.08}
       />
     </instancedMesh>
   );
@@ -164,12 +168,13 @@ const PointCloud3D: React.FC<PointCloud3DProps> = ({
         <Canvas 
           gl={{ antialias: true, powerPreference: 'high-performance' }}
           frameloop="always"
-          camera={{ position: [zoomDist, zoomDist, zoomDist], fov: 45 }}
+          camera={{ position: [zoomDist * 0.7, zoomDist * 0.5, zoomDist], fov: 50 }}
           style={{ background: mode === "sandbox_hud" ? "#0a1a1a" : "#050805" }}
         >
           <color attach="background" args={[mode === "sandbox_hud" ? '#0a1510' : '#050805']} />
           <Stars radius={120} depth={60} count={6000} factor={4} saturation={0.5} fade speed={1.5} />
-          <fog attach="fog" args={[mode === "sandbox_hud" ? '#102518' : '#050805', 100, 300]} />
+          {/* Fog scales with build size so distant objects are never clipped */}
+          <fog attach="fog" args={[mode === "sandbox_hud" ? '#102518' : '#050805', zoomDist * 2.5, zoomDist * 9]} />
           
           {/* 🚨 ROBUST ARCHITECTURAL LIGHTING */}
           <ambientLight intensity={0.6} color="#ffffff" />

@@ -1405,7 +1405,8 @@ function gen_mothership(p: Record<string, number>): Point3D[] {
 
 function gen_skyscraper(p: Record<string, number>): Point3D[] {
   const pts: Point3D[] = [];
-  const h = p.height, w = p.width;
+  const h = p.height || 120;
+  const w = p.width  || 30;
   const floors = p.floors || 20;
   const floorH = h / floors;
   // Main tower - taper slightly
