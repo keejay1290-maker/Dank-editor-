@@ -7,23 +7,33 @@ import { Point3D } from "./types";
 function drawWall(pts: Point3D[], x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, spacing: number = 3) {
   const dx = x2 - x1, dy = y2 - y1, dz = z2 - z1;
   const len = Math.max(0.1, Math.sqrt(dx*dx + dy*dy + dz*dz));
-  const yaw = Math.atan2(dx, dz) * 180 / Math.PI + 90; 
-  const pitch = Math.atan2(dy, Math.sqrt(dx*dx+dz*dz)) * -180 / Math.PI;
-  const effectiveSpacing = (typeof spacing === "number" && spacing > 0) ? spacing : 3;
-  const steps = Math.max(1, Math.ceil(len / effectiveSpacing)); 
-  for (let i = 0; i <= steps; i++) {
-     const t = i / steps;
-     pts.push({ x: x1+dx*t, y: y1+dy*t, z: z1+dz*t, yaw, pitch });
+  const yaw = Math.atan2(dx, dz) * 180 / Math.PI + 90;
+  const pitch = Math.atan2(dy, Math.sqrt(dx*dx + dz*dz)) * -180 / Math.PI;
+  const s = (typeof spacing === "number" && spacing > 0) ? spacing : 3;
+  const steps = Math.max(1, Math.ceil(len / s));
+  // Center-based placement: panel i sits at the middle of cell i.
+  // No endpoint overlap at wall junctions → perfect flush tiling.
+  for (let i = 0; i < steps; i++) {
+    const t = (i + 0.5) / steps;
+    pts.push({ x: x1+dx*t, y: y1+dy*t, z: z1+dz*t, yaw, pitch });
   }
 }
 
 function drawRing(pts: Point3D[], cx: number, cy: number, cz: number, r: number, spacing: number = 4) {
-  const circum = 2 * Math.PI * r;
-  const steps = Math.max(8, Math.ceil(circum / spacing));
-  for(let i=0; i<steps; i++) {
-    const a1 = (i/steps)*Math.PI*2;
-    const a2 = ((i+1)/steps)*Math.PI*2;
-    drawWall(pts, cx+r*Math.cos(a1), cy, cz+r*Math.sin(a1), cx+r*Math.cos(a2), cy, cz+r*Math.sin(a2), spacing);
+  if (r <= 0) return;
+  // Exact panel count: round so panels fill ring flush, no endpoint double-placement.
+  const nPanels = Math.max(4, Math.round((2 * Math.PI * r) / spacing));
+  const arcStep = (2 * Math.PI) / nPanels;
+  for (let i = 0; i < nPanels; i++) {
+    // Place each panel at the ARC midpoint of its cell (not chord midpoint).
+    const a = (i + 0.5) * arcStep;
+    const x = cx + r * Math.cos(a);
+    const z = cz + r * Math.sin(a);
+    // Tangential yaw: wall's 8m axis lies along the ring tangent.
+    // tangent at angle a = (-sin a, cos a) in (X,Z) space.
+    // yaw = atan2(dx, dz)*180/PI + 90 → atan2(-sin a, cos a)*180/PI + 90 = -a*180/PI + 90
+    const yaw = -a * 180 / Math.PI + 90;
+    pts.push({ x, y: cy, z, yaw });
   }
 }
 
@@ -50,50 +60,70 @@ function placeStairs(pts: Point3D[], centerX: number, centerZ: number, startY: n
  */
 export function gen_shipwreck(p: Record<string, any>): Point3D[] {
   const pts: Point3D[] = [];
-  const len = Math.max(30, p.length || 60);
-  const tilt = (p.tiltDeg || 12) * Math.PI / 180;
-  
-  // 1. MAIN HULL SECTIONS (15m units)
-  const hullUnitLen = 15;
-  const numSections = Math.max(2, Math.floor(len / hullUnitLen));
-  
-  for (let i = 0; i < numSections; i++) {
-    const x = -len/2 + i * hullUnitLen + hullUnitLen/2;
-    let name = "Wreck_Ship_Large_Mid";
-    if (i === 0) name = "Wreck_Ship_Large_Front";
-    if (i === numSections - 1) name = "Wreck_Ship_Large_Back";
-    
-    // Slight jitter and tilt for that "beached" look
-    const staggerY = Math.sin(i * 1.5) * 0.5;
-    const staggerZ = Math.cos(i * 0.8) * 1.2;
+  const len    = Math.max(30, p.length || 80);
+  const tiltDeg = p.tiltDeg || 14;            // roll tilt (list) degrees
+  const beachDeg = p.beachAngle || 8;          // bow-down pitch degrees
 
-    pts.push({ 
-      x, 
-      y: staggerY * Math.cos(tilt) - staggerZ * Math.sin(tilt), 
-      z: staggerY * Math.sin(tilt) + staggerZ * Math.cos(tilt), 
-      yaw: 90, name 
-    });
+  // yaw=0: ship runs along X axis (15m hull sections flush at 15m intervals)
+  // roll encodes the list; pitch encodes the bow-down angle
+
+  // ── 1. MAIN HULL (15m sections) ──────────────────────────────────────────
+  const SECT = 15;
+  const nSect = Math.max(2, Math.round(len / SECT));
+  for (let i = 0; i < nSect; i++) {
+    const cx = -len/2 + i * SECT + SECT/2;
+    let name = "Wreck_Ship_Large_Mid";
+    if (i === 0)         name = "Wreck_Ship_Large_Front";
+    if (i === nSect - 1) name = "Wreck_Ship_Large_Back";
+    // progressive bow-down: stern level, bow dips
+    const bowDip = (i / nSect) * beachDeg * -0.3;
+    pts.push({ x: cx, y: bowDip, z: 0, yaw: 0, pitch: bowDip, roll: tiltDeg, name });
   }
 
-  // 2. ADDITIONAL DEBRIS & CARCTER (Metal slabs, containers)
-  for (let d = 0; d < 12; d++) {
-     const x = (Math.random() - 0.5) * len;
-     const z = (Math.random() - 0.5) * 15;
-     pts.push({ 
-        x, y: -0.5, z, 
-        yaw: Math.random() * 360, 
-        name: Math.random() > 0.5 ? "StaticObj_Wall_Tin_5" : "Land_Container_1Bo"
-     });
+  // ── 2. DECK SUPERSTRUCTURE (bridge block, mid-section) ──────────────────
+  const bridgeX = len * 0.25;
+  for (let bz = -3; bz <= 3; bz += 3) {
+    pts.push({ x: bridgeX, y: 7, z: bz, yaw: 0, roll: tiltDeg, name: "staticobj_wall_cncsmall_8" });
+    pts.push({ x: bridgeX, y: 11, z: bz, yaw: 0, roll: tiltDeg, name: "staticobj_wall_milcnc_4" });
+  }
+
+  // ── 3. FUNNEL / STACK (upright cylinder approximated with ring) ──────────
+  const funnelX = bridgeX + 5;
+  for (let fy = 7; fy <= 18; fy += 3) {
+    drawRing(pts, funnelX, fy, 0, 2.5, 3);
+  }
+
+  // ── 4. HULL SIDE PLATING (tin panels along the flanks) ──────────────────
+  for (let bx = -len/2 + 5; bx < len/2 - 5; bx += 5) {
+    const bow = (bx / len + 0.5) * beachDeg * -0.3;
+    pts.push({ x: bx, y: bow + 3, z:  5.5, yaw: 0, roll: tiltDeg, name: "StaticObj_Wall_Tin_5" });
+    pts.push({ x: bx, y: bow + 3, z: -5.5, yaw: 0, roll: tiltDeg, name: "StaticObj_Wall_Tin_5" });
+  }
+
+  // ── 5. SCATTERED DEBRIS (containers, debris on seabed around wreck) ───────
+  const debrisSeeds = [
+    { dx:  8, dz:  12, yaw: 35 },  { dx: -12, dz:  8, yaw: 110 },
+    { dx:  20, dz: -9, yaw: 200 }, { dx: -5,  dz: -14, yaw: 70 },
+    { dx: -18, dz:  6, yaw: 145 }, { dx:  5,  dz:  18, yaw: 280 },
+  ];
+  for (const d of debrisSeeds) {
+    const bx = (d.dx / 30) * len * 0.6;
+    pts.push({ x: bx, y: -0.5, z: d.dz, yaw: d.yaw, name: "land_container_1bo" });
+  }
+
+  // ── 6. ANCHOR CHAIN (loose chain on seabed at bow) ────────────────────────
+  const bowX = -len / 2;
+  for (let ch = 0; ch < 6; ch++) {
+    pts.push({ x: bowX - ch * 3, y: -0.5, z: ch * 1.2 - 3, yaw: ch * 25, name: "staticobj_roadblock_cncblock" });
   }
 
   return pts;
 }
 
 function drawOnionDome(pts: Point3D[], cx: number, baseH: number, cz: number, r: number, h: number) {
-
   const steps = 15;
-  for (let i = 0; i <= steps; i++) {
-    const t = i / steps;
+  for (let i = 0; i < steps; i++) {
+    const t = (i + 0.5) / steps;
     // Bulge then taper: use a specialized curve for the onion shape
     const bulge = Math.sin(Math.pow(t, 0.7) * Math.PI * 0.85 + 0.15); 
     const currentR = r * bulge;
@@ -364,18 +394,52 @@ export function gen_azkaban_prison(p: Record<string, any>): Point3D[] {
   return pts;
 }
 
-// 4. Stargate Portal (100% Fidelity)
+// 4. Stargate Portal — vertical ring portal standing in XY plane
 export function gen_stargate_portal(p: Record<string, any>): Point3D[] {
   const pts: Point3D[] = [];
-  const r = Math.max(10, p.radius || 20);
-  // Multi-layered ring with segmented 'symbols'
-  for(let i=0; i<36; i++) {
-     const a = (i/36)*Math.PI*2;
-     // Main ring segments (outer)
-     drawRing(pts, r*Math.cos(a), r*Math.sin(a)+r, 0, 2.5);
-     // Event horizon glow (inner)
-     if (i % 2 === 0) drawDisk(pts, (r-1)*Math.cos(a), (r-1)*Math.sin(a)+r, 0, 2);
+  const r = Math.max(10, p.radius || 22);
+
+  // ── 1. OUTER RING (vertical circle, 3 depth layers: z=0, 1.5, 3) ─────────
+  // Panels traverse the circle in XY plane; drawWall handles pitch automatically.
+  const nSegs = Math.max(24, Math.round((2 * Math.PI * r) / 3));
+  for (const fz of [0, 1.5, 3]) {
+    for (let i = 0; i < nSegs; i++) {
+      const a1 = (i / nSegs) * Math.PI * 2;
+      const a2 = ((i + 1) / nSegs) * Math.PI * 2;
+      drawWall(pts, r * Math.cos(a1), r + r * Math.sin(a1), fz,
+                    r * Math.cos(a2), r + r * Math.sin(a2), fz);
+    }
   }
+  // Inner edge at r-3 (front and back faces only)
+  const ri = r - 3;
+  for (const fz of [0, 3]) {
+    for (let i = 0; i < nSegs; i++) {
+      const a1 = (i / nSegs) * Math.PI * 2;
+      const a2 = ((i + 1) / nSegs) * Math.PI * 2;
+      drawWall(pts, ri * Math.cos(a1), r + ri * Math.sin(a1), fz,
+                    ri * Math.cos(a2), r + ri * Math.sin(a2), fz);
+    }
+  }
+
+  // ── 2. 9 CHEVRONS (outer markers, start from top, evenly spaced) ──────────
+  for (let i = 0; i < 9; i++) {
+    const a = (i / 9) * Math.PI * 2 - Math.PI / 2;
+    const bx = r * Math.cos(a),       by = r + r * Math.sin(a);
+    const ox = (r + 5) * Math.cos(a), oy = r + (r + 5) * Math.sin(a);
+    drawWall(pts, bx - 1.2, by, 1.5, ox, oy, 1.5);
+    drawWall(pts, bx + 1.2, by, 1.5, ox, oy, 1.5);
+  }
+
+  // ── 3. EVENT HORIZON (vertical disk filling portal plane, z=1.5) ──────────
+  const diskR = r * 0.82;
+  for (let rr = 4; rr <= diskR; rr += 4) {
+    const nP = Math.max(6, Math.round((2 * Math.PI * rr) / 4));
+    for (let j = 0; j < nP; j++) {
+      const a = ((j + 0.5) / nP) * Math.PI * 2;
+      pts.push({ x: rr * Math.cos(a), y: r + rr * Math.sin(a), z: 1.5, yaw: 0 });
+    }
+  }
+
   return pts;
 }
 
@@ -511,25 +575,42 @@ export function gen_matrix_zion_dock(p: Record<string, any>): Point3D[] {
   return pts;
 }
 
-// 7. Fortress of Solitude
+// 7. Superman's Fortress of Solitude — jagged crystal spires, deterministic seeded RNG
 export function gen_fortress_of_solitude(p: Record<string, any>): Point3D[] {
   const pts: Point3D[] = [];
   const r = Math.max(20, p.width || 60);
-  for(let i=0; i<30; i++) {
-     const cx = (Math.random()-0.5)*r;
-     const cz = (Math.random()-0.5)*r;
-     const ch = 20 + Math.random()*80; // random jagged crystals
-     
-     // Build a jagged triangular pillar
-     for(let y=0; y<ch; y+=4) {
-        const taper = 1 - (y/ch);
-        const w = (4 + Math.random()*2) * taper;
-        for(let j=0; j<3; j++) {
-           const a1 = j*Math.PI*2/3, a2 = (j+1)*Math.PI*2/3;
-           drawWall(pts, cx+w*Math.cos(a1), y, cz+w*Math.sin(a1), cx+w*Math.cos(a2), Math.min(y+10, ch), cz+w*Math.sin(a2));
-        }
-     }
+  // Seeded RNG (no Math.random — results must be deterministic)
+  let _s = ((p.seed || 7331) >>> 0);
+  const rnd = (): number => {
+    _s += 0x6D2B79F5; let t = _s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+
+  // 30 jagged crystal pillars scattered inside the base radius
+  for (let i = 0; i < 30; i++) {
+    const cx = (rnd() - 0.5) * r;
+    const cz = (rnd() - 0.5) * r;
+    const ch = 20 + rnd() * 80;  // height 20–100m
+    for (let y = 0; y < ch; y += 4) {
+      const taper = 1 - (y / ch);
+      const w = (4 + rnd() * 2) * taper;
+      for (let j = 0; j < 3; j++) {
+        const a1 = j * Math.PI * 2 / 3, a2 = (j + 1) * Math.PI * 2 / 3;
+        drawWall(pts, cx + w * Math.cos(a1), y, cz + w * Math.sin(a1),
+                      cx + w * Math.cos(a2), Math.min(y + 10, ch), cz + w * Math.sin(a2));
+      }
+    }
   }
+
+  // Central mega-crystal spire (tallest, at origin)
+  const coreH = 120;
+  for (let y = 0; y < coreH; y += 4) {
+    const taper = 1 - (y / coreH) * 0.9;
+    drawRing(pts, 0, y, 0, 8 * taper, 3);
+  }
+
   return pts;
 }
 
@@ -577,22 +658,48 @@ export function gen_barad_dur(p: Record<string, any>): Point3D[] {
   return pts;
 }
 
-// 10. TARDIS
+// 10. TARDIS — classic British Police Box, tall blue rectangular cabinet
 export function gen_tardis(p: Record<string, any>): Point3D[] {
   const pts: Point3D[] = [];
-  // TARDIS is small, let's say 4m wide, 8m tall
-  const w = 2, h = 4;
-  for(let y=0; y<=h; y+=1) {
-    drawWall(pts, -w, y, -w, w, y, -w, 1);
-    drawWall(pts, -w, y, w, w, y, w, 1);
-    drawWall(pts, -w, y, -w, -w, y, w, 1);
-    drawWall(pts, w, y, -w, w, y, w, 1);
+  const w = 7, d = 7, h = p.height || 20;
+
+  // ── Base plinth (slightly wider) ─────────────────────────────────────────
+  for (let y = 0; y <= 1; y += 1) {
+    drawWall(pts, -(w/2+1), y, -(d/2+1), (w/2+1), y, -(d/2+1));
+    drawWall(pts, -(w/2+1), y, (d/2+1), (w/2+1), y, (d/2+1));
+    drawWall(pts, -(w/2+1), y, -(d/2+1), -(w/2+1), y, (d/2+1));
+    drawWall(pts, (w/2+1), y, -(d/2+1), (w/2+1), y, (d/2+1));
   }
-  // Roof pitch
-  drawWall(pts, -w, h, -w, 0, h+1.5, 0, 1);
-  drawWall(pts, w, h, -w, 0, h+1.5, 0, 1);
-  drawWall(pts, -w, h, w, 0, h+1.5, 0, 1);
-  drawWall(pts, w, h, w, 0, h+1.5, 0, 1);
+
+  // ── Main box body — 4 walls, floor-by-floor ────────────────────────────
+  const floorH = 4;
+  for (let y = 0; y <= h - floorH; y += floorH) {
+    drawWall(pts, -w/2, y, -d/2, w/2, y, -d/2);
+    drawWall(pts, -w/2, y, d/2, w/2, y, d/2);
+    drawWall(pts, -w/2, y, -d/2, -w/2, y, d/2);
+    drawWall(pts, w/2, y, -d/2, w/2, y, d/2);
+  }
+
+  // ── Mid-section horizontal band (panel divider at h/2) ────────────────
+  const mid = Math.round(h / 2);
+  drawWall(pts, -w/2, mid, -d/2, w/2, mid, -d/2);
+  drawWall(pts, -w/2, mid, d/2, w/2, mid, d/2);
+  drawWall(pts, -w/2, mid, -d/2, -w/2, mid, d/2);
+  drawWall(pts, w/2, mid, -d/2, w/2, mid, d/2);
+
+  // ── Upper cap box (smaller, sits on top of main body) ─────────────────
+  const capW = w * 0.7, capD = d * 0.7, capH = 3;
+  for (let y = h; y <= h + capH; y += capH) {
+    drawWall(pts, -capW/2, y, -capD/2, capW/2, y, -capD/2);
+    drawWall(pts, -capW/2, y, capD/2, capW/2, y, capD/2);
+    drawWall(pts, -capW/2, y, -capD/2, -capW/2, y, capD/2);
+    drawWall(pts, capW/2, y, -capD/2, capW/2, y, capD/2);
+  }
+
+  // ── Finial (vertical lamp post on top) ────────────────────────────────
+  drawWall(pts, 0, h + capH, 0, 0, h + capH + 4, 0, 2);
+  drawRing(pts, 0, h + capH + 4, 0, 1.5, 2);
+
   return pts;
 }
 
@@ -696,74 +803,139 @@ export function gen_halo_control_room(p: Record<string, any>): Point3D[] {
   return pts;
 }
 
-// 16. Colosseum (IMPROVED)
+// 16. Colosseum — oval amphitheatre with vertical piers + arched tier bands
 export function gen_colosseum(p: Record<string, any>): Point3D[] {
   const pts: Point3D[] = [];
-  const rX = Math.max(40, p.width || 100);
-  const rZ = rX * 0.78; // Oval shape
-  const wallH = 35;
+  const rX   = Math.max(40, p.width || 100);
+  const rZ   = rX * 0.78;  // Rome's 188×156m proportions
   const tiers = 4;
-  
-  // Outer Facade (Multiple tiers of arches)
-  for(let t=0; t<tiers; t++) {
-    const y = t * 8;
-    const steps = 72;
-    for(let i=0; i<steps; i++) {
-       // Archaic gaps
-       if (i % 3 === 0) continue;
-       const a1 = (i/steps)*Math.PI*2, a2 = ((i+1)/steps)*Math.PI*2;
-       drawWall(pts, rX*Math.cos(a1), y, rZ*Math.sin(a1), rX*Math.cos(a2), y, rZ*Math.sin(a2));
-       // Decorative cornice
-       drawWall(pts, rX*Math.cos(a1), y+7, rZ*Math.sin(a1), rX*Math.cos(a2), y+7, rZ*Math.sin(a2));
+  const tierH = 8;          // 8m per tier
+  const wallH = tiers * tierH;
+  const nBays = 40;         // arch bays around the oval
+
+  const MAT_WALL  = "staticobj_wall_stone2";
+  const MAT_PIER  = "staticobj_wall_indcnc_10";
+  const MAT_FLOOR = "staticobj_wall_stone";
+
+  // ── OUTER FACADE: vertical piers every bay + horizontal arch bands ───────────
+  for (let i = 0; i < nBays; i++) {
+    const a = (i / nBays) * Math.PI * 2;
+    const x = rX * Math.cos(a);
+    const z = rZ * Math.sin(a);
+    const yaw = -a * 180 / Math.PI + 90;  // tangential
+
+    // Vertical pier column at each bay (full height, stacked)
+    for (let y = 0; y < wallH; y += 3) {
+      pts.push({ x, y, z, yaw, name: MAT_PIER });
+    }
+
+    // Skip every 3rd bay for an arch gap (visual openings)
+    if (i % 3 !== 0) {
+      // Horizontal arch bands at each tier
+      for (let t = 0; t < tiers; t++) {
+        const bandY = t * tierH + tierH * 0.5;
+        pts.push({ x, y: bandY, z, yaw, name: MAT_WALL });
+      }
     }
   }
 
-  // Internal Seating (Stepped)
-  for(let y=0; y<20; y+=2) {
-    const trX = rX - 10 - y*1.2, trZ = rZ - 10 - y*1.2;
-    if(trX > 15) {
-       const steps = 60;
-       for(let i=0; i<steps; i++) {
-          const a1 = (i/steps)*Math.PI*2, a2 = ((i+1)/steps)*Math.PI*2;
-          drawWall(pts, trX*Math.cos(a1), y, trZ*Math.sin(a1), trX*Math.cos(a2), y, trZ*Math.sin(a2));
-       }
+  // ── INNER SEATING TERRACES: stepped concentric ovals inward ─────────────────
+  for (let row = 0; row < 10; row++) {
+    const factor = 1 - (row / 12);
+    const srX = (rX - 12) * factor;
+    const srZ = (rZ - 12) * factor;
+    const sY  = row * 2;
+    if (srX < 15) break;
+    const nSeat = Math.max(16, Math.round(2 * Math.PI * srX / 8));
+    for (let i = 0; i < nSeat; i++) {
+      const a   = (i / nSeat) * Math.PI * 2;
+      const yaw = -a * 180 / Math.PI + 90;
+      pts.push({ x: srX * Math.cos(a), y: sY, z: srZ * Math.sin(a), yaw, name: MAT_FLOOR });
     }
   }
 
-  // Arena Floor
-  drawDisk(pts, 0, -2, 0, rX*0.4);
+  // ── ARENA FLOOR ──────────────────────────────────────────────────────────────
+  drawDisk(pts, 0, -1, 0, rX * 0.38, 8);
   return pts;
 }
 
-// 17. Golden Gate Bridge
+// 17. Golden Gate Bridge — mathematically correct suspension bridge
 export function gen_golden_gate_bridge(p: Record<string, any>): Point3D[] {
   const pts: Point3D[] = [];
-  const span = Math.max(100, p.width || 300);
-  const h = Math.max(50, p.height || 100);
-  
-  // Two Towers
-  [-span/4, span/4].forEach(tx => {
-     for(let y=0; y<=h; y+=4) {
-        drawWall(pts, tx-4, y, -10, tx-4, y, 10);
-        drawWall(pts, tx+4, y, -10, tx+4, y, 10);
-     }
-     drawWall(pts, tx-4, h*0.7, -10, tx+4, h*0.7, 10);
-  });
-  // Road Deck
-  for(let x=-span/2; x<=span/2; x+=4) {
-     drawWall(pts, x, h*0.3, -12, x, h*0.3, 12);
+  const span   = Math.max(100, p.width  || 300);  // total bridge length along X
+  const towerH = Math.max(30,  p.height || 90);   // tower height above deck
+  const roadY  = 0;                                // deck at y=0
+  const cabSag = towerH * 0.35;                   // cable midspan height (35% of tower)
+  const tX1    = -span / 4;                       // left tower X
+  const tX2    =  span / 4;                       // right tower X
+  const legOff = 5;                               // half-width of tower (leg offset from X-axis)
+  const deckZ  = 10;                              // half-width of road deck (20m total)
+
+  const MAT_TOWER = "staticobj_wall_indcnc_10";
+  const MAT_CABLE = "staticobj_wall_milcnc_4";
+  const MAT_DECK  = "staticobj_wall_cncsmall_8";
+
+  // ── 1. TOWERS: 4 vertical columns each, two cross-beams ─────────────────────
+  for (const tx of [tX1, tX2]) {
+    for (let y = 0; y <= towerH; y += 4) {
+      pts.push({ x: tx - legOff, y, z: -(deckZ + 2), yaw: 90, name: MAT_TOWER });
+      pts.push({ x: tx - legOff, y, z:  (deckZ + 2), yaw: 90, name: MAT_TOWER });
+      pts.push({ x: tx + legOff, y, z: -(deckZ + 2), yaw: 90, name: MAT_TOWER });
+      pts.push({ x: tx + legOff, y, z:  (deckZ + 2), yaw: 90, name: MAT_TOWER });
+    }
+    // Horizontal cross-braces between the two legs (at 60% height and top)
+    for (const cbY of [towerH * 0.60, towerH]) {
+      drawWall(pts, tx - legOff, cbY, -(deckZ + 2), tx + legOff, cbY, -(deckZ + 2), 4);
+      drawWall(pts, tx - legOff, cbY,  (deckZ + 2), tx + legOff, cbY,  (deckZ + 2), 4);
+    }
   }
-  // Suspension Cables (Parabola)
-  for(let x=-span/2; x<=span/2; x+=4) {
-     let distToTower = Math.min(Math.abs(x - -span/4), Math.abs(x - span/4));
-     if(x > -span/4 && x < span/4) distToTower = Math.abs(x); 
-     const cy = h*0.3 + Math.pow(distToTower/(span/4), 2) * (h*0.7);
-     pts.push({ x, y: cy, z: -10, yaw: 0 });
-     pts.push({ x, y: cy, z: 10, yaw: 0 });
-     // Vertical suspenders
-     drawWall(pts, x, h*0.3, -10, x, cy, -10);
-     drawWall(pts, x, h*0.3, 10, x, cy, 10);
+
+  // ── 2. ROAD DECK: cross-beams every 8m + longitudinal edge trusses ──────────
+  for (let x = -span / 2; x <= span / 2; x += 8) {
+    drawWall(pts, x, roadY, -deckZ, x, roadY, deckZ, 8);
   }
+  drawWall(pts, -span/2, roadY + 1.5, -deckZ, span/2, roadY + 1.5, -deckZ, 8);
+  drawWall(pts, -span/2, roadY + 1.5,  deckZ, span/2, roadY + 1.5,  deckZ, 8);
+
+  // ── 3. MAIN CABLES + SUSPENDERS ─────────────────────────────────────────────
+  // Cable formula (main span, tX1 ≤ x ≤ tX2):
+  //   u = x / (span/4)  →  -1 at tX1, 0 at midspan, +1 at tX2
+  //   cy = cabSag + (towerH - cabSag) * u²
+  //   → at towers (|u|=1): cy = towerH ✓   at midspan (u=0): cy = cabSag ✓
+  //
+  // Back spans (x < tX1 or x > tX2): linear drop from tower top → ground anchor.
+  for (const cz of [-deckZ, deckZ]) {
+    const sampleStep = 8;
+    for (let x = -span / 2; x <= span / 2; x += sampleStep) {
+      let cy: number;
+      if (x >= tX1 && x <= tX2) {
+        // Main span parabola: sags DOWN to cabSag at centre
+        const u = x / (span / 4);
+        cy = cabSag + (towerH - cabSag) * u * u;
+      } else if (x < tX1) {
+        // Left back-span: linear anchor (y=0) → left tower (y=towerH)
+        const t = (x - (-span / 2)) / (span / 4);  // 0 at anchor, 1 at tower
+        cy = t * towerH;
+      } else {
+        // Right back-span: linear right tower (y=towerH) → anchor (y=0)
+        const t = (span / 2 - x) / (span / 4);     // 1 at tower, 0 at anchor
+        cy = t * towerH;
+      }
+
+      // Cable point — yaw=0 means it runs along X (bridge longitudinal axis)
+      pts.push({ x, y: cy, z: cz, yaw: 0, name: MAT_CABLE });
+
+      // Vertical suspenders only in main span, clear of towers
+      if (x > tX1 + 8 && x < tX2 - 8 && cy > roadY + 4) {
+        const nSeg = Math.max(1, Math.floor((cy - roadY) / 5));
+        for (let si = 0; si < nSeg; si++) {
+          const sy = roadY + (cy - roadY) * (si + 0.5) / nSeg;
+          pts.push({ x, y: sy, z: cz, yaw: 0, name: MAT_DECK });
+        }
+      }
+    }
+  }
+
   return pts;
 }
 
@@ -780,10 +952,16 @@ export function gen_normandy_bunkers(p: Record<string, any>): Point3D[] {
     }
     drawDisk(pts, x, 4, 0, 9);
   }
-  // Dragon's teeth / Hedgehogs on the beach
-  for(let x=-length/2; x<=length/2; x+=8) {
-    for(let z=20; z<=60; z+=10) {
-       pts.push({ x: x+(Math.random()-0.5)*4, y: 0, z: z+(Math.random()-0.5)*4, yaw: Math.random()*360, pitch: Math.random()*45 });
+  // Dragon's teeth / Hedgehogs on the beach (deterministic scatter pattern)
+  let _hIdx = 0;
+  for (let x = -length/2; x <= length/2; x += 8) {
+    for (let z = 20; z <= 60; z += 10) {
+      const ox = (_hIdx % 3 - 1) * 1.5;          // cycles -1.5, 0, +1.5
+      const oz = (Math.floor(_hIdx / 3) % 3 - 1) * 1.5;
+      const yaw = (_hIdx * 47) % 360;
+      const pitch = (_hIdx * 17) % 45;
+      pts.push({ x: x + ox, y: 0, z: z + oz, yaw, pitch });
+      _hIdx++;
     }
   }
   return pts;
@@ -810,20 +988,41 @@ export function gen_the_pentagon(p: Record<string, any>): Point3D[] {
 export function gen_pyramid_giza(p: Record<string, any>): Point3D[] {
   const pts: Point3D[] = [];
   const base = Math.max(40, p.width || 120);
+  
+  const MAT_STONE1 = "staticobj_wall_stone2";
+  const MAT_STONE2 = "staticobj_wall_stone";
+  const MAT_PEAK   = "staticobj_wall_indcnc_10";
+
   // Pyramid
   for(let y=0; y<=base/2; y+=4) {
     const w = base - (y*2);
     if(w <= 0) break;
-    drawWall(pts, -w/2, y, -w/2, w/2, y, -w/2);
-    drawWall(pts, -w/2, y, w/2, w/2, y, w/2);
-    drawWall(pts, -w/2, y, -w/2, -w/2, y, w/2);
-    drawWall(pts, w/2, y, -w/2, w/2, y, w/2);
+    const isPeak = y > base/2 - 8;
+    const mat = isPeak ? MAT_PEAK : (Math.round(y/4) % 3 === 0 ? MAT_STONE2 : MAT_STONE1);
+
+    drawWall(pts, -w/2, y, -w/2, w/2, y, -w/2, 4);
+    drawWall(pts, -w/2, y, w/2, w/2, y, w/2, 4);
+    drawWall(pts, -w/2, y, -w/2, -w/2, y, w/2, 4);
+    drawWall(pts, w/2, y, -w/2, w/2, y, w/2, 4);
+    
+    // Add corner reinforcement points
+    pts.push({ x: -w/2, y, z: -w/2, name: mat }, { x: w/2, y, z: -w/2, name: mat }, { x: w/2, y, z: w/2, name: mat }, { x: -w/2, y, z: w/2, name: mat });
   }
-  // Sphinx (Simplified)
+
+  // Sphinx (Refined)
   const sx = base/2 + 30; // placed in front
-  drawWall(pts, sx-10, 0, -5, sx+10, 0, -5); 
-  drawWall(pts, sx-10, 6, -5, sx+10, 6, -5); // body
-  drawWall(pts, sx+5, 12, -5, sx+15, 12, -5); // head
+  const matBody = MAT_STONE1;
+  const matHead = MAT_STONE2;
+
+  for (let z = -8; z <= 8; z += 4) {
+    drawWall(pts, sx - 15, 0, z, sx + 15, 0, z, 4); // base
+    drawWall(pts, sx - 10, 4, z, sx + 10, 4, z, 4); // upper body
+  }
+  // Head
+  for (let y = 8; y <= 16; y += 4) {
+    drawRing(pts, sx + 5, y, 0, 4, 3);
+  }
+  
   return pts;
 }
 
@@ -848,25 +1047,53 @@ export function gen_azkaban(p: Record<string, any>): Point3D[] {
   return pts;
 }
 
-// 22. Stonehenge
+// 22. Stonehenge — mathematically placed standing stones + lintels
 export function gen_stonehenge(p: Record<string, any>): Point3D[] {
   const pts: Point3D[] = [];
-  const rOuter = 20, rInner = 12;
-  // Sarsen Circle
-  for(let i=0; i<30; i+=2) { // standing stones with gaps
-     const a = (i/30)*Math.PI*2;
-     drawWall(pts, rOuter*Math.cos(a), 0, rOuter*Math.sin(a), rOuter*Math.cos(a), 8, rOuter*Math.sin(a));
-     const aNext = ((i+1)/30)*Math.PI*2;
-     // Lintels (tops) connecting them
-     drawWall(pts, rOuter*Math.cos(a), 8, rOuter*Math.sin(a), rOuter*Math.cos(aNext), 8, rOuter*Math.sin(aNext));
+  const rOuter = p.radius || 20;
+  const rInner = rOuter * 0.6;
+  const stoneH = 4;    // sarsen stone height
+  const triH   = 6;    // trilithon stone height
+  const nSarsens = 15; // 30 positions, every other occupied
+
+  // Helper: place a standing stone (stack of wall pieces facing tangentially)
+  function standingStone(r: number, angle: number, h: number, mat?: string) {
+    const x = r * Math.cos(angle);
+    const z = r * Math.sin(angle);
+    // Tangential yaw so 8m face runs around the ring
+    const yaw = -angle * 180 / Math.PI + 90;
+    for (let y = 0; y < h; y += 3) {
+      pts.push({ x, y, z, yaw, name: mat || "staticobj_wall_stone2" });
+    }
   }
-  // Trilithon Horseshoe
-  for(let i=0; i<5; i++) {
-     const a = (i/5)*Math.PI - Math.PI/2; // Horseshoe arc
-     drawWall(pts, rInner*Math.cos(a-0.1), 0, rInner*Math.sin(a-0.1), rInner*Math.cos(a-0.1), 12, rInner*Math.sin(a-0.1));
-     drawWall(pts, rInner*Math.cos(a+0.1), 0, rInner*Math.sin(a+0.1), rInner*Math.cos(a+0.1), 12, rInner*Math.sin(a+0.1));
-     drawWall(pts, rInner*Math.cos(a-0.1), 12, rInner*Math.sin(a-0.1), rInner*Math.cos(a+0.1), 12, rInner*Math.sin(a+0.1));
+
+  // ── OUTER SARSEN CIRCLE (15 stones + 15 lintels) ────────────────────────────
+  for (let i = 0; i < nSarsens; i++) {
+    const a     = (i / nSarsens) * Math.PI * 2;
+    const aNext = ((i + 1) / nSarsens) * Math.PI * 2;
+    // Standing stone at every position
+    standingStone(rOuter, a, stoneH);
+    // Lintel connecting this stone to the next at top
+    const x1 = rOuter * Math.cos(a),     z1 = rOuter * Math.sin(a);
+    const x2 = rOuter * Math.cos(aNext), z2 = rOuter * Math.sin(aNext);
+    drawWall(pts, x1, stoneH, z1, x2, stoneH, z2, 4);
   }
+
+  // ── INNER TRILITHON HORSESHOE (5 trilithons, open to NE) ────────────────────
+  for (let i = 0; i < 5; i++) {
+    const a    = (i / 5) * Math.PI - Math.PI * 0.5; // south to north horseshoe
+    const aOff = 0.18; // angular half-gap between the two uprights
+    standingStone(rInner, a - aOff, triH, "staticobj_wall_stone");
+    standingStone(rInner, a + aOff, triH, "staticobj_wall_stone");
+    // Lintel across the top
+    const x1 = rInner * Math.cos(a - aOff), z1 = rInner * Math.sin(a - aOff);
+    const x2 = rInner * Math.cos(a + aOff), z2 = rInner * Math.sin(a + aOff);
+    drawWall(pts, x1, triH, z1, x2, triH, z2, 3);
+  }
+
+  // ── ALTAR STONE (centre, flat) ───────────────────────────────────────────────
+  pts.push({ x: 0, y: 0, z: 2, yaw: 0, name: "staticobj_wall_stone2" });
+
   return pts;
 }
 
@@ -1074,10 +1301,12 @@ export function gen_checkpoint_charlie(p: Record<string, number>): Point3D[] {
 export function gen_trench_network(p: Record<string, number>): Point3D[] {
   const pts: Point3D[] = [];
   const w = Math.max(50, p.width || 100);
-  // Main defensive line (zigzag)
+  // Main defensive line (zigzag — deterministic alternating pattern)
   let prevX = -w/2, prevZ = 0;
+  let _seg = 0;
   for(let x=-w/2 + 20; x<=w/2; x+=20) {
-     const z = (Math.random()>0.5 ? 20 : -20);
+     const z = (_seg % 2 === 0 ? 20 : -20);
+     _seg++;
      drawWall(pts, prevX, 0, prevZ, x, 0, z);
      // Communication branch backwards
      drawWall(pts, x, 0, z, x, 0, z+30);
@@ -1262,9 +1491,14 @@ export function gen_celtic_ring(p: Record<string, any>): Point3D[] {
   const count = p.stoneCount || 24;
   for (let i = 0; i < count; i++) {
     const a = 2 * Math.PI * i / count;
-    drawWall(pts, r * Math.cos(a), 0, r * Math.sin(a), r * Math.cos(a), h, r * Math.sin(a), 2);
+    const x = r * Math.cos(a), z = r * Math.sin(a);
+    // Tangential yaw — stone long-axis runs along the ring perimeter
+    const yaw = -a * 180 / Math.PI + 90;
+    for (let y = 0; y < h; y += 3) {
+      pts.push({ x, y, z, yaw });
+    }
   }
-  // Outer gates
+  // Outer arch gates — small ring at each gate post position
   const archCount = p.archCount || 6;
   for (let i = 0; i < archCount; i++) {
     const a = 2 * Math.PI * i / archCount + Math.PI / archCount;
@@ -1356,33 +1590,61 @@ export function gen_minas_tirith(p: Record<string, any>): Point3D[] {
   const tiers = 7;
   const stepH = totalH / tiers;
   
+  const MAT_WHITE = "staticobj_wall_cncsmall_8";
+  const MAT_STONE = "staticobj_wall_stone2";
+  const MAT_ROCK  = "staticobj_wall_stone";
+  const MAT_CROWN = "staticobj_wall_indcnc_10";
+
   for (let i = 0; i < tiers; i++) {
     const r = baseR * (1 - i / (tiers + 1));
     const y = i * stepH;
+    const mat = (i === tiers - 1) ? MAT_CROWN : MAT_WHITE;
     
     // Circle segment (80% circumference to allow for the 'Rock ridge')
-    const circumSteps = Math.max(24, Math.round(r * 0.8));
+    const circumSteps = Math.max(32, Math.round(r * 1.2));
     for (let j = 0; j <= circumSteps; j++) {
-       const a = (j / circumSteps) * Math.PI * 1.6 - Math.PI*0.8; 
+       const a = (j / circumSteps) * Math.PI * 1.6 - Math.PI*0.8;
        const x = r * Math.cos(a), z = r * Math.sin(a);
-       pts.push({ x, y, z });
+       const yaw = -a * 180 / Math.PI + 90; // tangential to the ring
+
+       // Main wall
+       pts.push({ x, y, z, yaw, name: mat });
+
        // Battlements (alternating points)
-       if (j % 2 === 0) pts.push({ x, y: y + 2.5, z });
+       if (j % 2 === 0) {
+         pts.push({ x, y: y + 2.5, z, yaw, name: MAT_STONE });
+       }
+
+       // Horizontal floor behind the wall
+       if (j % 4 === 0) {
+          for (let fr = r-2; fr > r-8; fr -= 3) {
+            pts.push({ x: fr * Math.cos(a), y: y - 0.5, z: fr * Math.sin(a), yaw, name: MAT_STONE });
+          }
+       }
     }
   }
   
   // The Great Rock Pier (The Outcrop cutting through the city)
-  for (let y = 0; y <= totalH; y += 5) {
-    drawWall(pts, 0, y, 0, baseR * 1.05, y, 0, 4);
+  for (let y = 0; y <= totalH + 10; y += 4) {
+    const rAtY = baseR + 5;
+    drawWall(pts, 0, y, 0, rAtY, y, 0, 4);
+    // Add jagged rock variation
+    for (let j=0; j<4; j++) {
+       pts.push({ x: (rAtY - j*5), y: y+0.5, z: 1.5, name: MAT_ROCK });
+       pts.push({ x: (rAtY - j*5), y: y+0.5, z: -1.5, name: MAT_ROCK });
+    }
   }
 
   // White Tower of Ecthelion (Citadel Spire at the top)
   const spireH = totalH + 30;
-  for (let y = totalH; y <= spireH; y += 4) {
-    drawRing(pts, 0, y, 0, 6, 2);
+  for (let y = totalH; y <= spireH; y += 3) {
+    const r = 6 * (1 - (y - totalH) / (spireH - totalH + 10));
+    drawRing(pts, 0, y, 0, Math.max(1, r), 3);
+    // Add vertical bracing
+    pts.push({ x: r, y, z: 0, name: MAT_CROWN }, { x: -r, y, z: 0, name: MAT_CROWN });
   }
   // Tower Point (Final crown)
-  pts.push({ x: 0, y: spireH + 6, z: 0 });
+  pts.push({ x: 0, y: spireH + 6, z: 0, name: MAT_CROWN });
 
   return pts;
 }
@@ -1400,17 +1662,24 @@ export function gen_tony_stark_tower(p: Record<string, any>): Point3D[] {
   const depth = p.depth || 14;
   const spacing = 3.5;
 
+  // Materials for mixing
+  const MAT_MAIN   = "staticobj_wall_cncsmall_8";
+  const MAT_GLASS  = "staticobj_furniture_lab_petri_dish"; 
+  const MAT_METAL  = "staticobj_wall_milcnc_4";
+  const MAT_GLOW   = "staticobj_wall_indcnc_10";
+
   // 1. BASE PODIUM (Floors 1-5)
   for (let f = 0; f < 5; f++) {
     const y = f * floorHeight;
+    const mat = MAT_METAL;
     // Draw rectangular floor plate
     for (let x = -width/2 - 2; x <= width/2 + 2; x += spacing) {
-      pts.push({ x, y, z: -depth/2 - 2, yaw: 0 }); // Front
-      pts.push({ x, y, z: depth/2 + 2, yaw: 0 });  // Back
+      pts.push({ x, y, z: -depth/2 - 2, yaw: 0, name: mat }); // Front
+      pts.push({ x, y, z: depth/2 + 2, yaw: 0, name: mat });  // Back
     }
     for (let z = -depth/2 - 2; z <= depth/2 + 2; z += spacing) {
-      pts.push({ x: -width/2 - 2, y, z, yaw: 90 }); // Left
-      pts.push({ x: width/2 + 2, y, z, yaw: 90 });  // Right
+      pts.push({ x: -width/2 - 2, y, z, yaw: 90, name: mat }); // Left
+      pts.push({ x: width/2 + 2, y, z, yaw: 90, name: mat });  // Right
     }
   }
 
@@ -1422,14 +1691,18 @@ export function gen_tony_stark_tower(p: Record<string, any>): Point3D[] {
     const fd = depth;
     const fx = slant;
 
+    // Material logic: use glass lookalike for windows
+    const isWindow = (f % 2 === 0);
+    const mat = MAT_MAIN;
+
     // Outer Shell
     for (let x = -fw/2; x <= fw/2; x += spacing) {
-      pts.push({ x: fx + x, y, z: -fd/2, yaw: 0 });
-      pts.push({ x: fx + x, y, z: fd/2, yaw: 0 });
+      pts.push({ x: fx + x, y, z: -fd/2, yaw: 0, name: isWindow && Math.abs(x) < fw/3 ? MAT_GLASS : mat });
+      pts.push({ x: fx + x, y, z: fd/2, yaw: 0, name: mat });
     }
     for (let z = -fd/2; z <= fd/2; z += spacing) {
-       pts.push({ x: fx - fw/2, y, z, yaw: 90 });
-       pts.push({ x: fx + fw/2, y, z, yaw: 90 });
+       pts.push({ x: fx - fw/2, y, z, yaw: 90, name: mat });
+       pts.push({ x: fx + fw/2, y, z, yaw: 90, name: mat });
     }
 
     // 3. LANDING PAD (Floor 35)
@@ -1437,9 +1710,13 @@ export function gen_tony_stark_tower(p: Record<string, any>): Point3D[] {
        const padR = 12;
        const px = fx + fw/2 + padR - 2;
        drawRing(pts, px, y, 0, padR, 3);
-       // Floor of pad
+       // Floor of pad + lights
        for (let r = 0; r < padR; r += 4) {
-          drawRing(pts, px, y - 0.2, 0, r, 4);
+          const rSteps = Math.max(4, Math.round(2*Math.PI*r / 4));
+          for (let i=0; i<rSteps; i++) {
+             const a = 2*Math.PI*i/rSteps;
+             pts.push({ x: px + r*Math.cos(a), y: y - 0.2, z: r*Math.sin(a), name: r === 0 ? MAT_GLOW : MAT_METAL });
+          }
        }
     }
 
@@ -1450,7 +1727,10 @@ export function gen_tony_stark_tower(p: Record<string, any>): Point3D[] {
        const ex = fx + fw/2 + 0.5;
        const ey = y - 5;
        for (let ay = -6; ay <= 12; ay += 1.5) {
-          pts.push({ x: ex, y: ey + ay, z: 0, yaw: 90, roll: 90 }); // Vertical bar
+          pts.push({ x: ex, y: ey + ay, z: 0, yaw: 90, roll: 90, name: MAT_METAL }); // Vertical bar
+          if (ay > 0) {
+             pts.push({ x: ex, y: ey + ay, z: ay*0.8, yaw: 90, name: MAT_METAL }); // Slant bar for A
+          }
        }
     }
   }
@@ -2547,6 +2827,104 @@ export function gen_parthenon(p: Record<string, any>): Point3D[] {
     drawWall(pts, -px, py, -L / 2,  px, py, -L / 2, sp);
     drawWall(pts, -px, py,  L / 2,  px, py,  L / 2, sp);
   }
+
+  return pts;
+}
+
+// ─── HOSPITAL (L-shaped building, ambulance bay, helipad) ────────────────────
+export function gen_hospital(p: Record<string, any>): Point3D[] {
+  const pts: Point3D[] = [];
+  const w = p.width  || 50;
+  const d = p.depth  || 70;
+  const h = p.height || 16;   // 4 storeys
+  const sp = 4;
+
+  // Helper: draw all 4 walls of a rectangle at given Y
+  function box(x0: number, z0: number, x1: number, z1: number, y: number, spacing = sp) {
+    drawWall(pts, x0, y, z0, x1, y, z0, spacing);
+    drawWall(pts, x0, y, z1, x1, y, z1, spacing);
+    drawWall(pts, x0, y, z0, x0, y, z1, spacing);
+    drawWall(pts, x1, y, z0, x1, y, z1, spacing);
+  }
+
+  // ── MAIN WING (tall rectangular block) ──────────────────────────────────────
+  for (let y = 0; y <= h; y += 4) box(-w/2, -d/2, w/2, d/3, y);
+
+  // ── SIDE WING (L-shape arm extending to one side) ───────────────────────────
+  for (let y = 0; y <= h * 0.5; y += 4) box(w/6, d/3, w/2, d/2, y);
+
+  // ── EMERGENCY / AMBULANCE BAY (recessed canopy at front) ────────────────────
+  const bayW = w * 0.3, bayD = 8;
+  for (let y = 0; y <= 5; y += 4) {
+    drawWall(pts, -bayW/2, y, -d/2 - bayD, bayW/2, y, -d/2 - bayD, 4);
+    drawWall(pts, -bayW/2, y, -d/2, -bayW/2, y, -d/2 - bayD, 4);
+    drawWall(pts,  bayW/2, y, -d/2,  bayW/2, y, -d/2 - bayD, 4);
+  }
+  // Bay roof (flat canopy)
+  for (let x = -bayW/2; x <= bayW/2; x += 4)
+    pts.push({ x, y: 5, z: -d/2 - bayD/2, yaw: 0, name: "staticobj_wall_cncsmall_8" });
+
+  // ── ROOFTOP HELIPAD (circle + H marker) ─────────────────────────────────────
+  const padY = h + 0.5;
+  drawRing(pts, 0, padY, -d/6, 10, 3);        // outer ring
+  drawRing(pts, 0, padY, -d/6, 6,  3);        // inner ring
+  // H marker crossbars
+  drawWall(pts, -4, padY, -d/6, 4, padY, -d/6, 3);
+  drawWall(pts, -4, padY, -d/6 - 4, -4, padY, -d/6 + 4, 3);
+  drawWall(pts,  4, padY, -d/6 - 4,  4, padY, -d/6 + 4, 3);
+
+  // ── WINDOW GRID (every other floor, front face) ─────────────────────────────
+  for (let y = 4; y < h; y += 4) {
+    for (let x = -w/2 + 6; x < w/2 - 4; x += 8) {
+      pts.push({ x, y: y + 1.5, z: -d/2 - 0.1, yaw: 0, name: "staticobj_wall_milcnc_4" });
+    }
+  }
+
+  // ── PERIMETER FENCE (car park / grounds) ────────────────────────────────────
+  const fw = w + 20, fd = d + 20;
+  drawWall(pts, -fw/2, 0, -fd/2, fw/2, 0, -fd/2, 8);
+  drawWall(pts, -fw/2, 0,  fd/2, fw/2, 0,  fd/2, 8);
+  drawWall(pts, -fw/2, 0, -fd/2, -fw/2, 0, fd/2, 8);
+  drawWall(pts,  fw/2, 0, -fd/2,  fw/2, 0, fd/2, 8);
+
+  return pts;
+}
+
+// ─── SUPERMARKET (big box retail, car park, loading bay) ─────────────────────
+export function gen_supermarket(p: Record<string, any>): Point3D[] {
+  const pts: Point3D[] = [];
+  const w = p.width  || 60;
+  const d = p.depth  || 40;
+  const h = p.height || 8;
+  const sp = 4;
+
+  // Main store box
+  for (let y = 0; y <= h; y += 4) {
+    drawWall(pts, -w/2, y, -d/2, w/2, y, -d/2, sp);
+    drawWall(pts, -w/2, y,  d/2, w/2, y,  d/2, sp);
+    drawWall(pts, -w/2, y, -d/2, -w/2, y, d/2, sp);
+    drawWall(pts,  w/2, y, -d/2,  w/2, y, d/2, sp);
+  }
+  // Flat roof
+  for (let x = -w/2 + 4; x <= w/2 - 4; x += 8)
+    for (let z = -d/2 + 4; z <= d/2 - 4; z += 8)
+      pts.push({ x, y: h, z, pitch: 90, name: "staticobj_wall_cncsmall_8" });
+
+  // Loading bay (rear extension)
+  const bayW = w * 0.4;
+  for (let y = 0; y <= 5; y += 4) {
+    drawWall(pts, -bayW/2, y, d/2, bayW/2, y, d/2 + 10, sp);
+    drawWall(pts, -bayW/2, y, d/2, -bayW/2, y, d/2 + 10, sp);
+    drawWall(pts,  bayW/2, y, d/2,  bayW/2, y, d/2 + 10, sp);
+  }
+  // Entrance canopy (front)
+  for (let x = -10; x <= 10; x += 4)
+    pts.push({ x, y: h * 0.6, z: -d/2 - 3, yaw: 0, name: "staticobj_wall_cncsmall_8" });
+
+  // Car park (flat markings)
+  for (let x = -w/2 - 30; x <= -w/2 - 5; x += 8)
+    for (let z = -d/2; z <= d/2; z += 6)
+      pts.push({ x, y: 0, z, pitch: 90, name: "staticobj_wall_milcnc_4" });
 
   return pts;
 }

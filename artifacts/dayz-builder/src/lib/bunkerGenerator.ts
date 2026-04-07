@@ -112,8 +112,8 @@ export function generateBunker(opts: BunkerOptions): BunkerLayout {
     const dy = lv * -LEVEL_DROP;
     const spineLen = spineLengths[lv - 1];
 
-    // Transition stairs sit directly under the entrance hatch (same XZ, midpoint vertically)
-    place(PIECE_STAIRS.classname, `L${lv} Transition`, 0, dy + LEVEL_DROP * 0.5, 0, 0, lv, 'stairs');
+    // Stairs at the entrance XZ, top flush with level above (dy + LEVEL_DROP = dy of level above = 0 for lv1)
+    place(PIECE_STAIRS.classname, `L${lv} Transition`, 0, dy, 0, 0, lv, 'stairs');
 
     for (let seg = 0; seg < spineLen; seg++) {
       // Tunnel segments start one cell ahead of the entrance so there is no overlap

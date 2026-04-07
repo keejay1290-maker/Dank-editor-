@@ -94,7 +94,8 @@ function getRawPoints(shapeType: string, params: Record<string, number>): Point3
     case 'cube':
     case 'box':                 return gen_bastion_square(p);
     case 'line':                return gen_wall_line(p);
-    case 'arc':                 return gen_wall_arc(p);
+    case 'arc':
+    case 'wall_arc':            return gen_wall_arc(p);
     case 'cluster':             return gen_sphere(p, false); // Best fallback for cluster
     case 'spoke_hub':           return gen_ring_platform(p); 
     case 'helix':
@@ -113,8 +114,8 @@ function getRawPoints(shapeType: string, params: Record<string, number>): Point3
     case 'azkaban_tower': return gen_azkaban_tower(p);
     case 'skyscraper': return gen_skyscraper(p);
     case 'wall_perimeter': return gen_wall_perimeter(p);
-    case 'colosseum': return gen_colosseum(p);
-    case 'colosseum_complex': return gen_colosseum(p);
+    case 'colosseum': return MP.gen_colosseum(p);
+    case 'colosseum_complex': return MP.gen_colosseum(p);
     case 'castle_keep': return gen_castle_keep(p);
     case 'gothic_arch': return gen_gothic_arch(p);
     case 'bridge_truss': return gen_bridge_truss(p);
@@ -172,6 +173,8 @@ function getRawPoints(shapeType: string, params: Record<string, number>): Point3
     case 'stark_tower': 
     case 'tony_stark_tower': return MP.gen_tony_stark_tower(p);
     case 'police_station': return MP.gen_police_station(p);
+    case 'hospital': return MP.gen_hospital(p);
+    case 'supermarket': return MP.gen_supermarket(p);
     case 'log_cabin': return MP.gen_log_cabin(p);
     case 'black_hole': return MP.gen_black_hole(p);
     case 'alcatraz_prison': return MP.gen_alcatraz_prison(p);
@@ -221,8 +224,6 @@ function getRawPoints(shapeType: string, params: Record<string, number>): Point3
     // 🦾 MECHS (Lite)
     case 'mech_bipedal': return gen_mech_bipedal(p);
     case 't800_endoskeleton': return gen_t800_endoskeleton(p);
-    case 'at_at_walker': 
-    case 'atat_walker': return MP.gen_atat_walker(p);
     case 'mech_minigun': return gen_mech_minigun(p);
     case 'mech_walker': return gen_mech_walker(p);
     case 'cannon_turret': return gen_cannon_turret(p);
@@ -1405,38 +1406,70 @@ function gen_mothership(p: Record<string, number>): Point3D[] {
 
 function gen_skyscraper(p: Record<string, number>): Point3D[] {
   const pts: Point3D[] = [];
-  const h = p.height || 120;
-  const w = p.width  || 30;
+  const h      = p.height || 120;
+  const w      = p.width  || 30;
   const floors = p.floors || 20;
   const floorH = h / floors;
-  // Main tower - taper slightly
-  for (let f = 0; f <= floors; f++) {
-    const y = f * floorH;
-    const taper = 1 - f * 0.005;
-    const hw = (w / 2) * taper, hd = (w * 0.6) * taper;
-    pts.push({ x: -hw, y, z: -hd }, { x: hw, y, z: -hd }, { x: hw, y, z: hd }, { x: -hw, y, z: hd });
-    // Window lines every few floors
-    if (f % 3 === 0) {
-      const step = w * 0.2;
-      for (let wx = -hw + step; wx < hw; wx += step) {
-        pts.push({ x: wx, y: y + floorH * 0.3, z: -hd });
-        pts.push({ x: wx, y: y + floorH * 0.3, z: hd });
-      }
+
+  const MAT_MAIN   = "staticobj_wall_cncsmall_8";
+  const MAT_BASE   = "staticobj_wall_stone2";
+  const MAT_ACCENT = "staticobj_wall_milcnc_4";
+
+  // Helper: place wall panels along a straight line, with correct yaw
+  function face(x1: number, z1: number, x2: number, z2: number, y: number, mat: string, spacing = 8) {
+    const dx = x2 - x1, dz = z2 - z1;
+    const len = Math.sqrt(dx * dx + dz * dz);
+    // yaw so the 8m wall panel spans along the face direction
+    const yaw = Math.atan2(dx, dz) * 180 / Math.PI + 90;
+    const steps = Math.max(1, Math.round(len / spacing));
+    for (let i = 0; i < steps; i++) {
+      const t = (i + 0.5) / steps;
+      pts.push({ x: x1 + dx * t, y, z: z1 + dz * t, yaw, name: mat });
     }
   }
-  // Antenna spire
-  for (let i = 0; i <= 8; i++) {
-    const y = h + h * 0.15 * i / 8;
-    const r = w * 0.03 * (1 - i / 8);
-    for (let j = 0; j < 120; j++) { const a = 2 * Math.PI * j / 4; pts.push({ x: r * Math.cos(a), y, z: r * Math.sin(a) }); }
+
+  for (let f = 0; f <= floors; f++) {
+    const y    = f * floorH;
+    const taper = 1 - f * 0.005;
+    const hw   = (w / 2) * taper;
+    const hd   = (w * 0.6) * taper;
+    const mat  = f < 3 ? MAT_BASE : MAT_MAIN;
+    const sp   = f < 3 ? 8 : 8;
+
+    // Four faces: N, S, E, W
+    face(-hw, -hd,  hw, -hd, y, mat, sp);  // North (Z-)
+    face(-hw,  hd,  hw,  hd, y, mat, sp);  // South (Z+)
+    face(-hw, -hd, -hw,  hd, y, mat, sp);  // West  (X-)
+    face( hw, -hd,  hw,  hd, y, mat, sp);  // East  (X+)
+
+    // Art Deco accent pillars every 5 floors
+    if (f % 5 === 0) {
+      pts.push({ x:  hw + 0.5, y, z: 0, name: MAT_ACCENT, yaw: 90 });
+      pts.push({ x: -hw - 0.5, y, z: 0, name: MAT_ACCENT, yaw: 90 });
+    }
   }
-  // Setback floors (Art Deco look)
+
+  // Setback floors (Art Deco)
   [0.6, 0.75, 0.9].forEach(ht => {
-    const y = h * ht;
+    const y  = h * ht;
     const sw = w * (1.3 - ht * 0.5);
     const sh = w * 0.5 * (1.3 - ht * 0.5);
-    pts.push({ x: -sw / 2, y, z: -sh }, { x: sw / 2, y, z: -sh }, { x: sw / 2, y, z: sh }, { x: -sw / 2, y, z: sh });
+    face(-sw/2, -sh,  sw/2, -sh, y, MAT_BASE);
+    face(-sw/2,  sh,  sw/2,  sh, y, MAT_BASE);
+    face(-sw/2, -sh, -sw/2,  sh, y, MAT_BASE);
+    face( sw/2, -sh,  sw/2,  sh, y, MAT_BASE);
   });
+
+  // Antenna spire
+  for (let i = 0; i <= 10; i++) {
+    const ay = h + h * 0.15 * i / 10;
+    const r  = w * 0.025 * (1 - i / 10);
+    for (let j = 0; j < 4; j++) {
+      const a = 2 * Math.PI * j / 4;
+      pts.push({ x: r * Math.cos(a), y: ay, z: r * Math.sin(a), name: MAT_ACCENT, yaw: j * 90 });
+    }
+  }
+
   return pts;
 }
 
@@ -1590,7 +1623,7 @@ function gen_cannon_turret(p: Record<string, number>): Point3D[] {
 
 function gen_tunnel_circle(p: Record<string, number>): Point3D[] {
   const pts: Point3D[] = [];
-  const r = d(p, 'radius', 8), len = d(p, 'length', 30), segs = d(p, 'segments', 10);
+  const r = d(p, 'radius', 8), len = p.length || p.height || 30, segs = d(p, 'segments', 14);
   const ptsCircle = d(p, 'points', 16);
   for (let i = 0; i <= segs; i++) {
     const z = -len / 2 + len * i / segs;
@@ -2059,14 +2092,19 @@ function gen_eiffel_tower(p: Record<string, number>): Point3D[] {
   const baseSize = Math.max(20, p.width || 60);
   const height = Math.max(30, p.height || 120);
 
-  function drawWall(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number) {
+  const MAT_LEG    = "staticobj_wall_milcnc_4";
+  const MAT_ANCHOR = "staticobj_roadblock_cncblock";
+  const MAT_LATTICE = "staticobj_wall_tin_5";
+
+  function drawWall(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, mat: string = MAT_LEG) {
     const dx = x2 - x1, dy = y2 - y1, dz = z2 - z1;
     const len = Math.max(0.1, Math.sqrt(dx*dx + dy*dy + dz*dz));
-    const yaw = Math.atan2(dx, dz) * 180 / Math.PI + 90; 
-    const steps = Math.max(1, Math.ceil(len / 3.5)); 
-    for (let i=0; i<=steps; i++) {
-       const t = i/steps;
-       pts.push({ x: x1+dx*t, y: y1+dy*t, z: z1+dz*t, yaw, pitch: Math.atan2(dy, Math.sqrt(dx*dx+dz*dz)) * -180 / Math.PI });
+    const yaw = Math.atan2(dx, dz) * 180 / Math.PI + 90;
+    const pitch = Math.atan2(dy, Math.sqrt(dx*dx + dz*dz)) * -180 / Math.PI;
+    const steps = Math.max(1, Math.ceil(len / 3.5));
+    for (let i = 0; i < steps; i++) {
+      const t = (i + 0.5) / steps;  // center-based: no endpoint overlap
+      pts.push({ x: x1+dx*t, y: y1+dy*t, z: z1+dz*t, yaw, pitch, name: mat });
     }
   }
 
@@ -2082,17 +2120,19 @@ function gen_eiffel_tower(p: Record<string, number>): Point3D[] {
      const y1 = height * t1;
      const y2 = height * t2;
 
+     const mat = i < 3 ? MAT_ANCHOR : MAT_LEG;
+
      // 4 pillars
      [[1,1], [1,-1], [-1,1], [-1,-1]].forEach(([sx, sz]) => {
-        drawWall(w1*sx, y1, w1*sz, w2*sx, y2, w2*sz);
+        drawWall(w1*sx, y1, w1*sz, w2*sx, y2, w2*sz, mat);
      });
      
      // Horizontal braces every 1/5th height
      if (i > 0 && i % Math.floor(legSteps/5) === 0) {
-        drawWall(-w1, y1, -w1, w1, y1, -w1);
-        drawWall(w1, y1, -w1, w1, y1, w1);
-        drawWall(w1, y1, w1, -w1, y1, w1);
-        drawWall(-w1, y1, w1, -w1, y1, -w1);
+        drawWall(-w1, y1, -w1, w1, y1, -w1, MAT_LATTICE);
+        drawWall(w1, y1, -w1, w1, y1, w1, MAT_LATTICE);
+        drawWall(w1, y1, w1, -w1, y1, w1, MAT_LATTICE);
+        drawWall(-w1, y1, w1, -w1, y1, -w1, MAT_LATTICE);
      }
   }
   return pts;
@@ -2193,8 +2233,8 @@ function gen_castle_keep(p: Record<string, number>): Point3D[] {
 
 function gen_borg_cube(p: Record<string, number>): Point3D[] {
   const pts: Point3D[] = [];
-  const s = p.size * 0.5; // half-edge
-  const g = Math.max(2, Math.round(p.gridLines || 4));
+  const s = (p.size || p.width || 100) * 0.5; // half-edge
+  const g = Math.max(2, Math.round(p.gridLines || 6));
 
   // Helper: draw a face grid (normal axis = n, axes = u/v)
   const face = (n: 'x' | 'y' | 'z', nVal: number, uA: 'x' | 'y' | 'z', vA: 'x' | 'y' | 'z') => {
@@ -2226,7 +2266,7 @@ function gen_borg_cube(p: Record<string, number>): Point3D[] {
 
 function gen_colosseum(p: Record<string, number>): Point3D[] {
   const pts: Point3D[] = [];
-  const r = p.radius, h = p.height;
+  const r = p.radius || p.width / 2 || 50, h = p.height || 35;
   // Elliptical outer wall tiers
   const tiers = p.tiers || 6;
   for (let tier = 0; tier < tiers; tier++) {

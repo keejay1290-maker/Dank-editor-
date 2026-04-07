@@ -660,24 +660,19 @@ export async function executePipeline(
     name: mapLogicalToRealObject(obj.name, ctx)
   }));
 
-  // STEP 4: Inject Grenade_ChemGas centrepiece if enabled (Section 5/10 Fix)
-  const CHEMGAS_BUILDS = ["ufo", "deathstar", "nexus", "reactor", "stargate_portal"];
-  if (ctx.params.addCentrepiece === true || ctx.params.enable_dankvault_decorations !== 0 || CHEMGAS_BUILDS.includes(ctx.shape_normalised)) {
+  // STEP 4: Inject Grenade_ChemGas centrepiece ONLY when explicitly requested
+  if (ctx.params.addCentrepiece === true || ctx.params.enable_dankvault_decorations === 1) {
     const isOffsetMode = ["teleport", "race", "maze", "freeway"].includes(ctx.params.mode || "");
-    
-    // Find the topmost point for apex placement
     const ys = ctx.objects_final.map(o => o.pos[1]);
     const apexY = ys.length > 0 ? Math.max(...ys) + 5 : 5;
-    const [cx, cy, cz] = isOffsetMode ? [0, apexY, 0] : [0, 0, 0]; 
-
-    // Check if one already exists to avoid duplicates
+    const [cx, cy, cz] = isOffsetMode ? [0, apexY, 0] : [ctx.params.posX || 0, apexY, ctx.params.posZ || 0];
     const hasChem = ctx.objects_final.some(o => o.name === "Grenade_ChemGas");
     if (!hasChem) {
       ctx.objects_final.push({
         name: "Grenade_ChemGas",
         pos: [cx, cy, cz],
         ypr: [0, 0, 0],
-        scale: 30.0
+        scale: 1.0
       });
     }
   }
@@ -902,7 +897,7 @@ function applyInteriorLogic(ctx: PipelineContext) {
 function alignDankvaultWalls(ctx: PipelineContext) {
   let wallCount = 0;
   ctx.objects_final = ctx.objects_final.map(obj => {
-    const isWall = obj.name.toLowerCase().includes("wall") || obj.name.toLowerCase().includes("hbarrier");
+    const isWall = (obj.name || "").toLowerCase().includes("wall") || (obj.name || "").toLowerCase().includes("hbarrier");
     if (isWall) {
       wallCount++;
       const forcedYaw = (wallCount % 2 === 0) ? 90 : 0;

@@ -59,9 +59,10 @@ export const SHAPE_MIMICS: Record<string, MimicDef> = {
 };
 
 export function getMimic(classname: string): MimicDef {
+  if (!classname) return { shape: "box", args: [2, 2, 2], color: "#4a7a50" };
   // Check exact match
   if (SHAPE_MIMICS[classname]) return SHAPE_MIMICS[classname];
-  
+
   // Fuzzy match for common types
   const lower = classname.toLowerCase();
   if (lower.includes("barrel"))                                  return { shape: "cylinder", args: [0.35, 0.35, 0.9, 8], color: "#555" };
@@ -77,11 +78,13 @@ export function getMimic(classname: string): MimicDef {
   if (lower.includes("roadblock"))                              return { shape: "box", args: [3, 1, 1.2], color: "#8a8a8a" };
   if (lower.includes("wreck_ship"))                             return { shape: "box", args: [15, 6, 10], color: "#5a6a7a" };
   if (lower.includes("ugcomplex_"))                             return { shape: "box", args: [1, 2, 1], color: "#9b59b6" };
-  if (lower.includes("underground_stairs"))                     return { shape: "box", args: [4.5, 4.5, 4.5], color: "#f39c12" };
-  if (lower.includes("underground_corridor"))                   return { shape: "box", args: [4.5, 4.5, 9], color: "#3498db" };
-  if (lower.includes("underground_branch"))                     return { shape: "box", args: [9, 4.5, 4.5], color: "#2980b9" };
-  if (lower.includes("underground_waterroom") || lower.includes("underground_room")) return { shape: "box", args: [18, 9, 18], color: "#d4a017" };
-  if (lower.includes("underground_entrance"))                   return { shape: "box", args: [9, 5, 9], color: "#27ae60" };
+  if (lower.includes("underground_stairs"))                     return { shape: "box", args: [9.5, 5.0, 9.5], color: "#f39c12" };
+  // Tunnel pieces (Land_Underground_Tunnel_Single/T/X) — 10m × 5m grid cells
+  if (lower.includes("underground_tunnel"))                     return { shape: "box", args: [9.5, 4.8, 9.5], color: "#3498db" };
+  if (lower.includes("underground_corridor"))                   return { shape: "box", args: [9.5, 4.8, 9.5], color: "#3498db" };
+  if (lower.includes("underground_branch"))                     return { shape: "box", args: [9.5, 4.8, 9.5], color: "#2980b9" };
+  if (lower.includes("underground_waterroom") || lower.includes("underground_room")) return { shape: "box", args: [9.5, 4.8, 9.5], color: "#d4a017" };
+  if (lower.includes("underground_entrance"))                   return { shape: "box", args: [9.5, 5.0, 9.5], color: "#27ae60" };
   if (lower.includes("underground_panel"))                      return { shape: "box", args: [1, 2, 1], color: "#9b59b6" };
 
   // Generic fallback — 3m cube (visible at any zoom)

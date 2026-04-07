@@ -136,8 +136,8 @@ export async function perfectBuild(build: any): Promise<PerfectingReport> {
 
     // 4. THEME & LORE CORRECTNESS
     const globalForbid = (MASTER_RULESET.object_family_mapping as any).global_forbid_families || [];
-    const offending = ctx.objects.filter(obj => 
-      globalForbid.some((f: string) => obj.name.toLowerCase().includes(f.toLowerCase()))
+    const offending = ctx.objects.filter(obj =>
+      obj.name && globalForbid.some((f: string) => (obj.name || "").toLowerCase().includes(f.toLowerCase()))
     );
 
     if (offending.length > 0) {

@@ -230,6 +230,7 @@ export function remapLegacyObject(name: string): string {
     "neutral_structural":           "Land_Container_1Bo",
     "wall":                         "StaticObj_BusStation_wall",
   };
+  if (!name) return "Land_Container_1Bo";
   return LEGACY_MAP[name] || LEGACY_MAP[name.toLowerCase()] || name;
 }
 

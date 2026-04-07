@@ -58,6 +58,14 @@ function makeMazeGrid(rng: ReturnType<typeof mkRng>, width: number, height: numb
     stack.push([nr, nc]);
   }
 
+  // Entrance: open the top wall at the left-center column
+  const entC = Math.floor(width / 4);
+  hWalls[0][entC] = false;
+
+  // Exit: open the bottom wall at the right-center column
+  const exitC = Math.floor((width * 3) / 4);
+  hWalls[height][exitC] = false;
+
   return { hWalls, vWalls, cellW: width, cellH: height };
 }
 

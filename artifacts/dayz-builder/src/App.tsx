@@ -136,10 +136,10 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     if (!ctx) return;
 
     const dpr = window.devicePixelRatio || 1;
-    // Physical pixel dimensions â€” the actual canvas buffer size
+    // Physical pixel dimensions â€" the actual canvas buffer size
     const PW = canvas.width;
     const PH = canvas.height;
-    // CSS dimensions â€” used for projection math (centering, spread)
+    // CSS dimensions â€" used for projection math (centering, spread)
     const W = cssDimsRef.current.w || PW / dpr;
     const H = cssDimsRef.current.h || PH / dpr;
     if (PW <= 0 || PH <= 0) return;
@@ -147,7 +147,7 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     const pts = ptsRef.current;
     const userScale = scaleRef.current;
 
-    // â”€â”€ Draw directly in physical pixels â€” no ctx.scale, so every coordinate
+    // â"€â"€ Draw directly in physical pixels â€" no ctx.scale, so every coordinate
     //    is an integer screen pixel. This is the key to crispness on retina/mobile.
     ctx.imageSmoothingEnabled = false;
     ctx.fillStyle = "#060402";
@@ -199,7 +199,7 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
       const rz2 = ly3 * sinX + rz1 * cosX;
       const fov = 700;
       const sc  = fov / (fov + rz2 + spread * 1.5);
-      // Convert to physical pixels â€” round to nearest integer for pixel-perfect placement
+      // Convert to physical pixels â€" round to nearest integer for pixel-perfect placement
       const px = Math.round((W / 2 + rx1 * baseZoom * sc) * dpr);
       const py = Math.round((H / 2 - ry2 * baseZoom * sc) * dpr);
       return { px, py, depth: rz2 };
@@ -208,18 +208,18 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     projected.sort((a, b) => b.depth - a.depth);
     const maxD = spread * 1.5, minD = -spread * 1.5;
 
-    // â”€â”€ Zoom-aware dot size: cap scales WITH zoom so dots shrink at low zoom
+    // â"€â"€ Zoom-aware dot size: cap scales WITH zoom so dots shrink at low zoom
     //    preventing them from overlapping into a solid blob when zoomed out
     const zoomCap  = Math.max(1.5, 4.0 * dpr * Math.min(1, zoom * 0.75));
     const baseDotPhys = Math.max(1, Math.min(zoomCap, (380 / Math.sqrt(pts.length + 1)) * zoom * dpr));
 
-    // â”€â”€ Occlusion culling at low zoom: skip dots that land on an already-drawn cell
+    // â"€â"€ Occlusion culling at low zoom: skip dots that land on an already-drawn cell
     //    This breaks up the blob by showing only one dot per occupied pixel region
     const cullCell  = zoom < 1.2 ? Math.max(1, Math.round(baseDotPhys * 1.4)) : 0;
     const occupied  = cullCell > 0 ? new Set<number>() : null;
 
     projected.forEach(({ px, py, depth }) => {
-      // Occlusion check â€” keyed by grid cell so nearby dots are skipped
+      // Occlusion check â€" keyed by grid cell so nearby dots are skipped
       if (occupied) {
         const cx2 = Math.round(px / cullCell);
         const cy2 = Math.round(py / cullCell);
@@ -229,17 +229,17 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
       }
 
       const t = Math.max(0, Math.min(1, (depth - minD) / (maxD - minD)));
-      // â”€â”€ Wider depth range: front bright gold, back very dim brown (better separation)
+      // â"€â"€ Wider depth range: front bright gold, back very dim brown (better separation)
       const r = Math.round(220 * t + 50 * (1 - t));
       const g = Math.round(160 * t + 70 * (1 - t));
       const b = Math.round(20  * t + 6  * (1 - t));
-      const alpha = 0.28 + 0.72 * t;    // was 0.6+0.4 â€” now much wider range
+      const alpha = 0.28 + 0.72 * t;    // was 0.6+0.4 â€" now much wider range
       ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
 
       // Front dots slightly larger than back dots for natural depth cue
       const rad = baseDotPhys * (0.7 + 0.3 * t);
 
-      // â”€â”€ Crisp rendering: small â†’ fillRect (zero blur), larger â†’ arc at integer centre
+      // â"€â"€ Crisp rendering: small â†' fillRect (zero blur), larger â†' arc at integer centre
       if (rad <= 2) {
         const s = Math.max(1, Math.round(rad * 2));
         ctx.fillRect(px - (s >> 1), py - (s >> 1), s, s);
@@ -250,7 +250,7 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
       }
     });
 
-    // HUD â€” scale font to physical pixels
+    // HUD â€" scale font to physical pixels
     ctx.fillStyle = "rgba(212,160,23,0.9)";
     ctx.font = `bold ${Math.round(11 * dpr)}px 'Courier New'`;
     ctx.textAlign = "left";
@@ -317,7 +317,7 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
       zoomRef.current = clampZoom(zoomRef.current * (e.deltaY > 0 ? 0.88 : 1.12));
       if (!autoRef.current) draw();
     };
-    // Pinch-to-zoom â€” track distance between two fingers
+    // Pinch-to-zoom â€" track distance between two fingers
     let lastPinchDist = 0;
     const onTouch = (e: TouchEvent) => {
       if (e.touches.length === 1) {
@@ -369,7 +369,7 @@ function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     };
   }, [draw]);
 
-  // Resize observer â€” DPR-aware sizing prevents blurriness on HiDPI screens
+  // Resize observer â€" DPR-aware sizing prevents blurriness on HiDPI screens
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !canvas.parentElement) return;
@@ -602,7 +602,7 @@ export default function App() {
   const [presetFilter, setPresetFilter] = useState("");
   const [presetCategory, setPresetCategory] = useState("All");
 
-  // â”€â”€ FAVOURITES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // â"€â"€ FAVOURITES â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
   const [favourites, setFavourites] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem("dayz_fav_presets") ?? "[]"); } catch { return []; }
   });
@@ -635,6 +635,28 @@ export default function App() {
     const basePts = getShapePoints(b.shape, b.params);
     return basePts.length;
   }, [selectedBuildId, pipelineCtx]);
+
+  // Auto-run pipeline whenever a build is selected in builds mode
+  // Populates pipelineCtx + output so the Download button works without an extra click
+  useEffect(() => {
+    if (mode !== "builds" || !selectedBuildId) return;
+    const b = COMPLETED_BUILDS.find(x => x.id === selectedBuildId);
+    if (!b) return;
+    let cancelled = false;
+    executePipeline(
+      "AutoPreview",
+      (b.category || "").toLowerCase().includes("sci-fi") ? "death_star" : "generic",
+      0,
+      { ...b.params, buildName: b.name, posX: b.posX, posY: b.posY, posZ: b.posZ, shape: b.shape },
+      () => getShapePoints(b.shape, b.params)
+    ).then(ctx => {
+      if (cancelled) return;
+      const processed = runSandboxIntelligence(ctx);
+      setPipelineCtx(processed);
+      setOutput(JSON.stringify({ Objects: processed.objects_final }, null, 2));
+    }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [selectedBuildId, mode]);
 
   // Text maker
   const [textInput, setTextInput] = useState("DAYZ");
@@ -697,23 +719,27 @@ export default function App() {
     setMode("architect");
   }, []);
 
-  // â”€â”€ COMPUTE SHAPE POINTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  const rawPoints = useMemo(() => {
-    if (pipelineCtx) return pipelineCtx.points;
+  // â"€â"€ COMPUTE SHAPE POINTS â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+  const rawPoints = useMemo((): Point3D[] => {
+    if (mode === "builds" && selectedBuildId) {
+      const b = COMPLETED_BUILDS.find(x => x.id === selectedBuildId);
+      if (b) {
+        try { return getShapePoints(b.shape, b.params); } catch (_) { /* skip */ }
+      }
+    }
+    if (pipelineCtx && Array.isArray(pipelineCtx.points) && pipelineCtx.points.length > 0) {
+      return pipelineCtx.points;
+    }
     if (mode === "text") {
       return getTextPoints(textInput, textLetterH, textSpacing, textDepth, textRings, textArcDeg);
     }
-    if (mode === "builds" && selectedBuildId) {
-      const b = COMPLETED_BUILDS.find(b => b.id === selectedBuildId);
-      if (b) return getShapePoints(b.shape, b.params);
-    }
-    return getShapePoints(shapeType, params);
+    try { return getShapePoints(shapeType, params); } catch (_) { return []; }
   }, [pipelineCtx, mode, shapeType, params, selectedBuildId, textInput, textLetterH, textSpacing, textDepth, textRings, textArcDeg]);
 
   // All shapes render as hollow frames — displayPoints is always the raw frame points
   const displayPoints = useMemo(() => rawPoints, [rawPoints]);
 
-  // Bounding-box dimensions in metres (scale-adjusted) â€” shown live in info bar
+  // Bounding-box dimensions in metres (scale-adjusted) â€" shown live in info bar
   const dims = useMemo(() => {
     if (!rawPoints.length) return null;
     const xs = rawPoints.map(p => p.x * scaleVal);
@@ -744,7 +770,7 @@ export default function App() {
       setObjClass(preset.suggestedClass);
       setObjSearch("");
     }
-    showToast(`âœ“ Loaded: ${preset.label}`);
+    showToast(`âœ" Loaded: ${preset.label}`);
     // Auto-generate after state settles
     setTimeout(() => generate(), 50);
   };
@@ -770,7 +796,7 @@ export default function App() {
     setShapeType(shapeKey);
     setParams(newParams);
     setMode("architect");
-    showToast(`ðŸŽ² ${def.label} â€” new layout!`);
+    showToast(`\u{1F3B2} ${def.label} \u2014 new layout!`);
   };
 
   const rollRandomArena = () => randomizeArenaParams(
@@ -793,7 +819,7 @@ export default function App() {
 
   const setParam = (id: string, v: number) => setParams(prev => ({ ...prev, [id]: v }));
 
-  // â”€â”€ BUILD CODE STRING (pure â€” returns without setting state) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // â"€â"€ BUILD CODE STRING (pure â€" returns without setting state) â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
   /**
    * 🏗️ LEGACY buildShapeCode REMOVED.
    * All generation must flow through executePipeline and use ctx.objects_final.
@@ -1063,7 +1089,7 @@ export default function App() {
   const downloadBuild = async (build: CompletedBuild, fmt: "initc" | "json") => {
     const ctx = await executePipeline(
       "Prebuilt_Downloader",
-      build.category.toLowerCase().includes("sci-fi") ? "death_star" : "generic",
+      (build.category || "").toLowerCase().includes("sci-fi") ? "death_star" : "generic",
       lootSeed,
       {
         buildName: build.id,
@@ -1198,7 +1224,7 @@ export default function App() {
 
 
 
-  const currentCode = mode === "architect" ? output : textOutput;
+  const currentCode = mode === "text" ? textOutput : output;
   const currentExt = (mode === "architect" ? format : textFormat) === "initc" ? "c" : "json";
   const currentParamDefs: ParamDef[] = SHAPE_DEFS[shapeType]?.params || [];
   const PRESET_CATEGORIES = ["All", ...Array.from(new Set(QUICK_PRESETS.map(p => p.category)))];
@@ -1294,7 +1320,7 @@ export default function App() {
           ] as const).map(t => {
             const isActive = mode === t.key;
             return (
-              <button key={t.key} onClick={() => setMode(t.key as EditorMode)}
+              <button key={t.key} onClick={() => { setPipelineCtx(null); if (t.key === "builds") setOutput(""); setMode(t.key as EditorMode); }}
                 className={`relative flex flex-col items-center justify-center gap-0.5 px-3.5 py-2 shrink-0 font-bold transition-all duration-150 ${isActive ? t.active : `${t.inactive} hover:bg-[#0e1a0e]`}`}>
                 <span className="text-[13px] leading-none">{t.emoji}</span>
                 <span className="text-[8px] tracking-widest leading-none">{t.label}</span>
@@ -1494,7 +1520,7 @@ export default function App() {
               filter={buildFilter}
               category={buildCategory}
               zipGenerating={zipGenerating}
-              onSelect={setSelectedBuildId}
+              onSelect={(id: string) => { setPipelineCtx(null); setOutput(""); setSelectedBuildId(id); }}
               onLoadIntoEditor={loadBuildIntoEditor}
               onFilterChange={setBuildFilter}
               onCategoryChange={setBuildCategory}
@@ -1628,452 +1654,76 @@ export default function App() {
             />
 
             <>
-                  {/* ─── SANDBOX FLOATING TOOLS (Top Right) ─── */}
-                  <div className="absolute top-3 right-3 flex flex-col gap-2 z-20 w-[240px]">
-                    <button 
-                        onClick={() => setSandboxEnabled(!sandboxEnabled)}
-                        className={`px-4 py-2 rounded-sm text-[11px] font-black uppercase transition-all shadow-[0_4px_15px_rgba(0,0,0,0.5)] backdrop-blur-xl border ${sandboxEnabled ? "bg-[#27ae60] text-[#080f09] border-[#27ae60]" : "bg-[#1a150b]/80 border-[#d4a017] text-[#d4a017] hover:bg-[#d4a017] hover:text-[#0a1209] animate-pulse border-[2px]"}`}
+                  {/* Minimal overlay - auto-rotate toggle */}
+                  <div className="absolute top-3 right-3 z-10">
+                    <button
+                        onClick={() => setAutoRotate(!autoRotate)}
+                        className={`px-3 py-1.5 rounded text-[9px] font-bold uppercase backdrop-blur-sm border transition-all ${autoRotate ? "bg-[#27ae60]/20 border-[#27ae60] text-[#27ae60]" : "bg-black/40 border-[#333] text-[#666]"}`}
                     >
-                        {sandboxEnabled ? "🛰️ DISENGAGE SANDBOX" : "🚁 INITIALIZE SANDBOX"}
+                        {autoRotate ? "Rotating" : "Paused"}
                     </button>
                     
-                    {sandboxEnabled && (
-                        <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                             {/* 🛰️ SANDBOX DASHBOARD */}
-                             <div className="bg-[#0f140f]/95 border border-[#27ae6044] p-3 rounded shadow-2xl backdrop-blur-2xl">
-                                <h4 className="text-[#27ae60] text-[10px] font-black uppercase tracking-widest mb-3 border-b border-[#27ae6022] pb-1 flex justify-between">
-                                    <span className="flex items-center gap-1.5">📡 AUDIT SUITE <span className="bg-[#f1c40f] text-[#080f09] px-1 rounded-sm text-[8px] font-black">100% SECURE</span></span>
-                                    <span className="opacity-40">{pipelineCtx?.semantic?.type || "GENERIC"}</span>
-                                </h4>
-                                
-                                <div className="space-y-2 mb-4">
-                                     <label className="flex items-center gap-2 cursor-pointer group">
-                                         <input type="checkbox" checked={sandboxHUD} onChange={e => setSandboxHUD(e.target.checked)} className="hidden" />
-                                         <div className={`w-3 h-3 rounded-full border border-[#27ae60] flex items-center justify-center ${sandboxHUD ? "bg-[#27ae60]" : "bg-transparent group-hover:bg-[#27ae6022]"}`} />
-                                         <span className="text-[10px] uppercase font-bold text-[#b8d4b8] opacity-70 group-hover:opacity-100 transition-opacity">Show Telemetry HUD</span>
-                                     </label>
-
-                                     <div className="pt-2 border-t border-[#ffffff05] space-y-2">
-                                         <p className="text-[8px] font-black text-[#5c6c5c] uppercase mb-1">Optical Overlays</p>
-                                         {[
-                                             { id: 'density', label: 'Density Map', color: '#3498db' },
-                                             { id: 'collision', label: 'Collision Mesh', color: '#e74c3c' },
-                                             { id: 'navigation', label: 'Nav-Mesh Filter', color: '#2ecc71' },
-                                             { id: 'symmetry', label: 'Symmetry Plane', color: '#f1c40f' },
-                                             { id: 'structural', label: 'Mat-Typing', color: '#9b59b6' }
-                                         ].map(ov => (
-                                            <label key={ov.id} className="flex items-center gap-2 cursor-pointer group">
-                                                <input type="checkbox" checked={(sandboxOverlays as any)[ov.id]} onChange={e => setSandboxOverlays(prev => ({...prev, [ov.id]: e.target.checked}))} className="hidden" />
-                                                <div className={`w-3 h-3 rounded-sm border opacity-60 flex items-center justify-center`} style={{ borderColor: ov.color, backgroundColor: (sandboxOverlays as any)[ov.id] ? ov.color : 'transparent' }} />
-                                                <span className="text-[10px] uppercase font-bold opacity-60 group-hover:opacity-100 transition-opacity" style={{ color: (sandboxOverlays as any)[ov.id] ? ov.color : '#b8d4b8' }}>{ov.label}</span>
-                                            </label>
-                                         ))}
-                                     </div>
-                                </div>
-
-                                {/* ⏯ REPLAY TRAY */}
-                                <div className="pt-2 border-t border-[#ffffff10]">
-                                    <button 
-                                        onClick={() => {
-                                            setReplayActive(!replayActive);
-                                            setReplayStep(0);
-                                        }}
-                                        className={`w-full py-1.5 rounded-sm text-[9px] font-black uppercase transition-all mb-2 ${replayActive ? "bg-[#e74c3c] text-white" : "bg-[#27ae6033] text-[#27ae60] hover:bg-[#27ae60] hover:text-[#0a1209]"}`}
-                                    >
-                                        {replayActive ? "⏹ STOP REPLAY" : "⏯ PLAY GENERATION REPLAY"}
-                                    </button>
-                                    
-                                    {replayActive && (
-                                        <div className="space-y-2 animate-in fade-in duration-300">
-                                            <div className="flex justify-between items-center px-1">
-                                                <span className="text-[8px] font-black text-[#5c6c5c]">STAGE {replayStep + 1} / {getReplaySteps(pipelineCtx).length}</span>
-                                                <span className="text-[8px] font-black text-[#27ae60] uppercase truncate max-w-[100px]">{getReplaySteps(pipelineCtx)[replayStep]?.stage}</span>
-                                            </div>
-                                            <input 
-                                                type="range" min="0" max={getReplaySteps(pipelineCtx).length - 1} value={replayStep} 
-                                                onChange={e => setReplayStep(parseInt(e.target.value))}
-                                                className="w-full accent-[#27ae60] h-1 bg-[#27ae6022] rounded-full appearance-none cursor-pointer"
-                                            />
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* 💥 STRESS TEST */}
-                                <div className="pt-4 mt-2 border-t border-[#ffffff10]">
-                                    <h5 className="text-[9px] font-black text-[#5c6c5c] uppercase mb-2">Predicted Stress Metrics</h5>
-                                    <div className="flex flex-wrap gap-1 mb-2">
-                                        {(["50_players", "100_ai", "pvp_heavy"] as StressScenario[]).map(scen => (
-                                            <button 
-                                                key={scen}
-                                                onClick={() => {
-                                                    const res = estimateStress(pipelineCtx, scen);
-                                                    setStressScenario(scen);
-                                                    setStressResult(res);
-                                                }}
-                                                className={`px-2 py-1 rounded-sm text-[8px] font-black uppercase border transition-all ${stressScenario === scen ? "bg-[#e74c3c] border-[#e74c3c] text-white" : "bg-[#1a0f0f] border-[#222] text-[#444] hover:border-[#e74c3c] hover:text-[#e74c3c]"}`}
-                                            >
-                                                {scen.replace('_', ' ')}
-                                            </button>
-                                        ))}
-                                    </div>
-                                    {stressResult && (
-                                        <div className="bg-black/40 p-2 rounded border border-[#e74c3c22] text-[9px] font-mono animate-in slide-in-from-right-2 duration-300">
-                                            <p className="flex justify-between">Tier: <span className={stressResult.predictedTier === "D" ? "text-[#e74c3c]" : "text-[#27ae60]"}>{stressResult.predictedTier}</span></p>
-                                            <p className="flex justify-between">Est Cost: <span className="text-[#d4a017]">{stressResult.estimatedCost.toFixed(0)}</span></p>
-                                        </div>
-                                    )}
-                                </div>
-                             </div>
-
-                             {/* 🧠 BUILD INSIGHTS */}
-                             {pipelineCtx?.insights && pipelineCtx.insights.length > 0 && (
-                                 <div className="bg-[#0c0c0c]/90 border border-[#27ae6033] p-3 rounded shadow-2xl backdrop-blur-xl">
-                                     <h4 className="text-[#27ae60] text-[9px] font-black uppercase tracking-widest mb-2 flex items-center gap-2">
-                                         <span>🧠 COGNITIVE AUDIT</span>
-                                         {pipelineCtx.health < 60 && <span className="animate-pulse text-[#e74c3c]">⚠</span>}
-                                     </h4>
-                                     <ul className="space-y-2">
-                                         {pipelineCtx.insights.map((ins: string, idx: number) => (
-                                             <li key={idx} className="text-[9px] leading-relaxed text-[#b8d4b8] opacity-80 border-l-2 border-[#27ae6022] pl-2 py-0.5">
-                                                 {ins}
-                                             </li>
-                                         ))}
-                                     </ul>
-                                     <div className="grid grid-cols-2 gap-1 mt-3">
-                                         <button onClick={() => setMode("validation")} className="bg-[#1a2e1a] text-[#27ae60] text-[8px] font-black py-1 rounded hover:bg-[#27ae60] hover:text-[#080f08] transition-all">CHECK COMPLIANCE</button>
-                                         <button onClick={() => setMode("vault")} className="bg-[#1c1c1a] text-[#d4a017] text-[8px] font-black py-1 rounded hover:bg-[#d4a017] hover:text-[#080f08] transition-all">VIEW MASTERPIECES</button>
-                                     </div>
-                                 </div>
-                             )}
-                        </div>
-                    )}
                   </div>
-
-                  {/* ─── HUD TELEMETRY (Top Left) ─── */}
-                  {sandboxHUD && sandboxEnabled && pipelineCtx && (
-                     <div className="absolute top-12 left-4 z-20 pointer-events-none select-none p-4 bg-gradient-to-br from-black/80 to-transparent rounded-lg border-l-2 border-[#27ae60] animate-in slide-in-from-left-4 duration-500">
-                        <div className="grid grid-cols-2 gap-x-8 gap-y-1 font-mono text-[10px]">
-                            <span className="text-[#5c6c5c] font-black uppercase tracking-tighter">System Health</span>
-                            <span className={`text-right font-black ${pipelineCtx.health >= 80 ? "text-[#27ae60]" : "text-[#e74c3c]"}`}>{pipelineCtx.health}/100</span>
-                            
-                            <span className="text-[#5c6c5c] font-black uppercase tracking-tighter">Perf Tier</span>
-                            <span className="text-right text-[#27ae60] font-black">{pipelineCtx.performance?.tier || "S"}</span>
-
-                            <span className="text-[#5c6c5c] font-black uppercase tracking-tighter">Archetype</span>
-                            <span className="text-right text-[#3498db] uppercase italic">{pipelineCtx.semantic?.type || "Generic"}</span>
-
-                            <span className="text-[#5c6c5c] font-black uppercase tracking-tighter">Walkable Area</span>
-                            <span className="text-right text-[#b8d4b8]">{pipelineCtx.metrics?.walkableArea.toLocaleString()}m²</span>
-
-                            <span className="text-[#5c6c5c] font-black uppercase tracking-tighter">Choke Points</span>
-                            <span className="text-right text-[#f1c40f]">{pipelineCtx.metrics?.chokePoints} Detected</span>
-
-                            <span className="text-[#5c6c5c] font-black uppercase tracking-tighter">Verticality</span>
-                            <span className="text-right text-[#9b59b6]">{pipelineCtx.metrics?.verticalLayers} Layers</span>
-                        </div>
-                        <div className="mt-4 pt-2 border-t border-[#27ae6022] flex gap-4">
-                             <div className="flex flex-col">
-                                 <span className="text-[8px] text-[#5c6c5c] font-black">VOL. ENCLOSED</span>
-                                 <span className="text-[12px] font-black text-[#27ae60]">{pipelineCtx.metrics?.enclosedVolume.toLocaleString()}m³</span>
-                             </div>
-                             <div className="flex flex-col">
-                                 <span className="text-[8px] text-[#5c6c5c] font-black">DEAD ENDS</span>
-                                 <span className="text-[12px] font-black text-[#e74c3c]">{pipelineCtx.metrics?.deadEnds}</span>
-                             </div>
-                        </div>
-                     </div>
-                  )}
                 </>
-
-            {/* 🛠️ TOOLBOX OVERLAY */}
-            <div className="absolute bottom-3 right-3 flex gap-2 z-10">
-                <button 
-                  onClick={() => {
-                      if (!pipelineCtx) return;
-                      const next = cleanupBuild(pipelineCtx);
-                      setPipelineCtx(next);
-                      showToast("Build Cleaned: Duplicates & Overlaps Removed!");
-                  }}
-                  className="px-3 py-1.5 bg-[#0e2010]/80 border border-[#27ae60] text-[#27ae60] text-[10px] font-black rounded backdrop-blur-md hover:bg-[#27ae60] hover:text-[#080f09]"
-                >
-                  🧹 CLEANUP WIZARD
-                </button>
-                <button 
-                  onClick={() => {
-                      if (!pipelineCtx) return;
-                      const json = exportDankBuild(pipelineCtx);
-                      const blob = new Blob([json], { type: "application/json" });
-                      const url = URL.createObjectURL(blob);
-                      const a = document.createElement("a");
-                      a.href = url;
-                      a.download = `${pipelineCtx.params.buildName || "DankBuild"}.dankbuild`;
-                      a.click();
-                  }}
-                  className="px-3 py-1.5 bg-[#1a150b]/80 border border-[#d4a017] text-[#d4a017] text-[10px] font-black rounded backdrop-blur-md hover:bg-[#d4a017] hover:text-[#080f09]"
-                >
-                  📦 SHARE (.dankbuild)
-                </button>
-            </div>
-
-            {/* 🏥 HEALTH RATING OVERLAY */}
-            {(() => {
-              const status = getValidationStatus({ name: "", id: shapeType });
-              if (!status) return null;
-              const color = status.health >= 80 ? "text-[#27ae60]" : status.health >= 40 ? "text-[#d4a017]" : "text-[#e74c3c]";
-              const bg = status.health >= 80 ? "bg-[#0b1a0e]/90" : status.health >= 40 ? "bg-[#1a150b]/90" : "bg-[#1a0b0b]/90";
-              const rating = status.health >= 90 ? "Excellent" : status.health >= 70 ? "Good" : status.health >= 40 ? "Fair" : "Critical Fail";
-              
-              return (
-                <>
-                  {/* DNA & EVOLUTION FLOATER (Top Right) */}
-                  <div className="absolute top-3 right-3 flex flex-col gap-2 z-10">
-                    <button 
-                        onClick={() => setSandboxMode(!sandboxMode)}
-                        className={`px-3 py-1.5 rounded-sm text-[10px] font-black uppercase transition-all shadow-xl backdrop-blur-md ${sandboxMode ? "bg-[#27ae60] text-[#080f09]" : "bg-[#1a150b]/80 border border-[#d4a017] text-[#d4a017]"}`}
-                    >
-                        {sandboxMode ? "🚀 EXIT SANDBOX" : "🚁 ENTER SANDBOX TEST"}
-                    </button>
-                    
-                    {pipelineCtx?.metadata?.dna && (
-                        <div className="bg-[#0a0f0a]/90 border border-[#27ae6044] p-3 rounded shadow-2xl backdrop-blur-xl w-[200px]">
-                            <h4 className="text-[#27ae60] text-[9px] font-black uppercase tracking-widest mb-2 border-b border-[#27ae6022] pb-1">🧬 BUILD DNA</h4>
-                            <div className="space-y-1 text-[8px] font-mono leading-tight">
-                                <p className="flex justify-between"><span className="opacity-50">SHAPE:</span> <span className="text-[#b8d4b8]">{pipelineCtx.metadata.dna.shape}</span></p>
-                                <p className="flex justify-between"><span className="opacity-50">DENSITY:</span> <span className="text-[#27ae60]">{pipelineCtx.metadata.dna.avgDensity.toFixed(2)}</span></p>
-                                <p className="flex justify-between"><span className="opacity-50">Symmetry:</span> <span className="text-[#d4a017]">High</span></p>
-                            </div>
-                            <button 
-                                onClick={() => {
-                                    const code = encodeDNA(pipelineCtx.metadata.dna);
-                                    navigator.clipboard.writeText(code);
-                                    showToast("DNA Code Copied to Clipboard!");
-                                }}
-                                className="mt-2 w-full py-1 bg-[#1a2e1a] text-[#27ae60] text-[8px] font-bold rounded hover:bg-[#27ae60] hover:text-[#080f09] transition-all truncate"
-                            >
-                                COPY DNA: {encodeDNA(pipelineCtx.metadata.dna).slice(0, 12)}...
-                            </button>
-                        </div>
-                    )}
-
-                    <div className="flex flex-col gap-1">
-                        <button 
-                            onClick={async () => {
-                                if (!pipelineCtx) return;
-                                const next = await evolveBuild(pipelineCtx, "more_sci_fi");
-                                setPipelineCtx(next);
-                            }}
-                            className="w-full text-left px-2 py-1 bg-[#0a0a1a] border border-[#3050a0]/40 text-[#4080ff] text-[8px] font-black uppercase rounded hover:border-[#4080ff]"
-                        >
-                            🧬 EVOLVE: MORE SCI-FI
-                        </button>
-                        <button 
-                            onClick={async () => {
-                                if (!pipelineCtx) return;
-                                const next = await evolveBuild(pipelineCtx, "more_fortified");
-                                setPipelineCtx(next);
-                            }}
-                            className="w-full text-left px-2 py-1 bg-[#1a0a0a] border border-[#a03030]/40 text-[#ff4040] text-[8px] font-black uppercase rounded hover:border-[#ff4040]"
-                        >
-                            🧬 EVOLVE: FORTIFIED
-                        </button>
-                    </div>
-                  </div>
-
-                  <div className={`absolute bottom-3 left-3 ${bg} border border-current ${color} px-2 py-1 rounded shadow-2xl backdrop-blur-md z-10 transition-all`}>
-                    <p className="text-[9px] font-black uppercase opacity-60 m-0 leading-none mb-1">Structural Health</p>
-                    <p className="text-[14px] font-black m-0 leading-none uppercase italic tracking-tighter">
-                       {status.health}/100 <span className="text-[10px] opacity-80 not-italic ml-1">({rating})</span>
-                    </p>
-                  </div>
-
-                  {status.status === "FAIL" && (
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#301010]/95 border-2 border-[#e74c3c] p-6 rounded shadow-[0_0_50px_rgba(231,76,60,0.4)] backdrop-blur-xl z-20 text-center max-w-sm animate-[pulse_2s_infinite]">
-                        <h4 className="text-[#e74c3c] font-black text-xl mb-2 uppercase italic tracking-tighter">⚠️ CRITICAL BUILD ERROR</h4>
-                        <p className="text-[#ffaaaa] text-[11px] leading-relaxed mb-4">
-                            This build has failed structural validation and may not function correctly on console. 
-                            Manual tuning or re-scaling is highly recommended.
-                        </p>
-                        <div className="flex gap-2 justify-center">
-                            <button 
-                                onClick={async () => {
-                                    showToast("Initiating auto-repair...");
-                                    const res = await autoFixBuild({ name: shapeType, id: shapeType });
-                                    if (res) showToast("Build repaired successfully!");
-                                    else showToast("Unable to repair build — see Validation Dashboard");
-                                }} 
-                                className="px-3 py-1.5 bg-[#27ae60] text-[#080f09] font-black text-[10px] rounded uppercase shadow-[0_0_15px_rgba(39,174,96,0.3)]"
-                            >
-                                ✨ Fix Build Automatically
-                            </button>
-                            <button onClick={() => setMode("validation")} className="px-3 py-1.5 bg-[#e74c3c] text-[#080f09] font-black text-[10px] rounded uppercase">View Full Trace</button>
-                            <button onClick={() => showToast("Dismissed. Proceed with caution.")} className="px-3 py-1.5 bg-[#1a0a0a] border border-[#e74c3c] text-[#e74c3c] font-black text-[10px] rounded uppercase">Ignore</button>
-                        </div>
-                    </div>
-                  )}
-                </>
-              );
-            })()}
+            {/* Object count badge */}
           </div>
 
           {/* Output */}
           {mode === "builds" ? (
             <div className="flex flex-col border-t border-[#0e2010] bg-[#0a1209] flex-1 min-h-0">
               <div className="flex items-center gap-2 px-3 py-1.5 border-b border-[#0e2010] shrink-0">
-                <span className="text-[#27ae60] text-[11px] font-bold tracking-wider">🏆 COMPLETED BUILDS</span>
-                <span className="text-[#5a8a5a] text-[10px]">{COMPLETED_BUILDS.length} ready-to-download builds</span>
+                {(() => {
+                  const b = COMPLETED_BUILDS.find(x => x.id === selectedBuildId);
+                  return b ? (
+                    <>
+                      <span className="text-[#27ae60] text-[11px] font-bold truncate">{b.icon} {b.name}</span>
+                      <span className="text-[#5a8a5a] text-[9px]">{selectedBuildLiveCount} obj</span>
+                    </>
+                  ) : (
+                    <span className="text-[#27ae60] text-[11px] font-bold tracking-wider">🏆 COMPLETED BUILDS</span>
+                  );
+                })()}
                 <div className="flex-1" />
-                <button
-                  onClick={downloadAllBuilds}
-                  disabled={zipGenerating}
-                  className="px-2 py-1 text-[10px] font-bold bg-[#0e2010] border border-[#27ae60] text-[#27ae60] rounded-sm hover:bg-[#27ae60] hover:text-[#080f09] transition-all disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
-                >
-                  {zipGenerating ? "⏳ Encoding…" : "⬇️ Registry (JSON)"}
-                </button>
+                {output && (
+                  <>
+                    <button
+                      onClick={() => copyCode(output)}
+                      className="px-2 py-1 text-[9px] font-bold border border-[#0e2010] text-[#b09a6a] hover:border-[#27ae60] hover:text-[#27ae60] rounded-sm transition-all shrink-0"
+                    >Copy</button>
+                    {(() => {
+                      const b = COMPLETED_BUILDS.find(x => x.id === selectedBuildId);
+                      return b ? (
+                        <>
+                          <button
+                            disabled={zipGenerating}
+                            onClick={() => handleDownloadPackage(b.id, b.shape, b.params, b.category, "initc")}
+                            className="px-2 py-1 text-[9px] font-bold bg-[#0e2010] border border-[#27ae60] text-[#27ae60] rounded-sm hover:bg-[#27ae60] hover:text-[#080f09] transition-all disabled:opacity-50 shrink-0"
+                          >{zipGenerating ? "⏳" : "⬇ .C"}</button>
+                          <button
+                            disabled={zipGenerating}
+                            onClick={() => handleDownloadPackage(b.id, b.shape, b.params, b.category, "json")}
+                            className="px-2 py-1 text-[9px] font-bold bg-[#1a1a2e] border border-[#6a7abf] text-[#6a7abf] rounded-sm hover:bg-[#6a7abf] hover:text-[#080f09] transition-all disabled:opacity-50 shrink-0"
+                          >{zipGenerating ? "⏳" : "⬇ JSON"}</button>
+                          <button
+                            onClick={() => loadBuildIntoEditor(b)}
+                            className="px-2 py-1 text-[9px] font-black bg-[#27ae60] text-[#080f09] rounded-sm hover:bg-[#e8b82a] transition-all shrink-0"
+                          >🛠️ Editor</button>
+                        </>
+                      ) : null;
+                    })()}
+                  </>
+                )}
               </div>
-              {(() => {
-                const b = COMPLETED_BUILDS.find(x => x.id === selectedBuildId);
-                return b ? (
-                  <div className="flex-1 p-4 overflow-auto flex flex-col gap-3">
-                    <div className="text-[#27ae60] text-lg font-black">{b.icon} {b.name}</div>
-                    <div className="text-[#b8d4b8] text-[11px] leading-relaxed">{b.tagline}</div>
-                    <div className="border border-[#0e2010] rounded-sm p-3 flex flex-col gap-2">
-                      <div className="text-[#5a8a5a] text-[10px] uppercase tracking-wider mb-1">Architecture Details</div>
-                      <div className="text-[11px]">
-                        <span className="text-[#27ae60] font-bold">PATTERN: </span>
-                        <span className="text-[#b8d4b8]">{b.shape || b.id}</span>
-                      </div>
-                      <div className="text-[11px]">
-                        <span className="text-[#27ae60] font-bold">OBJECT CLASS: </span>
-                        <span className="text-[#b8d4b8]">{b.frameObj}</span>
-                      </div>
-                      <div className="text-[#5a8a5a] text-[10px] leading-relaxed mt-1">{b.objectNotes}</div>
-                    </div>
-                    {(
-                      <div className="flex items-center gap-2 p-2 rounded-sm bg-[#0f1f0f] border border-[#27ae60]">
-                        <span className="text-[#27ae60] text-[18px] font-black">{selectedBuildLiveCount}</span>
-                        <div>
-                          <div className="text-[#27ae60] text-[10px] font-bold">OBJECTS TOTAL</div>
-                          <div className="text-[#5a8a5a] text-[9px]">⚡ Server-friendly · stays loaded long-term</div>
-                        </div>
-                      </div>
-                    )}
-                    <div className="border border-[#0e2010] rounded-sm p-3">
-                      <div className="text-[#5a8a5a] text-[10px] uppercase tracking-wider mb-2">Location</div>
-                      <div className="text-[#b8d4b8] text-[11px] font-mono">
-                        <span className="text-[#27ae60] font-bold">{b.posX < 8000 ? "NWAF" : b.category.includes("Lightweight") ? "Krasnoe Airfield" : "Krasnoe"}</span>
-                        {" "}X={b.posX} Y={b.posY} Z={b.posZ}
-                      </div>
-                      {b.category.includes("Lightweight") && (
-                        <div className="mt-1 text-[9px] text-[#3a6a3a]">Pre-positioned at Krasnoe Airfield flat apron — ready to paste into init.c</div>
-                      )}
-                    </div>
-
-                    {/* Interior & Loot toggle */}
-                    {b.interiorType && (
-                      <div className="mt-2 p-2 bg-[#0a1a0a] border border-[#1e3a1e] rounded-sm">
-                          <div className="flex flex-col gap-2">
-                             <label className="flex items-center gap-2 cursor-pointer select-none">
-                                <input
-                                  type="checkbox"
-                                  checked={addInteriorRooms}
-                                  onChange={e => setAddInteriorRooms(e.target.checked)}
-                                  className="accent-[#27ae60]"
-                                />
-                                <span className="text-[10px] text-[#7abf7a] font-bold uppercase tracking-wider">🏛️ Interior Rooms & Loot</span>
-                              </label>
-
-                              {addInteriorRooms && (
-                                <div className="flex flex-col gap-2 p-2 bg-[#1a2e1a] border border-[#27ae60]/30 rounded-sm ml-6">
-                                  <div className="flex items-center gap-3">
-                                    <label className="flex items-center gap-1">
-                                      <input type="checkbox" checked={addInteriorFurniture} onChange={e => setAddInteriorFurniture(e.target.checked)} className="accent-[#27ae60]" />
-                                      <span className="text-[9px] text-[#7abf7a]">FURNITURE</span>
-                                    </label>
-                                    <div className="flex items-center gap-1">
-                                      <span className="text-[9px] text-[#3a6a3a]">FLOORS:</span>
-                                      <input type="number" min="1" max="10" value={intFloors} onChange={e => setIntFloors(Number(e.target.value))} 
-                                        className="w-10 bg-[#080f09] border border-[#27ae60]/50 text-[10px] text-[#27ae60] p-0.5 rounded px-1" />
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                      <span className="text-[9px] text-[#3a6a3a]">HEIGHT:</span>
-                                      <input type="number" min="3" max="6" value={intFloorH} onChange={e => setIntFloorH(Number(e.target.value))} 
-                                        className="w-10 bg-[#080f09] border border-[#27ae60]/50 text-[10px] text-[#27ae60] p-0.5 rounded px-1" />
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                      <span className="text-[9px] text-[#3a6a3a]">ROOMS:</span>
-                                      <input type="number" min="4" max="15" value={intRoomSize} onChange={e => setIntRoomSize(Number(e.target.value))} 
-                                        className="w-10 bg-[#080f09] border border-[#27ae60]/50 text-[10px] text-[#27ae60] p-0.5 rounded px-1" />
-                                    </div>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <button
-                                      onClick={() => setLootSeed(Math.floor(Math.random() * 99999))}
-                                      className="text-[9px] px-2 py-0.5 bg-[#27ae60] text-[#080f09] font-bold rounded-sm hover:opacity-80 transition-all"
-                                    >
-                                      🎲 ROTATE LOOT SEED
-                                    </button>
-                                    <span className="text-[9px] text-[#3a6a3a]">Seed: <span className="text-[#27ae60] font-mono">{lootSeed}</span></span>
-                                  </div>
-                                </div>
-                              )}
-                          </div>
-                      </div>
-                    )}
-
-                    <div className="grid grid-cols-2 gap-2 mt-1">
-                      <button 
-                         disabled={zipGenerating}
-                         onClick={() => handleDownloadPackage(b.id, b.shape, b.params, b.category, "initc")}
-                         className="py-1.5 text-[10px] font-bold bg-[#0e2010] border border-[#27ae60] text-[#27ae60] rounded-sm hover:bg-[#27ae60] hover:text-[#080f09] transition-all disabled:opacity-50 uppercase">
-                        {zipGenerating ? "⏳..." : "⬇️ INIT.C"}
-                      </button>
-                      <button 
-                         disabled={zipGenerating}
-                         onClick={() => handleDownloadPackage(b.id, b.shape, b.params, b.category, "json")}
-                         className="py-1.5 text-[10px] font-bold bg-[#1a1a2e] border border-[#6a7abf] text-[#6a7abf] rounded-sm hover:bg-[#6a7abf] hover:text-[#080f09] transition-all disabled:opacity-50 uppercase">
-                        {zipGenerating ? "⏳..." : "⬇️ JSON"}
-                      </button>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2 mt-2">
-                       <button 
-                         onClick={() => {
-                           const xml = generateMapgroupposXml(b.objects_final || []);
-                           downloadFile(xml, `${b.name}_mapgrouppos.xml`, "application/xml");
-                         }}
-                         className="py-1.5 text-[10px] font-black bg-[#0c1510] border border-[#d4a017] text-[#d4a017] rounded-sm hover:bg-[#d4a017] hover:text-[#080f09] transition-all uppercase tracking-tighter">
-                         📤 XML EXPORT
-                       </button>
-                       <label className="py-1.5 text-[10px] font-black bg-[#0c1510] border border-[#9b59b6] text-[#9b59b6] rounded-sm hover:bg-[#9b59b6] hover:text-[#080f09] transition-all uppercase tracking-tighter text-center cursor-pointer">
-                         📥 XML IMPORT
-                         <input 
-                           type="file" 
-                           className="hidden" 
-                           accept=".xml" 
-                           onChange={async (e) => {
-                             const file = e.target.files?.[0];
-                             if (!file) return;
-                             const text = await file.text();
-                             const objs = parseMapgroupPos(text);
-                             if (objs.length > 0) {
-                               // Load into temporary workspace or create new build
-                               alert(`Imported ${objs.length} objects from XML. Ready for materialize.`);
-                             }
-                           }} 
-                         />
-                       </label>
-                    </div>
-                    <button 
-                       onClick={() => loadBuildIntoEditor(b)}
-                       className="w-full py-2.5 mt-2 bg-[#27ae60] text-[#080f09] font-black text-[12px] tracking-widest rounded-sm hover:bg-[#e8b82a] transition-all shadow-[0_0_15px_rgba(39,174,96,0.3)]">
-                      🛠️ LOAD IN EDITOR (RE-OPTIMIZE)
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex-1 flex items-center justify-center text-[#5a8a5a] text-[11px]">
-                    Select a build on the left to preview and download
-                  </div>
-                );
-              })()}
+              {output ? (
+                <textarea readOnly value={output}
+                  className="flex-1 resize-none p-3 text-[11px] text-[#7ec060] bg-transparent border-0 outline-none leading-relaxed font-mono overflow-auto"
+                />
+              ) : (
+                <div className="flex-1 flex items-center justify-center text-[#3a6a3a] text-[11px] flex-col gap-2 opacity-60">
+                  <span>Select a build on the left</span>
+                  <span className="text-[9px]">Code generates automatically on selection</span>
+                </div>
+              )}
             </div>
           ) : (
             <div className="flex flex-col border-t border-[#0e2010] bg-[#0a1209] flex-1 min-h-0">
@@ -2504,12 +2154,12 @@ function ArchitectSidebar(p: any) {
           {/* 6 arena type tiles */}
           <div className="grid grid-cols-3 gap-1 mb-2">
             {[
-              { key: "arena_colosseum", icon: "ðŸ›", label: "Colosseum" },
-              { key: "arena_fort",      icon: "ðŸ°", label: "Fortress"  },
-              { key: "arena_maze",      icon: "ðŸŒ€", label: "Maze"      },
-              { key: "arena_siege",     icon: "âš”",  label: "Siege"     },
-              { key: "arena_compound",  icon: "ðŸª–", label: "Compound"  },
-              { key: "pvp_arena",       icon: "ðŸ”µ", label: "Ring"      },
+              { key: "arena_colosseum", icon: "\u{1F3DB}", label: "Colosseum" },
+              { key: "arena_fort",      icon: "\u{1F3F0}", label: "Fortress"  },
+              { key: "arena_maze",      icon: "\u{1F300}", label: "Maze"      },
+              { key: "arena_siege",     icon: "\u2694", label: "Siege"     },
+              { key: "arena_compound",  icon: "\u{1FA96}", label: "Compound"  },
+              { key: "pvp_arena",       icon: "\u{1F535}", label: "Ring"      },
             ].map(({ key, icon, label }) => (
               <button key={key} onClick={() => p.onShapeChange(key)}
                 className={`text-center px-1 py-1.5 rounded-sm border transition-all ${p.shapeType === key ? "border-[#27ae60] bg-[#0e1a0e]" : "border-[#0e2010] hover:border-[#3a6a3a] bg-[#060402]"}`}>
@@ -2634,7 +2284,7 @@ function ArchitectSidebar(p: any) {
       ))}
 
       {/* Position */}
-      {sec("pos", "ðŸ“ Base Position", (
+      {sec("pos", "\u{1F4CD} Base Position", (
         <div className="px-3">
           {/* Famous Locations picker */}
           <Lbl>Famous Chernarus Location</Lbl>
@@ -2847,7 +2497,7 @@ function BuildsSidebar(p: {
   onLoadIntoEditor: (build: CompletedBuild | any) => void;
   onFilterChange: (v: string) => void;
   onCategoryChange: (v: string) => void;
-  onDownloadPackage: (id: string, shape: string, params: any, cat: string) => void;
+  onDownloadPackage: (id: string, shape: string, params: any, cat: string, fmt?: "json" | "initc") => void;
   onGetValidationStatus: (build: any) => any;
   packagingProfile: PackagingProfile;
   setPackagingProfile: (v: PackagingProfile) => void;
@@ -2861,7 +2511,7 @@ function BuildsSidebar(p: {
   const filtered = p.builds.filter(b => {
     const catOk = p.category === "All" || b.category === p.category;
     const q = p.filter.toLowerCase();
-    const textOk = !q || b.name.toLowerCase().includes(q) || b.tagline.toLowerCase().includes(q);
+    const textOk = !q || (b.name || "").toLowerCase().includes(q) || (b.tagline || "").toLowerCase().includes(q);
     return catOk && textOk;
   });
 
@@ -2934,13 +2584,13 @@ function BuildsSidebar(p: {
               <div className="grid grid-cols-2 gap-1">
                 <button
                   disabled={p.zipGenerating}
-                  onClick={e => { e.stopPropagation(); p.onDownloadPackage(b.id, b.shape, b.params, b.category); }}
+                  onClick={e => { e.stopPropagation(); p.onDownloadPackage(b.id, b.shape, b.params, b.category, "initc"); }}
                   className="py-1 text-[8px] font-bold border border-[#27ae60] text-[#27ae60] rounded-sm hover:bg-[#27ae60] hover:text-[#080f09] disabled:opacity-50">
                   ⬇ .C {p.zipGenerating && "..."}
                 </button>
                 <button
                   disabled={p.zipGenerating}
-                  onClick={e => { e.stopPropagation(); p.onDownloadPackage(b.id, b.shape, b.params, b.category); }}
+                  onClick={e => { e.stopPropagation(); p.onDownloadPackage(b.id, b.shape, b.params, b.category, "json"); }}
                   className="py-1 text-[8px] font-bold border border-[#6a7abf] text-[#6a7abf] rounded-sm hover:bg-[#6a7abf] hover:text-[#080f09] disabled:opacity-50">
                   ⬇ JSON
                 </button>

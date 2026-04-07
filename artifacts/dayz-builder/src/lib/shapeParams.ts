@@ -1081,6 +1081,21 @@ export const SHAPE_DEFS: Record<string, ShapeDef> = {
       { id: "height", label: "Tower Height (m)", val: 100, min: 50, max: 300 },
     ]
   },
+  skyscraper: {
+    label: " Skyscraper", group: " Masterpieces",
+    params: [
+      { id: "height", label: "Tower Height (m)", val: 120, min: 40, max: 300, step: 5 },
+      { id: "width",  label: "Tower Width (m)",  val: 30,  min: 10, max: 100, step: 2 },
+      { id: "floors", label: "Number of Floors", val: 20,  min: 5,  max: 60,  step: 1 },
+    ]
+  },
+  eiffel_tower: {
+    label: " Eiffel Tower", group: " Masterpieces",
+    params: [
+      { id: "height", label: "Tower Height (m)", val: 120, min: 40, max: 300, step: 10 },
+      { id: "width",  label: "Base Width (m)",  val: 60,  min: 20, max: 150, step: 5 },
+    ]
+  },
 };
 
 export const SHAPE_GROUPS = [...new Set(Object.values(SHAPE_DEFS).map(s => s.group))];

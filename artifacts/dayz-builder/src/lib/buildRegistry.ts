@@ -108,8 +108,8 @@ export const initRegistry = async () => {
 
   // 2. Load VAULT_FILES (Filtered)
   for (const f of VAULT_FILES) {
-    if (EXCLUDED_CATEGORIES.includes(f.category.toLowerCase())) continue;
-    if (EXCLUDED_FILES.includes(f.name.toLowerCase())) continue;
+    if (EXCLUDED_CATEGORIES.includes((f.category || "").toLowerCase())) continue;
+    if (EXCLUDED_FILES.includes((f.name || "").toLowerCase())) continue;
 
     const isMasterpiece = f.path.includes("INTERNAL:masterpiece:") || 
                          COMPLETED_BUILDS.some(b => b.id === f.name.replace(".json", "").replace(".dze", ""));

@@ -69,9 +69,9 @@ export default function BuildLibrary({
 
   const filteredBuilds = useMemo(() => {
     const list = builds.filter(b => {
-      const matchQuery = b.name.toLowerCase().includes(query.toLowerCase()) || 
+      const matchQuery = (b.name || "").toLowerCase().includes(query.toLowerCase()) ||
                          (b.tagline || "").toLowerCase().includes(query.toLowerCase()) ||
-                         b.category.toLowerCase().includes(query.toLowerCase());
+                         (b.category || "").toLowerCase().includes(query.toLowerCase());
       const matchCat = category === "All" || b.category === category;
       return matchQuery && matchCat;
     });

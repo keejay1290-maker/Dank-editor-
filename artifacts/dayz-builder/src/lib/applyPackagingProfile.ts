@@ -27,7 +27,7 @@ export function applyPackagingProfile(ctx: PipelineContext, profileName: Packagi
 
     case "pvp":
         // Remove tiny props, keep structural cover
-        clone.objects_final = objects.filter(obj => !obj.name.toLowerCase().includes("prop_") && !obj.name.toLowerCase().includes("misc_"));
+        clone.objects_final = objects.filter(obj => !(obj.name || "").toLowerCase().includes("prop_") && !(obj.name || "").toLowerCase().includes("misc_"));
         break;
 
     case "rp":

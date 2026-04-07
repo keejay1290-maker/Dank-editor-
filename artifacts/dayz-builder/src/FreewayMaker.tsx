@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { formatInitC, HELPER_FUNC } from "@/lib/dayzObjects";
 import FreewayPreview3D from "@/FreewayPreview3D";
 import { executePipeline, PipelineContext } from "@/lib/pipeline";
@@ -139,16 +139,17 @@ export default function FreewayMaker() {
             }
         }
 
-        // Wrecks
-        if (carWrecks > 0 && Math.random() < carWrecks * 0.1 && objs.length < MAX_FREEWAY_OBJECTS) {
+        // Wrecks (Deterministic approach to prevent render loops)
+        const wreckSeed = (i * 1337) % 100;
+        if (carWrecks > 0 && wreckSeed < carWrecks * 10 && objs.length < MAX_FREEWAY_OBJECTS) {
             const wreckTypes = ["Land_Wreck_Ssed19_1", "Land_Wreck_Volha_1", "Land_Wreck_V3S"];
-            const wName = wreckTypes[Math.floor(Math.random() * wreckTypes.length)];
-            const laneOff = (Math.random() - 0.5) * (def.width * 0.7);
+            const wName = wreckTypes[i % wreckTypes.length];
+            const laneOff = ((i % 7) / 7 - 0.5) * (def.width * 0.7);
             const rYaw = yaw * (Math.PI / 180);
             objs.push({ 
                 name: wName, 
                 x: p.x + Math.cos(rYaw)*laneOff, y: p.y + 0.3, z: p.z - Math.sin(rYaw)*laneOff, 
-                yaw: yaw + 90 + (Math.random()*40-20), pitch, roll: 0 
+                yaw: yaw + 90 + ((i % 5) * 8 - 16), pitch, roll: 0 
             });
         }
     }
@@ -157,12 +158,17 @@ export default function FreewayMaker() {
   }, [startX, startY, startZ, endX, endY, endZ, cp1X, cp1Y, cp1Z, roadType, supportPillars, guardRails, carWrecks]);
 
   // V2 Pipeline Sync
-  useCallback(() => {
-    executePipeline("Freeway_High_Fidelity", "industrial", 0, 
-      { startX, startY, startZ, endX, endY, endZ, cp1X, cp1Y, cp1Z, roadType },
-      () => objects.map(o => ({ ...o, x: o.x - startX, y: o.y - startY, z: o.z - startZ }))
-    ).then(setPipelineCtx).catch(console.error);
-  }, [objects, startX, startY, startZ, endX, endY, endZ, cp1X, cp1Y, cp1Z, roadType])();
+  useEffect(() => {
+    let active = true;
+    const timer = setTimeout(() => {
+      executePipeline("Freeway_High_Fidelity", "industrial", 0,
+        { startX, startY, startZ, endX, endY, endZ, cp1X, cp1Y, cp1Z, roadType },
+        () => objects.map(o => ({ ...o, x: o.x - startX, y: o.y - startY, z: o.z - startZ }))
+      ).then(ctx => { if (active) setPipelineCtx(ctx); }).catch(console.error);
+    }, 200); // 200ms debounce
+
+    return () => { active = false; clearTimeout(timer); };
+  }, [objects, startX, startY, startZ, endX, endY, endZ, cp1X, cp1Y, cp1Z, roadType]);
 
   const output = useMemo(() => {
     if (objects.length === 0) return "";

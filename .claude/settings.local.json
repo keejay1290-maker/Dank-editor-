@@ -25,7 +25,19 @@
       "Bash(\"/c/Users/Shadow/Downloads/Dank-editor-preview/node_modules/.bin/tsc\" --noEmit)",
       "Bash(node_modules/.bin/vite --host 0.0.0.0 --port 5173)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173)",
-      "Bash(node_modules/.bin/vite build:*)"
+      "Bash(node_modules/.bin/vite build:*)",
+      "Bash(npx tsc:*)",
+      "Bash(pnpm dev:*)",
+      "Bash(npm run:*)",
+      "Bash(python3 -c ':*)",
+      "Bash(python3)",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' http://localhost:5173/)",
+      "Bash(kill %1)",
+      "Bash(curl -s http://localhost:5175)",
+      "Bash(curl -s http://localhost:5174)",
+      "Bash(awk 'NR>=2100 && NR<=2170 && /^function |^export function/' \"c:/Users/Shadow/Downloads/Dank-editor-preview/artifacts/dayz-builder/src/lib/shapeGenerators.ts\")",
+      "Bash(awk 'NR>=5960 && NR<=6010 && /^function |^export function/' \"c:/Users/Shadow/Downloads/Dank-editor-preview/artifacts/dayz-builder/src/lib/shapeGenerators.ts\")",
+      "Bash(grep -n \"category.*undefined\\\\|category: undefined\\\\|category:$\\\\|category: ,\" \"c:/Users/Shadow/Downloads/Dank-editor-preview/artifacts/dayz-builder/src/lib/vaultData.ts\")"
     ]
   }
 }

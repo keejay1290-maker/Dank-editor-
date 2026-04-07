@@ -29,5 +29,23 @@ export const OBJECT_FAMILY_MAP = {
     rooms: ["Land_Underground_Room_Small"],
     entrances: ["Land_Underground_Entrance"],
     theme: "Livonia-grade bunker tunnels and modular corridor segments"
+  },
+  civilian: {
+    walls: ["StaticObj_BusStation_wall", "StaticObj_Roadblock_CncBlock"],
+    panels: ["StaticObj_BusStation_wall"],
+    barriers: ["StaticObj_Roadblock_CncBlock", "Land_Roadblock_Bags_Long"],
+    theme: "Civilian infrastructure — bus stops, road barriers, urban concrete"
+  },
+  police: {
+    walls: ["StaticObj_Mil_HBarrier_6m", "StaticObj_BusStation_wall"],
+    fortifications: ["StaticObj_Mil_HBarrier_Big", "Land_Roadblock_Bags_Long"],
+    barriers: ["StaticObj_Roadblock_CncBlock"],
+    theme: "Police station perimeter: HESCO barriers, roadblocks, bollards"
+  },
+  medical: {
+    walls: ["StaticObj_BusStation_wall", "Land_ContainerLocked_Blue_DE"],
+    panels: ["StaticObj_BusStation_wall"],
+    containers: ["Land_ContainerLocked_Blue_DE"],
+    theme: "Hospital/medical facility: clean white walls and blue containers"
   }
 };

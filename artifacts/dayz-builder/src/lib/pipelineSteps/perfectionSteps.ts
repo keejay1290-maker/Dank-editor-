@@ -232,7 +232,7 @@ export const FIX_FAMILY_ERRORS = (ctx: PipelineContext) => {
   const fallback = MASTER_RULESET.object_family_mapping.fallback_family;
   
   ctx.objects.forEach(obj => {
-    if (forbidden.some((f: string) => obj.name.toLowerCase().includes(f.toLowerCase()))) {
+    if (obj.name && forbidden.some((f: string) => (obj.name || "").toLowerCase().includes(f.toLowerCase()))) {
       const old = obj.name;
       obj.name = fallback;
       ctx.errors.push(`Remapped forbidden asset ${old} -> ${fallback}`);
