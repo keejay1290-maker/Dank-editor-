@@ -103,6 +103,7 @@ export const smart_density_optimizer = (ctx: PipelineContext) => {
         
         const dist = Math.sqrt(
             Math.pow(curr.pos[0] - prev.pos[0], 2) + 
+            Math.pow(curr.pos[1] - prev.pos[1], 2) + 
             Math.pow(curr.pos[2] - prev.pos[2], 2)
         );
 

@@ -1,46 +1,99 @@
 import { Point3D } from "./types";
+import { getMimic } from "./shapeMimic";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 🏗️  DANKVAULT™ MASTERPIECE GEOMETRY ENGINE (HIGH FIDELITY)
 // ─────────────────────────────────────────────────────────────────────────────
 
-function drawWall(pts: Point3D[], x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, spacing: number = 3) {
+// Safety Constants
+const MAX_OBJECTS = 1200;
+const PANEL_W = 8.0;      // Legacy default
+const OVERLAP = 0.90;     // 10% overlap intersection for solid surfaces
+
+/** 
+ * Returns the canonical width of an object for gapless tiling.
+ * Defaults to 8m for unknown walls.
+ */
+function getObjectWidth(name?: string): number {
+  if (!name) return 8.0;
+  const mimic = getMimic(name);
+  // Many mimics use [width, height, thickness] logic.
+  // We assume args[0] is the lateral span unless it's a known exception.
+  return (mimic.args && mimic.args[0]) ? mimic.args[0] : 8.0;
+}
+
+function drawWall(pts: Point3D[], x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, nameOrSpacing?: string | number) {
+  let name: string | undefined = undefined;
+  let spacing: number = PANEL_W * OVERLAP;
+
+  if (typeof nameOrSpacing === "string") {
+    name = nameOrSpacing;
+    spacing = getObjectWidth(name) * OVERLAP;
+  } else if (typeof nameOrSpacing === "number") {
+    spacing = nameOrSpacing;
+  }
+
   const dx = x2 - x1, dy = y2 - y1, dz = z2 - z1;
   const len = Math.max(0.1, Math.sqrt(dx*dx + dy*dy + dz*dz));
   const yaw = Math.atan2(dx, dz) * 180 / Math.PI + 90;
   const pitch = Math.atan2(dy, Math.sqrt(dx*dx + dz*dz)) * -180 / Math.PI;
-  const s = (typeof spacing === "number" && spacing > 0) ? spacing : 3;
-  const steps = Math.max(1, Math.ceil(len / s));
-  // Center-based placement: panel i sits at the middle of cell i.
-  // No endpoint overlap at wall junctions → perfect flush tiling.
+  const steps = Math.max(1, Math.ceil(len / spacing));
   for (let i = 0; i < steps; i++) {
     const t = (i + 0.5) / steps;
-    pts.push({ x: x1+dx*t, y: y1+dy*t, z: z1+dz*t, yaw, pitch });
+    pts.push({ x: x1+dx*t, y: y1+dy*t, z: z1+dz*t, yaw, pitch, name });
   }
 }
 
-function drawRing(pts: Point3D[], cx: number, cy: number, cz: number, r: number, spacing: number = 4) {
+function drawRing(pts: Point3D[], cx: number, cy: number, cz: number, r: number, nameOrSpacing?: string | number) {
   if (r <= 0) return;
-  // Exact panel count: round so panels fill ring flush, no endpoint double-placement.
-  const nPanels = Math.max(4, Math.round((2 * Math.PI * r) / spacing));
+  let name: string | undefined = undefined;
+  let spacing: number = PANEL_W * OVERLAP;
+
+  if (typeof nameOrSpacing === "string") {
+    name = nameOrSpacing;
+    spacing = getObjectWidth(name) * OVERLAP;
+  } else if (typeof nameOrSpacing === "number") {
+    spacing = nameOrSpacing;
+  }
+
+  const nPanels = Math.max(4, Math.ceil((2 * Math.PI * r) / spacing));
   const arcStep = (2 * Math.PI) / nPanels;
   for (let i = 0; i < nPanels; i++) {
-    // Place each panel at the ARC midpoint of its cell (not chord midpoint).
     const a = (i + 0.5) * arcStep;
     const x = cx + r * Math.cos(a);
     const z = cz + r * Math.sin(a);
-    // Tangential yaw: wall's 8m axis lies along the ring tangent.
-    // tangent at angle a = (-sin a, cos a) in (X,Z) space.
-    // yaw = atan2(dx, dz)*180/PI + 90 → atan2(-sin a, cos a)*180/PI + 90 = -a*180/PI + 90
     const yaw = -a * 180 / Math.PI + 90;
-    pts.push({ x, y: cy, z, yaw });
+    pts.push({ x, y: cy, z, yaw, name });
   }
 }
 
-function drawDisk(pts: Point3D[], cx: number, cy: number, cz: number, maxR: number, spacing: number = 4) {
-  for(let r=spacing; r<=maxR; r+=spacing) {
-    drawRing(pts, cx, cy, cz, r, spacing);
+function drawDisk(pts: Point3D[], cx: number, cy: number, cz: number, maxR: number, nameOrSpacing?: string | number) {
+  let spacing: number = PANEL_W * OVERLAP;
+  if (typeof nameOrSpacing === "string") {
+    spacing = getObjectWidth(nameOrSpacing) * OVERLAP;
+  } else if (typeof nameOrSpacing === "number") {
+    spacing = nameOrSpacing;
   }
+
+  for(let r=spacing; r<=maxR; r+=spacing) {
+    drawRing(pts, cx, cy, cz, r, nameOrSpacing);
+  }
+}
+
+/**
+ * Ensures build stays under 1200 objects.
+ * If exceeded, it scales the entire build down until it fits.
+ */
+function applyGovernor(pts: Point3D[], targetLimit: number = MAX_OBJECTS): Point3D[] {
+  if (pts.length <= targetLimit) return pts;
+  const factor = Math.sqrt(targetLimit / pts.length) * 0.95; 
+  return pts.map(p => ({
+    ...p,
+    x: p.x * factor,
+    y: p.y * factor,
+    z: p.z * factor,
+    // Note: Rotations remain same, scale might need adjustment if it was per-object
+  })).slice(0, targetLimit); // Safety slice
 }
 
 function placeStairs(pts: Point3D[], centerX: number, centerZ: number, startY: number, height: number, steps: number, radius = 5): void {
@@ -90,7 +143,7 @@ export function gen_shipwreck(p: Record<string, any>): Point3D[] {
   // ── 3. FUNNEL / STACK (upright cylinder approximated with ring) ──────────
   const funnelX = bridgeX + 5;
   for (let fy = 7; fy <= 18; fy += 3) {
-    drawRing(pts, funnelX, fy, 0, 2.5, 3);
+    drawRing(pts, funnelX, fy, 0, 2.5, "staticobj_wall_indcnc_10");
   }
 
   // ── 4. HULL SIDE PLATING (tin panels along the flanks) ──────────────────
@@ -134,145 +187,94 @@ function drawOnionDome(pts: Point3D[], cx: number, baseH: number, cz: number, r:
 
 // ── Primaries (The Gold Standard) ───────────────────────────────────────────
 
-// 1. Death Star — High-Fidelity Shell with Equatorial Trench & Superlaser Dish
+// 1. Death Star — High-Fidelity Gapless Spherical Shell with Equatorial Trench & Superlaser Dish
 export function gen_death_star(p: Record<string, any>): Point3D[] {
-  const pts: Point3D[] = [];
-  const radius = p.radius || 44;
+  let pts: Point3D[] = [];
+  const R = p.radius || 44;
+  const latSegs = Math.max(28, p.latSegs || 36);
 
-  // Hull panel spacing — use concrete wall sections (8m) for finer granularity
-  const PANEL_W = 8;
-  const latSegs = Math.max(12, p.latSegs || 18);
-  const lonSegs = Math.max(24, p.lonSegs || 36);
+  // Hull Object: 8m Concrete for speed/coverage
+  const HullObj = "staticobj_wall_cncsmall_8";
+  const HullW = getObjectWidth(HullObj);
+  
+  // Trench Object: 4m Military for detail
+  const TrenchObj = "staticobj_wall_milcnc_4";
+  const TrenchW = getObjectWidth(TrenchObj);
 
-  // Superlaser dish: northern hemisphere offset ~30° from pole
-  const dishLat    = (p.dishLat || 30) * Math.PI / 180;
-  const dishRadius = radius * (p.dishRatio || 0.28);
-  // Dish face-centre on the sphere surface
-  const dcX = radius * Math.cos(dishLat);
-  const dcY = radius * Math.sin(dishLat);
-  const dcZ = 0;
-  // Outward normal of the dish
-  const dnX = dcX / radius, dnY = dcY / radius;
+  // Superlaser dish parameters
+  const dishLat = (p.dishLat || 30) * Math.PI / 180;
+  const dishR = R * (p.dishRatio || 0.25);
+  const dcX = R * Math.cos(dishLat);
+  const dcY = R * Math.sin(dishLat);
 
-  // Equatorial trench half-width (radians)
-  const TRENCH_HALF = Math.asin(3.5 / radius);
+  // Equatorial trench half-width in radians
+  const TRENCH_HALF = Math.asin(4.2 / R);
 
-  // ── 1. OUTER HULL ────────────────────────────────────────────────────────
+  // ── 1. OUTER HULL — UV Sphere Shell ────────────────────────────────────
   for (let i = 0; i <= latSegs; i++) {
     const lat = -Math.PI / 2 + Math.PI * i / latSegs;
-    const y      = radius * Math.sin(lat);
-    const r_at_y = radius * Math.cos(lat);
+    const y = R * Math.sin(lat);
+    const rAtY = R * Math.cos(lat);
 
-    // Skip equatorial trench band
     if (Math.abs(lat) < TRENCH_HALF) continue;
-    if (r_at_y < 0.5) continue;
+    if (rAtY < HullW * 0.5) {
+        // Polar caps
+        pts.push({ x: 0, y: y > 0 ? R : -R, z: 0, pitch: y > 0 ? -90 : 90, name: HullObj });
+        continue;
+    }
 
-    const circum = 2 * Math.PI * r_at_y;
-    const steps  = Math.max(4, Math.round(circum / PANEL_W));
+    // Dynamic lonSegs based on circumference at this latitude for perfect gapless tiling
+    const nPanels = Math.max(6, Math.ceil((2 * Math.PI * rAtY) / (HullW * OVERLAP)));
 
-    for (let j = 0; j < steps; j++) {
-      const lon = (2 * Math.PI * j) / steps;
-      const x   = r_at_y * Math.cos(lon);
-      const z   = r_at_y * Math.sin(lon);
+    for (let j = 0; j < nPanels; j++) {
+      const lon = (2 * Math.PI * j) / nPanels;
+      const x = rAtY * Math.cos(lon);
+      const z = rAtY * Math.sin(lon);
 
-      // Skip dish recess
-      const toDish = Math.sqrt((x - dcX) ** 2 + (y - dcY) ** 2 + (z - dcZ) ** 2);
-      if (toDish < dishRadius * 1.05) continue;
+      const toDish = Math.sqrt((x - dcX) ** 2 + (y - dcY) ** 2 + z * z);
+      if (toDish < dishR * 1.05) continue;
 
-      // Face outward: yaw = tangential direction around latitude ring
-      const yaw = (lon * 180 / Math.PI) + 90;
-
-      // Surface panel variation: alternate between two wall types for panel-seam detail
-      const useAlt = ((i + j) % 3 === 0);
-      pts.push({
-        x, y, z,
-        yaw,
-        name: useAlt ? "staticobj_wall_milcnc_4" : "staticobj_wall_cncsmall_8",
-      });
+      const yaw = -(lon * 180 / Math.PI) + 90;
+      const pitch = -(lat * 180 / Math.PI);
+      pts.push({ x, y, z, yaw, pitch, name: HullObj });
     }
   }
 
-  // ── 2. EQUATORIAL TRENCH ─────────────────────────────────────────────────
-  // Inner trench floor ring + trench walls with turbolaser towers
-  const TRENCH_DEPTH = radius * 0.07;
-  const trenchR      = radius - TRENCH_DEPTH;
-  const trenchSteps  = 72;
-  for (let j = 0; j < trenchSteps; j++) {
-    const lon = (2 * Math.PI * j) / trenchSteps;
-    const x   = trenchR * Math.cos(lon);
-    const z   = trenchR * Math.sin(lon);
-    const yaw = (lon * 180 / Math.PI) + 90;
+  // ── 2. EQUATORIAL TRENCH ────────────────────────────────────────────────
+  const trenchDepth = R * 0.05;
+  const trenchR = R - trenchDepth;
+  drawRing(pts, 0, 0, 0, trenchR, TrenchObj);           // Deepest floor
+  drawRing(pts, 0, 2.5, 0, R - 0.5, TrenchObj);       // Upper lip
+  drawRing(pts, 0, -2.5, 0, R - 0.5, TrenchObj);      // Lower lip
 
-    // Trench floor
-    pts.push({ x, y: 0,  z, yaw, name: "staticobj_wall_milcnc_4" });
-    // Upper trench lip (north side)
-    pts.push({ x: (radius - 1) * Math.cos(lon), y: 3.5,  z: (radius - 1) * Math.sin(lon), yaw, name: "staticobj_wall_milcnc_4" });
-    // Upper trench lip (south side)
-    pts.push({ x: (radius - 1) * Math.cos(lon), y: -3.5, z: (radius - 1) * Math.sin(lon), yaw, name: "staticobj_wall_milcnc_4" });
-
-    // Turbolaser battery towers every ~24 steps
-    if (j % 8 === 0) {
-      pts.push({ x: (radius + 2) * Math.cos(lon), y:  5, z: (radius + 2) * Math.sin(lon), yaw, name: "staticobj_wall_indcnc_10" });
-      pts.push({ x: (radius + 2) * Math.cos(lon), y: -5, z: (radius + 2) * Math.sin(lon), yaw, name: "staticobj_wall_indcnc_10" });
-    }
-
-    // Exhaust port shaft — single entry at lon=0
-    if (j === 0) {
-      for (let depth = 1; depth <= 5; depth++) {
-        pts.push({ x: (trenchR - depth * 1.5) * Math.cos(lon), y: 0, z: (trenchR - depth * 1.5) * Math.sin(lon), yaw, name: "staticobj_wall_cncsmall_8" });
-      }
-    }
-  }
-
-  // ── 3. SUPERLASER DISH ───────────────────────────────────────────────────
-  // Concave parabolic recess on the surface, angled outward from sphere center.
-  // We build concentric rings that are tangent to the sphere surface and then
-  // recessed inward along the dish normal vector.
-  for (let ring = 1; ring <= 7; ring++) {
-    const dr        = (dishRadius / 7) * ring;
-    const recess    = dishRadius * 0.45 * (1 - (dr / dishRadius) ** 1.5); // parabolic depth
-    const dCircum   = 2 * Math.PI * dr;
-    const dSteps    = Math.max(6, Math.round(dCircum / 4));
+  // ── 3. SUPERLASER DISH ──────────────────────────────────────────────────
+  const dnX = dcX / R, dnY = dcY / R;
+  for (let ring = 1; ring <= 4; ring++) {
+    const dr = (dishR / 4) * ring;
+    const recess = dishR * 0.35 * (1 - (dr / dishR) ** 1.8);
+    const dSteps = Math.ceil((2 * Math.PI * dr) / (HullW * OVERLAP));
 
     for (let di = 0; di < dSteps; di++) {
       const da = (2 * Math.PI * di) / dSteps;
+      const bx = -dnY, by = dnX;
+      const lx = dr * Math.sin(da) * bx;
+      const ly = dr * Math.sin(da) * by;
+      const lz = dr * Math.cos(da);
 
-      // Local disc coords (two axes perpendicular to dish normal)
-      // dish normal is (dnX, dnY, 0); perp axes: (0,0,1) and (-dnY, dnX, 0)
-      const ax = 0,    ay = 0,    az = 1;              // axis A = Z
-      const bx = -dnY, by = dnX,  bz = 0;              // axis B = tangent
-
-      const lx = dr * (Math.cos(da) * ax + Math.sin(da) * bx);
-      const ly = dr * (Math.cos(da) * ay + Math.sin(da) * by);
-      const lz = dr * (Math.cos(da) * az + Math.sin(da) * bz);
-
-      // Position on sphere surface, then recess along inward normal
-      const px = dcX + lx - dnX * recess;
-      const py = dcY + ly - dnY * recess;
-      const pz = dcZ + lz;
-
-      const useInner = ring <= 2;
       pts.push({
-        x: px, y: py, z: pz,
-        yaw: (da * 180 / Math.PI) + 90,
-        name: useInner ? "staticobj_wall_cncsmall_8" : "staticobj_wall_indcnc_10",
+        x: dcX + lx - dnX * recess,
+        y: dcY + ly - dnY * recess,
+        z: lz,
+        yaw: -(da * 180 / Math.PI) + 90,
+        name: ring <= 2 ? HullObj : "staticobj_wall_indcnc_10",
       });
     }
   }
 
-  // Dish lens / focus point
-  pts.push({ x: dcX - dnX * dishRadius * 0.5, y: dcY - dnY * dishRadius * 0.5, z: dcZ, name: "staticobj_wall_milcnc_4" });
-
-  // ── 4. POLAR SURFACE DETAIL ──────────────────────────────────────────────
-  // Add small rings at N/S poles for sensor/reactor texture
-  [[0, radius], [0, -radius]].forEach(([, py]) => {
-    for (let pr = 3; pr <= 10; pr += 3.5) {
-      drawRing(pts, 0, py, 0, pr, 3);
-    }
-  });
-
-  return pts;
+  return applyGovernor(pts);
 }
+
+
 
 /**
  * 🏢 GEN_STRUCTURAL_RANDOM (DANKVAULT_STABLE_V2_FINALIZE)
@@ -293,21 +295,21 @@ export function gen_structural_random(p: Record<string, any>): Point3D[] {
       const rz = Math.floor(r / 2) * roomSize;
       
       // Floor
-      drawDisk(pts, rx, y, rz, roomSize / 2, 4);
+      drawDisk(pts, rx, y, rz, roomSize / 2, "staticobj_platform1_block");
       
       // Walls
       const half = roomSize / 2;
       // North
-      drawWall(pts, rx - half, y, rz + half, rx + half, y, rz + half, 4);
+      drawWall(pts, rx - half, y, rz + half, rx + half, y, rz + half, "staticobj_wall_indcnc_10");
       // South
-      drawWall(pts, rx - half, y, rz - half, rx + half, y, rz - half, 4);
+      drawWall(pts, rx - half, y, rz - half, rx + half, y, rz - half, "staticobj_wall_indcnc_10");
       // East
-      drawWall(pts, rx + half, y, rz - half, rx + half, y, rz + half, 4);
+      drawWall(pts, rx + half, y, rz - half, rx + half, y, rz + half, "staticobj_wall_indcnc_10");
       // West (with entrance)
       if (r === 0) {
         pts.push({ x: rx - half, y, z: rz, yaw: 90, name: "Land_Underground_Entrance" });
       } else {
-        drawWall(pts, rx - half, y, rz - half, rx - half, y, rz + half, 4);
+        drawWall(pts, rx - half, y, rz - half, rx - half, y, rz + half, "staticobj_wall_indcnc_10");
       }
       
       // Loot placement (Learned from Player_Building_Container study)
@@ -369,7 +371,7 @@ export function gen_taj_mahal(p: Record<string, any>): Point3D[] {
   // 4 Minarets at Plinth Corners
   const mOff = base/2 + 4;
   [[-mOff, -mOff], [mOff, -mOff], [-mOff, mOff], [mOff, mOff]].forEach(([cx, cz]) => {
-     for(let y=6; y<=55; y+=4) drawRing(pts, cx, y, cz, 4);
+     for(let y=6; y<=55; y+=4) drawRing(pts, cx, y, cz, 4, "staticobj_wall_stone2");
      drawOnionDome(pts, cx, 55, cz, 5, 10);
   });
   return pts;
@@ -531,8 +533,8 @@ export function gen_millennium_falcon(p: Record<string, any>): Point3D[] {
   const r = 25;
   // Main Hull (Flat Disc)
   for(let y=-2; y<=2; y+=2) {
-    drawRing(pts, 0, y, 0, r);
-    drawDisk(pts, 0, y, 0, r*0.9, 5);
+    drawRing(pts, 0, y, 0, r, "staticobj_wall_milcnc_4");
+    drawDisk(pts, 0, y, 0, r*0.9, "staticobj_platform1_block");
   }
   // Forward Mandibles
   for(let y=-1.5; y<=1.5; y+=1.5) {
@@ -608,7 +610,7 @@ export function gen_fortress_of_solitude(p: Record<string, any>): Point3D[] {
   const coreH = 120;
   for (let y = 0; y < coreH; y += 4) {
     const taper = 1 - (y / coreH) * 0.9;
-    drawRing(pts, 0, y, 0, 8 * taper, 3);
+    drawRing(pts, 0, y, 0, 8 * taper, "staticobj_wall_milcnc_4");
   }
 
   return pts;
@@ -623,10 +625,10 @@ export function gen_wall_maria(p: Record<string, any>): Point3D[] {
   // Concentric arc sweeps
   for(let y=0; y<=height; y+=4) {
      const circum = 2 * Math.PI * radius;
-     const steps = Math.max(12, Math.ceil(circum / 4));
+     const steps = Math.max(12, Math.ceil(circum / 8));
      for(let i=0; i<steps; i++) {
         const a1 = (i/steps)*Math.PI, a2 = ((i+1)/steps)*Math.PI; // draw half circle for performance
-        drawWall(pts, radius*Math.cos(a1), y, radius*Math.sin(a1), radius*Math.cos(a2), y, radius*Math.sin(a2), 4);
+        drawWall(pts, radius*Math.cos(a1), y, radius*Math.sin(a1), radius*Math.cos(a2), y, radius*Math.sin(a2), "staticobj_wall_indcnc_10");
      }
   }
   return pts;
@@ -642,7 +644,7 @@ export function gen_barad_dur(p: Record<string, any>): Point3D[] {
   for(let y=0; y<=h; y+=5) {
      const taper = 1 - (y/h)*0.85; // Doesn't quite reach 0
      const w = baseW * taper;
-     drawRing(pts, 0, y, 0, w, 4);
+     drawRing(pts, 0, y, 0, w, "staticobj_wall_indcnc_10");
      
      // 4 sharp corner spines flying upwards
      [[1,1], [1,-1], [-1,1], [-1,-1]].forEach(([sx, sz]) => {
@@ -697,8 +699,8 @@ export function gen_tardis(p: Record<string, any>): Point3D[] {
   }
 
   // ── Finial (vertical lamp post on top) ────────────────────────────────
-  drawWall(pts, 0, h + capH, 0, 0, h + capH + 4, 0, 2);
-  drawRing(pts, 0, h + capH + 4, 0, 1.5, 2);
+  drawWall(pts, 0, h + capH, 0, 0, h + capH + 4, 0, "staticobj_wall_milcnc_4");
+  drawRing(pts, 0, h + capH + 4, 0, 1.5, "staticobj_wall_milcnc_4");
 
   return pts;
 }
@@ -803,319 +805,161 @@ export function gen_halo_control_room(p: Record<string, any>): Point3D[] {
   return pts;
 }
 
-// 16. Colosseum — oval amphitheatre with vertical piers + arched tier bands
+// ── Primaries (The Gold Standard) ───────────────────────────────────────────
+
+// 1. Stonehenge — Accurate stone circle with trilithon horseshoe
+export function gen_stonehenge(p: Record<string, any>): Point3D[] {
+  let pts: Point3D[] = [];
+  const R = p.radius || 30;
+  const PillarObj = "staticobj_wall_stone";
+  const LintelObj = "staticobj_wall_stone2";
+  const PillarW = getObjectWidth(PillarObj);
+
+  // ── 1. OUTER SARSEN CIRCLE ─────────────────────────────────────────────
+  // 30 upright stones arranged in a circle
+  const nSarsens = 30;
+  for (let i = 0; i < nSarsens; i++) {
+    const a = (i / nSarsens) * Math.PI * 2;
+    const x = R * Math.cos(a), z = R * Math.sin(a);
+    const yaw = -(a * 180 / Math.PI) + 90;
+    
+    // Upright Pillar (vertical stack for height)
+    pts.push({ x, y: 1.5, z, yaw, pitch: 90, name: PillarObj });
+    pts.push({ x, y: 4.5, z, yaw, pitch: 90, name: PillarObj });
+  }
+
+  // ── 2. OUTER LINTEL RING ───────────────────────────────────────────────
+  // Horizontal stones bridging the sarsens at the top
+  drawRing(pts, 0, 6.0, 0, R, LintelObj);
+
+  // ── 3. INNER TRILITHON HORSESHOE ──────────────────────────────────────
+  // 5 massive trilithons (2 pillars + 1 lintel each)
+  const horseshoeR = R * 0.65;
+  for (let i = 0; i < 5; i++) {
+    const a = (i / 4) * Math.PI * 1.5 - Math.PI * 0.75; // Horseshoe arc
+    const sweep = 0.08; 
+    
+    [a - sweep, a + sweep].forEach(aa => {
+       const x = horseshoeR * Math.cos(aa), z = horseshoeR * Math.sin(aa);
+       const yaw = -(aa * 180 / Math.PI) + 90;
+       pts.push({ x, y: 2, z, yaw, pitch: 90, name: PillarObj });
+       pts.push({ x, y: 6, z, yaw, pitch: 90, name: PillarObj });
+    });
+    
+    // Lintel on top
+    const lx = horseshoeR * Math.cos(a), lz = horseshoeR * Math.sin(a);
+    const lyaw = -(a * 180 / Math.PI) + 90;
+    pts.push({ x: lx, y: 8.5, z: lz, yaw: lyaw, name: LintelObj });
+  }
+
+  // ── 4. HEEL STONE ─────────────────────────────────────────────────────
+  const heelR = R * 1.8;
+  pts.push({ x: heelR, y: 4, z: 0, yaw: 0, pitch: 82, name: PillarObj });
+
+  return applyGovernor(pts);
+}
+
+// 2. Colosseum
 export function gen_colosseum(p: Record<string, any>): Point3D[] {
-  const pts: Point3D[] = [];
-  const rX   = Math.max(40, p.width || 100);
-  const rZ   = rX * 0.78;  // Rome's 188×156m proportions
-  const tiers = 4;
-  const tierH = 8;          // 8m per tier
+  let pts: Point3D[] = [];
+  const rX = Math.max(40, p.width || 100);
+  const rZ = rX * 0.78; 
+  const tiers = 3;
+  const tierH = 8;
   const wallH = tiers * tierH;
-  const nBays = 40;         // arch bays around the oval
+  const MasterObj = "staticobj_wall_stone2";
+  const RingObj = "staticobj_wall_stone";
 
-  const MAT_WALL  = "staticobj_wall_stone2";
-  const MAT_PIER  = "staticobj_wall_indcnc_10";
-  const MAT_FLOOR = "staticobj_wall_stone";
+  const nBays = Math.max(30, Math.ceil((2 * Math.PI * rX) / (getObjectWidth(MasterObj) * OVERLAP)));
 
-  // ── OUTER FACADE: vertical piers every bay + horizontal arch bands ───────────
   for (let i = 0; i < nBays; i++) {
     const a = (i / nBays) * Math.PI * 2;
     const x = rX * Math.cos(a);
     const z = rZ * Math.sin(a);
-    const yaw = -a * 180 / Math.PI + 90;  // tangential
+    const yaw = -a * 180 / Math.PI + 90;
 
-    // Vertical pier column at each bay (full height, stacked)
-    for (let y = 0; y < wallH; y += 3) {
-      pts.push({ x, y, z, yaw, name: MAT_PIER });
-    }
-
-    // Skip every 3rd bay for an arch gap (visual openings)
-    if (i % 3 !== 0) {
-      // Horizontal arch bands at each tier
-      for (let t = 0; t < tiers; t++) {
-        const bandY = t * tierH + tierH * 0.5;
-        pts.push({ x, y: bandY, z, yaw, name: MAT_WALL });
-      }
+    for (let y = 0; y < wallH; y += 4) {
+      pts.push({ x, y, z, yaw, name: MasterObj });
     }
   }
-
-  // ── INNER SEATING TERRACES: stepped concentric ovals inward ─────────────────
-  for (let row = 0; row < 10; row++) {
-    const factor = 1 - (row / 12);
-    const srX = (rX - 12) * factor;
-    const srZ = (rZ - 12) * factor;
-    const sY  = row * 2;
-    if (srX < 15) break;
-    const nSeat = Math.max(16, Math.round(2 * Math.PI * srX / 8));
-    for (let i = 0; i < nSeat; i++) {
-      const a   = (i / nSeat) * Math.PI * 2;
-      const yaw = -a * 180 / Math.PI + 90;
-      pts.push({ x: srX * Math.cos(a), y: sY, z: srZ * Math.sin(a), yaw, name: MAT_FLOOR });
-    }
+  
+  // Decorative rings for tiers
+  for (let t = 1; t <= tiers; t++) {
+    drawRing(pts, 0, t * tierH, 0, rX, RingObj);
   }
 
-  // ── ARENA FLOOR ──────────────────────────────────────────────────────────────
-  drawDisk(pts, 0, -1, 0, rX * 0.38, 8);
-  return pts;
+  return applyGovernor(pts);
 }
 
-// 17. Golden Gate Bridge — mathematically correct suspension bridge
-export function gen_golden_gate_bridge(p: Record<string, any>): Point3D[] {
-  const pts: Point3D[] = [];
-  const span   = Math.max(100, p.width  || 300);  // total bridge length along X
-  const towerH = Math.max(30,  p.height || 90);   // tower height above deck
-  const roadY  = 0;                                // deck at y=0
-  const cabSag = towerH * 0.35;                   // cable midspan height (35% of tower)
-  const tX1    = -span / 4;                       // left tower X
-  const tX2    =  span / 4;                       // right tower X
-  const legOff = 5;                               // half-width of tower (leg offset from X-axis)
-  const deckZ  = 10;                              // half-width of road deck (20m total)
-
-  const MAT_TOWER = "staticobj_wall_indcnc_10";
-  const MAT_CABLE = "staticobj_wall_milcnc_4";
-  const MAT_DECK  = "staticobj_wall_cncsmall_8";
-
-  // ── 1. TOWERS: 4 vertical columns each, two cross-beams ─────────────────────
-  for (const tx of [tX1, tX2]) {
-    for (let y = 0; y <= towerH; y += 4) {
-      pts.push({ x: tx - legOff, y, z: -(deckZ + 2), yaw: 90, name: MAT_TOWER });
-      pts.push({ x: tx - legOff, y, z:  (deckZ + 2), yaw: 90, name: MAT_TOWER });
-      pts.push({ x: tx + legOff, y, z: -(deckZ + 2), yaw: 90, name: MAT_TOWER });
-      pts.push({ x: tx + legOff, y, z:  (deckZ + 2), yaw: 90, name: MAT_TOWER });
-    }
-    // Horizontal cross-braces between the two legs (at 60% height and top)
-    for (const cbY of [towerH * 0.60, towerH]) {
-      drawWall(pts, tx - legOff, cbY, -(deckZ + 2), tx + legOff, cbY, -(deckZ + 2), 4);
-      drawWall(pts, tx - legOff, cbY,  (deckZ + 2), tx + legOff, cbY,  (deckZ + 2), 4);
-    }
-  }
-
-  // ── 2. ROAD DECK: cross-beams every 8m + longitudinal edge trusses ──────────
-  for (let x = -span / 2; x <= span / 2; x += 8) {
-    drawWall(pts, x, roadY, -deckZ, x, roadY, deckZ, 8);
-  }
-  drawWall(pts, -span/2, roadY + 1.5, -deckZ, span/2, roadY + 1.5, -deckZ, 8);
-  drawWall(pts, -span/2, roadY + 1.5,  deckZ, span/2, roadY + 1.5,  deckZ, 8);
-
-  // ── 3. MAIN CABLES + SUSPENDERS ─────────────────────────────────────────────
-  // Cable formula (main span, tX1 ≤ x ≤ tX2):
-  //   u = x / (span/4)  →  -1 at tX1, 0 at midspan, +1 at tX2
-  //   cy = cabSag + (towerH - cabSag) * u²
-  //   → at towers (|u|=1): cy = towerH ✓   at midspan (u=0): cy = cabSag ✓
-  //
-  // Back spans (x < tX1 or x > tX2): linear drop from tower top → ground anchor.
-  for (const cz of [-deckZ, deckZ]) {
-    const sampleStep = 8;
-    for (let x = -span / 2; x <= span / 2; x += sampleStep) {
-      let cy: number;
-      if (x >= tX1 && x <= tX2) {
-        // Main span parabola: sags DOWN to cabSag at centre
-        const u = x / (span / 4);
-        cy = cabSag + (towerH - cabSag) * u * u;
-      } else if (x < tX1) {
-        // Left back-span: linear anchor (y=0) → left tower (y=towerH)
-        const t = (x - (-span / 2)) / (span / 4);  // 0 at anchor, 1 at tower
-        cy = t * towerH;
-      } else {
-        // Right back-span: linear right tower (y=towerH) → anchor (y=0)
-        const t = (span / 2 - x) / (span / 4);     // 1 at tower, 0 at anchor
-        cy = t * towerH;
-      }
-
-      // Cable point — yaw=0 means it runs along X (bridge longitudinal axis)
-      pts.push({ x, y: cy, z: cz, yaw: 0, name: MAT_CABLE });
-
-      // Vertical suspenders only in main span, clear of towers
-      if (x > tX1 + 8 && x < tX2 - 8 && cy > roadY + 4) {
-        const nSeg = Math.max(1, Math.floor((cy - roadY) / 5));
-        for (let si = 0; si < nSeg; si++) {
-          const sy = roadY + (cy - roadY) * (si + 0.5) / nSeg;
-          pts.push({ x, y: sy, z: cz, yaw: 0, name: MAT_DECK });
-        }
-      }
-    }
-  }
-
-  return pts;
-}
-
-// 18. Normandy Beach Bunkers
-export function gen_normandy_bunkers(p: Record<string, any>): Point3D[] {
-  const pts: Point3D[] = [];
-  const length = Math.max(50, p.width || 120);
-  // Hexagonal Pillboxes
-  for(let x=-length/2; x<=length/2; x+=40) {
-    for(let i=0; i<6; i++) {
-       const a1 = i*Math.PI/3, a2 = (i+1)*Math.PI/3;
-       drawWall(pts, x+8*Math.cos(a1), 0, 8*Math.sin(a1), x+8*Math.cos(a2), 0, 8*Math.sin(a2));
-       drawWall(pts, x+8*Math.cos(a1), 3, 8*Math.sin(a1), x+8*Math.cos(a2), 3, 8*Math.sin(a2));
-    }
-    drawDisk(pts, x, 4, 0, 9);
-  }
-  // Dragon's teeth / Hedgehogs on the beach (deterministic scatter pattern)
-  let _hIdx = 0;
-  for (let x = -length/2; x <= length/2; x += 8) {
-    for (let z = 20; z <= 60; z += 10) {
-      const ox = (_hIdx % 3 - 1) * 1.5;          // cycles -1.5, 0, +1.5
-      const oz = (Math.floor(_hIdx / 3) % 3 - 1) * 1.5;
-      const yaw = (_hIdx * 47) % 360;
-      const pitch = (_hIdx * 17) % 45;
-      pts.push({ x: x + ox, y: 0, z: z + oz, yaw, pitch });
-      _hIdx++;
-    }
-  }
-  return pts;
-}
-
-// 19. The Pentagon
-export function gen_the_pentagon(p: Record<string, any>): Point3D[] {
-  const pts: Point3D[] = [];
-  const r = Math.max(40, p.width || 100);
-  for(let ring=1; ring<=5; ring++) {
-     const rad = r * (ring/5);
-     for(let i=0; i<5; i++) {
-        const a1 = (i/5)*Math.PI*2 - Math.PI/2;
-        const a2 = ((i+1)/5)*Math.PI*2 - Math.PI/2;
-        for(let y=0; y<=16; y+=4) { // 4 floors
-           drawWall(pts, rad*Math.cos(a1), y, rad*Math.sin(a1), rad*Math.cos(a2), y, rad*Math.sin(a2));
-        }
-     }
-  }
-  return pts;
-}
-
-// 20. Pyramid of Giza & Sphinx
+// 3. Pyramid of Giza & Sphinx
 export function gen_pyramid_giza(p: Record<string, any>): Point3D[] {
-  const pts: Point3D[] = [];
+  let pts: Point3D[] = [];
   const base = Math.max(40, p.width || 120);
   
-  const MAT_STONE1 = "staticobj_wall_stone2";
-  const MAT_STONE2 = "staticobj_wall_stone";
-  const MAT_PEAK   = "staticobj_wall_indcnc_10";
-
-  // Pyramid
   for(let y=0; y<=base/2; y+=4) {
     const w = base - (y*2);
     if(w <= 0) break;
-    const isPeak = y > base/2 - 8;
-    const mat = isPeak ? MAT_PEAK : (Math.round(y/4) % 3 === 0 ? MAT_STONE2 : MAT_STONE1);
-
-    drawWall(pts, -w/2, y, -w/2, w/2, y, -w/2, 4);
-    drawWall(pts, -w/2, y, w/2, w/2, y, w/2, 4);
-    drawWall(pts, -w/2, y, -w/2, -w/2, y, w/2, 4);
-    drawWall(pts, w/2, y, -w/2, w/2, y, w/2, 4);
-    
-    // Add corner reinforcement points
-    pts.push({ x: -w/2, y, z: -w/2, name: mat }, { x: w/2, y, z: -w/2, name: mat }, { x: w/2, y, z: w/2, name: mat }, { x: -w/2, y, z: w/2, name: mat });
+    drawWall(pts, -w/2, y, -w/2, w/2, y, -w/2);
+    drawWall(pts, -w/2, y, w/2, w/2, y, w/2);
+    drawWall(pts, -w/2, y, -w/2, -w/2, y, w/2);
+    drawWall(pts, w/2, y, -w/2, w/2, y, w/2);
   }
 
-  // Sphinx (Refined)
-  const sx = base/2 + 30; // placed in front
-  const matBody = MAT_STONE1;
-  const matHead = MAT_STONE2;
-
+  const sx = base/2 + 30;
   for (let z = -8; z <= 8; z += 4) {
-    drawWall(pts, sx - 15, 0, z, sx + 15, 0, z, 4); // base
-    drawWall(pts, sx - 10, 4, z, sx + 10, 4, z, 4); // upper body
+    drawWall(pts, sx - 15, 0, z, sx + 15, 0, z);
+    drawWall(pts, sx - 10, 4, z, sx + 10, 4, z);
   }
-  // Head
   for (let y = 8; y <= 16; y += 4) {
-    drawRing(pts, sx + 5, y, 0, 4, 3);
+    drawRing(pts, sx + 5, y, 0, 4);
   }
   
-  return pts;
+  return applyGovernor(pts);
 }
 
-// 21. Taj Mahal (HANDLED ABOVE)
+// 4. Golden Gate Bridge
+export function gen_golden_gate_bridge(p: Record<string, any>): Point3D[] {
+  let pts: Point3D[] = [];
+  const span = Math.max(100, p.width || 300);
+  const towerH = Math.max(30, p.height || 90);
+  const roadY = 0;
+  const tX1 = -span/4, tX2 = span/4;
 
-// 22. Azkaban Prison (REWRITTEN)
-export function gen_azkaban(p: Record<string, any>): Point3D[] {
-  const pts: Point3D[] = [];
-  const h = 120;
-  const w = 40;
-  // Triangular monolithic tower with deep vertical grooves
-  for(let y=0; y<=h; y+=5) {
-    const taper = 1 - (y/h)*0.2;
-    const r = w * taper;
-    for(let i=0; i<3; i++) {
-       const a1 = i*Math.PI*2/3, a2 = (i+1)*Math.PI*2/3;
-       drawWall(pts, r*Math.cos(a1), y, r*Math.sin(a1), r*Math.cos(a2), y, r*Math.sin(a2));
-       // Interior ribs
-       drawWall(pts, 0, y, 0, r*0.8*Math.cos(a1+0.1), y, r*0.8*Math.sin(a1+0.1));
+  for (const tx of [tX1, tX2]) {
+    for (let y = 0; y <= towerH; y += 4) {
+      pts.push({ x: tx, y, z: -10, name: "staticobj_wall_indcnc_10" });
+      pts.push({ x: tx, y, z: 10, name: "staticobj_wall_indcnc_10" });
     }
   }
-  return pts;
+  for (let x = -span/2; x <= span/2; x += 8) {
+    drawWall(pts, x, roadY, -10, x, roadY, 10);
+  }
+
+  return applyGovernor(pts);
 }
 
-// 22. Stonehenge — mathematically placed standing stones + lintels
-export function gen_stonehenge(p: Record<string, any>): Point3D[] {
-  const pts: Point3D[] = [];
-  const rOuter = p.radius || 20;
-  const rInner = rOuter * 0.6;
-  const stoneH = 4;    // sarsen stone height
-  const triH   = 6;    // trilithon stone height
-  const nSarsens = 15; // 30 positions, every other occupied
-
-  // Helper: place a standing stone (stack of wall pieces facing tangentially)
-  function standingStone(r: number, angle: number, h: number, mat?: string) {
-    const x = r * Math.cos(angle);
-    const z = r * Math.sin(angle);
-    // Tangential yaw so 8m face runs around the ring
-    const yaw = -angle * 180 / Math.PI + 90;
-    for (let y = 0; y < h; y += 3) {
-      pts.push({ x, y, z, yaw, name: mat || "staticobj_wall_stone2" });
-    }
-  }
-
-  // ── OUTER SARSEN CIRCLE (15 stones + 15 lintels) ────────────────────────────
-  for (let i = 0; i < nSarsens; i++) {
-    const a     = (i / nSarsens) * Math.PI * 2;
-    const aNext = ((i + 1) / nSarsens) * Math.PI * 2;
-    // Standing stone at every position
-    standingStone(rOuter, a, stoneH);
-    // Lintel connecting this stone to the next at top
-    const x1 = rOuter * Math.cos(a),     z1 = rOuter * Math.sin(a);
-    const x2 = rOuter * Math.cos(aNext), z2 = rOuter * Math.sin(aNext);
-    drawWall(pts, x1, stoneH, z1, x2, stoneH, z2, 4);
-  }
-
-  // ── INNER TRILITHON HORSESHOE (5 trilithons, open to NE) ────────────────────
-  for (let i = 0; i < 5; i++) {
-    const a    = (i / 5) * Math.PI - Math.PI * 0.5; // south to north horseshoe
-    const aOff = 0.18; // angular half-gap between the two uprights
-    standingStone(rInner, a - aOff, triH, "staticobj_wall_stone");
-    standingStone(rInner, a + aOff, triH, "staticobj_wall_stone");
-    // Lintel across the top
-    const x1 = rInner * Math.cos(a - aOff), z1 = rInner * Math.sin(a - aOff);
-    const x2 = rInner * Math.cos(a + aOff), z2 = rInner * Math.sin(a + aOff);
-    drawWall(pts, x1, triH, z1, x2, triH, z2, 3);
-  }
-
-  // ── ALTAR STONE (centre, flat) ───────────────────────────────────────────────
-  pts.push({ x: 0, y: 0, z: 2, yaw: 0, name: "staticobj_wall_stone2" });
-
-  return pts;
-}
 
 // 23. Starship Enterprise
 export function gen_starship_enterprise(p: Record<string, any>): Point3D[] {
   const pts: Point3D[] = [];
   const scale = Math.max(1, (p.width||100)/100);
+  const HullObj = "staticobj_wall_milcnc_4";
+  
   // Saucer Section
   for(let r=5; r<=40*scale; r+=5) {
-     drawRing(pts, 0, 20*scale, 50*scale, r);
+     drawRing(pts, 0, 20*scale, 50*scale, r, HullObj);
   }
   // Engineering Hull
   for(let y=0; y<=10*scale; y+=4) {
-    drawRing(pts, 0, y, -20*scale, 15*scale);
+    drawRing(pts, 0, y, -20*scale, 15*scale, HullObj);
   }
   // Neck
-  drawWall(pts, 0, 10*scale, -20*scale, 0, 20*scale, 50*scale);
+  drawWall(pts, 0, 10*scale, -20*scale, 0, 20*scale, 50*scale, HullObj);
   // Pylons & Nacelles
   [-25*scale, 25*scale].forEach(nx => {
-     drawWall(pts, 0, 5*scale, -20*scale, nx, 25*scale, -40*scale); // pylon
-     for(let r=2; r<=6*scale; r+=2) drawRing(pts, nx, 25*scale, -40*scale, r); // nacelle
-     drawWall(pts, nx, 25*scale, -60*scale, nx, 25*scale, -10*scale); 
+     drawWall(pts, 0, 5*scale, -20*scale, nx, 25*scale, -40*scale, HullObj); // pylon
+     for(let r=2; r<=6*scale; r+=2) drawRing(pts, nx, 25*scale, -40*scale, r, "staticobj_wall_indcnc_10"); // nacelle
+     drawWall(pts, nx, 25*scale, -60*scale, nx, 25*scale, -10*scale, "staticobj_wall_indcnc_10"); 
   });
   return pts;
 }
@@ -1154,8 +998,8 @@ export function gen_star_destroyer(p: Record<string, any>): Point3D[] {
     drawWall(pts, bw/2, y, bz, bw/2, y, bz + bl, 3);
   }
   // Shield Domes
-  drawRing(pts, -bw/4, by + 14, bz + bl/2, 3, 2);
-  drawRing(pts, bw/4, by + 14, bz + bl/2, 3, 2);
+  drawRing(pts, -bw/4, by + 14, bz + bl/2, 3, "barrel_red");
+  drawRing(pts, bw/4, by + 14, bz + bl/2, 3, "barrel_red");
 
   // 3. Engine Nacelles (3 Main Engines at rear)
   const er = w * 0.08;
@@ -1539,7 +1383,7 @@ export function gen_eye_of_sauron(p: Record<string, any>): Point3D[] {
     if (y > h * 0.8) {
        for(let i=0; i<2; i++) {
          const a = i * Math.PI;
-         pts.push({ x: (tw+5)*Math.cos(a), y, z: (tw+5)*Math.sin(a) });
+         pts.push({ x: (tw+5)*Math.cos(a), y, z: (tw+5)*Math.sin(a), yaw: -a * 180/Math.PI + 90 });
        }
     }
   }
@@ -1570,7 +1414,7 @@ export function gen_black_hole(p: Record<string, any>): Point3D[] {
         const angle = startAngle + t * Math.PI * 1.5;
         const dist = r * (0.6 + t * 0.4);
         const y = Math.sin(t * Math.PI * 2) * 2; // subtle wave
-        pts.push({ x: dist * Math.cos(angle), y, z: dist * Math.sin(angle) });
+        pts.push({ x: dist * Math.cos(angle), y, z: dist * Math.sin(angle), yaw: -angle * 180/Math.PI + 90 });
     }
   }
 
@@ -1601,7 +1445,9 @@ export function gen_minas_tirith(p: Record<string, any>): Point3D[] {
     const mat = (i === tiers - 1) ? MAT_CROWN : MAT_WHITE;
     
     // Circle segment (80% circumference to allow for the 'Rock ridge')
-    const circumSteps = Math.max(32, Math.round(r * 1.2));
+    // Cap panel count per tier to control total object budget
+    const rawSteps = Math.round((2 * Math.PI * r * 0.8) / 8);
+    const circumSteps = Math.max(12, Math.min(rawSteps, 24));
     for (let j = 0; j <= circumSteps; j++) {
        const a = (j / circumSteps) * Math.PI * 1.6 - Math.PI*0.8;
        const x = r * Math.cos(a), z = r * Math.sin(a);
@@ -1610,14 +1456,14 @@ export function gen_minas_tirith(p: Record<string, any>): Point3D[] {
        // Main wall
        pts.push({ x, y, z, yaw, name: mat });
 
-       // Battlements (alternating points)
-       if (j % 2 === 0) {
+       // Battlements (every 3rd point for budget)
+       if (j % 3 === 0) {
          pts.push({ x, y: y + 2.5, z, yaw, name: MAT_STONE });
        }
 
-       // Horizontal floor behind the wall
-       if (j % 4 === 0) {
-          for (let fr = r-2; fr > r-8; fr -= 3) {
+       // Horizontal floor behind the wall (every 5th)
+       if (j % 5 === 0) {
+          for (let fr = r-3; fr > r-8; fr -= 4) {
             pts.push({ x: fr * Math.cos(a), y: y - 0.5, z: fr * Math.sin(a), yaw, name: MAT_STONE });
           }
        }
@@ -1630,8 +1476,8 @@ export function gen_minas_tirith(p: Record<string, any>): Point3D[] {
     drawWall(pts, 0, y, 0, rAtY, y, 0, 4);
     // Add jagged rock variation
     for (let j=0; j<4; j++) {
-       pts.push({ x: (rAtY - j*5), y: y+0.5, z: 1.5, name: MAT_ROCK });
-       pts.push({ x: (rAtY - j*5), y: y+0.5, z: -1.5, name: MAT_ROCK });
+       pts.push({ x: (rAtY - j*5), y: y+0.5, z: 1.5, yaw: 0, name: MAT_ROCK });
+       pts.push({ x: (rAtY - j*5), y: y+0.5, z: -1.5, yaw: 0, name: MAT_ROCK });
     }
   }
 
@@ -1641,7 +1487,7 @@ export function gen_minas_tirith(p: Record<string, any>): Point3D[] {
     const r = 6 * (1 - (y - totalH) / (spireH - totalH + 10));
     drawRing(pts, 0, y, 0, Math.max(1, r), 3);
     // Add vertical bracing
-    pts.push({ x: r, y, z: 0, name: MAT_CROWN }, { x: -r, y, z: 0, name: MAT_CROWN });
+    pts.push({ x: r, y, z: 0, yaw: 90, name: MAT_CROWN }, { x: -r, y, z: 0, yaw: 90, name: MAT_CROWN });
   }
   // Tower Point (Final crown)
   pts.push({ x: 0, y: spireH + 6, z: 0, name: MAT_CROWN });
@@ -1715,7 +1561,7 @@ export function gen_tony_stark_tower(p: Record<string, any>): Point3D[] {
           const rSteps = Math.max(4, Math.round(2*Math.PI*r / 4));
           for (let i=0; i<rSteps; i++) {
              const a = 2*Math.PI*i/rSteps;
-             pts.push({ x: px + r*Math.cos(a), y: y - 0.2, z: r*Math.sin(a), name: r === 0 ? MAT_GLOW : MAT_METAL });
+             pts.push({ x: px + r*Math.cos(a), y: y - 0.2, z: r*Math.sin(a), yaw: -a * 180/Math.PI + 90, name: r === 0 ? MAT_GLOW : MAT_METAL });
           }
        }
     }
@@ -1876,7 +1722,7 @@ export function gen_big_ben(p: Record<string, any>): Point3D[] {
   const hw = 7.6 * S;               // half-width of 15.2 m base
 
   // ── Helper: 4-wall rectangle at height y ─────────────────────────────────
-  function rect(y: number, half: number, sp = 3 * S, wallName?: string) {
+  function rect(y: number, half: number, sp = 4 * S, wallName?: string) {
     const w = half;
     drawWall(pts, -w, y, -w,  w, y, -w, sp);
     drawWall(pts, -w, y,  w,  w, y,  w, sp);
@@ -1884,7 +1730,7 @@ export function gen_big_ben(p: Record<string, any>): Point3D[] {
     drawWall(pts,  w, y, -w,  w, y,  w, sp);
     if (wallName) {
       [[-w,-w],[w,-w],[-w,w],[w,w]].forEach(([cx,cz]) =>
-        pts.push({ x: cx, y, z: cz, name: wallName })
+        pts.push({ x: cx, y, z: cz, yaw: Math.atan2(cx, cz) * 180/Math.PI, name: wallName })
       );
     }
   }
@@ -1895,23 +1741,23 @@ export function gen_big_ben(p: Record<string, any>): Point3D[] {
     { y: 0,      extra: 2.8 * S },
     { y: 2 * S,  extra: 1.6 * S },
     { y: 4 * S,  extra: 0.6 * S },
-  ].forEach(({ y, extra }) => rect(y, hw + extra, 3 * S, "staticobj_wall_stone"));
+  ].forEach(({ y, extra }) => rect(y, hw + extra, 4 * S, "staticobj_wall_stone"));
 
   // ── 2. MAIN TOWER SHAFT (6 – 52 m) ──────────────────────────────────────
-  for (let y = 6 * S; y <= 52 * S; y += 4 * S) {
-    rect(y, hw, 3 * S);
+  for (let y = 6 * S; y <= 52 * S; y += 5 * S) {
+    rect(y, hw, 4 * S);
 
     // Decorative string course every ~16 m (slightly proud of wall)
-    if ((Math.round(y / S) % 16) === 6) {
-      rect(y, hw + 0.9 * S, 3 * S, "staticobj_wall_stone2");
+    if ((Math.round(y / S) % 20) === 6) {
+      rect(y, hw + 0.9 * S, 4 * S, "staticobj_wall_stone2");
     }
   }
 
   // Corner buttresses — project 1.8 m proud, every 6 m vertically
   const bOff = hw + 1.8 * S;
-  for (let y = 6 * S; y <= 52 * S; y += 6 * S) {
+  for (let y = 6 * S; y <= 52 * S; y += 8 * S) {
     [[-bOff, -bOff], [bOff, -bOff], [-bOff, bOff], [bOff, bOff]].forEach(([cx, cz]) =>
-      pts.push({ x: cx, y, z: cz, name: "staticobj_wall_stone2" })
+      pts.push({ x: cx, y, z: cz, yaw: Math.atan2(cx, cz) * 180/Math.PI, name: "staticobj_wall_stone2" })
     );
   }
 
@@ -1964,10 +1810,10 @@ export function gen_big_ben(p: Record<string, any>): Point3D[] {
     const arcX  = Math.cos(a) * archGap;
     const arcY  = archY + Math.sin(a) * archGap * 1.1;
     // All four faces
-    pts.push({ x: arcX, y: arcY, z: -(bw + 0.2 * S), name: "staticobj_wall_stone2" });
-    pts.push({ x: arcX, y: arcY, z:  (bw + 0.2 * S), name: "staticobj_wall_stone2" });
-    pts.push({ x: -(bw + 0.2 * S), y: arcY, z: arcX,  name: "staticobj_wall_stone2" });
-    pts.push({ x:  (bw + 0.2 * S), y: arcY, z: arcX,  name: "staticobj_wall_stone2" });
+    pts.push({ x: arcX, y: arcY, z: -(bw + 0.2 * S), yaw: 0,   name: "staticobj_wall_stone2" }); // N
+    pts.push({ x: arcX, y: arcY, z:  (bw + 0.2 * S), yaw: 180, name: "staticobj_wall_stone2" }); // S
+    pts.push({ x: -(bw + 0.2 * S), y: arcY, z: arcX,  yaw: 270, name: "staticobj_wall_stone2" }); // W
+    pts.push({ x:  (bw + 0.2 * S), y: arcY, z: arcX,  yaw: 90,  name: "staticobj_wall_stone2" }); // E
   }
 
   // ── 6. FOUR CORNER PINNACLE SPIRELETS (52 – 84 m) ────────────────────────
@@ -2047,7 +1893,7 @@ export function gen_statue_liberty(p: Record<string, any>): Point3D[] {
     }
     // Corner quoins at step transitions
     [[-hw*S,-hw*S],[hw*S,-hw*S],[hw*S,hw*S],[-hw*S,hw*S]].forEach(([cx,cz])=>{
-      pts.push({ x: cx, y: y1 * S, z: cz, name: "staticobj_wall_stone2" });
+      pts.push({ x: cx, y: y1 * S, z: cz, yaw: Math.atan2(cx, cz) * 180/Math.PI, name: "staticobj_wall_stone2" });
     });
   }
 
@@ -2066,18 +1912,18 @@ export function gen_statue_liberty(p: Record<string, any>): Point3D[] {
   for (let i = 0; i <= armSteps; i++) {
     const t = i / armSteps;
     const ax = (4 + t * 4) * S, ay = (72 + t * 21) * S, az = 0;
-    pts.push({ x: ax, y: ay, z: az, name: "staticobj_wall_stone2" });
+    pts.push({ x: ax, y: ay, z: az, yaw: 90, name: "staticobj_wall_stone2" }); // arm extends east
   }
   // Torch cylinder at arm tip (y=90–95)
   for (let y = 90 * S; y <= 95 * S; y += 2 * S) {
     drawRing(pts, 8 * S, y, 0, 1.5 * S, 3);
   }
-  pts.push({ x: 8 * S, y: 96 * S, z: 0 }); // flame tip
+  pts.push({ x: 8 * S, y: 96 * S, z: 0, yaw: 90 }); // flame tip
 
   // ── 5. LEFT ARM — Tablet (x=-3,y=72 downward to x=-5,y=65) ───────────────
   for (let i = 0; i <= 6; i++) {
     const t = i / 6;
-    pts.push({ x: (-3 - t * 2) * S, y: (72 - t * 7) * S, z: 0 });
+    pts.push({ x: (-3 - t * 2) * S, y: (72 - t * 7) * S, z: 0, yaw: 270 }); // tablet arm extends west
   }
 
   // ── 6. HEAD & CROWN — 7 radiating spikes (y=83–93) ───────────────────────
@@ -2115,12 +1961,12 @@ export function gen_xwing(p: Record<string, any>): Point3D[] {
   // Cockpit nose — tapered rings at front
   drawRing(pts, 0, 0, -6 * S, 1.5 * S, 3);
   drawRing(pts, 0, 0.4 * S, -7 * S, 1.0 * S, 3);
-  pts.push({ x: 0, y: 0.2 * S, z: -8 * S }); // nose tip
+  pts.push({ x: 0, y: 0.2 * S, z: -8 * S, yaw: 0 }); // nose tip (faces north/forward)
 
   // ── 2. COCKPIT DOME — canopy above fuselage ────────────────────────────────
   drawRing(pts, 0, 1.2 * S, -4 * S, 1.0 * S, 3);
   drawRing(pts, 0, 1.8 * S, -4 * S, 0.5 * S, 3);
-  pts.push({ x: 0, y: 2.2 * S, z: -4 * S });
+  pts.push({ x: 0, y: 2.2 * S, z: -4 * S, yaw: 0 }); // cockpit dome top
 
   // ── 3. S-FOILS — 4 wings in X pattern, ±45° ───────────────────────────────
   // Upper-right, Upper-left, Lower-right, Lower-left
@@ -2237,12 +2083,12 @@ export function gen_hogwarts(p: Record<string, any>): Point3D[] {
   }
   // Battlements atop main block
   for (let x = -mw; x <= mw; x += 4 * S) {
-    pts.push({ x, y: 21 * S, z: -md, name: CASTLE });
-    pts.push({ x, y: 21 * S, z:  md, name: CASTLE });
+    pts.push({ x, y: 21 * S, z: -md, yaw: 0,   name: CASTLE }); // N wall, face north
+    pts.push({ x, y: 21 * S, z:  md, yaw: 180, name: CASTLE }); // S wall, face south
   }
   for (let z = -md; z <= md; z += 4 * S) {
-    pts.push({ x: -mw, y: 21 * S, z, name: CASTLE });
-    pts.push({ x:  mw, y: 21 * S, z, name: CASTLE });
+    pts.push({ x: -mw, y: 21 * S, z, yaw: 270, name: CASTLE }); // W wall, face west
+    pts.push({ x:  mw, y: 21 * S, z, yaw: 90,  name: CASTLE }); // E wall, face east
   }
 
   // ── 2. GREAT HALL — 30×20m protrusion south (z>0), taller (y=0–30) ───────
@@ -2263,7 +2109,7 @@ export function gen_hogwarts(p: Record<string, any>): Point3D[] {
   }
   // Parapet + pinnacle
   drawRing(pts, mw, 72 * S, -md, 5 * S, 7);
-  pts.push({ x: mw, y: 78 * S, z: -md, name: BASTION });
+  pts.push({ x: mw, y: 78 * S, z: -md, yaw: 90, name: BASTION });
 
   // ── 4. THREE CORNER TOWERS — NW, SW, SE (shorter) ─────────────────────────
   const corners = [
@@ -2275,7 +2121,7 @@ export function gen_hogwarts(p: Record<string, any>): Point3D[] {
     for (let y = 0; y <= c.h; y += 8 * S) {
       drawRing(pts, c.cx, y, c.cz, 4 * S, 7);
     }
-    pts.push({ x: c.cx, y: c.h + 6 * S, z: c.cz, name: BASTION });
+    pts.push({ x: c.cx, y: c.h + 6 * S, z: c.cz, yaw: Math.atan2(c.cx, c.cz) * 180/Math.PI, name: BASTION });
   }
 
   // ── 5. VIADUCT BRIDGE — connects main block to boathouse (x=mw+15 side) ──
@@ -2287,7 +2133,7 @@ export function gen_hogwarts(p: Record<string, any>): Point3D[] {
   for (let ax = mw + 8*S; ax < mw + 40*S; ax += 10*S) {
     for (let s = 0; s <= 5; s++) {
       const aa = (s / 5) * Math.PI;
-      pts.push({ x: ax, y: viaY - Math.sin(aa) * 4*S, z: Math.cos(aa) * 3*S });
+      pts.push({ x: ax, y: viaY - Math.sin(aa) * 4*S, z: Math.cos(aa) * 3*S, yaw: 90 }); // bridge runs E-W
     }
   }
 
@@ -2332,7 +2178,7 @@ export function gen_sydney_opera(p: Record<string, any>): Point3D[] {
         const a = (s / archSegs) * Math.PI;
         const ax = (sh.xOff + Math.cos(a) * sh.xSpan) * S;
         const ay = 6 * S + Math.sin(a) * sh.peakY * S;
-        pts.push({ x: ax, y: ay, z, name: "staticobj_wall_cncsmall_8" });
+        pts.push({ x: ax, y: ay, z, yaw: 0, name: "staticobj_wall_cncsmall_8" }); // ribs face N/S along Z axis
       }
     }
   }
@@ -2349,7 +2195,7 @@ export function gen_sydney_opera(p: Record<string, any>): Point3D[] {
         const a = (s / archSegs) * Math.PI;
         const ax = (sh.xOff + Math.cos(a) * sh.xSpan) * S;
         const ay = 6 * S + Math.sin(a) * sh.peakY * S;
-        pts.push({ x: ax, y: ay, z, name: "staticobj_wall_cncsmall_8" });
+        pts.push({ x: ax, y: ay, z, yaw: 0, name: "staticobj_wall_cncsmall_8" }); // ribs face N/S along Z axis
       }
     }
   }

@@ -115,294 +115,9 @@ function getTextPoints(text: string, letterH: number, letterSpacing: number, dep
   });
 }
 
-// ─── 3D RENDERER ─────────────────────────────────────────────────────────────
-function use3DCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
-  const rotRef = useRef({ x: -0.4, y: 0.5 });
-  const dragRef = useRef({ dragging: false, lx: 0, ly: 0 });
-  const zoomRef = useRef(2.0);
-  const animRef = useRef<number | null>(null);
-  const autoRef = useRef(false);
-  const ptsRef = useRef<Point3D[]>([]);
-  const scaleRef = useRef(1.0);
-  const pitchRef = useRef(0);
-  const rollRef = useRef(0);
-  // CSS logical dimensions (used for drawing math, canvas.width = W * dpr)
-  const cssDimsRef = useRef({ w: 0, h: 0 });
+// ─── LEGACY RENDERER REMOVED (Shifted to R3F PointCloud3D) ──────────────────────────
 
-  const draw = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d", { alpha: false });
-    if (!ctx) return;
-
-    const dpr = window.devicePixelRatio || 1;
-    // Physical pixel dimensions â€" the actual canvas buffer size
-    const PW = canvas.width;
-    const PH = canvas.height;
-    // CSS dimensions â€" used for projection math (centering, spread)
-    const W = cssDimsRef.current.w || PW / dpr;
-    const H = cssDimsRef.current.h || PH / dpr;
-    if (PW <= 0 || PH <= 0) return;
-
-    const pts = ptsRef.current;
-    const userScale = scaleRef.current;
-
-    // â"€â"€ Draw directly in physical pixels â€" no ctx.scale, so every coordinate
-    //    is an integer screen pixel. This is the key to crispness on retina/mobile.
-    ctx.imageSmoothingEnabled = false;
-    ctx.fillStyle = "#060402";
-    ctx.fillRect(0, 0, PW, PH);
-
-    if (!pts.length) {
-      ctx.fillStyle = "#0e2010";
-      ctx.font = `bold ${Math.round(12 * dpr)}px 'Courier New'`;
-      ctx.textAlign = "center";
-      ctx.fillText("â† Configure shape  Â·  real-time 3D updates instantly", Math.round(PW / 2), Math.round(PH / 2));
-      return;
-    }
-
-    const rx = rotRef.current.x, ry = rotRef.current.y;
-    const cosX = Math.cos(rx), sinX = Math.sin(rx);
-    const cosY = Math.cos(ry), sinY = Math.sin(ry);
-    const pitch = pitchRef.current * Math.PI / 180;
-    const roll  = rollRef.current  * Math.PI / 180;
-    const cosPitch = Math.cos(pitch), sinPitch = Math.sin(pitch);
-    const cosRoll  = Math.cos(roll),  sinRoll  = Math.sin(roll);
-    const zoom = zoomRef.current;
-
-    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity,
-        minZ = Infinity, maxZ = -Infinity;
-    pts.forEach(p => {
-      if (!isFinite(p.x) || !isFinite(p.y) || !isFinite(p.z)) return;
-      if (p.x < minX) minX = p.x; if (p.x > maxX) maxX = p.x;
-      if (p.y < minY) minY = p.y; if (p.y > maxY) maxY = p.y;
-      if (p.z < minZ) minZ = p.z; if (p.z > maxZ) maxZ = p.z;
-    });
-    if (!isFinite(minX) || !isFinite(maxX)) return;
-
-    const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2, cz = (minZ + maxZ) / 2;
-    const spread = Math.max(maxX - minX, maxY - minY, maxZ - minZ, 1);
-    const baseZoom = Math.min(W, H) * 0.4 / spread * zoom;
-
-    // Project to CSS pixels first, then scale to physical pixels at the last step
-    const projected = pts.map(p => {
-      if (!isFinite(p.x) || !isFinite(p.y) || !isFinite(p.z)) return null;
-      let lx = (p.x - cx) * userScale, ly = (p.y - cy) * userScale, lz = (p.z - cz) * userScale;
-      const ly2 = ly * cosPitch - lz * sinPitch;
-      const lz2 = ly * sinPitch + lz * cosPitch;
-      const lx3 = lx * cosRoll  + ly2 * sinRoll;
-      const ly3 = -lx * sinRoll + ly2 * cosRoll;
-      const lz3 = lz2;
-      const rx1 = lx3 * cosY + lz3 * sinY;
-      const rz1 = -lx3 * sinY + lz3 * cosY;
-      const ry2 = ly3 * cosX - rz1 * sinX;
-      const rz2 = ly3 * sinX + rz1 * cosX;
-      const fov = 700;
-      const sc  = fov / (fov + rz2 + spread * 1.5);
-      // Convert to physical pixels â€" round to nearest integer for pixel-perfect placement
-      const px = Math.round((W / 2 + rx1 * baseZoom * sc) * dpr);
-      const py = Math.round((H / 2 - ry2 * baseZoom * sc) * dpr);
-      return { px, py, depth: rz2 };
-    }).filter(Boolean) as { px: number; py: number; depth: number }[];
-
-    projected.sort((a, b) => b.depth - a.depth);
-    const maxD = spread * 1.5, minD = -spread * 1.5;
-
-    // â"€â"€ Zoom-aware dot size: cap scales WITH zoom so dots shrink at low zoom
-    //    preventing them from overlapping into a solid blob when zoomed out
-    const zoomCap  = Math.max(1.5, 4.0 * dpr * Math.min(1, zoom * 0.75));
-    const baseDotPhys = Math.max(1, Math.min(zoomCap, (380 / Math.sqrt(pts.length + 1)) * zoom * dpr));
-
-    // â"€â"€ Occlusion culling at low zoom: skip dots that land on an already-drawn cell
-    //    This breaks up the blob by showing only one dot per occupied pixel region
-    const cullCell  = zoom < 1.2 ? Math.max(1, Math.round(baseDotPhys * 1.4)) : 0;
-    const occupied  = cullCell > 0 ? new Set<number>() : null;
-
-    projected.forEach(({ px, py, depth }) => {
-      // Occlusion check â€" keyed by grid cell so nearby dots are skipped
-      if (occupied) {
-        const cx2 = Math.round(px / cullCell);
-        const cy2 = Math.round(py / cullCell);
-        const key = cx2 * 100003 + cy2; // prime-multiplied hash to avoid collisions
-        if (occupied.has(key)) return;
-        occupied.add(key);
-      }
-
-      const t = Math.max(0, Math.min(1, (depth - minD) / (maxD - minD)));
-      // â"€â"€ Wider depth range: front bright gold, back very dim brown (better separation)
-      const r = Math.round(220 * t + 50 * (1 - t));
-      const g = Math.round(160 * t + 70 * (1 - t));
-      const b = Math.round(20  * t + 6  * (1 - t));
-      const alpha = 0.28 + 0.72 * t;    // was 0.6+0.4 â€" now much wider range
-      ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
-
-      // Front dots slightly larger than back dots for natural depth cue
-      const rad = baseDotPhys * (0.7 + 0.3 * t);
-
-      // â"€â"€ Crisp rendering: small â†' fillRect (zero blur), larger â†' arc at integer centre
-      if (rad <= 2) {
-        const s = Math.max(1, Math.round(rad * 2));
-        ctx.fillRect(px - (s >> 1), py - (s >> 1), s, s);
-      } else {
-        ctx.beginPath();
-        ctx.arc(px, py, rad, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    });
-
-    // HUD â€" scale font to physical pixels
-    ctx.fillStyle = "rgba(212,160,23,0.9)";
-    ctx.font = `bold ${Math.round(11 * dpr)}px 'Courier New'`;
-    ctx.textAlign = "left";
-    ctx.fillText(
-      `â— LIVE  ${pts.length.toLocaleString()} pts  Ã—${zoom.toFixed(2)}`,
-      Math.round(9 * dpr), Math.round(17 * dpr)
-    );
-    if (pts.length >= MAX_OBJECTS) {
-      ctx.fillStyle = "#e74c3c";
-      ctx.fillText("âš  LIMIT REACHED (1200)", Math.round(9 * dpr), Math.round(32 * dpr));
-    }
-  }, [canvasRef]);
-
-  const zoomStep = useCallback((factor: number) => {
-    zoomRef.current = Math.max(0.5, Math.min(8, zoomRef.current * factor));
-    if (!autoRef.current) draw();
-  }, [draw]);
-
-  const resetZoom = useCallback(() => {
-    zoomRef.current = 2.0;
-    rotRef.current = { x: -0.4, y: 0.5 };
-    if (!autoRef.current) draw();
-  }, [draw]);
-
-  const startAutoRotate = useCallback(() => {
-    autoRef.current = true;
-    const loop = () => {
-      if (!autoRef.current) return;
-      rotRef.current.y += 0.008;
-      draw();
-      animRef.current = requestAnimationFrame(loop);
-    };
-    animRef.current = requestAnimationFrame(loop);
-  }, [draw]);
-
-  const stopAutoRotate = useCallback(() => {
-    autoRef.current = false;
-    if (animRef.current) cancelAnimationFrame(animRef.current);
-  }, []);
-
-  const updatePoints = useCallback((pts: Point3D[], scale: number, pitchDeg: number, rollDeg: number) => {
-    ptsRef.current = pts;
-    scaleRef.current = scale;
-    pitchRef.current = pitchDeg;
-    rollRef.current = rollDeg;
-    if (!autoRef.current) draw();
-  }, [draw]);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const onDown = (e: MouseEvent) => { dragRef.current = { dragging: true, lx: e.clientX, ly: e.clientY }; };
-    const onMove = (e: MouseEvent) => {
-      if (!dragRef.current.dragging) return;
-      rotRef.current.y += (e.clientX - dragRef.current.lx) * 0.01;
-      rotRef.current.x += (e.clientY - dragRef.current.ly) * 0.01;
-      dragRef.current.lx = e.clientX; dragRef.current.ly = e.clientY;
-      if (!autoRef.current) draw();
-    };
-    const onUp = () => { dragRef.current.dragging = false; };
-    const clampZoom = (z: number) => Math.max(0.5, Math.min(8, z));
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      zoomRef.current = clampZoom(zoomRef.current * (e.deltaY > 0 ? 0.88 : 1.12));
-      if (!autoRef.current) draw();
-    };
-    // Pinch-to-zoom â€" track distance between two fingers
-    let lastPinchDist = 0;
-    const onTouch = (e: TouchEvent) => {
-      if (e.touches.length === 1) {
-        dragRef.current = { dragging: true, lx: e.touches[0].clientX, ly: e.touches[0].clientY };
-      } else if (e.touches.length === 2) {
-        dragRef.current.dragging = false;
-        lastPinchDist = Math.hypot(
-          e.touches[0].clientX - e.touches[1].clientX,
-          e.touches[0].clientY - e.touches[1].clientY
-        );
-      }
-    };
-    const onTouchMove = (e: TouchEvent) => {
-      if (e.touches.length === 2) {
-        // Pinch zoom
-        const dist = Math.hypot(
-          e.touches[0].clientX - e.touches[1].clientX,
-          e.touches[0].clientY - e.touches[1].clientY
-        );
-        if (lastPinchDist > 0) {
-          zoomRef.current = clampZoom(zoomRef.current * (dist / lastPinchDist));
-        }
-        lastPinchDist = dist;
-        if (!autoRef.current) draw();
-      } else if (e.touches.length === 1 && dragRef.current.dragging) {
-        // Single-finger rotate
-        rotRef.current.y += (e.touches[0].clientX - dragRef.current.lx) * 0.012;
-        rotRef.current.x += (e.touches[0].clientY - dragRef.current.ly) * 0.012;
-        dragRef.current.lx = e.touches[0].clientX;
-        dragRef.current.ly = e.touches[0].clientY;
-        if (!autoRef.current) draw();
-      }
-    };
-    canvas.addEventListener("mousedown", onDown);
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseup", onUp);
-    canvas.addEventListener("wheel", onWheel, { passive: false });
-    canvas.addEventListener("touchstart", onTouch, { passive: true });
-    canvas.addEventListener("touchmove", onTouchMove, { passive: false });
-    canvas.addEventListener("touchend", onUp);
-    return () => {
-      canvas.removeEventListener("mousedown", onDown);
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseup", onUp);
-      canvas.removeEventListener("wheel", onWheel);
-      canvas.removeEventListener("touchstart", onTouch);
-      canvas.removeEventListener("touchmove", onTouchMove);
-      canvas.removeEventListener("touchend", onUp);
-    };
-  }, [draw]);
-
-  // Resize observer â€" DPR-aware sizing prevents blurriness on HiDPI screens
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || !canvas.parentElement) return;
-    let rafId: number | null = null;
-    const resizeCanvas = (parent: Element) => {
-      const rect = parent.getBoundingClientRect();
-      if (rect.width <= 0 || rect.height <= 0) return;
-      const dpr = window.devicePixelRatio || 1;
-      cssDimsRef.current = { w: rect.width, h: rect.height };
-      canvas.width = Math.round(rect.width * dpr);
-      canvas.height = Math.round(rect.height * dpr);
-      // Explicit CSS dimensions prevent CSS from stretching/distorting the buffer
-      canvas.style.width = rect.width + "px";
-      canvas.style.height = rect.height + "px";
-      draw();
-    };
-    const obs = new ResizeObserver(() => {
-      if (rafId !== null) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => {
-        if (canvas.parentElement) resizeCanvas(canvas.parentElement);
-        rafId = null;
-      });
-    });
-    obs.observe(canvas.parentElement);
-    resizeCanvas(canvas.parentElement);
-    return () => {
-      obs.disconnect();
-      if (rafId !== null) cancelAnimationFrame(rafId);
-    };
-  }, [draw]);
-
-  return { updatePoints, startAutoRotate, stopAutoRotate, draw, zoomStep, resetZoom };
-}
+// ─── QUICK PRESETS ──────────────────────────────────────────────────────────
 
 // ─── QUICK PRESETS ──────────────────────────────────────────────────────────
 type Preset = { label: string; shape: string; params: Record<string, number>; category: string; suggestedClass?: string };
@@ -496,13 +211,14 @@ export default function App() {
   const [sandboxMode, setSandboxMode] = useState(false);
   const [performanceRef, setPerformanceRef] = useState<any>(null);
   const [buildDna, setBuildDna] = useState<string | null>(null);
-  const [packagingProfile, setPackagingProfile] = useState<PackagingProfile>("default");
   const [output, setOutput] = useState("");
+  const [selectedNode, setSelectedNode] = useState<{point: any, index: number} | null>(null);
   const [autoRotate, setAutoRotate] = useState(true);
   const [autoOrient, setAutoOrient] = useState(false);
   const [orientInward, setOrientInward] = useState(false);
   const [jitter, setJitter] = useState(0);
   const [buildNotes, setBuildNotes] = useState("");
+  const [packagingProfile, setPackagingProfile] = useState<PackagingProfile>("default");
 
   // ─── GLOBAL PROJECT MANAGEMENT ──────────────────────────────────
   const [history, setHistory] = useState<any[]>([]);
@@ -736,8 +452,18 @@ export default function App() {
     try { return getShapePoints(shapeType, params); } catch (_) { return []; }
   }, [pipelineCtx, mode, shapeType, params, selectedBuildId, textInput, textLetterH, textSpacing, textDepth, textRings, textArcDeg]);
 
+  const [manualNodes, setManualNodes] = useState<Point3D[]>([]);
+  const [nodeOverrides, setNodeOverrides] = useState<Record<number, string>>({});
+
+  useEffect(() => {
+    setNodeOverrides({});
+    setManualNodes([]);
+  }, [shapeType, params, selectedBuildId]);
+
   // All shapes render as hollow frames — displayPoints is always the raw frame points
-  const displayPoints = useMemo(() => rawPoints, [rawPoints]);
+  const displayPoints = useMemo(() => {
+     return rawPoints.map((p, i) => nodeOverrides[i] ? { ...p, name: nodeOverrides[i] } : p).concat(manualNodes);
+  }, [rawPoints, nodeOverrides, manualNodes]);
 
   // Bounding-box dimensions in metres (scale-adjusted) â€" shown live in info bar
   const dims = useMemo(() => {
@@ -1381,18 +1107,8 @@ export default function App() {
           />
         )}
 
-        {/* ── UNIFIED LIBRARY MODE ── */}
-        {mode === "builds" && (
-          <BuildLibrary 
-            onLoadIntoEditor={loadBuildIntoEditor} 
-            onGetValidationStatus={getValidationStatus} 
-            sandboxEnabled={sandboxEnabled} setSandboxEnabled={setSandboxEnabled}
-            sandboxHUD={sandboxHUD} setSandboxHUD={setSandboxHUD}
-            sandboxOverlays={sandboxOverlays} setSandboxOverlays={setSandboxOverlays}
-            developerMode={developerMode} setDeveloperMode={setDeveloperMode}
-            showDebugGeometry={showDebugGeometry} setShowDebugGeometry={setShowDebugGeometry}
-          />
-        )}
+
+
 
         {/* Mobile backdrop */}
         {mode !== "weapons" && mode !== "bunker" && mode !== "maze" && mode !== "race" && mode !== "random" && mode !== "conzone" && mode !== "shipwreck" && mode !== "teleport" && mode !== "airdrops" && mode !== "mover" && mode !== "freeway" && mode !== "trader" && mode !== "terrain" && mode !== "vault" && sidebarOpen && (
@@ -1651,7 +1367,57 @@ export default function App() {
               mode={sandboxEnabled ? (sandboxHUD || (sandboxOverlays.density || sandboxOverlays.collision || sandboxOverlays.navigation || sandboxOverlays.symmetry || sandboxOverlays.structural) ? "sandbox_hud" : "sandbox_basic") : "preview"}
               overlays={{...sandboxOverlays, debug: showDebugGeometry}}
               pipelineCtx={pipelineCtx}
+              onSelectNode={(p, idx) => setSelectedNode({ point: p, index: idx as number })}
+              onPlaceNode={(pos) => {
+                if (pipelineCtx && pipelineCtx.objects_final) {
+                  const newCtx = {...pipelineCtx};
+                  newCtx.objects_final = [...newCtx.objects_final, {
+                    name: objClass, pos: pos, ypr: [yaw, pitch, roll], scale: scaleVal
+                  }];
+                  setPipelineCtx(newCtx);
+                  setOutput(JSON.stringify({ Objects: newCtx.objects_final }, null, 2));
+                } else {
+                  setManualNodes(prev => [...prev, { x: pos[0], y: pos[1], z: pos[2], name: objClass, yaw, pitch, roll }]);
+                }
+              }}
             />
+
+            <>
+              {selectedNode && (
+                <div className="absolute bottom-3 left-3 bg-[#0a1209ee] border border-[#27ae60] flex flex-col p-2 text-[10px] text-[#27ae60] rounded backdrop-blur z-20 shadow-lg">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="font-bold">Node #{selectedNode.index}</span>
+                    <button onClick={() => setSelectedNode(null)} className="text-[#e74c3c] font-bold px-1 hover:bg-[#e74c3c33] rounded">X</button>
+                  </div>
+                  <span>Pos: {selectedNode.point.x?.toFixed(1) || selectedNode.point.pos?.[0]?.toFixed(1)}, {selectedNode.point.y?.toFixed(1) || selectedNode.point.pos?.[1]?.toFixed(1)}, {selectedNode.point.z?.toFixed(1) || selectedNode.point.pos?.[2]?.toFixed(1)}</span>
+                  <span>Current: {selectedNode.point.name || "Default"}</span>
+                  <input 
+                    type="text" 
+                    className="bg-[#000] border border-[#27ae60] text-[#27ae60] px-1.5 py-1 mt-1 outline-none focus:border-[#e8b82a]" 
+                    defaultValue={selectedNode.point.name} 
+                    onKeyDown={(e) => {
+                     if(e.key === 'Enter') {
+                        const newName = e.currentTarget.value;
+                        if (pipelineCtx && pipelineCtx.objects_final) {
+                            const newCtx = {...pipelineCtx};
+                            newCtx.objects_final[selectedNode.index].name = newName;
+                            setPipelineCtx(newCtx);
+                            setOutput(JSON.stringify({ Objects: newCtx.objects_final }, null, 2));
+                        } else {
+                            if (selectedNode.index < rawPoints.length) {
+                                setNodeOverrides(prev => ({...prev, [selectedNode.index]: newName}));
+                            } else {
+                                const manualIdx = selectedNode.index - rawPoints.length;
+                                setManualNodes(prev => prev.map((n, i) => i === manualIdx ? {...n, name: newName} : n));
+                            }
+                        }
+                        setSelectedNode({ point: {...selectedNode.point, name: newName}, index: selectedNode.index });
+                     }
+                  }}/>
+                  <span className="text-[8px] opacity-70 mt-1 uppercase tracking-wider">Press Enter to Swap</span>
+                </div>
+              )}
+            </>
 
             <>
                   {/* Minimal overlay - auto-rotate toggle */}

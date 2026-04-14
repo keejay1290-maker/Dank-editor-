@@ -1,0 +1,198 @@
+export function placeStairs(pts: Point3D[], centerX: number, centerZ: number, startY: number, height: number, steps: number, radius = 5): void {
+export function getShapePoints(shapeType: string, params: Record<string, number>): Point3D[] {
+function getRawPoints(shapeType: string, params: Record<string, number>): Point3D[] {
+export function gen_sphere(p: Record<string, number>, hemi: boolean): Point3D[] {
+export function gen_deathstar(p: Record<string, number>): Point3D[] {
+export function gen_torus(p: Record<string, number>): Point3D[] {
+export function gen_disc(p: Record<string, number>): Point3D[] {
+export function gen_helix(p: Record<string, number>): Point3D[] {
+export function gen_cone(p: Record<string, number>): Point3D[] {
+export function gen_cylinder(p: Record<string, number>): Point3D[] {
+export function gen_hyperboloid(p: Record<string, number>): Point3D[] {
+export function gen_mobius(p: Record<string, number>): Point3D[] {
+export function gen_icosphere(p: Record<string, number>): Point3D[] {
+function gen_body_skull(p: Record<string, number>): Point3D[] {
+function gen_body_arm(p: Record<string, number>): Point3D[] {
+function gen_body_leg(p: Record<string, number>): Point3D[] {
+function gen_body_ball_joint(p: Record<string, number>): Point3D[] {
+function gen_body_hand(p: Record<string, number>): Point3D[] {
+function gen_body_ribcage(p: Record<string, number>): Point3D[] {
+function gen_body_spine(p: Record<string, number>): Point3D[] {
+function gen_body_eye(p: Record<string, number>): Point3D[] {
+function gen_body_humanoid(p: Record<string, number>): Point3D[] {
+function gen_bastion_round(p: Record<string, number>): Point3D[] {
+function gen_bastion_square(p: Record<string, number>): Point3D[] {
+function gen_tower(p: Record<string, number>): Point3D[] {
+function gen_wall_line(p: Record<string, number>): Point3D[] {
+function gen_wall_arc(p: Record<string, number>): Point3D[] {
+function gen_star_fort(p: Record<string, number>): Point3D[] {
+function gen_grid_flat(p: Record<string, number>): Point3D[] {
+function gen_staircase(p: Record<string, number>): Point3D[] {
+function gen_pyramid(p: Record<string, number>): Point3D[] {
+function gen_ring_platform(p: Record<string, number>): Point3D[] {
+function gen_cross(p: Record<string, number>): Point3D[] {
+function gen_arrow(p: Record<string, number>): Point3D[] {
+function letterPoints(letter: string, size: number, depth: number, spacing: number, rings: number): Point3D[] {
+function gen_letter_D(p: Record<string, number>): Point3D[] {
+function gen_letter_Z(p: Record<string, number>): Point3D[] {
+function gen_t800_endoskeleton(p: Record<string, number>): Point3D[] {
+function gen_mech_bipedal(p: Record<string, number>): Point3D[] {
+function gen_mech_minigun(p: Record<string, number>): Point3D[] {
+function gen_mech_walker(p: Record<string, number>): Point3D[] {
+function gen_millennium_falcon(p: Record<string, number>): Point3D[] {
+function gen_mothership(p: Record<string, number>): Point3D[] {
+function gen_skyscraper(p: Record<string, number>): Point3D[] {
+function gen_prison_tower(p: Record<string, number>): Point3D[] {
+function gen_sci_fi_gate(p: Record<string, number>): Point3D[] {
+function gen_cannon_turret(p: Record<string, number>): Point3D[] {
+function gen_tunnel_circle(p: Record<string, number>): Point3D[] {
+function gen_tunnel_square(p: Record<string, number>): Point3D[] {
+function gen_tunnel_hex(p: Record<string, number>): Point3D[] {
+function gen_dna_double(p: Record<string, number>): Point3D[] {
+function gen_reactor_core(p: Record<string, number>): Point3D[] {
+function gen_orbital_station(p: Record<string, number>): Point3D[] {
+function gen_azkaban_tower(p: Record<string, number>): Point3D[] {
+function gen_pyramid_stepped(p: Record<string, number>): Point3D[] {
+function gen_crashed_ufo(p: Record<string, number>): Point3D[] {
+function gen_volcano(p: Record<string, number>): Point3D[] {
+function gen_eye_of_sauron(p: Record<string, number>): Point3D[] {
+function gen_atat_walker(p: Record<string, number>): Point3D[] {
+function gen_eiffel_tower(p: Record<string, number>): Point3D[] {
+function gen_cyberpunk_nexus(p: Record<string, number>): Point3D[] {
+function gen_castle_keep(p: Record<string, number>): Point3D[] {
+function gen_borg_cube(p: Record<string, number>): Point3D[] {
+function gen_colosseum(p: Record<string, number>): Point3D[] {
+function gen_stonehenge(p: Record<string, number>): Point3D[] {
+function gen_mushroom_cloud(p: Record<string, number>): Point3D[] {
+function gen_black_hole(p: Record<string, number>): Point3D[] {
+function gen_alien_mothership(p: Record<string, number>): Point3D[] {
+function gen_celtic_ring(p: Record<string, number>): Point3D[] {
+function gen_treehouse(p: Record<string, number>): Point3D[] {
+function gen_checkpoint(p: Record<string, number>): Point3D[] {
+function gen_watchtower_post(p: Record<string, number>): Point3D[] {
+function gen_fuel_depot(p: Record<string, number>): Point3D[] {
+function gen_sniper_nest(p: Record<string, number>): Point3D[] {
+function gen_farmstead(p: Record<string, number>): Point3D[] {
+function gen_survivor_camp(p: Record<string, number>): Point3D[] {
+function gen_bunker_line(p: Record<string, number>): Point3D[] {
+function gen_power_relay(p: Record<string, number>): Point3D[] {
+function gen_radio_outpost(p: Record<string, number>): Point3D[] {
+function _tfRing(pts: Point3D[], cx: number, cy: number, cz: number, rx: number, rz: number, n: number) {
+function _tfCol(pts: Point3D[], x: number, z: number, y0: number, y1: number, n: number) {
+function _tfBox(pts: Point3D[], cx: number, cy: number, cz: number, w: number, h: number, d: number, slices = 3) {
+function _buildMechPts(c: TFConfig): Point3D[] {
+function gen_tf_bumblebee(p: Record<string, number>): Point3D[] {
+function gen_tf_optimus(p: Record<string, number>): Point3D[] {
+function gen_tf_ironhide(p: Record<string, number>): Point3D[] {
+function gen_tf_jazz(p: Record<string, number>): Point3D[] {
+function gen_tf_ratchet(p: Record<string, number>): Point3D[] {
+function gen_tf_megatron(p: Record<string, number>): Point3D[] {
+function gen_tf_starscream(p: Record<string, number>): Point3D[] {
+function gen_dragon(p: Record<string, number>): Point3D[] {
+function gen_pirate_ship(p: Record<string, number>): Point3D[] {
+function gen_pvp_arena(p: Record<string, number>): Point3D[] {
+function gen_helipad(p: Record<string, number>): Point3D[] {
+function gen_arena_colosseum(p: Record<string, number>): Point3D[] {
+function gen_arena_fort(p: Record<string, number>): Point3D[] {
+function gen_arena_maze(p: Record<string, number>): Point3D[] {
+function gen_arena_siege(p: Record<string, number>): Point3D[] {
+function gen_arena_compound(p: Record<string, number>): Point3D[] {
+function gen_wall_perimeter(p: Record<string, number>): Point3D[] {
+function gen_iron_throne(p: Record<string, number>): Point3D[] {
+function gen_gothic_arch(p: Record<string, number>): Point3D[] {
+function gen_bridge_truss(p: Record<string, number>): Point3D[] {
+function gen_amphitheater(p: Record<string, number>): Point3D[] {
+function gen_vaulted_ceiling(p: Record<string, number>): Point3D[] {
+function gen_pitched_roof(p: Record<string, number>): Point3D[] {
+function gen_log_cabin(p: Record<string, number>): Point3D[] {
+function gen_freeway_curve(p: Record<string, number>): Point3D[] {
+function gen_saturn(p: Record<string, number>): Point3D[] {
+function gen_crown(p: Record<string, number>): Point3D[] {
+function gen_olympic_rings(p: Record<string, number>): Point3D[] {
+function gen_submarine(p: Record<string, number>): Point3D[] {
+function gen_aircraft_carrier(p: Record<string, number>): Point3D[] {
+function gen_helicarrier(p: Record<string, number>): Point3D[] {
+function gen_vault_door(p: Record<string, number>): Point3D[] {
+function gen_lab_spider(p: Record<string, number>): Point3D[] {
+function gen_destroyer(p: Record<string, number>): Point3D[] {
+function gen_xmas_tree_large(p: Record<string, number>): Point3D[] {
+function gen_jack_house(p: Record<string, number>): Point3D[] {
+function gen_pumpkin_ring(p: Record<string, number>): Point3D[] {
+function gen_easter_cross(p: Record<string, number>): Point3D[] {
+function gen_ice_wall(p: Record<string, number>): Point3D[] {
+---
+function drawWall(pts: Point3D[], x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, spacing: number = 8) {
+function drawRing(pts: Point3D[], cx: number, cy: number, cz: number, r: number, spacing: number = 8) {
+function drawDisk(pts: Point3D[], cx: number, cy: number, cz: number, maxR: number, spacing: number = 8) {
+function placeStairs(pts: Point3D[], centerX: number, centerZ: number, startY: number, height: number, steps: number, radius = 5): void {
+export function gen_shipwreck(p: Record<string, any>): Point3D[] {
+function drawOnionDome(pts: Point3D[], cx: number, baseH: number, cz: number, r: number, h: number) {
+export function gen_death_star(p: Record<string, any>): Point3D[] {
+export function gen_structural_random(p: Record<string, any>): Point3D[] {
+function ctx_check_symmetry(pts: Point3D[]) {
+export function gen_taj_mahal(p: Record<string, any>): Point3D[] {
+export function gen_azkaban_prison(p: Record<string, any>): Point3D[] {
+export function gen_stargate_portal(p: Record<string, any>): Point3D[] {
+export function gen_jurassic_park_gate(p: Record<string, any>): Point3D[] {
+export function gen_nakatomi_plaza(p: Record<string, any>): Point3D[] {
+export function gen_atat_walker(p: Record<string, any>): Point3D[] {
+export function gen_millennium_falcon(p: Record<string, any>): Point3D[] {
+export function gen_matrix_zion_dock(p: Record<string, any>): Point3D[] {
+export function gen_fortress_of_solitude(p: Record<string, any>): Point3D[] {
+export function gen_wall_maria(p: Record<string, any>): Point3D[] {
+export function gen_barad_dur(p: Record<string, any>): Point3D[] {
+export function gen_tardis(p: Record<string, any>): Point3D[] {
+export function gen_nuketown(p: Record<string, any>): Point3D[] {
+export function gen_dust2_a_site(p: Record<string, any>): Point3D[] {
+export function gen_peach_castle(p: Record<string, any>): Point3D[] {
+export function gen_shinra_hq(p: Record<string, any>): Point3D[] {
+export function gen_halo_control_room(p: Record<string, any>): Point3D[] {
+export function gen_colosseum(p: Record<string, any>): Point3D[] {
+export function gen_golden_gate_bridge(p: Record<string, any>): Point3D[] {
+export function gen_normandy_bunkers(p: Record<string, any>): Point3D[] {
+export function gen_the_pentagon(p: Record<string, any>): Point3D[] {
+export function gen_pyramid_giza(p: Record<string, any>): Point3D[] {
+export function gen_azkaban(p: Record<string, any>): Point3D[] {
+export function gen_stonehenge(p: Record<string, any>): Point3D[] {
+export function gen_starship_enterprise(p: Record<string, any>): Point3D[] {
+export function gen_star_destroyer(p: Record<string, any>): Point3D[] {
+export function gen_king_kong_empire(p: Record<string, any>): Point3D[] {
+export function gen_medieval_fort(p: Record<string, any>): Point3D[] {
+export function gen_bridge_of_khazad_dum(p: Record<string, any>): Point3D[] {
+export function gen_alcatraz_prison(p: Record<string, any>): Point3D[] {
+export function gen_roman_aqueduct(p: Record<string, any>): Point3D[] {
+export function gen_military_fob(p: Record<string, number>): Point3D[] {
+export function gen_checkpoint_charlie(p: Record<string, number>): Point3D[] {
+export function gen_trench_network(p: Record<string, number>): Point3D[] {
+export function gen_crop_circle(p: Record<string, number>): Point3D[] {
+export function gen_the_wall_game_of_thrones(p: Record<string, number>): Point3D[] {
+export function gen_helms_deep(p: Record<string, number>): Point3D[] {
+export function gen_minas_tirith_tier(p: Record<string, number>): Point3D[] {
+export function gen_oil_rig(p: Record<string, number>): Point3D[] {
+export function gen_panama_canal_locks(p: Record<string, number>): Point3D[] {
+export function gen_airport_runway(p: Record<string, number>): Point3D[] {
+export function gen_bunker_complex_entrance(p: Record<string, number>): Point3D[] {
+export function gen_celtic_ring(p: Record<string, any>): Point3D[] {
+export function gen_orbital_station(p: Record<string, any>): Point3D[] {
+export function gen_eye_of_sauron(p: Record<string, any>): Point3D[] {
+export function gen_black_hole(p: Record<string, any>): Point3D[] {
+export function gen_minas_tirith(p: Record<string, any>): Point3D[] {
+export function gen_tony_stark_tower(p: Record<string, any>): Point3D[] {
+export function gen_police_station(p: Record<string, any>): Point3D[] {
+export function gen_log_cabin(p: Record<string, any>): Point3D[] {
+export function gen_deep_sea_oil_rig(p: Record<string, any>): Point3D[] {
+export function gen_bunker_line(p: Record<string, any>): Point3D[] {
+export function gen_big_ben(p: Record<string, any>): Point3D[] {
+export function gen_statue_liberty(p: Record<string, any>): Point3D[] {
+export function gen_xwing(p: Record<string, any>): Point3D[] {
+export function gen_christ_redeemer(p: Record<string, any>): Point3D[] {
+export function gen_hogwarts(p: Record<string, any>): Point3D[] {
+export function gen_sydney_opera(p: Record<string, any>): Point3D[] {
+export function gen_space_needle(p: Record<string, any>): Point3D[] {
+export function gen_cn_tower(p: Record<string, any>): Point3D[] {
+export function gen_leaning_pisa(p: Record<string, any>): Point3D[] {
+export function gen_sagrada_familia(p: Record<string, any>): Point3D[] {
+export function gen_arc_triomphe(p: Record<string, any>): Point3D[] {
+export function gen_parthenon(p: Record<string, any>): Point3D[] {
+export function gen_hospital(p: Record<string, any>): Point3D[] {
+export function gen_supermarket(p: Record<string, any>): Point3D[] {

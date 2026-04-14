@@ -715,9 +715,8 @@ const FLOOR_OBJECTS = [
   { value: "land_container_1bo",       label: "Shipping Container 6m" },
 ];
 
-// yawOffset = 90: castle_wall3 default 8m spans LOCAL-X (perpendicular to heading).
-// Adding 90° rotates it so the 8m aligns WITH the track heading direction.
-// Container and fortified_nest also have long-axis along LOCAL-X → same 90° fix.
+// yawOffset = 90: wall default spans LOCAL-X (E-W at yaw=0).
+// segmentDir.yaw gives the forward heading; +90° rotates the wall to run PARALLEL to the track.
 const BARRIER_OBJECTS = [
   { value: "staticobj_castle_wall3",         label: "Castle Wall 8m", len: 8, yawOffset: 90 },
   { value: "land_container_1mo",             label: "Shipping Container 6m", len: 6, yawOffset: 90 },

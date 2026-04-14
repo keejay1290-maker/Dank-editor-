@@ -28,6 +28,7 @@ export const SHAPE_MIMICS: Record<string, MimicDef> = {
   "staticobj_wall_cncsmall_8":  { shape: "box", args: [8, 3.0, 0.4], color: "#aaaaaa" },  // concrete 8m
   "staticobj_wall_cncsmall_4":  { shape: "box", args: [4, 3.0, 0.4], color: "#aaaaaa" },  // concrete 4m
   "staticobj_wall_milcnc_4":    { shape: "box", args: [4, 3.0, 0.3], color: "#78909c" },  // metal panels
+  "staticobj_wall_indcnc_10":   { shape: "box", args: [10, 3.0, 0.3], color: "#6a7a8a" }, // industrial 10m
   "staticobj_platform1_block":  { shape: "box", args: [2.0, 0.4, 2.0], color: "#999" },   // platform tile
   "staticobj_misc_timbers_log4":{ shape: "box", args: [4, 0.4, 0.4], color: "#8d6e40" },  // timber log
   "staticobj_roadblock_cncblock":{ shape: "box", args: [3, 1, 1.2], color: "#8a8a8a" },

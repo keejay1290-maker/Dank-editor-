@@ -37,7 +37,18 @@
       "Bash(curl -s http://localhost:5174)",
       "Bash(awk 'NR>=2100 && NR<=2170 && /^function |^export function/' \"c:/Users/Shadow/Downloads/Dank-editor-preview/artifacts/dayz-builder/src/lib/shapeGenerators.ts\")",
       "Bash(awk 'NR>=5960 && NR<=6010 && /^function |^export function/' \"c:/Users/Shadow/Downloads/Dank-editor-preview/artifacts/dayz-builder/src/lib/shapeGenerators.ts\")",
-      "Bash(grep -n \"category.*undefined\\\\|category: undefined\\\\|category:$\\\\|category: ,\" \"c:/Users/Shadow/Downloads/Dank-editor-preview/artifacts/dayz-builder/src/lib/vaultData.ts\")"
+      "Bash(grep -n \"category.*undefined\\\\|category: undefined\\\\|category:$\\\\|category: ,\" \"c:/Users/Shadow/Downloads/Dank-editor-preview/artifacts/dayz-builder/src/lib/vaultData.ts\")",
+      "WebSearch",
+      "WebFetch(domain:community.bistudio.com)",
+      "WebFetch(domain:vincibean.github.io)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:dayzexplorer.zeroy.com)",
+      "WebFetch(domain:opendayz.net)",
+      "WebFetch(domain:dayz-scripts.yadz.app)",
+      "WebFetch(domain:cmogaming.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:pastebin.com)",
+      "WebFetch(domain:kingalobar.github.io)"
     ]
   }
 }

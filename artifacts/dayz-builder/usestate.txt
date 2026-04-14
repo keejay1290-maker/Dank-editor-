@@ -1,0 +1,83 @@
+0: import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+459: const [mode, setMode] = useState<EditorMode>("vault");
+462: const [shapeType, setShapeType] = useState("star_fort");
+463: const [selectedPresetLabel, setSelectedPresetLabel] = useState<string>("FOB Bastion");
+464: const [params, setParams] = useState<Record<string, number>>(() => {
+469: const [objClass, setObjClass] = useState("Land_HBarrier_5m");
+470: const [posX, setPosX] = useState(11950); // Default to Krasnoe
+471: const [posY, setPosY] = useState(140);   // Enforced Krasno Y
+472: const [posZ, setPosZ] = useState(12600);
+473: const [yaw, setYaw] = useState(0);
+474: const [pitch, setPitch] = useState(0);
+475: const [roll, setRoll] = useState(0);
+476: const [scaleVal, setScaleVal] = useState(1.0);
+489: const [format, setFormat] = useState<OutputFormat>("initc");
+490: const [cePersist, setCePersist] = useState(0);
+491: const [includeHelper, setIncludeHelper] = useState(true);
+492: const [extraObjs, setExtraObjs] = useState("");
+493: const [stackY, setStackY] = useState(0);
+494: const [pipelineCtx, setPipelineCtx] = useState<PipelineContext | null>(null);
+495: const [sandboxMode, setSandboxMode] = useState(false);
+496: const [performanceRef, setPerformanceRef] = useState<any>(null);
+497: const [buildDna, setBuildDna] = useState<string | null>(null);
+498: const [packagingProfile, setPackagingProfile] = useState<PackagingProfile>("default");
+499: const [output, setOutput] = useState("");
+500: const [autoRotate, setAutoRotate] = useState(true);
+501: const [autoOrient, setAutoOrient] = useState(false);
+502: const [orientInward, setOrientInward] = useState(false);
+503: const [jitter, setJitter] = useState(0);
+504: const [buildNotes, setBuildNotes] = useState("");
+507: const [history, setHistory] = useState<any[]>([]);
+508: const [redoStack, setRedoStack] = useState<any[]>([]);
+509: const [snapGrid, setSnapGrid] = useState(0);
+510: const [snapAngle, setSnapAngle] = useState(0);
+511: const [showProjectTools, setShowProjectTools] = useState(false);
+583: const [sidebarOpen, setSidebarOpen] = useState(true);
+586: const [validationResults, setValidationResults] = useState<any[]>([]);
+598: const [toast, setToast] = useState("");
+599: const [objSearch, setObjSearch] = useState("");
+600: const [textObjSearch, setTextObjSearch] = useState("");
+601: const [presetFilter, setPresetFilter] = useState("");
+602: const [presetCategory, setPresetCategory] = useState("All");
+605: const [favourites, setFavourites] = useState<string[]>(() => {
+617: const [selectedBuildId, setSelectedBuildId] = useState<string>(COMPLETED_BUILDS[0]?.id || "");
+618: const [buildFilter, setBuildFilter] = useState("");
+619: const [buildCategory, setBuildCategory] = useState("All");
+620: const [zipGenerating, setZipGenerating] = useState(false);
+621: const [addInteriorRooms, setAddInteriorRooms] = useState(false);
+622: const [addInteriorFurniture, setAddInteriorFurniture] = useState(true);
+623: const [intFloors, setIntFloors] = useState(2);
+624: const [intFloorH, setIntFloorH] = useState(4);
+625: const [intRoomSize, setIntRoomSize] = useState(8);
+626: const [lootSeed, setLootSeed] = useState(() => Math.floor(Math.random() * 99999));
+661: const [textInput, setTextInput] = useState("DAYZ");
+662: const [textObj, setTextObj] = useState("Land_Container_1Bo");
+663: const [textScale, setTextScale] = useState(1.0);
+664: const [textLetterH, setTextLetterH] = useState(10);
+665: const [textSpacing, setTextSpacing] = useState(1.2);
+666: const [textDepth, setTextDepth] = useState(0);
+667: const [textRings, setTextRings] = useState(1);
+668: const [textPosX, setTextPosX] = useState(12000);
+669: const [textPosY, setTextPosY] = useState(150);
+670: const [textPosZ, setTextPosZ] = useState(12600);
+671: const [textFormat, setTextFormat] = useState<OutputFormat>("initc");
+672: const [textOutput, setTextOutput] = useState("");
+673: const [textArcDeg, setTextArcDeg] = useState(0);
+676: const [sandboxEnabled, setSandboxEnabled] = useState(false);
+677: const [sandboxHUD, setSandboxHUD] = useState(false);
+678: const [sandboxOverlays, setSandboxOverlays] = useState({
+685: const [replayActive, setReplayActive] = useState(false);
+686: const [replayStep, setReplayStep] = useState(0);
+687: const [stressScenario, setStressScenario] = useState<StressScenario | null>(null);
+688: const [stressResult, setStressResult] = useState<any>(null);
+689: const [developerMode, setDeveloperMode] = useState(false);
+690: const [showDebugGeometry, setShowDebugGeometry] = useState(false);
+1815: const [saves, setSaves] = useState<SaveSlot[]>(() => {
+1818: const [saveName, setSaveName] = useState("");
+1819: const [saveErr, setSaveErr] = useState("");
+1886: const [ax, setAx] = useState(""); const [az, setAz] = useState("");
+1887: const [bx, setBx] = useState(""); const [bz, setBz] = useState("");
+1888: const [count, setCount] = useState(5);
+1889: const [fixedY, setFixedY] = useState("");
+1890: const [copied, setCopied] = useState(false);
+1975: const [collapsed, setCollapsed] = useState<Record<string, boolean>>({

@@ -1,61 +1,54 @@
-# 🏗️ DANKVAULT™ COMPREHENSIVE SESSION HANDOVER (2026-04-03)
-# SESSION STATUS: STABLE / READY FOR DEEP ARCHITECTURAL STRESS TEST
+# 🏗️ DANKVAULT™ COMPREHENSIVE SESSION HANDOVER (v2.51)
+# SESSION STATUS: ACTIVE RECONSTRUCTION / SANDBOX ENABLED
 
-## 📌 PRIMARY OBJECTIVE: PIPELINE HARDENING & MATERIALIZATION REPAIR
-This session was devoted to resolving critical "Zero-Object Materialization" and "Preview Void" bugs within the DankVault Global Builder Pipeline, while enforcing strict adherence to the **DANKVAULT™ System Routing Contract**.
-
----
-
-## 🚮 DEPRECATED & REMOVED
-1.  **Legacy Object Placeholders**: Scrapped all legacy logical placeholders from `objectFamilies.ts`. ALL builds are now firewalled to the **11-object Master Approved Registry**.
-2.  **Empty Masterpiece Stubs**: Removed the placeholder `{ objects: [] }` return from `loadPrebuildGeometry`. Masterpieces no longer return empty artifacts; they must either find baked geometry or fall back to live generators.
-3.  **Redundant Pipeline Logic**: Excised direct object creation from the `path_and_curve_generation` step in `pipeline.ts`. Materialization is now canonicalized strictly in `placement_and_snapping`.
+## 📌 PRIMARY OBJECTIVE: INTERACTIVE SANDBOX & ARCHITECTURAL PERFECTION
+This session focused on transforming the DankVault Global Builder into an interactive sandbox while preparing the mathematical foundation to eliminate all geometric gaps in complex masterpieces.
 
 ---
 
-## 🛠️ KEY CHANGES & RECONSTRUCTIVE REPAIRS
+## 🛠️ COMPLETED CHANGES (Current Session)
 
-### 1. Masterpiece Classification Pivot (src/lib/ruleset.ts)
-*   **The Change**: Re-classified ~34 masterpieces (Millennium Falcon, Death Star, Stargate Portal, Helms Deep, etc.) as `complex` rather than `composite`.
-*   **The Rationale**: Composite builds were attempting to LOAD geometry that didn't yet exist in the registry, resulting in 0 objects. Re-classifying them as `complex` forces the pipeline to execute their high-fidelity recursive generators in `shapeGenerators.ts`.
+### 1. Interactive 3D Sandbox Overhaul (`PointCloud3D.tsx`)
+*   **The Change**: Enabled real-time interaction with the 3D point cloud.
+    *   **Raycasting Selection**: Objects in the preview are now clickable. Selecting an object opens a property editor in the HUD.
+    *   **Shift-Click Placement**: Holding `Shift` and clicking on the 3D ground grid/plane now allows manual point injection into the builder.
+    *   **Interactive Plane**: Added a transparent raycast-target plane (`planeGeometry`) to handle ground intersections for accurate point placement.
 
-### 2. Generator Math Hardening (src/lib/shapeGenerators.ts)
-*   **The Change**: Implemented robust parameter fallbacks in `gen_star_fort`, `gen_sphere`, `gen_torus`, `gen_disc`, and `gen_helix`.
-*   **The Rationale**: These generators previously failed silently if UI parameters (e.g., `rings`, `latSegs`) were undefined, returning point arrays filled with `NaN` coordinates that were filtered out by the 3D renderer. They now use default "Gold Standard" scales (6 points, 12m height) as a safety net.
+### 2. Live Editor State Management (`App.tsx`)
+*   **The Change**: Implemented `manualNodes` and `nodeOverrides` states to handle user-driven edits.
+    *   **Object Swapping**: Users can click an object in the viewer and type a new classname (e.g., swapping a wood wall for metal) directly in the HUD. Pressing `Enter` updates the preview instantly.
+    *   **Manual Cache**: Placed points and overridden names are cached during the session, persisting through parameter changes until a full re-generation is forced.
+*   **Critical Stability Patch**: Fixed a `ReferenceError` where `packagingProfile` was being accessed before initialization, which caused the editor to crash on startup.
 
-### 3. Pipeline Finalization Re-ordering (src/lib/pipeline.ts)
-*   **The Change**: Moved the `applyDankvaultMetaExtensions` call and HUD telemetry extraction to occur **after** the population of `objects_final`.
-*   **The Rationale**: Telemetry was previously attempting to analyze `objects_final` before the pipeline loop had finished materializing them, leading to 0-object count displays in the HUD.
-
-### 4. UI Stability Patches (src/main.tsx / App.tsx)
-*   **Pointer Lock Wrapper**: Implemented a global wrapper for `requestPointerLock()` and `exitPointerLock()`.
-*   **The Change**: All lock calls now check for DOM existence (`element.isConnected`) and body-containment before firing. This prevents React-mode-switch crashes during high-speed transitions.
-
----
-
-## 🕵️ ISSUES ENCOUNTERED & RESOLVED
-
-1.  **"Zero-Object" Materialization Bug**: 
-    *   **Cause**: Masterpieces were flagged as `composite` in the ruleset but lacked pre-baked entries in the `buildRegistry`. 
-    *   **Resolution**: Switched to `complex` generator-routing.
-2.  **"Synchronizing Neural Archetypes" Preview Loop**: 
-    *   **Cause**: `loadPrebuildGeometry` returned an empty object array for masterpieces, which was interpreted by `PointCloud3D` as a "loading" state. 
-    *   **Resolution**: Fixed the return value to fall back to the live generator.
-3.  **NaN Coordinate Corruption**: 
-    *   **Cause**: Generators like `star_fort` were treating `undefined` params as `NaN` in math operations.
-    *   **Resolution**: Implemented the Generator Hardening patch.
-4.  **HUD Telemetry Lag**: 
-    *   **Cause**: Metadata extraction triggered on empty stage snapshots. 
-    *   **Resolution**: Re-ordered pipeline hooks to ensure finalization is complete before audit.
+### 3. Pipeline & HUD Upgrades
+*   **Fidelity Tracking**: Added a performance/fidelity badge to the HUD, grading builds (Tier S/A/B) based on object density and estimated cost.
+*   **Sandbox Intelligence**: Added a toggle to enable/disable the interactive logic and debug overlays.
 
 ---
 
-## 🏗️ NEXT STEPS FOR TOMORROW
-*   **Stress Test**: Perform a full architectural sweep of all 34 masterpieces to verify generator fidelity.
-*   **Export Verification**: Perform a final audit of the `Nitrado-ready JSON` split-logic for high-fidelity builds exceeding 1200 objects.
-*   **Fidelity Score Polish**: Refine the `fidelityScore` calculation to better reflect architectural density in the HUD.
+## 📅 DUE TO CHANGE / ROADMAP (Architectural Perfection)
+
+The following items are the priority for the next phase to address the "holey" look of masterpieces like the Death Star:
+
+### 1. The "Zero-Gap" Algorithmic Sweep
+*   **Dynamic Density Scaling**: Refactoring generators (Sphere, Torus, Death Star) to calculate panel counts based on actual circumference `(2 * PI * R) / (PanelWidth * Overlap)`.
+    *   **Goal**: Ensure zero visible gaps on all curved surfaces, regardless of radius.
+*   **Generator Consolidation**: Deprecating legacy `gen_deathstar` in favor of the recursive `gen_death_star` in `shapeMasterpieces.ts` to ensure 100% fidelity.
+
+### 2. Camera Controls (Zoom Fix)
+*   **The Issue**: The legacy drawing logic in `App.tsx` contains global `onWheel` event listeners that intercept scroll actions before they reach the 3D canvas `OrbitControls`.
+*   **The Fix**: Excise the `use3DCanvas` legacy code from `App.tsx` to restore native scroll-wheel zoom functionality.
 
 ---
-**SESSION STATUS: STABLE**
-**DATE: 2026-04-03**
-**BUILD SIGNATURE: DANKVAULT_STABLE_V2_FINALIZE**
+
+## 📜 GUIDE: HOW TO ACHIEVE MASTERY
+
+The system logic is designed to be mathematically precise. To achieve a "Masterpiece" output:
+
+1.  **Density is King**: If gaps appear, increase the `latSegs` or `lonSegs` (or wait for the upcoming Dynamic Density patch which will handle this automatically).
+2.  **Interaction**: Use **Shift + Click** to fill gaps manually in complex builds. Use **Click + HUD** to swap single objects for variants (e.g., doors, gates).
+3.  **High-Fidelity Scaling**: Large builds (>1200 objects) are normal for gapless spheres. Use the Nitrado-ready JSON parts for seamless in-game assembly.
+
+---
+**BUILD SIGNATURE**: `DANKVAULT_SANDBOX_V1`
+**DATE**: 2026-04-09

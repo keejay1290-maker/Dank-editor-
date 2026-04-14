@@ -529,7 +529,7 @@ export async function executePipeline(
         ctx.objects = ctx.points.map((p, idx) => {
           (ctx as any)._objCounter = idx - 1;
           const resolvedName = mapLogicalToRealObject(
-            ctx.params.objClass || "neutral_structural",
+            p.name || ctx.params.objClass || "neutral_structural",
             ctx
           );
           return {

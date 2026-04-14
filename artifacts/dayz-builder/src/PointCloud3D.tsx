@@ -22,6 +22,8 @@ interface PointCloud3DProps {
   mode?:        'preview' | 'sandbox_basic' | 'sandbox_hud';
   overlays?:    any;
   pipelineCtx?: any;
+  onSelectNode?: (p: any, index?: number) => void;
+  onPlaceNode?: (pos: [number, number, number]) => void;
 }
 
 // ─── NORMALISE INPUT ──────────────────────────────────────────────────────────
@@ -83,13 +85,12 @@ function ObjectGroup({ pts, objClass }: { pts: Pt[], objClass: string }) {
 
   const color = useMemo(() => mimic.color || '#4a7a50', [mimic]);
 
-  // Cube size for unoriented points — use wall height so the cube is actually visible.
-  // Math.min(bw,bh,bd) for thin walls (0.6m) produced near-invisible cubes.
+  // Cube size for unoriented points
   const cubeSize = Math.max(bh, 2.5);
 
   const [oriented, unoriented] = useMemo(() => {
-    const o: Pt[] = [], u: Pt[] = [];
-    for (const p of pts) (p.yaw !== undefined ? o : u).push(p);
+    const o: (Pt & {origIdx: number})[] = [], u: (Pt & {origIdx: number})[] = [];
+    pts.forEach((p, i) => (p.yaw !== undefined ? o : u).push({ ...p, origIdx: i }));
     return [o, u];
   }, [pts]);
 
@@ -129,16 +130,26 @@ function ObjectGroup({ pts, objClass }: { pts: Pt[], objClass: string }) {
     />
   );
 
+  // Add internal callback for clicks
+  const handleClick = (e: any, list: (Pt & {origIdx: number})[]) => {
+    e.stopPropagation();
+    if (e.instanceId !== undefined && typeof window !== 'undefined') {
+      const p = list[e.instanceId];
+      // Fire custom event to cross React-Three-Fiber context boundary cleanly
+      window.dispatchEvent(new CustomEvent('dank-select-node', { detail: p }));
+    }
+  };
+
   return (
     <>
       {oriented.length > 0 && (
-        <instancedMesh ref={orientedRef} args={[undefined, undefined, oriented.length]}>
+        <instancedMesh ref={orientedRef} args={[undefined, undefined, oriented.length]} onClick={e => handleClick(e, oriented)}>
           <boxGeometry args={[bw, bh, bd]} />
           {mat}
         </instancedMesh>
       )}
       {unoriented.length > 0 && (
-        <instancedMesh ref={unorientedRef} args={[undefined, undefined, unoriented.length]}>
+        <instancedMesh ref={unorientedRef} args={[undefined, undefined, unoriented.length]} onClick={e => handleClick(e, unoriented)}>
           <boxGeometry args={[cubeSize, cubeSize, cubeSize]} />
           {mat}
         </instancedMesh>
@@ -174,8 +185,17 @@ const PointCloud3D: React.FC<PointCloud3DProps> = ({
   globalPitch = 0,
   globalRoll  = 0,
   mode        = 'preview',
+  onSelectNode,
+  onPlaceNode
 }) => {
   const controlsRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (!onSelectNode) return;
+    const handler = (e: any) => onSelectNode(e.detail, e.detail.origIdx);
+    window.addEventListener('dank-select-node', handler as any);
+    return () => window.removeEventListener('dank-select-node', handler as any);
+  }, [onSelectNode]);
 
   // ── Normalise ──────────────────────────────────────────────────────────────
   const pts = useMemo(() => normalisePoints(points, objects), [points, objects]);
@@ -191,19 +211,19 @@ const PointCloud3D: React.FC<PointCloud3DProps> = ({
   }, [pts]);
 
   // ── Bounding box → camera distance ────────────────────────────────────────
-  const { center, zoomDist } = useMemo(() => {
-    if (pts.length === 0) return { center: new THREE.Vector3(), zoomDist: 50 };
+  const { center, zoomDist, minY } = useMemo(() => {
+    if (pts.length === 0) return { center: new THREE.Vector3(), zoomDist: 50, minY: 0 };
     let minX = Infinity, maxX = -Infinity,
-        minY = Infinity, maxY = -Infinity,
+        minYv = Infinity, maxY = -Infinity,
         minZ = Infinity, maxZ = -Infinity;
     for (const p of pts) {
       if (p.x < minX) minX = p.x; if (p.x > maxX) maxX = p.x;
-      if (p.y < minY) minY = p.y; if (p.y > maxY) maxY = p.y;
+      if (p.y < minYv) minYv = p.y; if (p.y > maxY) maxY = p.y;
       if (p.z < minZ) minZ = p.z; if (p.z > maxZ) maxZ = p.z;
     }
-    const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2, cz = (minZ + maxZ) / 2;
-    const span = Math.max(maxX - minX, maxY - minY, maxZ - minZ, 10);
-    return { center: new THREE.Vector3(cx, cy, cz), zoomDist: Math.max(20, span * 1.6) };
+    const cx = (minX + maxX) / 2, cy = (minYv + maxY) / 2, cz = (minZ + maxZ) / 2;
+    const span = Math.max(maxX - minX, maxY - minYv, maxZ - minZ, 10);
+    return { center: new THREE.Vector3(cx, cy, cz), zoomDist: Math.max(20, span * 1.6), minY: minYv };
   }, [pts]);
 
   // ── Empty state ────────────────────────────────────────────────────────────
@@ -223,11 +243,32 @@ const PointCloud3D: React.FC<PointCloud3DProps> = ({
       <WebGLErrorBoundary>
         <Canvas
           gl={{ antialias: true, powerPreference: 'high-performance' }}
-          camera={{ position: [zoomDist * 0.75, zoomDist * 0.55, zoomDist], fov: 48, near: 0.5, far: zoomDist * 25 }}
+          camera={{ position: [zoomDist * 0.75, zoomDist * 0.55, zoomDist], fov: 60, near: 0.5, far: zoomDist * 25 }}
           style={{ background: bg }}
         >
           <color attach="background" args={[bg as any]} />
-          <fog attach="fog" args={[bg, zoomDist * 6, zoomDist * 35]} />
+          <fogExp2 attach="fog" args={[bg as any, 0.002]} />
+
+          {/* Ground grid for spatial reference */}
+          <gridHelper args={[zoomDist * 4, Math.min(80, Math.round(zoomDist * 4 / 8)), '#1a3a1a', '#0a1a0a']} position={[0, -0.1, 0]} />
+          
+          {/* Invisible plane for placing objects */}
+          {onPlaceNode && (
+            <mesh 
+              rotation={[-Math.PI / 2, 0, 0]} 
+              position={[0, -0.1, 0]} 
+              onClick={(e) => {
+                if (e.shiftKey) {
+                  e.stopPropagation();
+                  onPlaceNode([e.point.x, e.point.y, e.point.z]);
+                }
+              }}
+              visible={true}
+            >
+              <planeGeometry args={[zoomDist * 4, zoomDist * 4]} />
+              <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+            </mesh>
+          )}
 
           <Stars radius={100} depth={50} count={3000} factor={3} saturation={0.2} fade speed={0.6} />
 
@@ -239,11 +280,11 @@ const PointCloud3D: React.FC<PointCloud3DProps> = ({
           {/* Reactive camera — updates when build changes */}
           <CameraRig zoomDist={zoomDist} controlsRef={controlsRef} />
 
-          {/* Build geometry — shifted so bounding-box centre sits at world origin */}
+          {/* Build geometry — centered on X/Z, grounded on Y (minY at y=0) */}
           <group
             scale={globalScale}
             rotation={[globalPitch * Math.PI / 180, 0, globalRoll * Math.PI / 180]}
-            position={[-center.x, -center.y, -center.z]}
+            position={[-center.x, -minY, -center.z]}
           >
             {Object.entries(groups).map(([cls, grpPts]) => (
               <ObjectGroup key={cls} pts={grpPts} objClass={cls} />
@@ -258,8 +299,9 @@ const PointCloud3D: React.FC<PointCloud3DProps> = ({
             autoRotateSpeed={0.5}
             enableDamping
             dampingFactor={0.07}
-            minDistance={2}
-            maxDistance={zoomDist * 15}
+            minDistance={1}
+            maxDistance={5000}
+            enableZoom={true}
           />
         </Canvas>
       </WebGLErrorBoundary>

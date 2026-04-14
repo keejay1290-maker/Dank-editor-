@@ -312,7 +312,9 @@ export function gen_sphere(p: Record<string, number>, hemi: boolean): Point3D[] 
     const y = radius * Math.sin(lat), r = radius * Math.cos(lat);
     for (let j = 0; j < lonSegs; j++) {
       const a = 2 * Math.PI * j / lonSegs;
-      pts.push({ x: r * Math.cos(a), y, z: r * Math.sin(a) });
+      const yaw = -(a * 180 / Math.PI) + 90;
+      const pitch = -(lat * 180 / Math.PI);
+      pts.push({ x: r * Math.cos(a), y, z: r * Math.sin(a), yaw, pitch });
     }
   }
   return pts;
@@ -339,7 +341,9 @@ export function gen_deathstar(p: Record<string, number>): Point3D[] {
       const ang = Math.acos(Math.min(1, Math.max(-1, dot)));
       const dr = Math.asin(Math.min(1, dishRadius / radius));
       if (ang < dr) continue;
-      pts.push({ x: px, y, z: pz });
+      const yaw = -(a * 180 / Math.PI) + 90;
+      const pitch = -(lat * 180 / Math.PI);
+      pts.push({ x: px, y, z: pz, yaw, pitch });
     }
   }
   const bc = { x: radius * dX, y: radius * dY };
@@ -348,7 +352,7 @@ export function gen_deathstar(p: Record<string, number>): Point3D[] {
     const dep = dishDepth * (1 - (dr / dishRadius) ** 2);
     for (let j = 0; j < 64; j++) {
       const a = 2 * Math.PI * j / 64;
-      pts.push({ x: bc.x - dep * dX + dr * Math.cos(a), y: bc.y - dep * dY, z: dr * Math.sin(a) });
+      pts.push({ x: bc.x - dep * dX + dr * Math.cos(a), y: bc.y - dep * dY, z: dr * Math.sin(a), yaw: -(a * 180 / Math.PI) + 90 });
     }
   }
   return pts;
@@ -365,10 +369,13 @@ export function gen_torus(p: Record<string, number>): Point3D[] {
     const u = 2 * Math.PI * i / majorSegs;
     for (let j = 0; j < minorSegs; j++) {
       const v = 2 * Math.PI * j / minorSegs;
+      const yaw = -(u * 180 / Math.PI) + 90;
+      const pitch = -(v * 180 / Math.PI);
       pts.push({ 
         x: (majorR + minorR * Math.cos(v)) * Math.cos(u), 
         y: minorR * Math.sin(v), 
-        z: (majorR + minorR * Math.cos(v)) * Math.sin(u) 
+        z: (majorR + minorR * Math.cos(v)) * Math.sin(u),
+        yaw, pitch
       });
     }
   }

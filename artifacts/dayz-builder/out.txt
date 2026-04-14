@@ -1,0 +1,7 @@
+500: const [output, setOutput] = useState("");
+656: setOutput(JSON.stringify({ Objects: processed.objects_final }, null, 2));
+926: setOutput(json);
+1039: setOutput(JSON.stringify({ Objects: processed.objects_final }, null, 2));
+1323: <button key={t.key} onClick={() => { setPipelineCtx(null); if (t.key === "builds") setOutput(""); setMode(t.key as EditorMode); }}
+1418: onClear={() => setOutput("")}
+1513: onSelect={(id: string) => { setPipelineCtx(null); setOutput(""); setSelectedBuildId(id); }}
